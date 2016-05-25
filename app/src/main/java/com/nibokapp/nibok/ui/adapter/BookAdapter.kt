@@ -2,7 +2,7 @@ package com.nibokapp.nibok.ui.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.nibokapp.nibok.ui.adapter.common.AdapterConstants
+import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
@@ -12,14 +12,14 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private val loadingItem = object : ViewType {
-        override fun getViewType(): Int = AdapterConstants.LOADING
+        override fun getViewType(): Int = AdapterTypes.LOADING
     }
 
     private val items = mutableListOf(loadingItem)
 
     private val delegateAdaptersMap = mapOf(
-            AdapterConstants.LOADING to LoadingDelegateAdapter(),
-            AdapterConstants.BOOK to BookDelegateAdapter()
+            AdapterTypes.LOADING to LoadingDelegateAdapter(),
+            AdapterTypes.BOOK to BookDelegateAdapter()
     )
 
 

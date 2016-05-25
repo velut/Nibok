@@ -1,6 +1,6 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.common.AdapterConstants
+import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 
 data class BookModel(
@@ -12,6 +12,6 @@ data class BookModel(
         val priceFracPart: Int,
         val thumbnail: String
 ) : ViewType {
-    override fun getViewType(): Int = AdapterConstants.BOOK
+    override fun getViewType(): Int = AdapterTypes.BOOK
 }
 
