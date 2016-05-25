@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Nibok</string>
+
+    <!-- Accessibility content description -->
+    <string name="book_cover_description">Picture of the book's cover</string>
+    <string name="save_button_description">Save this book to your Saved collection</string>
 </resources>
