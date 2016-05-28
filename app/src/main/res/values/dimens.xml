@@ -29,5 +29,6 @@
 
     <dimen name="small_newline">1.5dp</dimen>
     <dimen name="big_newline">14dp</dimen>
+    <dimen name="book_thumb_margin_left">12dp</dimen>
 
 </resources>
