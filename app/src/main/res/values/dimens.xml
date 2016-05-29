@@ -28,7 +28,9 @@
     <dimen name="book_title_margin_top">20dp</dimen>
 
     <dimen name="small_newline">1.5dp</dimen>
-    <dimen name="big_newline">14dp</dimen>
-    <dimen name="book_thumb_margin_left">12dp</dimen>
+    <dimen name="big_newline">16dp</dimen>
+    <dimen name="book_thumb_margin">14dp</dimen>
+    <dimen name="save_button_dim">64dp</dimen>
+    <dimen name="info_indentation">1.5dp</dimen>
 
 </resources>
