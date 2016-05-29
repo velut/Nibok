@@ -101,17 +101,19 @@
 
         <ImageView
             android:id="@+id/saveButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="@dimen/icon_button_padding"
-            android:layout_marginBottom="@dimen/icon_button_padding"
-            android:layout_marginEnd="@dimen/icon_button_padding"
-            android:layout_alignParentBottom="true"
-            android:layout_alignTop="@+id/bookPrice"
-            android:layout_alignParentEnd="true"
+            android:clickable="true"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:paddingTop="@dimen/icon_button_padding"
+            android:paddingBottom="@dimen/icon_button_padding"
+            android:paddingStart="@dimen/icon_button_padding"
+            android:paddingEnd="@dimen/icon_button_padding"
             android:tint="@color/secondary_text"
             android:src="@drawable/ic_bookmark_border_black_48dp"
-            android:contentDescription="@string/save_button_description"/>
+            android:contentDescription="@string/save_button_description"
+            android:layout_below="@+id/bookQuality"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="false" />
 
     </RelativeLayout>
 
