@@ -13,19 +13,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/card_content_margin"
+        android:layout_marginEnd="@dimen/card_content_margin"
+        android:layout_marginTop="@dimen/card_content_margin"
+        android:layout_marginBottom="@dimen/card_content_margin">
 
         <ImageView
             android:id="@+id/bookThumbnail"
             android:layout_width="@dimen/book_cover_width"
             android:layout_height="wrap_content"
-
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:layout_marginStart="@dimen/book_thumb_margin"
-            android:layout_marginEnd="@dimen/book_thumb_margin"
-            android:layout_marginTop="@dimen/book_thumb_margin"
-            android:layout_marginBottom="@dimen/book_thumb_margin"
+            android:layout_marginEnd="@dimen/card_content_margin"
             android:scaleType="fitCenter"
             android:contentDescription="@string/book_cover_description"
             tools:src="@mipmap/ic_launcher"/>
@@ -34,13 +34,11 @@
             android:id="@+id/bookTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_newline"
             android:textSize="@dimen/book_title_size"
             android:textStyle="bold"
             android:textColor="@color/primary_text"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/book_title_margin_top"
             android:layout_toEndOf="@+id/bookThumbnail"
             tools:text="Android programming"/>
 
@@ -48,8 +46,6 @@
             android:id="@+id/bookAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/info_indentation"
-            android:layout_marginBottom="@dimen/small_newline"
             android:textSize="@dimen/book_info_size"
             android:textColor="@color/secondary_text"
             android:textStyle="italic"
@@ -62,8 +58,6 @@
             android:id="@+id/bookYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/info_indentation"
-            android:layout_marginBottom="@dimen/small_newline"
             android:textSize="@dimen/book_info_size"
             android:textColor="@color/secondary_text"
             android:layout_below="@+id/bookAuthor"
@@ -74,7 +68,7 @@
             android:id="@+id/bookQuality"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/big_newline"
+            android:layout_marginTop="@dimen/big_jump"
             android:textSize="@dimen/book_quality_size"
             android:textColor="@color/secondary_text"
             android:layout_below="@+id/bookYear"
@@ -86,12 +80,11 @@
             android:id="@+id/bookPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/med_jump"
             android:textColor="@color/accent"
-            android:textSize="@dimen/book_title_size"
+            android:textSize="@dimen/book_price_size"
             android:textStyle="bold"
             android:layout_below="@+id/bookQuality"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/big_newline"
             android:layout_toEndOf="@+id/bookThumbnail"
             tools:text="€ 15,90"/>
 
@@ -100,10 +93,6 @@
             android:clickable="true"
             android:layout_width="@dimen/save_button_dim"
             android:layout_height="@dimen/save_button_dim"
-            android:paddingTop="@dimen/icon_button_padding"
-            android:paddingBottom="@dimen/icon_button_padding"
-            android:paddingStart="@dimen/icon_button_padding"
-            android:paddingEnd="@dimen/icon_button_padding"
             android:tint="@color/secondary_text"
             android:src="@drawable/ic_bookmark_border_black_48dp"
             android:contentDescription="@string/save_button_description"

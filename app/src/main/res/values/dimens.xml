@@ -3,34 +3,22 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <!-- Navigation tabs -->
-    <dimen name="tab_max_width">264dp</dimen>
-    <dimen name="tab_padding_bottom">16dp</dimen>
-    <dimen name="tab_label">14sp</dimen>
-    <dimen name="custom_tab_layout_height">72dp</dimen>
-
     <!-- Card dimensions -->
-    <dimen name="card_height">180dp</dimen>
     <dimen name="card_margin">4dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_content_margin">14dp</dimen>
 
     <!-- Card elements dimensions -->
     <dimen name="book_cover_width">116dp</dimen>
-    <dimen name="book_cover_height">160dp</dimen>
+    <dimen name="save_button_dim">32dp</dimen>
 
-    <dimen name="book_text_padding">16dp</dimen>
-    <dimen name="icon_button_padding">16dp</dimen>
+    <!-- Card text sizes -->
+    <dimen name="book_title_size">18sp</dimen>
+    <dimen name="book_info_size">14sp</dimen>
+    <dimen name="book_quality_size">14.5sp</dimen>
+    <dimen name="book_price_size">18sp</dimen>
 
-    <dimen name="book_title_size">16dp</dimen>
-    <dimen name="book_quality_size">14.5dp</dimen>
-    <dimen name="book_info_size">14dp</dimen>
-
-    <dimen name="book_title_margin_top">20dp</dimen>
-
-    <dimen name="small_newline">1.5dp</dimen>
-    <dimen name="big_newline">16dp</dimen>
-    <dimen name="book_thumb_margin">14dp</dimen>
-    <dimen name="save_button_dim">64dp</dimen>
-    <dimen name="info_indentation">1.5dp</dimen>
+    <dimen name="big_jump">16dp</dimen>
+    <dimen name="med_jump">8dp</dimen>
 
 </resources>
