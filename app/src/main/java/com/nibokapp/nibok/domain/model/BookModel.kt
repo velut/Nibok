@@ -10,7 +10,8 @@ data class BookModel(
         val quality: String,
         val priceIntPart: Int,
         val priceFracPart: Int,
-        val thumbnail: String
+        val thumbnail: String,
+        var saved: Boolean = false
 ) : ViewType {
     override fun getViewType(): Int = AdapterTypes.BOOK
 }
