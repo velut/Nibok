@@ -4,4 +4,15 @@
     <!-- Accessibility content description -->
     <string name="book_cover_description">Picture of the book\'s cover</string>
     <string name="save_button_description">Save this book to your Saved collection</string>
+
+    <!-- Tabs names -->
+    <string name="latest_tab">Latest</string>
+    <string name="saved_tab">Saved</string>
+    <string name="selling_tab">Selling</string>
+    <string name="messages_tab">Messages</string>
+
+    <!-- Toast -->
+    <string name="book_saved_to_collection">Book saved to your collection</string>
+    <string name="book_removed_from_collection">Book removed from your collection</string>
+
 </resources>
