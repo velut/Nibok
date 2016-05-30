@@ -91,13 +91,19 @@
         <ImageView
             android:id="@+id/saveButton"
             android:clickable="true"
-            android:layout_width="@dimen/save_button_dim"
-            android:layout_height="@dimen/save_button_dim"
+            android:layout_width="@dimen/img_button_dim"
+            android:layout_height="@dimen/img_button_dim"
+            android:paddingStart="@dimen/img_button_padding"
+            android:paddingTop="@dimen/img_button_padding"
+            android:paddingEnd="@dimen/img_button_padding"
+            android:paddingBottom="@dimen/img_button_padding"
             android:tint="@color/secondary_text"
             android:src="@drawable/ic_bookmark_border_black_48dp"
             android:contentDescription="@string/save_button_description"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            />
+
 
     </RelativeLayout>
 
