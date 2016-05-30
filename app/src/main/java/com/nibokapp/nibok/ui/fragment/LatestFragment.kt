@@ -28,10 +28,8 @@ class LatestFragment : Fragment() {
 
         initAdapter()
 
-        if (savedInstanceState == null) {
-            val latestBooks = bookManager.getLatestBooks()
-            (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
-        }
+        val latestBooks = bookManager.getLatestBooks()
+        (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
 
     }
 
