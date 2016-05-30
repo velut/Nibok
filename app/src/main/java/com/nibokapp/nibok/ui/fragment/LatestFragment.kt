@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.latest_fragment.*
 
 class LatestFragment : Fragment() {
 
-    private val bookManager by lazy { BookManager() }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.latest_fragment)
@@ -28,7 +27,7 @@ class LatestFragment : Fragment() {
 
         initAdapter()
 
-        val latestBooks = bookManager.getLatestBooks()
+        val latestBooks = BookManager.getLatestBooks()
         (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
 
     }
