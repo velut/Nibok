@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.ui.adapter.common.ViewType
@@ -39,6 +40,9 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
             saveButton.setOnClickListener {
                 item.saved = !item.saved
                 updateSaveButton(saveButton, item.saved)
+                if (item.saved) {
+                    saveButton.animateBounce()
+                }
                 val toastMessage = if (item.saved) R.string.book_saved_to_collection
                                     else R.string.book_removed_from_collection
                 context.toast(toastMessage)
@@ -47,6 +51,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
         }
 
         private fun updateSaveButton(saveButton: ImageView, saved: Boolean) {
+
             if (saved) {
                 saveButton.apply {
                     setColorFilter(ContextCompat.getColor(context, R.color.primary))
