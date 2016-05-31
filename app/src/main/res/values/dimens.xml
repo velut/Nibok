@@ -10,8 +10,8 @@
 
     <!-- Card elements dimensions -->
     <dimen name="book_cover_width">116dp</dimen>
-    <dimen name="img_button_dim">64dp</dimen>
-    <dimen name="img_button_padding">16dp</dimen>
+    <dimen name="img_button_dim">48dp</dimen>
+    <dimen name="img_button_padding">12dp</dimen>
 
     <!-- Card text sizes -->
     <dimen name="book_title_size">18sp</dimen>

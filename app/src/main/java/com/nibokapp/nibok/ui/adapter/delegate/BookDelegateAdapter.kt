@@ -55,12 +55,12 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
             if (saved) {
                 saveButton.apply {
                     setColorFilter(ContextCompat.getColor(context, R.color.primary))
-                    setImageResource(R.drawable.ic_bookmark_black_48dp)
+                    setImageResource(R.drawable.ic_bookmark_black_24dp)
                 }
             } else {
                 saveButton.apply {
                     setColorFilter(ContextCompat.getColor(context, R.color.secondary_text))
-                    setImageResource(R.drawable.ic_bookmark_border_black_48dp)
+                    setImageResource(R.drawable.ic_bookmark_border_black_24dp)
                 }
             }
         }

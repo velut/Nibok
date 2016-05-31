@@ -98,7 +98,7 @@
             android:paddingEnd="@dimen/img_button_padding"
             android:paddingBottom="@dimen/img_button_padding"
             android:tint="@color/secondary_text"
-            android:src="@drawable/ic_bookmark_border_black_48dp"
+            android:src="@drawable/ic_bookmark_border_black_24dp"
             android:contentDescription="@string/save_button_description"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
