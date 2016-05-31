@@ -15,4 +15,9 @@
     <string name="book_saved_to_collection">Book saved to your collection</string>
     <string name="book_removed_from_collection">Book removed from your collection</string>
 
+    <!-- Toolbar menu -->
+    <string name="search_action">Search</string>
+    <string name="refresh_action">Refresh</string>
+    <string name="settings_action">Settings</string>
+
 </resources>

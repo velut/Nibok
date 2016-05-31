@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Search button, action if possible -->
+    <item
+        android:id="@+id/searchAction"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search_action"
+        app:showAsAction="always"/>
+
+    <!-- Refresh button, action if possible -->
+    <item
+        android:id="@+id/refreshAction"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:title="@string/refresh_action"
+        app:showAsAction="always"/>
+
+    <!-- Settings, in overflow -->
+    <item
+        android:id="@+id/settingsAction"
+        android:title="@string/settings_action"
+        app:showAsAction="never"/>
+
+</menu>
