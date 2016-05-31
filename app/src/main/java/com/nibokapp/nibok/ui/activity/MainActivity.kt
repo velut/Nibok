@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.LatestFragment
 import com.nibokapp.nibok.ui.fragment.MessagesFragment
@@ -23,11 +22,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         setupViewPager(viewPager)
         tabLayout.setupWithViewPager(viewPager)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        return true
     }
 
     fun setupViewPager(viewPager: ViewPager) {
