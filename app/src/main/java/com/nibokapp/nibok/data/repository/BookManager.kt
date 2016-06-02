@@ -7,11 +7,25 @@ object BookManager {
     val books = mutableListOf<BookModel>()
 
     init {
-        // Mock books
-        for (i in 1..10) {
+        books.addAll(genMockBooks())
+    }
+
+    fun getBooksList() : List<BookModel> = books
+
+    fun getNewerBooks(): List<BookModel> {
+        val newBooks = genMockBooks(end = 3, title = "Newer title")
+        books.addAll(0, newBooks)
+        return newBooks
+    }
+
+    fun isBookUpdateAvailable() = true
+
+    private fun genMockBooks(start: Int = 1, end: Int = 10, title: String = "Title"): List<BookModel> {
+        val books = mutableListOf<BookModel>()
+        for (i in start..end) {
             books.add(
                     BookModel(
-                            "Title is $i",
+                            "$title is $i",
                             "Author num $i",
                             2000 + i,
                             "Light wear",
@@ -21,7 +35,6 @@ object BookManager {
                     )
             )
         }
+        return books
     }
-
-    fun getLatestBooks() : List<BookModel> = books
 }

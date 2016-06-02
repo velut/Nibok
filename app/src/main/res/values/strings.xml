@@ -14,6 +14,7 @@
     <!-- Toast -->
     <string name="book_saved_to_collection">Book saved to your collection</string>
     <string name="book_removed_from_collection">Book removed from your collection</string>
+    <string name="no_newer_books">No newer books found</string>
 
     <!-- Toolbar menu -->
     <string name="search_action">Search</string>

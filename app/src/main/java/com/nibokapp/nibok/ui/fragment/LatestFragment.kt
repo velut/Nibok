@@ -20,10 +20,6 @@ class LatestFragment : BaseFragment() {
         return container?.inflate(R.layout.latest_fragment)
     }
 
-    override fun handleSearchAction() {
-        context.toast("Latest search")
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -32,12 +28,20 @@ class LatestFragment : BaseFragment() {
 
         initAdapter()
 
-        val latestBooks = BookManager.getLatestBooks()
+        val latestBooks = BookManager.getBooksList()
         (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
-
     }
 
-
+    override fun handleRefreshAction() {
+        super.handleRefreshAction()
+        if (BookManager.isBookUpdateAvailable()) {
+            val newerBooks = BookManager.getNewerBooks()
+            (latestBooksList.adapter as BookAdapter).addBooks(newerBooks)
+            latestBooksList.layoutManager.scrollToPosition(0)
+        } else {
+            context.toast(getString(R.string.no_newer_books))
+        }
+    }
 
     private fun initAdapter() {
         if (latestBooksList.adapter == null) {

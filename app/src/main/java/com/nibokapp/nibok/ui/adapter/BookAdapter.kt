@@ -36,16 +36,10 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return delegateAdaptersMap[getItemViewType(position)]!!.onBindViewHolder(holder, items[position])
     }
 
-    fun addBooks(books: List<BookModel>) {
-        // Remove loading and notify change
-        val initPosition = itemCount - 1
-        items.removeAt(initPosition)
-        notifyItemRemoved(initPosition)
-
-        // Insert books and loading item
-        items.addAll(books)
-        items.add(loadingItem)
-        notifyItemRangeChanged(initPosition, itemCount + 1)
+    fun addBooks(books: List<BookModel>, positionStart: Int = 0) {
+        val insertItemCount = books.size
+        items.addAll(positionStart, books)
+        notifyItemRangeInserted(positionStart, insertItemCount)
     }
 
 }
