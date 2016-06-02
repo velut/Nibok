@@ -11,6 +11,7 @@ import com.nibokapp.nibok.ui.fragment.LatestFragment
 import com.nibokapp.nibok.ui.fragment.MessagesFragment
 import com.nibokapp.nibok.ui.fragment.SavedFragment
 import com.nibokapp.nibok.ui.fragment.SellingFragment
+import com.nibokapp.nibok.ui.fragment.common.BaseFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,16 +27,16 @@ class MainActivity : AppCompatActivity() {
 
     fun setupViewPager(viewPager: ViewPager) {
         val fragments = mapOf(
-                "Latest" to LatestFragment(),
-                "Saved" to SavedFragment(),
-                "Selling" to SellingFragment(),
-                "Messages" to MessagesFragment()
+                getString(R.string.latest_tab) to LatestFragment(),
+                getString(R.string.saved_tab) to SavedFragment(),
+                getString(R.string.selling_tab) to SellingFragment(),
+                getString(R.string.messages_tab) to MessagesFragment()
         )
         val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         viewPager.adapter = adapter
     }
 
-    class ViewPagerAdapter(fm: FragmentManager, val fragments: Map<String, Fragment>) : FragmentPagerAdapter(fm) {
+    class ViewPagerAdapter(fm: FragmentManager, val fragments: Map<String, BaseFragment>) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment? {
             val fragmentsInstances = fragments.values
