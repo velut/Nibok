@@ -18,7 +18,15 @@ object BookManager {
         return newBooks
     }
 
-    fun isBookUpdateAvailable() = true
+    fun getOlderBooks(): List<BookModel> {
+        val oldBooks = genMockBooks(end = 4, title = "Older title")
+        books.addAll(oldBooks)
+        return oldBooks
+    }
+
+    fun hasNewerBooks() = true
+
+    fun hasOlderBooks() = true
 
     private fun genMockBooks(start: Int = 1, end: Int = 10, title: String = "Title"): List<BookModel> {
         val books = mutableListOf<BookModel>()
