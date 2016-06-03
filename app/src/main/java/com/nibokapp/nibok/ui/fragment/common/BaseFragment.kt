@@ -24,6 +24,7 @@ open class BaseFragment : Fragment() {
         when (item.itemId) {
             R.id.searchAction -> handleSearchAction()
             R.id.refreshAction -> handleRefreshAction()
+            R.id.backToTopAction -> handleBackToTopAction()
             R.id.settingsAction -> handleSettingsAction()
             else -> handleUnknownAction(item)
         }
@@ -36,6 +37,10 @@ open class BaseFragment : Fragment() {
 
     open fun handleRefreshAction() {
         context.toast("Refresh")
+    }
+
+    open fun handleBackToTopAction() {
+        context.toast("Back to top")
     }
 
     private fun handleSettingsAction() {

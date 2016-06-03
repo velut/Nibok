@@ -16,6 +16,12 @@
         android:title="@string/refresh_action"
         app:showAsAction="always"/>
 
+    <!-- Back top, in overflow -->
+    <item
+        android:id="@+id/backToTopAction"
+        android:title="@string/back_to_top_action"
+        app:showAsAction="never"/>
+
     <!-- Settings, in overflow -->
     <item
         android:id="@+id/settingsAction"

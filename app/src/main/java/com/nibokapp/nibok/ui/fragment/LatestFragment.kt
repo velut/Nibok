@@ -50,10 +50,14 @@ class LatestFragment : BaseFragment() {
         if (BookManager.hasNewerBooks()) {
             val newerBooks = BookManager.getNewerBooks()
             (latestBooksList.adapter as BookAdapter).addBooks(newerBooks)
-            latestBooksList.layoutManager.scrollToPosition(0)
+            handleBackToTopAction()
         } else {
             context.toast(getString(R.string.no_newer_books))
         }
+    }
+
+    override fun handleBackToTopAction() {
+        latestBooksList.layoutManager.scrollToPosition(0)
     }
 
     private fun requestOlderBooks() {
