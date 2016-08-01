@@ -15,6 +15,11 @@ import com.nibokapp.nibok.ui.fragment.common.BaseFragment
 import kotlinx.android.synthetic.main.latest_fragment.*
 import org.jetbrains.anko.toast
 
+/**
+ * Fragment managing the feed of books.
+ *
+ * It fetches the latest books published on the platform, it requests newer and older books.
+ */
 class LatestFragment : BaseFragment() {
 
     companion object {
@@ -30,11 +35,14 @@ class LatestFragment : BaseFragment() {
 
         val linearLayoutManager = LinearLayoutManager(context)
 
+        // Setup the list of the latest books
         latestBooksList.apply {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
             clearOnScrollListeners()
+            // Add infinite scroll listener
             addOnScrollListener(InfiniteScrollListener(linearLayoutManager) {
+                // Request older books published on the platform on load
                 requestOlderBooks()
             })
         }
@@ -47,6 +55,7 @@ class LatestFragment : BaseFragment() {
 
     override fun handleRefreshAction() {
         super.handleRefreshAction()
+        // If new books are available add them to the list and return to the top
         if (BookManager.hasNewerBooks()) {
             val newerBooks = BookManager.getNewerBooks()
             (latestBooksList.adapter as BookAdapter).addBooks(newerBooks)
@@ -60,6 +69,14 @@ class LatestFragment : BaseFragment() {
         latestBooksList.layoutManager.scrollToPosition(0)
     }
 
+    /**
+     * Function passed to the infinite scroll listener to load older books.
+     *
+     * It requests books published on the platform before the ones currently displayed.
+     *
+     * If older books are available they are added to the bottom of the list,
+     * otherwise a message is shown and the loading item is removed.
+     */
     private fun requestOlderBooks() {
         val bookAdapter = latestBooksList.adapter as BookAdapter
 
@@ -74,6 +91,9 @@ class LatestFragment : BaseFragment() {
         }
     }
 
+    /**
+     * Associates BookAdapter to the latest book list.
+     */
     private fun initAdapter() {
         if (latestBooksList.adapter == null) {
             latestBooksList.adapter = BookAdapter()

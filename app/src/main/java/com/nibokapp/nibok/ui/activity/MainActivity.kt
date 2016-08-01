@@ -14,6 +14,11 @@ import com.nibokapp.nibok.ui.fragment.SellingFragment
 import com.nibokapp.nibok.ui.fragment.common.BaseFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * The main activity of the application.
+ *
+ * It sets up the ViewPager with the four main fragments.
+ */
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +30,11 @@ class MainActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+    /**
+     * Sets up the ViewPager adding the four main fragments and the adapter.
+     *
+     * @param viewPager the ViewPager defined in the layout
+     */
     fun setupViewPager(viewPager: ViewPager) {
         val fragments = mapOf(
                 getString(R.string.latest_tab) to LatestFragment(),

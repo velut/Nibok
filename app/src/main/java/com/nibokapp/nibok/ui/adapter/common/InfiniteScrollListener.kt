@@ -3,7 +3,16 @@ package com.nibokapp.nibok.ui.adapter.common
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
-
+/**
+ * Scroll listener that enables infinite scrolling.
+ *
+ * When the view is scrolled down if not enough items are present it loads more by calling the given
+ * loading function.
+ * If enough items are present it stops loading.
+ *
+ * @param layoutManager the layout manager
+ * @param loadFunc the function to be called to load more items
+ */
 class InfiniteScrollListener(val layoutManager: LinearLayoutManager, val loadFunc: () -> Unit) :
         RecyclerView.OnScrollListener() {
 

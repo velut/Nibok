@@ -11,11 +11,28 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.nibokapp.nibok.R
 
+/**
+ * Extensions file.
+ *
+ * Here are located extension functions defined for convenience.
+ *
+ */
 
+
+/**
+ * Inflate a layout directly in a view.
+ *
+ * @param layoutId the layout to inflate
+ */
 fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
+/**
+ * Load an image directly in a view.
+ *
+ * @param imageUrl the url of the image
+ */
 fun ImageView.loadImg(imageUrl: String) {
     if (TextUtils.isEmpty(imageUrl)) {
         Glide.with(context).load(R.mipmap.ic_launcher).into(this)
@@ -24,6 +41,10 @@ fun ImageView.loadImg(imageUrl: String) {
     }
 }
 
+/**
+ * Animate a scaling with the given parameters.
+ *
+ */
 fun View.animateScaling(xStart: Float, xEnd: Float, yStart: Float, yEnd: Float, duration: Long = 250) {
     val animation = ScaleAnimation(
             xStart, xEnd,
@@ -44,6 +65,9 @@ fun View.animateScaleDown() {
     this.animateScaling(1.618f, 1f, 1.618f, 1f)
 }
 
+/**
+ * A scale up followed by a scale down animation to be called directly by a View.
+ */
 fun View.animateBounce() {
     this.animateScaleUp()
     this.animateScaleDown()

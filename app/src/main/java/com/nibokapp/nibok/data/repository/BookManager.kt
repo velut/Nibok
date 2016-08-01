@@ -2,32 +2,63 @@ package com.nibokapp.nibok.data.repository
 
 import com.nibokapp.nibok.domain.model.BookModel
 
+/**
+ * Singleton that manages the retrieval of books published on the platform.
+ */
 object BookManager {
 
+    // The list of books
     val books = mutableListOf<BookModel>()
 
     init {
         books.addAll(genMockBooks())
     }
 
+    /**
+     * Get the current book list.
+     *
+     * @return the list of currently available book
+     */
     fun getBooksList() : List<BookModel> = books
 
+    /**
+     * Get newer books published since the last retrieval and add them to the books list.
+     *
+     * @return list of newer books published since the last retrieval
+     */
     fun getNewerBooks(): List<BookModel> {
         val newBooks = genMockBooks(end = 3, title = "Newer title")
         books.addAll(0, newBooks)
         return newBooks
     }
 
+    /**
+     * Get older books published before the last one currently displayed
+     * and add them to the books list.
+     *
+     * @return list of older books published before the last one currently displayed
+     */
     fun getOlderBooks(): List<BookModel> {
         val oldBooks = genMockBooks(end = 4, title = "Older title")
         books.addAll(oldBooks)
         return oldBooks
     }
 
+    /**
+     * Signals if newer books are available.
+     *
+     * @return true if newer books are available, false otherwise
+     */
     fun hasNewerBooks() = true
 
+    /**
+     * Signals if older books are available.
+     *
+     * @return true if older books are available, false otherwise
+     */
     fun hasOlderBooks() = true
 
+    // Temporary. Generate mocked books
     private fun genMockBooks(start: Int = 1, end: Int = 10, title: String = "Title"): List<BookModel> {
         val books = mutableListOf<BookModel>()
         for (i in start..end) {

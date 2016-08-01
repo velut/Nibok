@@ -14,20 +14,38 @@ import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 import kotlinx.android.synthetic.main.book_card.view.*
 import org.jetbrains.anko.toast
 
+/**
+ * Delegated adapter managing the creation and binding of book view holders.
+ *
+ */
 class BookDelegateAdapter : ViewTypeDelegateAdapter {
 
+    /**
+     * Creates a book view holder when needed.
+     */
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return BookVH(parent)
     }
 
+    /**
+     * Casts a view holder to a book view holder and then binds it to the given book model.
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
         holder as BookVH
         holder.bind(item as BookModel)
     }
 
+    /**
+     * Book view holder.
+     */
     class BookVH(parent: ViewGroup) : RecyclerView.ViewHolder(
             parent.inflate(R.layout.book_card)) {
 
+        /**
+         * Binds the itemView of the view holder to the given item.
+         *
+         * @param item the item of which the properties will be bound in the itemView
+         */
         fun bind(item: BookModel) = with(itemView) {
             bookThumbnail.loadImg(item.thumbnail)
             bookTitle.text = item.title
@@ -50,6 +68,12 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
 
         }
 
+        /**
+         * Update the graphics of the save button given the saved status.
+         *
+         * @param saveButton the save button
+         * @param saved the status of saved
+         */
         private fun updateSaveButton(saveButton: ImageView, saved: Boolean) {
 
             if (saved) {

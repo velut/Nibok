@@ -8,16 +8,23 @@ import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
 
-
+/**
+ * The adapter responsible for the overall book view.
+ *
+ * It delegates the managing of the items in the view to the respective adapters based on the
+ * view type and adapter type.
+ */
 class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
+    // The single loading item
     private val loadingItem = object : ViewType {
         override fun getViewType(): Int = AdapterTypes.LOADING
     }
 
+    // Items to be displayed
     private val items = mutableListOf<ViewType>(loadingItem)
 
+    // Adapter instances corresponding to adapter types
     private val delegateAdaptersMap = mapOf(
             AdapterTypes.LOADING to LoadingDelegateAdapter(),
             AdapterTypes.BOOK to BookDelegateAdapter()
@@ -28,14 +35,27 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = items[position].getViewType()
 
+    /**
+     * Delegate the creation of view holders to the right adapter given the viewType.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return delegateAdaptersMap[viewType]!!.onCreateViewHolder(parent)
     }
 
+    /**
+     * Delegate the binding of view holders to the right adapter based on the viewType.
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         return delegateAdaptersMap[getItemViewType(position)]!!.onBindViewHolder(holder, items[position])
     }
 
+    /**
+     * Add books to the list of items to display.
+     *
+     * @param books the list of books to add
+     * @param addToTop true if the books have to be added at the start of the list of items,
+     * false if they are to be inserted at the end of the list (before the loading item). Default true.
+     */
     fun addBooks(books: List<BookModel>, addToTop: Boolean = true) {
         val insertPosition = if (addToTop) 0 else itemCount - 1 // at top or at loading item position
         val insertItemCount = books.size
@@ -44,8 +64,12 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyItemRangeInserted(insertPosition, insertItemCount)
     }
 
+    /**
+     * Remove the loading item from the list of items to be displayed.
+     */
     fun removeLoadingItem() {
         if (items.contains(loadingItem)) {
+            // Loading item is always the last item in the list
             val loadingItemPosition = itemCount - 1
             items.remove(loadingItem)
             notifyItemRemoved(loadingItemPosition)

@@ -4,7 +4,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 
 /**
- * Created by edo on 24/05/2016.
+ * Interface common to all delegate adapters.
+ *
+ * It defines the common behaviors of creating and binding view holders.
  */
 
 interface ViewTypeDelegateAdapter {

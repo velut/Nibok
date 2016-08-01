@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.common.BaseFragment
 
+/**
+ * Fragment managing the messaging between users.
+ */
 class MessagesFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

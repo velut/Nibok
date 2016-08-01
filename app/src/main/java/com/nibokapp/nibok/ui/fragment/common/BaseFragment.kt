@@ -10,14 +10,20 @@ import android.view.MenuItem
 import com.nibokapp.nibok.R
 import org.jetbrains.anko.toast
 
+/**
+ * Base fragment implementing common features.
+ *
+ * It sets up the menu and creates stubs for handling menu actions.
+ */
 open class BaseFragment : Fragment() {
 
     companion object {
-        val TAG = BaseFragment::class.java.simpleName
+        val TAG: String = BaseFragment::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Add options menu
         setHasOptionsMenu(true)
     }
 
@@ -25,8 +31,10 @@ open class BaseFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.toolbar_menu, menu)
 
+        // Find the search view
         val searchView = menu?.findItem(R.id.searchAction)?.actionView as SearchView
 
+        // Add listener to search view input
         searchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -42,6 +50,11 @@ open class BaseFragment : Fragment() {
         )
     }
 
+    /**
+     * Handle selection of options in the menu.
+     *
+     * @param item the selected menu item
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.searchAction -> handleSearchAction()
@@ -53,22 +66,37 @@ open class BaseFragment : Fragment() {
         return true
     }
 
+    /**
+     * Handle the search action.
+     */
     open fun handleSearchAction() {
         context.toast("Search")
     }
 
+    /**
+     * Handle the refresh action.
+     */
     open fun handleRefreshAction() {
         context.toast("Refresh")
     }
 
+    /**
+     * Handle the back to top action.
+     */
     open fun handleBackToTopAction() {
         context.toast("Back to top")
     }
 
+    /**
+     * Handle the settings action.
+     */
     private fun handleSettingsAction() {
         context.toast("Settings")
     }
 
+    /**
+     * Handle every other action not directly handled.
+     */
     private fun handleUnknownAction(item: MenuItem) {
         super.onOptionsItemSelected(item)
         context.toast("Unknown menu action")

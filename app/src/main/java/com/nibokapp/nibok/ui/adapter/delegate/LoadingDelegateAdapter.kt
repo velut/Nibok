@@ -7,6 +7,9 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 
+/**
+ * Delegated adapter that displays the loading item (an animated icon).
+ */
 class LoadingDelegateAdapter : ViewTypeDelegateAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder = LoadingVH(parent)
