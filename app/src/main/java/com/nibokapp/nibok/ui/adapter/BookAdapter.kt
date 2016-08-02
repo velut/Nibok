@@ -16,7 +16,7 @@ import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
  */
 class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    // The single loading item
+    // The loading item singleton
     private val loadingItem = object : ViewType {
         override fun getViewType(): Int = AdapterTypes.LOADING
     }
