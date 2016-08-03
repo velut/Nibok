@@ -15,7 +15,7 @@ import org.jetbrains.anko.toast
  *
  * It sets up the menu and creates stubs for handling menu actions.
  */
-open class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment() {
 
     companion object {
         val TAG: String = BaseFragment::class.java.simpleName
@@ -70,22 +70,18 @@ open class BaseFragment : Fragment() {
      * Handle the search action.
      */
     open fun handleSearchAction() {
-        context.toast("Search")
+        Log.i(TAG, "Searching")
     }
 
     /**
      * Handle the refresh action.
      */
-    open fun handleRefreshAction() {
-        context.toast("Refresh")
-    }
+    abstract fun handleRefreshAction()
 
     /**
      * Handle the back to top action.
      */
-    open fun handleBackToTopAction() {
-        context.toast("Back to top")
-    }
+    abstract fun handleBackToTopAction()
 
     /**
      * Handle the settings action.
