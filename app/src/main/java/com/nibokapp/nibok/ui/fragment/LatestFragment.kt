@@ -2,17 +2,13 @@ package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.BookAdapter
-import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
-import com.nibokapp.nibok.ui.fragment.common.BaseFragment
-import kotlinx.android.synthetic.main.latest_fragment.*
+import com.nibokapp.nibok.ui.fragment.common.BookFragment
+import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.toast
 
 /**
@@ -20,41 +16,31 @@ import org.jetbrains.anko.toast
  *
  * It fetches the latest books published on the platform, it requests newer and older books.
  */
-class LatestFragment : BaseFragment() {
+class LatestFragment : BookFragment() {
 
     companion object {
         private val TAG = LatestFragment::class.java.simpleName
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.latest_fragment)
-    }
+    override fun getFragmentLayout() = R.layout.fragment_latest
+
+    override fun getBooksViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getBooksView() : RecyclerView = latestBooksList
+
+    override fun getBooksViewAdapter() = BookAdapter()
+
+    override fun onScrollDownLoader() = requestOlderBooks()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val linearLayoutManager = LinearLayoutManager(context)
-
-        // Setup the list of the latest books
-        latestBooksList.apply {
-            setHasFixedSize(true)
-            layoutManager = linearLayoutManager
-            clearOnScrollListeners()
-            // Add infinite scroll listener
-            addOnScrollListener(InfiniteScrollListener(linearLayoutManager) {
-                // Request older books published on the platform on load
-                requestOlderBooks()
-            })
-        }
-
-        initAdapter()
-
+        Log.i(TAG, "Fetching latest books")
         val latestBooks = BookManager.getBooksList()
         (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
     }
 
     override fun handleRefreshAction() {
-        super.handleRefreshAction()
         // If new books are available add them to the list and return to the top
         if (BookManager.hasNewerBooks()) {
             val newerBooks = BookManager.getNewerBooks()
@@ -63,10 +49,6 @@ class LatestFragment : BaseFragment() {
         } else {
             context.toast(getString(R.string.no_newer_books))
         }
-    }
-
-    override fun handleBackToTopAction() {
-        latestBooksList.layoutManager.scrollToPosition(0)
     }
 
     /**
@@ -91,12 +73,4 @@ class LatestFragment : BaseFragment() {
         }
     }
 
-    /**
-     * Associates BookAdapter to the latest book list.
-     */
-    private fun initAdapter() {
-        if (latestBooksList.adapter == null) {
-            latestBooksList.adapter = BookAdapter()
-        }
-    }
 }
