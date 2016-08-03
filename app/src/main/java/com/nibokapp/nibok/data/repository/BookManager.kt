@@ -45,6 +45,17 @@ object BookManager {
     }
 
     /**
+     * Get older books saved by the user and add them to the saved book list.
+     *
+     * @return list of older books saved by the user
+     */
+    fun  getOlderSavedBooks(): List<BookModel> {
+        val oldBooks = genMockBooks(end = 4, title = "Older Saved title")
+        books.addAll(oldBooks)
+        return oldBooks
+    }
+
+    /**
      * Signals if newer books are available.
      *
      * @return true if newer books are available, false otherwise
@@ -57,6 +68,13 @@ object BookManager {
      * @return true if older books are available, false otherwise
      */
     fun hasOlderBooks() = true
+
+    /**
+     * Signals if older saved books are available.
+     *
+     * @return true if older saved books are available, false otherwise
+     */
+    fun  hasOlderSavedBooks() = true
 
     // Temporary. Generate mocked books
     private fun genMockBooks(start: Int = 1, end: Int = 10, title: String = "Title"): List<BookModel> {
