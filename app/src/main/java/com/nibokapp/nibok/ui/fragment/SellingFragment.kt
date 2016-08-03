@@ -1,22 +1,47 @@
 package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.fragment.common.BaseFragment
+import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.fragment.common.BookFragment
+import kotlinx.android.synthetic.main.fragment_selling.*
 
 /**
  * Fragment managing the books being sold the user.
  */
-class SellingFragment : BaseFragment() {
+class SellingFragment : BookFragment() {
+
+    companion object {
+        private val TAG = SellingFragment::class.java.simpleName
+    }
+
+    override fun getFragmentLayout() = R.layout.fragment_selling
+
+    override fun getBooksViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getBooksView(): RecyclerView = sellingBooksList
+
+    override fun getBooksViewAdapter() = BookAdapter()
+
+    override fun onScrollDownLoader() {
+        Log.i(TAG, "Loading more books being sold")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.selling_fragment, container, false)
+        return inflater?.inflate(R.layout.fragment_selling, container, false)
+    }
+
+    override fun handleRefreshAction() {
+        Log.i(TAG, "Refreshing")
     }
 }
