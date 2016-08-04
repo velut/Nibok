@@ -7,28 +7,38 @@ import com.nibokapp.nibok.domain.model.BookModel
  */
 object BookManager {
 
-    // The list of books
-    val books = mutableListOf<BookModel>()
+    // The list of books in the feed
+    val feedBooks = mutableListOf<BookModel>()
+
+    // The list of saved books
+    val savedBooks = mutableListOf<BookModel>()
 
     init {
-        books.addAll(genMockBooks())
+        feedBooks.addAll(genMockBooks())
     }
 
     /**
-     * Get the current book list.
+     * Get the current book list to display in the feed.
      *
-     * @return the list of currently available book
+     * @return the list of currently available book for the feed
      */
-    fun getBooksList() : List<BookModel> = books
+    fun getFeedBooksList() : List<BookModel> = feedBooks
+
+    /**
+     * Get the current list of saved books.
+     *
+     * @return the list of saved books
+     */
+    fun getSavedBooksList(): List<BookModel> = savedBooks
 
     /**
      * Get newer books published since the last retrieval and add them to the books list.
      *
      * @return list of newer books published since the last retrieval
      */
-    fun getNewerBooks(): List<BookModel> {
+    fun getNewerFeedBooks(): List<BookModel> {
         val newBooks = genMockBooks(end = 3, title = "Newer title")
-        books.addAll(0, newBooks)
+        feedBooks.addAll(0, newBooks)
         return newBooks
     }
 
@@ -38,9 +48,9 @@ object BookManager {
      *
      * @return list of older books published before the last one currently displayed
      */
-    fun getOlderBooks(): List<BookModel> {
+    fun getOlderFeedBooks(): List<BookModel> {
         val oldBooks = genMockBooks(end = 4, title = "Older title")
-        books.addAll(oldBooks)
+        feedBooks.addAll(oldBooks)
         return oldBooks
     }
 
@@ -51,7 +61,7 @@ object BookManager {
      */
     fun  getOlderSavedBooks(): List<BookModel> {
         val oldBooks = genMockBooks(end = 4, title = "Older Saved title")
-        books.addAll(oldBooks)
+        savedBooks.addAll(oldBooks)
         return oldBooks
     }
 
@@ -60,14 +70,14 @@ object BookManager {
      *
      * @return true if newer books are available, false otherwise
      */
-    fun hasNewerBooks() = true
+    fun hasNewerFeedBooks() = true
 
     /**
      * Signals if older books are available.
      *
      * @return true if older books are available, false otherwise
      */
-    fun hasOlderBooks() = true
+    fun hasOlderFeedBooks() = true
 
     /**
      * Signals if older saved books are available.

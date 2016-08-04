@@ -36,7 +36,7 @@ class SavedFragment : BookFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val latestBooks = BookManager.getBooksList()
+        val latestBooks = BookManager.getSavedBooksList()
         (getBooksView().adapter as BookAdapter).addBooks(latestBooks)
     }
 

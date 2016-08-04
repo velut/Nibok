@@ -36,14 +36,14 @@ class LatestFragment : BookFragment() {
         super.onActivityCreated(savedInstanceState)
 
         Log.i(TAG, "Fetching latest books")
-        val latestBooks = BookManager.getBooksList()
+        val latestBooks = BookManager.getFeedBooksList()
         (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
     }
 
     override fun handleRefreshAction() {
         // If new books are available add them to the list and return to the top
-        if (BookManager.hasNewerBooks()) {
-            val newerBooks = BookManager.getNewerBooks()
+        if (BookManager.hasNewerFeedBooks()) {
+            val newerBooks = BookManager.getNewerFeedBooks()
             (latestBooksList.adapter as BookAdapter).addBooks(newerBooks)
             handleBackToTopAction()
         } else {
@@ -62,9 +62,9 @@ class LatestFragment : BookFragment() {
     private fun requestOlderBooks() {
         val bookAdapter = latestBooksList.adapter as BookAdapter
 
-        if (BookManager.hasOlderBooks()) {
+        if (BookManager.hasOlderFeedBooks()) {
             Log.i(TAG, "Requesting older books on scroll down")
-            val olderBooks = BookManager.getOlderBooks()
+            val olderBooks = BookManager.getOlderFeedBooks()
             bookAdapter.addBooks(olderBooks, addToTop = false)
         } else {
             Log.i(TAG, "No more older books, end reached")
