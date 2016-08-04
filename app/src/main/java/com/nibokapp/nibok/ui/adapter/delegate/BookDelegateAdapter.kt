@@ -11,7 +11,7 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
-import kotlinx.android.synthetic.main.book_card.view.*
+import kotlinx.android.synthetic.main.card_book.view.*
 import org.jetbrains.anko.toast
 
 /**
@@ -39,7 +39,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
      * Book view holder.
      */
     class BookVH(parent: ViewGroup) : RecyclerView.ViewHolder(
-            parent.inflate(R.layout.book_card)) {
+            parent.inflate(R.layout.card_book)) {
 
         /**
          * Binds the itemView of the view holder to the given item.
