@@ -46,26 +46,88 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          *
          * @param item the item of which the properties will be bound in the itemView
          */
-        fun bind(item: BookModel) = with(itemView) {
-            bookThumbnail.loadImg(item.thumbnail)
+        fun bind(item: BookModel) {
+            addThumbnail(item.thumbnail)
+            bindData(item)
+            updateSaveButton(itemView.saveButton, item.saved)
+            addSaveButtonListener(item)
+            addThumbnailListener()
+            addCardListener()
+        }
+
+        /**
+         * Load the thumbnail of the book's cover into the view.
+         *
+         * @param imgSrc the source of the image
+         */
+        private fun addThumbnail(imgSrc: String) = with(itemView) {
+            bookThumbnail.loadImg(imgSrc)
+        }
+
+        /**
+         * Bind the textual data of the book to the view.
+         *
+         * @param item the item from which we extract the data
+         */
+        private fun bindData(item: BookModel) = with(itemView) {
             bookTitle.text = item.title
             bookAuthor.text = item.author
             bookYear.text = item.year.toString()
             bookQuality.text = item.quality
             bookPrice.text = "€ ${item.priceIntPart},${item.priceFracPart}"
-            updateSaveButton(saveButton, item.saved)
+        }
 
+        /**
+         * Listen to clicks on the card.
+         */
+        private fun addCardListener() = with(itemView) {
+            setOnClickListener {
+                // TODO
+                context.toast("Card CLICKED")
+            }
+        }
+
+        /**
+         * Listen to clicks on the thumbnail.
+         */
+        private fun addThumbnailListener() = with(itemView) {
+            bookThumbnail.setOnClickListener {
+                // TODO
+                context.toast("Thumb CLICKED")
+            }
+        }
+
+        /**
+         * Listen to clicks on the save button.
+         *
+         * Toggle the save status of the item.
+         * If just saved change the graphics of the save button and show the save animation.
+         * Display a message informing the user of the save status.
+         *
+         * @param item the item being saved/unsaved
+         */
+        private fun addSaveButtonListener(item: BookModel) = with(itemView) {
             saveButton.setOnClickListener {
-                item.saved = !item.saved
-                updateSaveButton(saveButton, item.saved)
-                if (item.saved) {
+                val saved = toggleItemSave(item)
+                updateSaveButton(saveButton, saved)
+                if (saved) {
                     saveButton.animateBounce()
                 }
-                val toastMessage = if (item.saved) R.string.book_saved_to_collection
-                                    else R.string.book_removed_from_collection
+                val toastMessage = if (saved) R.string.book_saved_to_collection
+                else R.string.book_removed_from_collection
                 context.toast(toastMessage)
             }
+        }
 
+        /**
+         * Toggle the save status of the considered item.
+         *
+         * @param item the item subject to the toggle of the save status
+         */
+        private fun toggleItemSave(item: BookModel): Boolean {
+            // TODO
+            item.saved = !item.saved
+            return item.saved
         }
 
         /**
