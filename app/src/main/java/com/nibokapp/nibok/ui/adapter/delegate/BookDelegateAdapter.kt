@@ -9,9 +9,11 @@ import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
+import com.nibokapp.nibok.ui.activity.BookDetailActivity
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 import kotlinx.android.synthetic.main.card_book.view.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -92,9 +94,12 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          */
         private fun addThumbnailListener() = with(itemView) {
             bookThumbnail.setOnClickListener {
-                // TODO
-                context.toast("Thumb CLICKED")
+                startDetailActivity()
             }
+        }
+
+        private fun startDetailActivity() {
+            itemView.context.startActivity<BookDetailActivity>()
         }
 
         /**

@@ -12,4 +12,8 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="NibokTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="NibokTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

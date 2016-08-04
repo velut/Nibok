@@ -17,6 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.activity.BookDetailActivity"
+            android:label="@string/title_activity_book_detail"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/NibokTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
