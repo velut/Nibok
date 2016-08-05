@@ -8,10 +8,175 @@
     tools:context="com.nibokapp.nibok.ui.activity.BookDetailActivity"
     tools:showIn="@layout/activity_book_detail">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bookPriceKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Price"
+            tools:text="Price"/>
+
+        <TextView
+            android:id="@+id/bookPriceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="€ 14,00"
+            tools:text="€ 14,00"/>
+
+        <TextView
+            android:id="@+id/bookTitleKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Title"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/bookTitleValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="A Primer in Game Theory"
+            tools:text="A Primer in Game Theory"/>
+
+        <TextView
+            android:id="@+id/bookAuthorKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Author"
+            tools:text="Author"/>
+
+        <TextView
+            android:id="@+id/bookAuthorValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="Roberto Lucchetti"
+            tools:text="Roberto Lucchetti"/>
+
+        <TextView
+            android:id="@+id/bookYearKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Year"
+            tools:text="Year"/>
+
+        <TextView
+            android:id="@+id/bookYearValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="2011"
+            tools:text="2011"/>
+
+        <TextView
+            android:id="@+id/bookPublisherKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Publisher"
+            tools:text="Publisher"/>
+
+        <TextView
+            android:id="@+id/bookPublisherValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="Società Editrice Esculapio"
+            tools:text="Società Editrice Esculapio"/>
+
+        <TextView
+            android:id="@+id/bookQualityKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="Condition"
+            tools:text="Condition"/>
+
+        <TextView
+            android:id="@+id/bookConditionValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="Good"
+            tools:text="Good"/>
+
+        <TextView
+            android:id="@+id/bookISBNKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/detail_key_size"
+            android:textStyle="bold"
+            android:text="ISBN"
+            tools:text="ISBN"/>
+
+        <TextView
+            android:id="@+id/bookISBNValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/detail_value_size"
+            android:textColor="@color/primary_text"
+            android:text="978-88-7488-468-1"
+            tools:text="978-88-7488-468-1"/>
+
+
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
