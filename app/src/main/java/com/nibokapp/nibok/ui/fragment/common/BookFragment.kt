@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 
@@ -65,7 +66,7 @@ abstract class BookFragment : BaseFragment() {
      * Scroll back to the top of the books view.
      */
     override fun handleBackToTopAction() {
-        Log.i(TAG, "Going back to top")
+        Log.d(TAG, "Going back to top")
         getBooksView().layoutManager.scrollToPosition(0)
     }
 
@@ -75,11 +76,12 @@ abstract class BookFragment : BaseFragment() {
      * Assign layout manager and adapter, add infinite scroll listener.
      */
     private fun setupBooksView() {
-        Log.i(TAG, "Setting up Books View")
+
 
         val lm = getBooksViewLayoutManager()
         val booksView = getBooksView()
-
+        val booksViewName = getBooksView().getName()
+        Log.d(TAG, "Setting up Books View: " + booksViewName)
         booksView.apply {
             // Performance improvement
             setHasFixedSize(true)

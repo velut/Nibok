@@ -35,7 +35,7 @@ class LatestFragment : BookFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        Log.i(TAG, "Fetching latest books")
+        Log.d(TAG, "Fetching latest books")
         val latestBooks = BookManager.getFeedBooksList()
         (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
     }
@@ -63,11 +63,11 @@ class LatestFragment : BookFragment() {
         val bookAdapter = latestBooksList.adapter as BookAdapter
 
         if (BookManager.hasOlderFeedBooks()) {
-            Log.i(TAG, "Requesting older books on scroll down")
+            Log.d(TAG, "Requesting older books on scroll down")
             val olderBooks = BookManager.getOlderFeedBooks()
             bookAdapter.addBooks(olderBooks, addToTop = false)
         } else {
-            Log.i(TAG, "No more older books, end reached")
+            Log.d(TAG, "No more older books, end reached")
             bookAdapter.removeLoadingItem()
             context.toast(getString(R.string.end_reached))
         }
