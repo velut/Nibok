@@ -6,26 +6,44 @@
     <string name="save_button_description">Save this book to your Saved collection</string>
     <string name="detail_image_description">Main image of the book</string>
 
-    <!-- Tabs names -->
+    <!-- Main ViewPager Tabs names -->
     <string name="latest_tab">Latest</string>
     <string name="saved_tab">Saved</string>
     <string name="selling_tab">Selling</string>
     <string name="messages_tab">Messages</string>
 
-    <!-- Toast -->
+    <!-- Toasts -->
     <string name="book_saved_to_collection">Book saved to your collection</string>
     <string name="book_removed_from_collection">Book removed from your collection</string>
     <string name="no_newer_books">No newer books found</string>
     <string name="end_reached">You have reached the end</string>
 
-    <!-- Toolbar menu -->
+    <!-- Main Toolbar menu actions -->
     <string name="search_action">Search</string>
     <string name="refresh_action">Refresh</string>
     <string name="back_to_top_action">Go back to top</string>
     <string name="settings_action">Settings</string>
+    
+    <!-- Book detail view -->
+    <string name="insertion_details">Insertion details</string>
+    <string name="insertion_book_price">Price</string>
+    <string name="insertion_book_condition">Book condition</string>
+    <string name="insertion_sold_by">Sold by</string>
+    <string name="insertion_date">Insertion date</string>
+    <string name="book_details">Book details</string>
+    <string name="book_title">Title</string>
+    <string name="book_year">Year</string>
+    <string name="book_publisher">Publisher</string>
+    <string name="book_isbn">ISBN</string>
+    <plurals name="book_author">
+        <item quantity="one">Author</item>
+        <item quantity="other">Authors</item>
+    </plurals>
+
+
+    <!-- Extra -->
+
     <string name="title_activity_book_detail">BookDetailActivity</string>
-
     <string name="action_settings">Settings</string>
-
 
 </resources>

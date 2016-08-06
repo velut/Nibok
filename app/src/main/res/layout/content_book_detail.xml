@@ -11,171 +11,317 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical">
 
+        <!-- Start of insertion details -->
+
         <TextView
-            android:id="@+id/bookPriceKey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/accent"
+            android:textSize="16sp"
+            android:text="@string/insertion_details"
+            tools:text="Insertion details"/>
+
+        <!-- Insertion details -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/insertion_book_price"
+                tools:text="Price"/>
+
+            <TextView
+                android:id="@+id/insertionBookPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="€ 14,00"
+                tools:text="€ 14,00"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/insertion_book_condition"
+                tools:text="Book condition"/>
+
+            <TextView
+                android:id="@+id/insertionBookCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="Light wear"
+                tools:text="Light wear"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/insertion_sold_by"
+                tools:text="Sold by"/>
+
+            <TextView
+                android:id="@+id/insertionSoldBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="John Doe"
+                tools:text="John Doe"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/insertion_date"
+                tools:text="Insertion date"/>
+
+            <TextView
+                android:id="@+id/insertionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="Aug 06, 2016"
+                tools:text="Aug 06, 2016"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <!-- Start of book details -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
             android:textStyle="bold"
-            android:text="Price"
-            tools:text="Price"/>
-
-        <TextView
-            android:id="@+id/bookPriceValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="€ 14,00"
-            tools:text="€ 14,00"/>
-
-        <TextView
-            android:id="@+id/bookTitleKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
             android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="Title"
-            tools:text="Title"/>
+            android:textSize="16sp"
+            android:text="@string/book_details"
+            tools:text="Book details"/>
 
-        <TextView
-            android:id="@+id/bookTitleValue"
-            android:layout_width="wrap_content"
+        <!-- Book details -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="A Primer in Game Theory"
-            tools:text="A Primer in Game Theory"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bookAuthorKey"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/book_title"
+                tools:text="Title"/>
+
+            <TextView
+                android:id="@+id/detailBookTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="Introduction to Algorithms"
+                tools:text="Introduction to Algorithms"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="Author"
-            tools:text="Author"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bookAuthorValue"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/detailBookAuthorPlural"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="Author"
+                tools:text="Author"/>
+
+            <TextView
+                android:id="@+id/detailBookAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="Thomas H. Cormen"
+                tools:text=" Thomas H. Cormen"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="Roberto Lucchetti"
-            tools:text="Roberto Lucchetti"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bookYearKey"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/book_year"
+                tools:text="Year"/>
+
+            <TextView
+                android:id="@+id/detailBookYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="2009"
+                tools:text="2009"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="Year"
-            tools:text="Year"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bookYearValue"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/book_publisher"
+                tools:text="Publisher"/>
+
+            <TextView
+                android:id="@+id/detailBookPublisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="Mit Press"
+                tools:text="Mit Press"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontal_detail_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="2011"
-            tools:text="2011"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bookPublisherKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="Publisher"
-            tools:text="Publisher"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"
+                android:text="@string/book_isbn"
+                tools:text="ISBN"/>
 
-        <TextView
-            android:id="@+id/bookPublisherValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="Società Editrice Esculapio"
-            tools:text="Società Editrice Esculapio"/>
+            <TextView
+                android:id="@+id/detailBookISBN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/primary_text"
+                android:textSize="21sp"
+                android:text="978-0262533058"
+                tools:text="978-0262533058"/>
 
-        <TextView
-            android:id="@+id/bookQualityKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="Condition"
-            tools:text="Condition"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/bookConditionValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="Good"
-            tools:text="Good"/>
+        <View style="@style/horizontal_detail_divider"/>
 
-        <TextView
-            android:id="@+id/bookISBNKey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/detail_key_size"
-            android:textStyle="bold"
-            android:text="ISBN"
-            tools:text="ISBN"/>
+        <!-- Add some space to the bottom -->
 
-        <TextView
-            android:id="@+id/bookISBNValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginStart="40dp"
-            android:textSize="@dimen/detail_value_size"
-            android:textColor="@color/primary_text"
-            android:text="978-88-7488-468-1"
-            tools:text="978-88-7488-468-1"/>
-
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="32dp"/>
 
     </LinearLayout>
 
