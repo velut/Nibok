@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.nibokapp.nibok.ui.activity.BookDetailActivity"
-    tools:showIn="@layout/activity_book_detail">
+    tools:showIn="@layout/fragment_book_detail">
 
     <LinearLayout
         android:layout_width="match_parent"
