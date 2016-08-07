@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.domain.model
+package com.nibokapp.nibok.domain.model.common
 
 import io.realm.RealmObject
 
@@ -9,4 +9,4 @@ import io.realm.RealmObject
  */
 open class RealmString(
         open var value: String = ""
-) : RealmObject () {}
+) : RealmObject() {}

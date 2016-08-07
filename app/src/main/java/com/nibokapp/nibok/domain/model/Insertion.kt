@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.domain.model
 
+import com.nibokapp.nibok.domain.model.common.RealmString
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
