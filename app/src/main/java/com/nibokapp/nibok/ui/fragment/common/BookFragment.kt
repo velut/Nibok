@@ -75,17 +75,19 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
-        val results = realm
-                .where(Insertion::class.java)
-                .contains("book.title", query, Case.INSENSITIVE)
-                .or()
-                .contains("book.authors.value", query, Case.INSENSITIVE)
-                .or()
-                .contains("book.publisher", query, Case.INSENSITIVE)
-                .or()
-                .contains("book.isbn", query, Case.INSENSITIVE)
-                .findAll()
-        Log.d(TAG, "${results.size}")
+        realm?.let {
+            val results = it
+                    .where(Insertion::class.java)
+                    .contains("book.title", query, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.authors.value", query, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.publisher", query, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.isbn", query, Case.INSENSITIVE)
+                    .findAll()
+            Log.d(TAG, "${results.size}")
+        }
     }
 
     /**

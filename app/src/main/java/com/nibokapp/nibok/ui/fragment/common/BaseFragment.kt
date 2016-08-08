@@ -22,18 +22,20 @@ abstract class BaseFragment : Fragment() {
         val TAG: String = BaseFragment::class.java.simpleName
     }
 
-    // Lazy access to the realm DB, shared with subclasses
-    protected val realm: Realm by lazy { Realm.getDefaultInstance() }
+    // Access to the realm DB, shared with subclasses
+    protected var realm: Realm? = null
 
     override fun onStart() {
         super.onStart()
-        // First access to get realm connection
-        realm
+        // Get realm connection
+        realm = Realm.getDefaultInstance()
+        Log.d(TAG, "Started, got realm")
     }
 
     override fun onStop() {
         super.onStop()
-        realm.close()
+        realm?.close()
+        Log.d(TAG, "Stopping, closed realm")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
