@@ -75,18 +75,26 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
+
+        // Remove leading and trailing whitespaces
+        val trimmedQuery = query.trim()
+
+        if (trimmedQuery.isEmpty()) {
+            return
+        }
+
         realm?.let {
             val results = it
                     .where(Insertion::class.java)
-                    .contains("book.title", query, Case.INSENSITIVE)
+                    .contains("book.title", trimmedQuery, Case.INSENSITIVE)
                     .or()
-                    .contains("book.authors.value", query, Case.INSENSITIVE)
+                    .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
                     .or()
-                    .contains("book.publisher", query, Case.INSENSITIVE)
+                    .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
                     .or()
-                    .contains("book.isbn", query, Case.INSENSITIVE)
+                    .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
                     .findAll()
-            Log.d(TAG, "${results.size}")
+            Log.d(TAG, "Number of results: ${results.size}")
         }
     }
 
