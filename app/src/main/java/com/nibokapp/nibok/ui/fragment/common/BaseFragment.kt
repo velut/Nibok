@@ -34,6 +34,9 @@ abstract class BaseFragment : Fragment() {
         // Find the search view
         val searchView = menu?.findItem(R.id.searchAction)?.actionView as SearchView
 
+        // Add search hint
+        searchView.queryHint = getString(R.string.search_hint)
+
         // Add listener to search view input
         searchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
