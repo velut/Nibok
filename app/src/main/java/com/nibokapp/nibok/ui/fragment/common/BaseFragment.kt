@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.nibokapp.nibok.R
+import io.realm.Realm
 import org.jetbrains.anko.toast
 
 /**
@@ -19,6 +20,20 @@ abstract class BaseFragment : Fragment() {
 
     companion object {
         val TAG: String = BaseFragment::class.java.simpleName
+    }
+
+    // Lazy access to the realm DB, shared with subclasses
+    protected val realm: Realm by lazy { Realm.getDefaultInstance() }
+
+    override fun onStart() {
+        super.onStart()
+        // First access to get realm connection
+        realm
+    }
+
+    override fun onStop() {
+        super.onStop()
+        realm.close()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +57,17 @@ abstract class BaseFragment : Fragment() {
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         Log.i(TAG, "Search submit: $query")
+                        query?.let {
+                            handleOnQueryTextSubmit(it)
+                        }
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
                         Log.i(TAG, "Search change to: $newText")
+                        newText?.let {
+                            handleOnQueryTextChange(it)
+                        }
                         return false
                     }
                 }
@@ -85,6 +106,16 @@ abstract class BaseFragment : Fragment() {
      * Handle the back to top action.
      */
     abstract fun handleBackToTopAction()
+
+    /**
+     * Handle queries when text is submitted.
+     */
+    abstract fun handleOnQueryTextSubmit(query: String)
+
+    /**
+     * Handle queries when text is changed.
+     */
+    abstract fun handleOnQueryTextChange(query: String)
 
     /**
      * Handle the settings action.
