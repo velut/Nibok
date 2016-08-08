@@ -33,4 +33,12 @@ class MessagesFragment : BaseFragment() {
     override fun handleBackToTopAction() {
         Log.i(TAG, "Going back to top")
     }
+
+    override fun handleOnQueryTextSubmit(query: String) {
+        Log.i(TAG, "TODO")
+    }
+
+    override fun handleOnQueryTextChange(query: String) {
+        Log.i(TAG, "TODO")
+    }
 }
