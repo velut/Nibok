@@ -7,11 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nibokapp.nibok.data.db.Insertion
+import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
-import io.realm.Case
 
 /**
  * Base fragment for fragments representing books lists.
@@ -75,27 +74,7 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
-
-        // Remove leading and trailing whitespaces
-        val trimmedQuery = query.trim()
-
-        if (trimmedQuery.isEmpty()) {
-            return
-        }
-
-        realm?.let {
-            val results = it
-                    .where(Insertion::class.java)
-                    .contains("book.title", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
-                    .findAll()
-            Log.d(TAG, "Number of results: ${results.size}")
-        }
+        BookManager.getBooksFromQuery(query)
     }
 
     /**

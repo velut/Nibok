@@ -1,11 +1,17 @@
 package com.nibokapp.nibok.data.repository
 
+import android.util.Log
+import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.domain.model.BookModel
+import io.realm.Case
+import io.realm.Realm
 
 /**
  * Singleton that manages the retrieval of books published on the platform.
  */
 object BookManager {
+
+    const val TAG = "BookManager"
 
     // The list of books in the feed
     val feedBooks = mutableListOf<BookModel>()
@@ -15,6 +21,31 @@ object BookManager {
 
     init {
         feedBooks.addAll(genMockBooks())
+    }
+
+    fun getBooksFromQuery(query: String) {
+
+        // Remove leading and trailing whitespaces
+        val trimmedQuery = query.trim()
+
+        if (trimmedQuery.isEmpty()) {
+            return
+        }
+
+        val realm = Realm.getDefaultInstance()
+
+        val results = realm
+                .where(Insertion::class.java)
+                .contains("book.title", trimmedQuery, Case.INSENSITIVE)
+                .or()
+                .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
+                .or()
+                .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
+                .or()
+                .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
+                .findAll()
+        Log.d(TAG, "Number of results: ${results.size}")
+        realm.close()
     }
 
     /**
