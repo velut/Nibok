@@ -13,9 +13,9 @@ import com.bumptech.glide.Glide
 import com.nibokapp.nibok.R
 
 /**
- * Extensions file.
+ * View extensions file.
  *
- * Here are located extension functions defined for convenience.
+ * Here are located extension functions defined over views.
  *
  */
 
