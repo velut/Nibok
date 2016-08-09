@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
@@ -76,6 +77,8 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextChange(query: String) {
         BookManager.getBooksFromQuery(query)
     }
+
+    override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
     /**
      * Initial setup of the books view.

@@ -41,4 +41,6 @@ class MessagesFragment : BaseFragment() {
     override fun handleOnQueryTextChange(query: String) {
         Log.i(TAG, "TODO")
     }
+
+    override fun getSearchHint() : String = getString(R.string.search_hint_message)
 }

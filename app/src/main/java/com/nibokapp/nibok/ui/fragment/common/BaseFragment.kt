@@ -52,7 +52,7 @@ abstract class BaseFragment : Fragment() {
         val searchView = menu?.findItem(R.id.searchAction)?.actionView as SearchView
 
         // Add search hint
-        searchView.queryHint = getString(R.string.search_hint)
+        searchView.queryHint = getSearchHint()
 
         // Add listener to search view input
         searchView.setOnQueryTextListener(
@@ -118,6 +118,13 @@ abstract class BaseFragment : Fragment() {
      * Handle queries when text is changed.
      */
     abstract fun handleOnQueryTextChange(query: String)
+
+    /**
+     * Get the string to provide search hints.
+     *
+     * @return the string with the search hint
+     */
+    abstract fun getSearchHint() : String
 
     /**
      * Handle the settings action.
