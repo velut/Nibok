@@ -4,16 +4,15 @@ import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 
 /**
- * Schema representing a book.
+ * Schema representing essential information about a book to display in a card.
  *
- * The book should be represented by a book delegate adapter.
+ * The book card model is used in the book delegate adapter to bind data into the card view.
  *
  * @property title the title of the book
  * @property author the author of the book
  * @property year the year in which the book was published
  * @property quality the wear condition of the book
- * @property priceIntPart the integer part of the price
- * @property priceFracPart the fractional part of the price
+ * @property price the price of the book
  * @property thumbnail the thumbnail of the book
  * @property saved true if the book was saved by the user, false otherwise
  */
@@ -22,8 +21,7 @@ data class BookModel(
         val author: String,
         val year: Int,
         val quality: String,
-        val priceIntPart: Int,
-        val priceFracPart: Int,
+        val price: Float,
         val thumbnail: String,
         var saved: Boolean = false
 ) : ViewType {

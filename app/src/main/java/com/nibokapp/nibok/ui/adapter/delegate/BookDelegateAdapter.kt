@@ -9,6 +9,7 @@ import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
+import com.nibokapp.nibok.extension.toCurrency
 import com.nibokapp.nibok.ui.activity.BookDetailActivity
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
@@ -76,7 +77,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
             bookAuthor.text = item.author
             bookYear.text = item.year.toString()
             bookQuality.text = item.quality
-            bookPrice.text = "€ ${item.priceIntPart},${item.priceFracPart}"
+            bookPrice.text = item.price.toCurrency()
         }
 
         /**

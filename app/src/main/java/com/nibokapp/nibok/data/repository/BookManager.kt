@@ -127,8 +127,7 @@ object BookManager {
                             "Author num $i",
                             2000 + i,
                             "Light wear",
-                            10 + i,
-                            10 + i,
+                            10f + i + (50 + i)/100f,
                             "http://lorempixel.com/300/400/abstract/$i"
                     )
             )
