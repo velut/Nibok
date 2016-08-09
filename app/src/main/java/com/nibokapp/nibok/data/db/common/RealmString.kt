@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.domain.model.common
+package com.nibokapp.nibok.data.db.common
 
 import io.realm.RealmObject
 

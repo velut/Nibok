@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.domain.model
+package com.nibokapp.nibok.data.db
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey

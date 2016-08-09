@@ -1,10 +1,10 @@
 package com.nibokapp.nibok.ui
 
 import android.app.Application
-import com.nibokapp.nibok.domain.model.Book
-import com.nibokapp.nibok.domain.model.Insertion
-import com.nibokapp.nibok.domain.model.Seller
-import com.nibokapp.nibok.domain.model.common.RealmString
+import com.nibokapp.nibok.data.db.Book
+import com.nibokapp.nibok.data.db.Insertion
+import com.nibokapp.nibok.data.db.Seller
+import com.nibokapp.nibok.data.db.common.RealmString
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import java.util.*
