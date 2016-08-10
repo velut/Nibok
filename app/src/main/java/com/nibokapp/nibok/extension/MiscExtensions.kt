@@ -1,7 +1,5 @@
 package com.nibokapp.nibok.extension
 
-import com.nibokapp.nibok.data.db.common.RealmString
-import io.realm.RealmList
 import java.text.NumberFormat
 import java.util.*
 
@@ -21,11 +19,3 @@ fun Float.toCurrency(currencyCode: String = "EUR") : String {
     format.currency = Currency.getInstance(currencyCode)
     return format.format(this)
 }
-
-/**
- * Convert a RealmList of RealmString into a normal String list.
- *
- * @return a list of strings
- */
-fun RealmList<RealmString>.toStringList() : List<String> =
-        this.map { it.value }
