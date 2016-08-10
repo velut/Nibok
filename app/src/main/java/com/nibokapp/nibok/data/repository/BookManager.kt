@@ -2,9 +2,10 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
+import com.nibokapp.nibok.data.mapper.BookDataMapper
 import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.extension.queryRealm
 import io.realm.Case
-import io.realm.Realm
 
 /**
  * Singleton that manages the retrieval of books published on the platform.
@@ -32,20 +33,19 @@ object BookManager {
             return
         }
 
-        val realm = Realm.getDefaultInstance()
-
-        val results = realm
-                .where(Insertion::class.java)
-                .contains("book.title", trimmedQuery, Case.INSENSITIVE)
-                .or()
-                .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
-                .or()
-                .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
-                .or()
-                .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
-                .findAll()
+        val results = queryRealm {
+            it.where(Insertion::class.java)
+                    .contains("book.title", trimmedQuery, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
+                    .or()
+                    .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
+                    .findAll()
+        }
         Log.d(TAG, "Number of results: ${results.size}")
-        realm.close()
+
     }
 
     /**
@@ -53,7 +53,10 @@ object BookManager {
      *
      * @return the list of currently available book for the feed
      */
-    fun getFeedBooksList() : List<BookModel> = feedBooks
+    fun getFeedBooksList() : List<BookModel> {
+        val results = queryRealm { it.where(Insertion::class.java).findAll() }
+        return BookDataMapper().convertInsertionListToDomain(results)
+    }
 
     /**
      * Get the current list of saved books.
