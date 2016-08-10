@@ -8,17 +8,28 @@ import com.nibokapp.nibok.data.db.common.RealmString
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import java.util.*
+import kotlin.properties.Delegates
 
 class App : Application() {
 
+    companion object {
+        var instance: App by Delegates.notNull<App>()
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        // Save instance
+        instance = this
+
+        // Get Realm configuration
         val realmConfig = RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded() // Delete the DB instead of migrating
                 .build()
 
         Realm.deleteRealm(realmConfig) // Delete realm on restart
 
+        // Set the Realm configuration
         Realm.setDefaultConfiguration(realmConfig)
 
         val realm = Realm.getDefaultInstance()
