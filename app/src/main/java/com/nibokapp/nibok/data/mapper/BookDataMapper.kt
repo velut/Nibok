@@ -7,7 +7,6 @@ import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.ui.App
 import io.realm.RealmList
-import io.realm.RealmResults
 
 class BookDataMapper {
 
@@ -23,7 +22,7 @@ class BookDataMapper {
      *
      * @return a list of BookModel instances
      */
-    fun convertInsertionListToDomain(insertions: RealmResults<Insertion>) : List<BookModel> =
+    fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookModel> =
             insertions.map { convertInsertionToDomain(it) }.filterNotNull()
 
     /**
