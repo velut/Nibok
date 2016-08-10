@@ -49,4 +49,6 @@
     <string name="search_hint_book">Search by title, author, ISBN…</string>
     <string name="search_hint_message">Search…</string>
 
+    <string name="author_placeholder">Author info not available</string>
+
 </resources>
