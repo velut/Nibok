@@ -123,6 +123,7 @@ object BookManager {
         for (i in start..end) {
             books.add(
                     BookModel(
+                            0,
                             "$title is $i",
                             "Author num $i",
                             2000 + i,

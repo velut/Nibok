@@ -8,6 +8,7 @@ import com.nibokapp.nibok.ui.adapter.common.ViewType
  *
  * The book card model is used in the book delegate adapter to bind data into the card view.
  *
+ * @property insertionId the id of the insertion in which the book appears
  * @property title the title of the book
  * @property author the author of the book
  * @property year the year in which the book was published
@@ -17,6 +18,7 @@ import com.nibokapp.nibok.ui.adapter.common.ViewType
  * @property saved true if the book was saved by the user, false otherwise
  */
 data class BookModel(
+        val insertionId: Long,
         val title: String,
         val author: String,
         val year: Int,
