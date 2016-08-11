@@ -37,3 +37,14 @@ inline fun <T: RealmModel> queryRealm(query: (realm: Realm) -> RealmResults<T>) 
     realm.close()
     return results
 }
+
+/**
+ * Perform a query with Realm and return a single result.
+ */
+inline fun <T: RealmModel> queryOneWithRealm(query: (realm: Realm) -> T) : T {
+    val realm = Realm.getDefaultInstance()
+    val realmResult = query(realm)
+    val result = realm.copyFromRealm(realmResult)
+    realm.close()
+    return result
+}
