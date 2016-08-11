@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.extension
 
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +34,11 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
  * @param imageUrl the url of the image
  */
 fun ImageView.loadImg(imageUrl: String) {
-    if (TextUtils.isEmpty(imageUrl)) {
-        Glide.with(context).load(R.mipmap.ic_launcher).into(this)
-    } else {
-        Glide.with(context).load(imageUrl).into(this)
-    }
+    Glide.with(context)
+            .load(imageUrl)
+            .placeholder(R.drawable.book_placehoder_image)
+            .error(R.drawable.book_placehoder_image)
+            .into(this)
 }
 
 /**
