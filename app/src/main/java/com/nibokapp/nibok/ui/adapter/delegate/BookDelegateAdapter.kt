@@ -89,8 +89,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          */
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
-                // TODO
-                context.toast("Card CLICKED")
+                startDetailActivity()
             }
         }
 
