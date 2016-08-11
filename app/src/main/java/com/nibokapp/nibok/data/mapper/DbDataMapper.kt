@@ -4,15 +4,31 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.common.RealmString
 import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.domain.model.DetailModel
 import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.ui.App
 import io.realm.RealmList
 
-class BookDataMapper {
+class DbDataMapper {
 
     companion object {
         val AUTHOR_PLACEHOLDER = R.string.author_placeholder
-        val THUMB_PLACEHOLDER = "http://lorempixel.com/300/400/food/"
+        val THUMB_PLACEHOLDER = ""
+    }
+
+    fun convertInsertionToDetailDomain(insertion: Insertion) : DetailModel = with(insertion) {
+        DetailModel(
+                id,
+                bookPrice,
+                bookCondition,
+                seller!!.name,
+                date!!,
+                book!!.title,
+                book!!.authors!!.toStringList(),
+                book!!.year,
+                book!!.publisher,
+                book!!.isbn
+        )
     }
 
     /**
@@ -22,8 +38,8 @@ class BookDataMapper {
      *
      * @return a list of BookModel instances
      */
-    fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookModel> =
-            insertions.map { convertInsertionToDomain(it) }.filterNotNull()
+    fun convertInsertionListToBookDomain(insertions: List<Insertion>) : List<BookModel> =
+            insertions.map { convertInsertionToBookDomain(it) }.filterNotNull()
 
     /**
      * Build a BookModel instance out of the data available in an insertion.
@@ -32,7 +48,7 @@ class BookDataMapper {
      *
      * @return a BookModel instance if book data was available, null otherwise
      */
-    fun convertInsertionToDomain(insertion: Insertion) : BookModel? = with(insertion) {
+    fun convertInsertionToBookDomain(insertion: Insertion) : BookModel? = with(insertion) {
         book?.let {
             BookModel(
                     id,

@@ -2,7 +2,7 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.mapper.BookDataMapper
+import com.nibokapp.nibok.data.mapper.DbDataMapper
 import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.queryRealm
 import io.realm.Case
@@ -55,7 +55,7 @@ object BookManager {
      */
     fun getFeedBooksList() : List<BookModel> {
         val results = queryRealm { it.where(Insertion::class.java).findAll() }
-        return BookDataMapper().convertInsertionListToDomain(results)
+        return DbDataMapper().convertInsertionListToBookDomain(results)
     }
 
     /**
