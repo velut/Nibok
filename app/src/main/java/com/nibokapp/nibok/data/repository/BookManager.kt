@@ -4,6 +4,8 @@ import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.mapper.DbDataMapper
 import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.domain.model.DetailModel
+import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
 import io.realm.Case
 
@@ -24,13 +26,36 @@ object BookManager {
         feedBooks.addAll(genMockBooks())
     }
 
-    fun getBooksFromQuery(query: String) {
+    /**
+     * Get detailed data about a given insertion.
+     *
+     * @param insertionId the id of the insertion
+     *
+     * @return a DetailModel instance containing detailed data about the insertion
+     */
+    fun getInsertionDetails(insertionId: Long) : DetailModel =
+            DbDataMapper().convertInsertionToDetailDomain(
+                    queryOneWithRealm {
+                        it.where(Insertion::class.java)
+                                .equalTo("id", insertionId)
+                                .findFirst()
+                    }
+            )
+
+    /**
+     * Get the list of books where the title, authors, publisher or isbn contain the given query.
+     *
+     * @param query the query
+     *
+     * @return a list of BookModel instances with data about the found books
+     */
+    fun getBooksFromQuery(query: String) : List<BookModel> {
 
         // Remove leading and trailing whitespaces
         val trimmedQuery = query.trim()
 
         if (trimmedQuery.isEmpty()) {
-            return
+            return emptyList()
         }
 
         val results = queryRealm {
@@ -44,8 +69,10 @@ object BookManager {
                     .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
                     .findAll()
         }
-        Log.d(TAG, "Number of results: ${results.size}")
-
+        Log.d(TAG, "Books corresponding to query '$query' = ${results.size}")
+        val booksList = DbDataMapper().convertInsertionListToBookDomain(results)
+        Log.d(TAG, "BookModel list size: ${booksList.size}")
+        return booksList
     }
 
     /**
