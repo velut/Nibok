@@ -3,17 +3,17 @@ package com.nibokapp.nibok.ui.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.fragment.BookDetailFragment
+import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 
-class BookDetailActivity : AppCompatActivity() {
+class InsertionDetailActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = BookDetailActivity::class.java.simpleName
+        private val TAG = InsertionDetailActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_book_detail)
+        setContentView(R.layout.activity_insertion_detail)
 
         // If restoring do not create overlapping fragments
         if (savedInstanceState != null) {
@@ -21,13 +21,13 @@ class BookDetailActivity : AppCompatActivity() {
         }
 
 
-        val bookDetailFragment = BookDetailFragment()
+        val insertionDetailFragment = InsertionDetailFragment()
         // Pass eventual intent extras to the fragment
-        bookDetailFragment.arguments = intent.extras
+        insertionDetailFragment.arguments = intent.extras
 
         // Add the fragment to the container
         supportFragmentManager.beginTransaction()
-                .add(R.id.detailFragmentContainer, bookDetailFragment)
+                .add(R.id.detailFragmentContainer, insertionDetailFragment)
                 .commit()
 
     }

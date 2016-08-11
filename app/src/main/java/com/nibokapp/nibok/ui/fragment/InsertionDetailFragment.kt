@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.inflate
-import kotlinx.android.synthetic.main.fragment_book_detail.*
+import kotlinx.android.synthetic.main.fragment_insertion_detail.*
 
-class BookDetailFragment : Fragment() {
+class InsertionDetailFragment : Fragment() {
 
     companion object {
-        private val TAG = BookDetailFragment::class.java.simpleName
+        private val TAG = InsertionDetailFragment::class.java.simpleName
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -26,6 +26,6 @@ class BookDetailFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.fragment_book_detail)
+        return container?.inflate(R.layout.fragment_insertion_detail)
     }
 }

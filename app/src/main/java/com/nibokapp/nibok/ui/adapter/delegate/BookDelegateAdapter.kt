@@ -10,7 +10,7 @@ import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.extension.toCurrency
-import com.nibokapp.nibok.ui.activity.BookDetailActivity
+import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 import kotlinx.android.synthetic.main.card_book.view.*
@@ -100,7 +100,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
         }
 
         private fun startDetailActivity() {
-            itemView.context.startActivity<BookDetailActivity>()
+            itemView.context.startActivity<InsertionDetailActivity>()
         }
 
         /**
