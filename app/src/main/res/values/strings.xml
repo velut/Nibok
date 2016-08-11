@@ -46,9 +46,12 @@
     <string name="title_activity_book_detail">BookDetailActivity</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Hints -->
     <string name="search_hint_book">Search by title, author, ISBN…</string>
     <string name="search_hint_message">Search…</string>
 
-    <string name="author_placeholder">Author info not available</string>
+    <!-- Placeholders -->
+    <string name="placeholder_no_info">Information not available</string>
+    <string name="placeholder_author_plural">Author</string>
 
 </resources>

@@ -52,7 +52,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="€ 14,00"
+                android:text="@string/placeholder_no_info"
                 tools:text="€ 14,00"/>
 
         </LinearLayout>
@@ -82,7 +82,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="Light wear"
+                android:text="@string/placeholder_no_info"
                 tools:text="Light wear"/>
 
         </LinearLayout>
@@ -113,7 +113,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="John Doe"
+                android:text="@string/placeholder_no_info"
                 tools:text="John Doe"/>
 
         </LinearLayout>
@@ -143,7 +143,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="Aug 06, 2016"
+                android:text="@string/placeholder_no_info"
                 tools:text="Aug 06, 2016"/>
 
         </LinearLayout>
@@ -188,7 +188,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="Introduction to Algorithms"
+                android:text="@string/placeholder_no_info"
                 tools:text="Introduction to Algorithms"/>
 
         </LinearLayout>
@@ -209,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/secondary_text"
                 android:textSize="18sp"
-                android:text="Author"
+                android:text="@string/placeholder_author_plural"
                 tools:text="Author"/>
 
             <TextView
@@ -219,7 +219,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="Thomas H. Cormen"
+                android:text="@string/placeholder_no_info"
                 tools:text=" Thomas H. Cormen"/>
 
         </LinearLayout>
@@ -249,7 +249,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="2009"
+                android:text="@string/placeholder_no_info"
                 tools:text="2009"/>
 
         </LinearLayout>
@@ -279,7 +279,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="Mit Press"
+                android:text="@string/placeholder_no_info"
                 tools:text="Mit Press"/>
 
         </LinearLayout>
@@ -309,7 +309,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/primary_text"
                 android:textSize="21sp"
-                android:text="978-0262533058"
+                android:text="@string/placeholder_no_info"
                 tools:text="978-0262533058"/>
 
         </LinearLayout>

@@ -12,7 +12,7 @@ import io.realm.RealmList
 class DbDataMapper {
 
     companion object {
-        val AUTHOR_PLACEHOLDER = R.string.author_placeholder
+        val AUTHOR_PLACEHOLDER = R.string.placeholder_no_info
         val THUMB_PLACEHOLDER = ""
     }
 
