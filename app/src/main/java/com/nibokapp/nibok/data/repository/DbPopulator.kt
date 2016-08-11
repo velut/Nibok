@@ -45,7 +45,7 @@ class DbPopulator {
         return author
     }
 
-    private fun genThumbnail(realm: Realm, url: String = "http://lorempixel.com/300/400/food/2/") : RealmString {
+    private fun genThumbnail(realm: Realm, url: String = "https://placehold.it/300x400") : RealmString {
         val thumbnail = realm.createObject(RealmString::class.java)
         thumbnail.value = url
         return thumbnail
