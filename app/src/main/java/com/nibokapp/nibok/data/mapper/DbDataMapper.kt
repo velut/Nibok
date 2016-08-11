@@ -16,6 +16,13 @@ class DbDataMapper {
         val THUMB_PLACEHOLDER = ""
     }
 
+    /**
+     * Build a DetailModel from insertion data.
+     *
+     * @param insertion the considered insertion
+     *
+     * @return a DetailModel instance containing detail data about the insertion
+     */
     fun convertInsertionToDetailDomain(insertion: Insertion) : DetailModel = with(insertion) {
         DetailModel(
                 id,
