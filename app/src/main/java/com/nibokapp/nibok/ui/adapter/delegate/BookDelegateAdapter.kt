@@ -13,6 +13,7 @@ import com.nibokapp.nibok.extension.toCurrency
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import kotlinx.android.synthetic.main.card_book.view.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -44,12 +45,15 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
     class BookVH(parent: ViewGroup) : RecyclerView.ViewHolder(
             parent.inflate(R.layout.card_book)) {
 
+        private var insertionId: Long? = null
+
         /**
          * Binds the itemView of the view holder to the given item.
          *
          * @param item the item of which the properties will be bound in the itemView
          */
         fun bind(item: BookModel) {
+            insertionId = item.insertionId
             addThumbnail(item.thumbnail)
             bindData(item)
             updateSaveButton(itemView.saveButton, item.saved)
@@ -100,7 +104,11 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
         }
 
         private fun startDetailActivity() {
-            itemView.context.startActivity<InsertionDetailActivity>()
+            insertionId?.let {
+                itemView.context.startActivity<InsertionDetailActivity>(
+                        InsertionDetailFragment.INSERTION_ID to it
+                )
+            }
         }
 
         /**
