@@ -19,13 +19,15 @@ class DbPopulator {
     fun populateDb() {
         withRealm {
             it.executeTransaction {
-                val authors = listOf(genAuthor(it,"John Doe"), genAuthor(it, "Bob Zu"))
-                val book = genBook(it, 1, "Title", authors, 2016, "Mit Press", "1234")
+                for (i in 1..50) {
+                    val authors = listOf(genAuthor(it,"John Doe $i"), genAuthor(it, "Bob Zu $i"))
+                    val book = genBook(it, i.toLong(), "Title $i", authors, 2016, "Mit Press", "$i")
 
-                val thumbnail = genThumbnail(it)
-                val seller = genSeller(it, 1, "Tom Seller")
+                    val thumbnail = genThumbnail(it)
+                    val seller = genSeller(it, i.toLong(), "Tom Seller $i")
 
-                genInsertion(it, 1, seller, book, 10.50f, "Light wear", thumbnail)
+                    genInsertion(it, i.toLong(), seller, book, 10.50f, "Light wear", thumbnail)
+                }
             }
         }
     }
