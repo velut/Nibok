@@ -2,8 +2,8 @@ package com.nibokapp.nibok.ui.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
+import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
@@ -14,7 +14,7 @@ import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
  * It delegates the managing of the items in the view to the respective adapters based on the
  * view type and adapter type.
  */
-class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     // The loading item singleton
     private val loadingItem = object : ViewType {
@@ -49,6 +49,10 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return delegateAdaptersMap[getItemViewType(position)]!!.onBindViewHolder(holder, items[position])
     }
 
+    override fun addItems(items: List<ViewType>) = addBooks(items)
+
+    override fun clearAndAddItems(items: List<ViewType>) = clearAndAddBooks(items)
+
     /**
      * Add books to the list of items to display.
      *
@@ -56,7 +60,7 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * @param addToTop true if the books have to be added at the start of the list of items,
      * false if they are to be inserted at the end of the list (before the loading item). Default true.
      */
-    fun addBooks(books: List<BookModel>, addToTop: Boolean = true) {
+    fun addBooks(books: List<ViewType>, addToTop: Boolean = true) {
         val insertPosition = if (addToTop) 0 else itemCount - 1 // at top or at loading item position
         val insertItemCount = books.size
 
@@ -69,7 +73,7 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      *
      * @param books the books to add to the items list
      */
-    fun clearAndAddBooks(books: List<BookModel>) {
+    fun clearAndAddBooks(books: List<ViewType>) {
         val oldItemCount = itemCount
         items.clear()
         notifyItemRangeRemoved(0, oldItemCount)

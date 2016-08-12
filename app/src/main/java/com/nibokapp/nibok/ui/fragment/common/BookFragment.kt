@@ -11,8 +11,9 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.adapter.BookAdapter
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
+import com.nibokapp.nibok.ui.adapter.common.ListAdapter
+import com.nibokapp.nibok.ui.adapter.common.ViewType
 
 /**
  * Base fragment for fragments representing books lists.
@@ -98,7 +99,11 @@ abstract class BookFragment : BaseFragment() {
 
     override fun handleOnQueryTextChange(query: String) {
         val results = BookManager.getBooksFromQuery(query)
-        (getSearchView().adapter as BookAdapter).clearAndAddBooks(results)
+        @Suppress("UNCHECKED_CAST")
+        val adapter = getSearchView().adapter as? ListAdapter<ViewType>
+        adapter?.let {
+            it.clearAndAddItems(results)
+        }
     }
 
     override fun handleOnSearchOpen() {
