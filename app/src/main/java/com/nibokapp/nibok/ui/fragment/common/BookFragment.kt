@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
+import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
@@ -23,6 +24,9 @@ abstract class BookFragment : BaseFragment() {
     companion object {
         private val TAG = BookFragment::class.java.simpleName
     }
+
+    private var oldQuery: String? = null
+    private var oldResults: List<BookModel>? = null
 
     /**
      * Get the layout used by the fragment.
@@ -98,7 +102,19 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
+        if (query.equals(oldQuery)) {
+            Log.d(TAG, "Same query as before, return")
+            return
+        }
+        oldQuery = query
+
         val results = BookManager.getBooksFromQuery(query)
+        if (results.equals(oldResults)) {
+            Log.d(TAG, "Same results as before, return")
+            return
+        }
+        oldResults = results
+
         @Suppress("UNCHECKED_CAST")
         val adapter = getSearchView().adapter as? ListAdapter<ViewType>
         adapter?.let {
