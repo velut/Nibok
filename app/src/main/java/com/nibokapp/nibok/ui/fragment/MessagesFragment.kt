@@ -42,5 +42,13 @@ class MessagesFragment : BaseFragment() {
         Log.i(TAG, "TODO")
     }
 
+    override fun handleOnSearchOpen() {
+        Log.i(TAG, "TODO")
+    }
+
+    override fun handleOnSearchClose() {
+        Log.i(TAG, "TODO")
+    }
+
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
 }

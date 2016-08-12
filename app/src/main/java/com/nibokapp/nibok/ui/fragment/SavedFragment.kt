@@ -30,6 +30,12 @@ class SavedFragment : BookFragment() {
 
     override fun onScrollDownLoader() = requestOlderSavedBooks()
 
+    override fun getSearchViewLayoutManager() = getBooksViewLayoutManager()
+
+    override fun getSearchView(): RecyclerView = getBooksView()
+
+    override fun getSearchViewAdapter() = getBooksViewAdapter()
+
     override fun handleRefreshAction() {
         Log.i(TAG, "Refreshing")
     }

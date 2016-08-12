@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.fragment.common
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
@@ -49,7 +50,8 @@ abstract class BaseFragment : Fragment() {
         inflater?.inflate(R.menu.toolbar_menu, menu)
 
         // Find the search view
-        val searchView = menu?.findItem(R.id.searchAction)?.actionView as SearchView
+        val searchAction = menu?.findItem(R.id.searchAction)
+        val searchView = searchAction?.actionView as SearchView
 
         // Add search hint
         searchView.queryHint = getSearchHint()
@@ -71,6 +73,26 @@ abstract class BaseFragment : Fragment() {
                             handleOnQueryTextChange(it)
                         }
                         return false
+                    }
+                }
+        )
+
+        /* Add listeners for when the search view is opened and closed.
+         * This is a workaround because the setOnCloseListener method does not get invoked by Android.
+         * The short way should be:
+         *  searchView.setOnSearchClickListener { handleOnSearchOpen() }
+         *  searchView.setOnCloseListener { handleOnSearchClose(); false }
+         */
+        MenuItemCompat.setOnActionExpandListener(searchAction,
+                object : MenuItemCompat.OnActionExpandListener {
+                    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                        handleOnSearchOpen()
+                        return true
+                    }
+
+                    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                        handleOnSearchClose()
+                        return true
                     }
                 }
         )
@@ -118,6 +140,16 @@ abstract class BaseFragment : Fragment() {
      * Handle queries when text is changed.
      */
     abstract fun handleOnQueryTextChange(query: String)
+
+    /**
+     * Handle the opening of the search.
+     */
+    abstract fun handleOnSearchOpen()
+
+    /**
+     * Handle the closing of the search.
+     */
+    abstract fun handleOnSearchClose()
 
     /**
      * Get the string to provide search hints.

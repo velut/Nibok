@@ -51,6 +51,27 @@ abstract class BookFragment : BaseFragment() {
     abstract fun getBooksViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
+     * Get the layout manager used by the search view.
+     *
+     * @return the layout manager used by the search view
+     */
+    abstract fun getSearchViewLayoutManager() : LinearLayoutManager
+
+    /**
+     * Get the search view defined in the fragment's layout.
+     *
+     * @return the search view defined in the fragment's layout.
+     */
+    abstract fun getSearchView() : RecyclerView
+
+    /**
+     * Get the adapter used by the search view.
+     *
+     * @return the adapter used by the search view
+     */
+    abstract fun getSearchViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
+
+    /**
      * The loading function called when scrolling down the books view.
      */
     abstract fun onScrollDownLoader()
@@ -76,6 +97,19 @@ abstract class BookFragment : BaseFragment() {
 
     override fun handleOnQueryTextChange(query: String) {
         BookManager.getBooksFromQuery(query)
+    }
+
+    override fun handleOnSearchOpen() {
+        Log.d(TAG, "Search opened. Hide BooksView and show SearchView")
+        getBooksView().visibility = View.GONE
+        setupSearchView()
+        getSearchView().visibility = View.VISIBLE
+    }
+
+    override fun handleOnSearchClose() {
+        Log.d(TAG, "Search closed. Hide SearchView and show BooksView")
+        getSearchView().visibility = View.GONE
+        getBooksView().visibility = View.VISIBLE
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
@@ -119,5 +153,6 @@ abstract class BookFragment : BaseFragment() {
     private fun setupBooksView() =
             setupView(getBooksView(), getBooksViewLayoutManager(), getBooksViewAdapter(), true)
 
-
+    private fun setupSearchView() =
+            setupView(getSearchView(), getSearchViewLayoutManager(), getSearchViewAdapter(), false)
 }

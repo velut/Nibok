@@ -25,6 +25,12 @@ class SellingFragment : BookFragment() {
 
     override fun getBooksViewAdapter() = BookAdapter()
 
+    override fun getSearchViewLayoutManager() = getBooksViewLayoutManager()
+
+    override fun getSearchView(): RecyclerView = getBooksView()
+
+    override fun getSearchViewAdapter() = getBooksViewAdapter()
+
     override fun onScrollDownLoader() {
         Log.i(TAG, "Loading more books being sold")
     }

@@ -32,6 +32,12 @@ class LatestFragment : BookFragment() {
 
     override fun onScrollDownLoader() = requestOlderBooks()
 
+    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getSearchView(): RecyclerView = searchResultsList
+
+    override fun getSearchViewAdapter() = BookAdapter()
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
