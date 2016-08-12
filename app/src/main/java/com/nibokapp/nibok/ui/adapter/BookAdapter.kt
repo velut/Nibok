@@ -69,8 +69,7 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      */
     fun removeLoadingItem() {
         if (items.contains(loadingItem)) {
-            // Loading item is always the last item in the list
-            val loadingItemPosition = itemCount - 1
+            val loadingItemPosition = items.indexOf(loadingItem)
             items.remove(loadingItem)
             notifyItemRemoved(loadingItemPosition)
         }
