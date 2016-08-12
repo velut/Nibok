@@ -81,34 +81,43 @@ abstract class BookFragment : BaseFragment() {
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
     /**
-     * Initial setup of the books view.
+     * Initial setup of a recycler view.
+     * Assign layout manager and adapter, add infinite scroll listener if requested.
      *
-     * Assign layout manager and adapter, add infinite scroll listener.
+     * @param view the recycler view to setup
+     * @param viewLM the linear layout manager of the view
+     * @param viewAdapter the adapter for the view
+     * @param hasCustomScrollListener true if a custom scroll listener has to be added
      */
-    private fun setupBooksView() {
+    private fun setupView(view: RecyclerView,
+                          viewLM: LinearLayoutManager,
+                          viewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+                          hasCustomScrollListener: Boolean) {
 
-
-        val lm = getBooksViewLayoutManager()
-        val booksView = getBooksView()
-        val booksViewName = getBooksView().getName()
-        Log.d(TAG, "Setting up Books View: " + booksViewName)
-        booksView.apply {
+        val viewName = view.getName()
+        Log.d(TAG, "Setting up View: " + viewName)
+        view.apply {
             // Performance improvement
             setHasFixedSize(true)
             // Assign layout manager
-            layoutManager = lm
+            layoutManager = viewLM
             // Assign adapter
             if (adapter == null) {
-                adapter = getBooksViewAdapter()
+                adapter = viewAdapter
             }
-            // Add infinite scroll listener
-            clearOnScrollListeners()
-            addOnScrollListener(InfiniteScrollListener(lm) {
-                // Custom loading function executed on scroll down
-                onScrollDownLoader()
-            })
+            if (hasCustomScrollListener) {
+                // Add infinite scroll listener
+                clearOnScrollListeners()
+                addOnScrollListener(InfiniteScrollListener(viewLM) {
+                    // Custom loading function executed on scroll down
+                    onScrollDownLoader()
+                })
+            }
         }
     }
+
+    private fun setupBooksView() =
+            setupView(getBooksView(), getBooksViewLayoutManager(), getBooksViewAdapter(), true)
 
 
 }
