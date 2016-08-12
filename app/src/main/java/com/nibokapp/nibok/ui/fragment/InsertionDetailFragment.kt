@@ -11,6 +11,7 @@ import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.domain.model.DetailModel
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.toCurrency
+import com.nibokapp.nibok.extension.toSimpleDateString
 import kotlinx.android.synthetic.main.content_insertion_detail.*
 import kotlinx.android.synthetic.main.fragment_insertion_detail.*
 
@@ -48,7 +49,7 @@ class InsertionDetailFragment : Fragment() {
         insertionBookPrice.text = item.bookPrice.toCurrency()
         insertionBookCondition.text = item.bookCondition
         insertionSoldBy.text = item.sellerName
-        insertionDate.text = item.insertionDate.toString()
+        insertionDate.text = item.insertionDate.toSimpleDateString()
 
         // Book details
         detailBookTitle.text = item.bookTitle
