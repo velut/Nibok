@@ -11,6 +11,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
+import com.nibokapp.nibok.ui.adapter.BookAdapter
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 
 /**
@@ -96,7 +97,8 @@ abstract class BookFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
-        BookManager.getBooksFromQuery(query)
+        val results = BookManager.getBooksFromQuery(query)
+        (getSearchView().adapter as BookAdapter).clearAndAddBooks(results)
     }
 
     override fun handleOnSearchOpen() {

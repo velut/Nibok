@@ -65,6 +65,18 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     /**
+     * Clear the items list and add the given books.
+     *
+     * @param books the books to add to the items list
+     */
+    fun clearAndAddBooks(books: List<BookModel>) {
+        val oldItemCount = itemCount
+        items.clear()
+        notifyItemRangeRemoved(0, oldItemCount)
+        addBooks(books)
+    }
+
+    /**
      * Remove the loading item from the list of items to be displayed.
      */
     fun removeLoadingItem() {
