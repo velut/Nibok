@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.data.repository
 
+import android.util.Log
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.Seller
@@ -13,10 +14,15 @@ import java.util.*
  */
 class DbPopulator {
 
+    companion object {
+        private val TAG = DbPopulator::class.java.simpleName
+    }
+
     /**
      * Add some data to the local db.
      */
     fun populateDb() {
+        Log.d(TAG, "Populating DB with test data")
         withRealm {
             it.executeTransaction {
                 for (i in 1..50) {
