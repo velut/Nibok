@@ -28,6 +28,9 @@ abstract class BookFragment : BaseFragment() {
     private var oldQuery: String? = null
     private var oldResults: List<BookModel>? = null
 
+    private var listView: RecyclerView? = null
+    private var searchResultsView: RecyclerView? = null
+
     /**
      * Get the layout used by the fragment.
      *
@@ -89,6 +92,7 @@ abstract class BookFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupBooksView()
+        listView = getBooksView()
     }
 
     /**
@@ -124,15 +128,16 @@ abstract class BookFragment : BaseFragment() {
 
     override fun handleOnSearchOpen() {
         Log.d(TAG, "Search opened. Hide BooksView and show SearchView")
-        getBooksView().visibility = View.GONE
+        listView?.visibility = View.GONE
         setupSearchView()
-        getSearchView().visibility = View.VISIBLE
+        searchResultsView = getSearchView()
+        searchResultsView?.visibility = View.VISIBLE
     }
 
     override fun handleOnSearchClose() {
         Log.d(TAG, "Search closed. Hide SearchView and show BooksView")
-        getSearchView().visibility = View.GONE
-        getBooksView().visibility = View.VISIBLE
+        searchResultsView?.visibility = View.GONE
+        listView?.visibility = View.VISIBLE
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
