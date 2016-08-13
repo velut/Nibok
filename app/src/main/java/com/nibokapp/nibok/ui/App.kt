@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui
 
 import android.app.Application
 import com.nibokapp.nibok.data.repository.DbPopulator
+import com.nibokapp.nibok.data.repository.UserManager
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlin.properties.Delegates
@@ -27,6 +28,9 @@ class App : Application() {
 
         // Set the Realm configuration
         Realm.setDefaultConfiguration(realmConfig)
+
+        // Create the local user
+        UserManager().createUser()
 
         // Populate the DB with test data
         DbPopulator().populateDb()
