@@ -17,7 +17,7 @@ import org.jetbrains.anko.toast
  *
  * It sets up the menu and creates stubs for handling menu actions.
  */
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), VisibleFragment {
 
     companion object {
         val TAG: String = BaseFragment::class.java.simpleName
@@ -25,6 +25,9 @@ abstract class BaseFragment : Fragment() {
 
     // Access to the realm DB, shared with subclasses
     protected var realm: Realm? = null
+
+    protected var menuSearchAction: MenuItem? = null
+    protected var searchView: SearchView? = null
 
     override fun onStart() {
         super.onStart()
@@ -45,19 +48,23 @@ abstract class BaseFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    override fun onBecomeVisible() {
+        Log.d(TAG, "Fragment became visible")
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.toolbar_menu, menu)
 
-        // Find the search view
-        val searchAction = menu?.findItem(R.id.searchAction)
-        val searchView = searchAction?.actionView as SearchView
+        // Find the search action menu item and get the search view
+        menuSearchAction = menu?.findItem(R.id.searchAction)
+        searchView = menuSearchAction?.actionView as? SearchView
 
         // Add search hint
-        searchView.queryHint = getSearchHint()
+        searchView?.queryHint = getSearchHint()
 
         // Add listener to search view input
-        searchView.setOnQueryTextListener(
+        searchView?.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         Log.i(TAG, "Search submit: $query")
@@ -83,7 +90,7 @@ abstract class BaseFragment : Fragment() {
          *  searchView.setOnSearchClickListener { handleOnSearchOpen() }
          *  searchView.setOnCloseListener { handleOnSearchClose(); false }
          */
-        MenuItemCompat.setOnActionExpandListener(searchAction,
+        MenuItemCompat.setOnActionExpandListener(menuSearchAction,
                 object : MenuItemCompat.OnActionExpandListener {
                     override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                         handleOnSearchOpen()

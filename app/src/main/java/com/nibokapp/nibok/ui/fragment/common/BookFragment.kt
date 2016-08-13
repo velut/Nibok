@@ -95,6 +95,11 @@ abstract class BookFragment : BaseFragment() {
         listView = getBooksView()
     }
 
+    override fun onBecomeVisible() {
+        super.onBecomeVisible()
+        showListView()
+    }
+
     /**
      * Scroll back to the top of the books view.
      */
@@ -136,8 +141,7 @@ abstract class BookFragment : BaseFragment() {
 
     override fun handleOnSearchClose() {
         Log.d(TAG, "Search closed. Hide SearchView and show BooksView")
-        searchResultsView?.visibility = View.GONE
-        listView?.visibility = View.VISIBLE
+        showListView()
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
@@ -183,4 +187,12 @@ abstract class BookFragment : BaseFragment() {
 
     private fun setupSearchView() =
             setupView(getSearchView(), getSearchViewLayoutManager(), getSearchViewAdapter(), false)
+
+    /**
+     * Hide search results view (if present) and show list view (if present)
+     */
+    private fun showListView() {
+        searchResultsView?.visibility = View.GONE
+        listView?.visibility = View.VISIBLE
+    }
 }

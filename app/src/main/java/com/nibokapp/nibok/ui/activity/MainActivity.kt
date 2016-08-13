@@ -12,6 +12,7 @@ import com.nibokapp.nibok.ui.fragment.MessagesFragment
 import com.nibokapp.nibok.ui.fragment.SavedFragment
 import com.nibokapp.nibok.ui.fragment.SellingFragment
 import com.nibokapp.nibok.ui.fragment.common.BaseFragment
+import com.nibokapp.nibok.ui.fragment.common.VisibleFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -44,6 +45,20 @@ class MainActivity : AppCompatActivity() {
         )
         val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         viewPager.adapter = adapter
+        viewPager.addOnPageChangeListener(
+                object : ViewPager.OnPageChangeListener {
+                    override fun onPageSelected(position: Int) {
+                        val fragment = adapter.instantiateItem(viewPager, position) as? VisibleFragment
+                        fragment?.onBecomeVisible()
+                    }
+
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    }
+
+                    override fun onPageScrollStateChanged(state: Int) {
+                    }
+                }
+        )
     }
 
     class ViewPagerAdapter(fm: FragmentManager, val fragments: Map<String, BaseFragment>) : FragmentPagerAdapter(fm) {
