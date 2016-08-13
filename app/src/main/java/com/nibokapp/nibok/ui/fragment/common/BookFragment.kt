@@ -161,7 +161,7 @@ abstract class BookFragment : BaseFragment() {
                           hasCustomScrollListener: Boolean) {
 
         val viewName = view.getName()
-        Log.d(TAG, "Setting up View: " + viewName)
+        Log.d(TAG, "Setting up View: $viewName")
         view.apply {
             // Performance improvement
             setHasFixedSize(true)

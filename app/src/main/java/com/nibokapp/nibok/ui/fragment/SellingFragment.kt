@@ -38,4 +38,6 @@ class SellingFragment : BookFragment() {
     override fun handleRefreshAction() {
         Log.i(TAG, "Refreshing")
     }
+
+    override fun getFragmentName() : String = TAG
 }

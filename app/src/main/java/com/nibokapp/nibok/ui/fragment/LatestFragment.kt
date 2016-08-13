@@ -38,6 +38,8 @@ class LatestFragment : BookFragment() {
 
     override fun getSearchViewAdapter() = BookAdapter()
 
+    override fun getFragmentName() : String = TAG
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

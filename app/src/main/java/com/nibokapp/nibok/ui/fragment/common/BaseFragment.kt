@@ -49,7 +49,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
     }
 
     override fun onBecomeVisible() {
-        Log.d(TAG, "Fragment became visible")
+        Log.d(TAG, "${getFragmentName()} became visible")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -67,7 +67,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
         searchView?.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        Log.i(TAG, "Search submit: $query")
+                        Log.d(TAG, "Search submit: $query")
                         query?.let {
                             handleOnQueryTextSubmit(it)
                         }
@@ -75,7 +75,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        Log.i(TAG, "Search change to: $newText")
+                        Log.d(TAG, "Search change to: $newText")
                         newText?.let {
                             handleOnQueryTextChange(it)
                         }
@@ -125,7 +125,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
      * Handle the search action.
      */
     open fun handleSearchAction() {
-        Log.i(TAG, "Searching")
+        Log.d(TAG, "Searching")
     }
 
     /**
@@ -164,6 +164,13 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
      * @return the string with the search hint
      */
     abstract fun getSearchHint() : String
+
+    /**
+     * Get the name of the actual child fragment instance of BaseFragment.
+     *
+     * @return the name of the fragment instance
+     */
+    abstract fun getFragmentName() : String
 
     /**
      * Handle the settings action.

@@ -51,4 +51,6 @@ class MessagesFragment : BaseFragment() {
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
+
+    override fun getFragmentName() : String = TAG
 }

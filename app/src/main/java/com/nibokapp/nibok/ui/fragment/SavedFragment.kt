@@ -40,6 +40,8 @@ class SavedFragment : BookFragment() {
         Log.i(TAG, "Refreshing")
     }
 
+    override fun getFragmentName() : String = TAG
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val latestBooks = BookManager.getSavedBooksList()
