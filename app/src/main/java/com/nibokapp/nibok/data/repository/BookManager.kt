@@ -33,14 +33,18 @@ object BookManager {
      *
      * @return a DetailModel instance containing detailed data about the insertion
      */
-    fun getInsertionDetails(insertionId: Long) : DetailModel =
-            DbDataMapper().convertInsertionToDetailDomain(
-                    queryOneWithRealm {
-                        it.where(Insertion::class.java)
-                                .equalTo("id", insertionId)
-                                .findFirst()
-                    }
-            )
+    fun getInsertionDetails(insertionId: Long) : DetailModel? {
+        val insertion = queryOneWithRealm {
+                            it.where(Insertion::class.java)
+                            .equalTo("id", insertionId)
+                            .findFirst()
+        }
+        var detail: DetailModel? = null
+        insertion?.let {
+            detail = DbDataMapper().convertInsertionToDetailDomain(it)
+        }
+        return detail
+    }
 
     /**
      * Get the list of books where the title, authors, publisher or isbn contain the given query.

@@ -34,7 +34,8 @@ class InsertionDetailFragment : Fragment() {
         arguments?.let {
             val insertionId = it.getLong(INSERTION_ID)
             if (!insertionId.equals(0L)) { // Exclude default case of getLong()
-                bindData(BookManager.getInsertionDetails(insertionId))
+                val data = BookManager.getInsertionDetails(insertionId)
+                data?.let { bindData(it) }
             }
         }
     }
