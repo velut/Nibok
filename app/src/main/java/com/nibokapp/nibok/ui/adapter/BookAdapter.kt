@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.ui.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
 import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
@@ -15,6 +16,10 @@ import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
  * view type and adapter type.
  */
 class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
+
+    companion object {
+        private val TAG = BookAdapter::class.java.simpleName
+    }
 
     // The loading item singleton
     private val loadingItem = object : ViewType {
@@ -84,10 +89,11 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter
      * Remove the loading item from the list of items to be displayed.
      */
     fun removeLoadingItem() {
-        if (items.contains(loadingItem)) {
-            val loadingItemPosition = items.indexOf(loadingItem)
-            items.remove(loadingItem)
+        val loadingItemPosition = items.indexOf(loadingItem)
+        if (loadingItemPosition != -1) {
+            items.removeAt(loadingItemPosition)
             notifyItemRemoved(loadingItemPosition)
+            Log.d(TAG, "Removed loading item")
         }
     }
 
