@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
@@ -56,7 +57,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
             insertionId = item.insertionId
             addThumbnail(item.thumbnail)
             bindData(item)
-            updateSaveButton(itemView.saveButton, item.saved)
+            updateSaveButton(itemView.saveButton, item.saved) //TODO Correctly update save button (UserManager)
             addSaveButtonListener(item)
             addThumbnailListener()
             addCardListener()
@@ -121,7 +122,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          */
         private fun addSaveButtonListener(item: BookModel) = with(itemView) {
             saveButton.setOnClickListener {
-                val saved = toggleItemSave(item)
+                val saved = toggleItemSave(item.insertionId)
                 updateSaveButton(saveButton, saved)
                 if (saved) {
                     saveButton.animateBounce()
@@ -135,13 +136,10 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
         /**
          * Toggle the save status of the considered item.
          *
-         * @param item the item subject to the toggle of the save status
+         * @param itemId the id of the item subject to the toggle of the save status
          */
-        private fun toggleItemSave(item: BookModel): Boolean {
-            // TODO
-            item.saved = !item.saved
-            return item.saved
-        }
+        private fun toggleItemSave(itemId: Long) : Boolean =
+                UserManager().toggleSaveInsertion(itemId)
 
         /**
          * Update the graphics of the save button given the saved status.
