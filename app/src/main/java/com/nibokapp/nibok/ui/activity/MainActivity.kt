@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.addOnPageChangeListener(
                 object : ViewPager.OnPageChangeListener {
                     override fun onPageSelected(position: Int) {
-                        val fragment = adapter.instantiateItem(viewPager, position) as? VisibleFragment
+                        val fragment = adapter.getItem(position) as? VisibleFragment
                         fragment?.onBecomeVisible()
                     }
 
