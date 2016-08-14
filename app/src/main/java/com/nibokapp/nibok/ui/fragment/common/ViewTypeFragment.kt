@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
@@ -17,18 +15,20 @@ import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 
 /**
- * Base fragment for fragments representing books lists.
+ * Base fragment for fragments representing ViewTypes.
+ *
+ * It handles the creation of the main view and of the search view and querying.
  */
-abstract class BookFragment : BaseFragment() {
+abstract class ViewTypeFragment : BaseFragment() {
 
     companion object {
-        private val TAG = BookFragment::class.java.simpleName
+        private val TAG = ViewTypeFragment::class.java.simpleName
     }
 
     private var oldQuery: String? = null
-    private var oldResults: List<BookModel>? = null
+    private var oldResults: List<ViewType>? = null
 
-    private var listView: RecyclerView? = null
+    private var mainView: RecyclerView? = null
     private var searchResultsView: RecyclerView? = null
     private var currentView: RecyclerView? = null
 
@@ -40,32 +40,30 @@ abstract class BookFragment : BaseFragment() {
     abstract fun getFragmentLayout() : Int
 
     /**
-     * Get the layout manager used by the books view.
+     * Get the main view defined in the fragment's layout.
      *
-     * @return the layout manager used by the books view
+     * @return the main view defined in the fragment's layout.
      */
-    abstract fun getBooksViewLayoutManager() : LinearLayoutManager
+    abstract fun getMainView() : RecyclerView
 
     /**
-     * Get the books view defined in the fragment's layout.
+     * Get the layout manager used by the main view.
      *
-     * @return the books view defined in the fragment's layout.
+     * @return the layout manager used by the main view
      */
-    abstract fun getBooksView() : RecyclerView
+    abstract fun getMainViewLayoutManager() : LinearLayoutManager
 
     /**
-     * Get the adapter used by the books view.
+     * Get the adapter used by the main view.
      *
-     * @return the adapter used by the books view
+     * @return the adapter used by the main view
      */
-    abstract fun getBooksViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
+    abstract fun getMainViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
-     * Get the layout manager used by the search view.
-     *
-     * @return the layout manager used by the search view
+     * The initial set of data to display in the main view.
      */
-    abstract fun getSearchViewLayoutManager() : LinearLayoutManager
+    abstract fun getMainViewData() : List<ViewType>
 
     /**
      * Get the search view defined in the fragment's layout.
@@ -75,6 +73,13 @@ abstract class BookFragment : BaseFragment() {
     abstract fun getSearchView() : RecyclerView
 
     /**
+     * Get the layout manager used by the search view.
+     *
+     * @return the layout manager used by the search view
+     */
+    abstract fun getSearchViewLayoutManager() : LinearLayoutManager
+
+    /**
      * Get the adapter used by the search view.
      *
      * @return the adapter used by the search view
@@ -82,9 +87,17 @@ abstract class BookFragment : BaseFragment() {
     abstract fun getSearchViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
-     * The loading function called when scrolling down the books view.
+     * The method that given a query returns a list of ViewType results.
+     *
+     * @return the list of ViewType representing the results of the query
      */
-    abstract fun onScrollDownLoader()
+    abstract fun searchStrategy(query: String) : List<ViewType>
+
+    /**
+     * The loading function called when scrolling down the main view.
+     */
+    abstract fun onMainViewScrollDownLoader()
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(getFragmentLayout())
@@ -92,17 +105,23 @@ abstract class BookFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupBooksView()
-        listView = getBooksView()
+        setupMainView()
+        mainView = getMainView()
+        val mainViewData = getMainViewData()
+        @Suppress("UNCHECKED_CAST")
+        val adapter = mainView?.adapter as? ListAdapter<ViewType>
+        adapter?.let {
+            it.clearAndAddItems(mainViewData)
+        }
     }
 
     override fun onBecomeVisible() {
         super.onBecomeVisible()
-        showListView()
+        showMainView()
     }
 
     /**
-     * Scroll back to the top of the books view.
+     * Scroll back to the top of the current view.
      */
     override fun handleBackToTopAction() {
         currentView?.let {
@@ -120,7 +139,7 @@ abstract class BookFragment : BaseFragment() {
         }
         oldQuery = query
 
-        val results = BookManager.getBooksFromQuery(query)
+        val results = searchStrategy(query)
         if (results.equals(oldResults)) {
             Log.d(TAG, "Same results as before, return")
             return
@@ -128,27 +147,28 @@ abstract class BookFragment : BaseFragment() {
         oldResults = results
 
         @Suppress("UNCHECKED_CAST")
-        val adapter = getSearchView().adapter as? ListAdapter<ViewType>
+        val adapter = searchResultsView?.adapter as? ListAdapter<ViewType>
         adapter?.let {
             it.clearAndAddItems(results)
         }
     }
 
     override fun handleOnSearchOpen() {
-        Log.d(TAG, "Search opened. Hide BooksView and show SearchView")
-        listView?.visibility = View.GONE
+        Log.d(TAG, "Search opened. Hide MainView and show SearchView")
+        mainView?.visibility = View.GONE
         setupSearchView()
         searchResultsView = getSearchView()
         searchResultsView?.visibility = View.VISIBLE
+        // Update the current view to be the search results view
         currentView = searchResultsView
     }
 
     override fun handleOnSearchClose() {
-        Log.d(TAG, "Search closed. Hide SearchView and show BooksView")
-        showListView()
+        Log.d(TAG, "Search closed. Hide SearchView and show MainView")
+        showMainView()
     }
 
-    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+    override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
 
     /**
      * Initial setup of a recycler view.
@@ -180,24 +200,25 @@ abstract class BookFragment : BaseFragment() {
                 clearOnScrollListeners()
                 addOnScrollListener(InfiniteScrollListener(viewLM) {
                     // Custom loading function executed on scroll down
-                    onScrollDownLoader()
+                    onMainViewScrollDownLoader()
                 })
             }
         }
     }
 
-    private fun setupBooksView() =
-            setupView(getBooksView(), getBooksViewLayoutManager(), getBooksViewAdapter(), true)
+    private fun setupMainView() =
+            setupView(getMainView(), getMainViewLayoutManager(), getMainViewAdapter(), true)
 
     private fun setupSearchView() =
             setupView(getSearchView(), getSearchViewLayoutManager(), getSearchViewAdapter(), false)
 
     /**
-     * Hide search results view (if present) and show list view (if present)
+     * Hide search results view (if present) and show main view (if present).
+     * Update currentView to be the mainView.
      */
-    private fun showListView() {
+    private fun showMainView() {
         searchResultsView?.visibility = View.GONE
-        listView?.visibility = View.VISIBLE
-        currentView = listView
+        mainView?.visibility = View.VISIBLE
+        currentView = mainView
     }
 }

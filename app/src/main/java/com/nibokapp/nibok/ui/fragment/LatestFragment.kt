@@ -1,13 +1,13 @@
 package com.nibokapp.nibok.ui.fragment
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.adapter.BookAdapter
-import com.nibokapp.nibok.ui.fragment.common.BookFragment
+import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.toast
 
@@ -16,7 +16,7 @@ import org.jetbrains.anko.toast
  *
  * It fetches the latest books published on the platform, it requests newer and older books.
  */
-class LatestFragment : BookFragment() {
+class LatestFragment : ViewTypeFragment() {
 
     companion object {
         private val TAG = LatestFragment::class.java.simpleName
@@ -24,29 +24,26 @@ class LatestFragment : BookFragment() {
 
     override fun getFragmentLayout() = R.layout.fragment_latest
 
-    override fun getBooksViewLayoutManager() = LinearLayoutManager(context)
+    override fun getMainView() : RecyclerView = latestBooksList
 
-    override fun getBooksView() : RecyclerView = latestBooksList
+    override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getBooksViewAdapter() = BookAdapter()
+    override fun getMainViewAdapter() = BookAdapter()
 
-    override fun onScrollDownLoader() = requestOlderBooks()
+    override fun getMainViewData(): List<ViewType> = BookManager.getFeedBooksList()
 
-    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+    override fun onMainViewScrollDownLoader() = requestOlderBooks()
 
     override fun getSearchView(): RecyclerView = searchResultsList
 
+    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+
     override fun getSearchViewAdapter() = BookAdapter()
+
+    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
     override fun getFragmentName() : String = TAG
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        Log.d(TAG, "Fetching latest books")
-        val latestBooks = BookManager.getFeedBooksList()
-        (latestBooksList.adapter as BookAdapter).addBooks(latestBooks)
-    }
 
     override fun handleRefreshAction() {
         // If new books are available add them to the list and return to the top

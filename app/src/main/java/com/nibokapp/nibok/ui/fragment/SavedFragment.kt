@@ -1,20 +1,20 @@
 package com.nibokapp.nibok.ui.fragment
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.adapter.BookAdapter
-import com.nibokapp.nibok.ui.fragment.common.BookFragment
+import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_saved.*
 import org.jetbrains.anko.toast
 
 /**
  * Fragment managing the books saved by the user.
  */
-class SavedFragment : BookFragment() {
+class SavedFragment : ViewTypeFragment() {
 
     companion object {
         private val TAG = SavedFragment::class.java.simpleName
@@ -22,31 +22,29 @@ class SavedFragment : BookFragment() {
 
     override fun getFragmentLayout() = R.layout.fragment_saved
 
-    override fun getBooksViewLayoutManager() = LinearLayoutManager(context)
+    override fun getMainView() : RecyclerView = savedBooksList
 
-    override fun getBooksView() : RecyclerView = savedBooksList
+    override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getBooksViewAdapter() = BookAdapter()
+    override fun getMainViewAdapter() = BookAdapter()
 
-    override fun onScrollDownLoader() = requestOlderSavedBooks()
+    override fun getMainViewData(): List<ViewType> = BookManager.getSavedBooksList()
 
-    override fun getSearchViewLayoutManager() = getBooksViewLayoutManager()
+    override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
 
-    override fun getSearchView(): RecyclerView = getBooksView()
+    override fun getSearchView(): RecyclerView = getMainView()
 
-    override fun getSearchViewAdapter() = getBooksViewAdapter()
+    override fun getSearchViewLayoutManager() = getMainViewLayoutManager()
+
+    override fun getSearchViewAdapter() = getMainViewAdapter()
+
+    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
     override fun handleRefreshAction() {
         Log.i(TAG, "Refreshing")
     }
 
     override fun getFragmentName() : String = TAG
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val latestBooks = BookManager.getSavedBooksList()
-        (getBooksView().adapter as BookAdapter).addBooks(latestBooks)
-    }
 
     /**
      * Function passed to the infinite scroll listener to load older saved books.
@@ -57,7 +55,7 @@ class SavedFragment : BookFragment() {
      * otherwise a message is shown and the loading item is removed.
      */
     private fun requestOlderSavedBooks() {
-        val bookAdapter = getBooksView().adapter as BookAdapter
+        val bookAdapter = getMainView().adapter as BookAdapter
 
         if (BookManager.hasOlderSavedBooks()) {
             Log.i(TAG, "Requesting older saved books on scroll down")
