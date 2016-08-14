@@ -30,6 +30,7 @@ abstract class BookFragment : BaseFragment() {
 
     private var listView: RecyclerView? = null
     private var searchResultsView: RecyclerView? = null
+    private var currentView: RecyclerView? = null
 
     /**
      * Get the layout used by the fragment.
@@ -104,8 +105,10 @@ abstract class BookFragment : BaseFragment() {
      * Scroll back to the top of the books view.
      */
     override fun handleBackToTopAction() {
-        Log.d(TAG, "Going back to top")
-        getBooksView().layoutManager.scrollToPosition(0)
+        currentView?.let {
+            Log.d(TAG, "Going back to top")
+            it.layoutManager.scrollToPosition(0)
+        }
     }
 
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
@@ -137,6 +140,7 @@ abstract class BookFragment : BaseFragment() {
         setupSearchView()
         searchResultsView = getSearchView()
         searchResultsView?.visibility = View.VISIBLE
+        currentView = searchResultsView
     }
 
     override fun handleOnSearchClose() {
@@ -194,5 +198,6 @@ abstract class BookFragment : BaseFragment() {
     private fun showListView() {
         searchResultsView?.visibility = View.GONE
         listView?.visibility = View.VISIBLE
+        currentView = listView
     }
 }
