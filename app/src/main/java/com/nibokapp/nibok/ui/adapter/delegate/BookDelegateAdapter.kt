@@ -57,7 +57,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
             insertionId = item.insertionId
             addThumbnail(item.thumbnail)
             bindData(item)
-            updateSaveButton(itemView.saveButton, item.saved) //TODO Correctly update save button (UserManager)
+            updateSaveButton(itemView.saveButton, item.saved)
             addSaveButtonListener(item)
             addThumbnailListener()
             addCardListener()
@@ -122,12 +122,12 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          */
         private fun addSaveButtonListener(item: BookModel) = with(itemView) {
             saveButton.setOnClickListener {
-                val saved = toggleItemSave(item.insertionId)
-                updateSaveButton(saveButton, saved)
-                if (saved) {
+                item.saved = toggleItemSave(item.insertionId)
+                updateSaveButton(saveButton, item.saved)
+                if (item.saved) {
                     saveButton.animateBounce()
                 }
-                val toastMessage = if (saved) R.string.book_saved_to_collection
+                val toastMessage = if (item.saved) R.string.book_saved_to_collection
                 else R.string.book_removed_from_collection
                 context.toast(toastMessage)
             }
@@ -139,7 +139,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          * @param itemId the id of the item subject to the toggle of the save status
          */
         private fun toggleItemSave(itemId: Long) : Boolean =
-                UserManager().toggleSaveInsertion(itemId)
+                UserManager.toggleSaveInsertion(itemId)
 
         /**
          * Update the graphics of the save button given the saved status.

@@ -30,9 +30,12 @@ class App : Application() {
         Realm.setDefaultConfiguration(realmConfig)
 
         // Create the local user
-        UserManager().createUser()
+        UserManager.createUser()
 
         // Populate the DB with test data
         DbPopulator().populateDb()
+
+        // For testing
+        UserManager.toggleSaveInsertion(1)
     }
 }

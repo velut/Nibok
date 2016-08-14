@@ -3,6 +3,7 @@ package com.nibokapp.nibok.data.mapper
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.common.RealmString
+import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.domain.model.DetailModel
 import com.nibokapp.nibok.extension.toStringList
@@ -64,8 +65,8 @@ class DbDataMapper {
                     it.year,
                     bookCondition,
                     bookPrice,
-                    getThumbnail(bookImagesSources)
-                    // TODO add correct saved status
+                    getThumbnail(bookImagesSources),
+                    UserManager.isInsertionSaved(id)
             )
         }
     }

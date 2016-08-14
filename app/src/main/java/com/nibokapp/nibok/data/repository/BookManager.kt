@@ -95,7 +95,7 @@ object BookManager {
      * @return the list of saved books
      */
     fun getSavedBooksList(): List<BookModel> =
-            DbDataMapper().convertInsertionListToBookDomain(UserManager().getUserSavedInsertions())
+            DbDataMapper().convertInsertionListToBookDomain(UserManager.getUserSavedInsertions())
 
     /**
      * Get newer books published since the last retrieval and add them to the books list.
