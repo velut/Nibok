@@ -40,6 +40,10 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
+    override fun hasUpdatableData(): Boolean = true
+
+    override fun hasRemovableData(): Boolean = true
+
     override fun handleRefreshAction() {
         Log.i(TAG, "Refreshing")
     }

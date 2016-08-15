@@ -86,6 +86,7 @@ object BookManager {
      */
     fun getFeedBooksList() : List<BookModel> {
         val results = queryRealm { it.where(Insertion::class.java).findAll() }
+        Log.d(TAG, "Found ${results.size} feed items")
         return DbDataMapper().convertInsertionListToBookDomain(results)
     }
 
@@ -150,7 +151,7 @@ object BookManager {
      *
      * @return true if older saved books are available, false otherwise
      */
-    fun  hasOlderSavedBooks() = true
+    fun  hasOlderSavedBooks() = false
 
     // Temporary. Generate mocked books
     private fun genMockBooks(start: Int = 1, end: Int = 10, title: String = "Title"): List<BookModel> {

@@ -36,6 +36,10 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun searchStrategy(query: String): List<ViewType> = emptyList() // TODO add real search
 
+    override fun hasUpdatableData(): Boolean = true
+
+    override fun hasRemovableData(): Boolean = false
+
     override fun onMainViewScrollDownLoader() {
         Log.i(TAG, "Loading more books being sold")
     }

@@ -100,6 +100,10 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun onMainViewScrollDownLoader()
 
+    abstract fun hasUpdatableData() : Boolean
+
+    abstract fun hasRemovableData() : Boolean
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(getFragmentLayout())
@@ -110,14 +114,13 @@ abstract class ViewTypeFragment : BaseFragment() {
         setupMainView()
         mainView = getMainView()
         mainViewData = getMainViewData()
-        @Suppress("UNCHECKED_CAST")
-        val adapter = mainView?.adapter as? ListAdapter<ViewType>
-        adapter?.clearAndAddItems(mainViewData)
+        getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
     }
 
     override fun onBecomeVisible() {
         super.onBecomeVisible()
         showMainView()
+        checkForUpdates()
     }
 
     /**
@@ -146,9 +149,7 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
         oldResults = results
 
-        @Suppress("UNCHECKED_CAST")
-        val adapter = searchResultsView?.adapter as? ListAdapter<ViewType>
-        adapter?.clearAndAddItems(results)
+        getAdapterForView(searchResultsView)?.clearAndAddItems(results)
     }
 
     override fun handleOnSearchOpen() {
@@ -167,6 +168,32 @@ abstract class ViewTypeFragment : BaseFragment() {
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
+
+    private fun checkForUpdates() {
+        var newData = getMainViewData()
+        if (mainViewData == newData) {
+            return
+        }
+        val viewAdapter = getAdapterForView(mainView)
+
+        if (hasRemovableData()) {
+            val toRemove = mainViewData.filter { !newData.contains(it) }
+            Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
+            viewAdapter?.removeItems(toRemove)
+        }
+        if (hasUpdatableData()) {
+            if (hasRemovableData()) newData = getMainViewData() // need to get new status after delete
+            val toUpdate = newData.filter { !mainViewData.contains(it) }
+            Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
+            viewAdapter?.updateItems(toUpdate)
+        }
+        mainViewData = newData
+    }
+
+    private fun getAdapterForView(view: RecyclerView?) : ListAdapter<ViewType>? {
+        @Suppress("UNCHECKED_CAST")
+        return view?.adapter as? ListAdapter<ViewType>
+    }
 
     /**
      * Initial setup of a recycler view.

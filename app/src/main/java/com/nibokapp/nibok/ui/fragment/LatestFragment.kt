@@ -42,6 +42,10 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
+    override fun hasUpdatableData(): Boolean = true
+
+    override fun hasRemovableData(): Boolean = false
+
     override fun getFragmentName() : String = TAG
 
 
