@@ -172,6 +172,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     private fun checkForUpdates() {
         var newData = getMainViewData()
         if (mainViewData == newData) {
+            Log.d(TAG, "No need for main view update in ${getFragmentName()}")
             return
         }
         val viewAdapter = getAdapterForView(mainView)
