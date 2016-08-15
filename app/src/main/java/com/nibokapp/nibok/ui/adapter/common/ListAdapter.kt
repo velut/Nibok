@@ -26,4 +26,11 @@ interface ListAdapter<in T> {
      */
     fun updateItems(items: List<T>)
 
+    /**
+     * Remove from the list the given items.
+     *
+     * @param items the items to be removed from the list
+     */
+    fun removeItems(items: List<T>)
+
 }
