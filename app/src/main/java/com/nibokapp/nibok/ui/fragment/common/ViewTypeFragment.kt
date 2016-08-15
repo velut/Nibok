@@ -32,6 +32,8 @@ abstract class ViewTypeFragment : BaseFragment() {
     private var searchResultsView: RecyclerView? = null
     private var currentView: RecyclerView? = null
 
+    private var mainViewData: List<ViewType> = emptyList()
+
     /**
      * Get the layout used by the fragment.
      *
@@ -107,12 +109,10 @@ abstract class ViewTypeFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         setupMainView()
         mainView = getMainView()
-        val mainViewData = getMainViewData()
+        mainViewData = getMainViewData()
         @Suppress("UNCHECKED_CAST")
         val adapter = mainView?.adapter as? ListAdapter<ViewType>
-        adapter?.let {
-            it.clearAndAddItems(mainViewData)
-        }
+        adapter?.clearAndAddItems(mainViewData)
     }
 
     override fun onBecomeVisible() {
@@ -148,9 +148,7 @@ abstract class ViewTypeFragment : BaseFragment() {
 
         @Suppress("UNCHECKED_CAST")
         val adapter = searchResultsView?.adapter as? ListAdapter<ViewType>
-        adapter?.let {
-            it.clearAndAddItems(results)
-        }
+        adapter?.clearAndAddItems(results)
     }
 
     override fun handleOnSearchOpen() {
