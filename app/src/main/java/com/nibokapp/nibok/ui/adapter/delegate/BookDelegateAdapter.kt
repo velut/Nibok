@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.adapter.delegate
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
@@ -17,19 +18,22 @@ import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import kotlinx.android.synthetic.main.card_book.view.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 /**
  * Delegated adapter managing the creation and binding of book view holders.
  *
  */
-class BookDelegateAdapter : ViewTypeDelegateAdapter {
+class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeDelegateAdapter {
+
+    companion object {
+        private val TAG = BookDelegateAdapter::class.java.simpleName
+    }
 
     /**
      * Creates a book view holder when needed.
      */
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return BookVH(parent)
+        return BookVH(parent, itemClickListener)
     }
 
     /**
@@ -43,7 +47,7 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
     /**
      * Book view holder.
      */
-    class BookVH(parent: ViewGroup) : RecyclerView.ViewHolder(
+    class BookVH(parent: ViewGroup, val itemClickListener: (ViewType) -> Unit) : RecyclerView.ViewHolder(
             parent.inflate(R.layout.card_book)) {
 
         private var insertionId: Long? = null
@@ -122,14 +126,13 @@ class BookDelegateAdapter : ViewTypeDelegateAdapter {
          */
         private fun addSaveButtonListener(item: BookModel) = with(itemView) {
             saveButton.setOnClickListener {
+                Log.d(TAG, "Save button clicked")
                 item.saved = toggleItemSave(item.insertionId)
                 updateSaveButton(saveButton, item.saved)
                 if (item.saved) {
                     saveButton.animateBounce()
                 }
-                val toastMessage = if (item.saved) R.string.book_saved_to_collection
-                else R.string.book_removed_from_collection
-                context.toast(toastMessage)
+                itemClickListener(item)
             }
         }
 

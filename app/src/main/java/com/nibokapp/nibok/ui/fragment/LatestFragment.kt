@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
+import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.ui.adapter.BookAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
@@ -22,31 +23,41 @@ class LatestFragment : ViewTypeFragment() {
         private val TAG = LatestFragment::class.java.simpleName
     }
 
+    // Fragment
+
     override fun getFragmentLayout() = R.layout.fragment_latest
+
+    override fun getFragmentName() : String = TAG
+
+    // Main View
 
     override fun getMainView() : RecyclerView = latestBooksList
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = BookAdapter()
+    override fun getMainViewAdapter() = BookAdapter { itemClickListener(it) }
+
+    // Main View Data
 
     override fun getMainViewData(): List<ViewType> = BookManager.getFeedBooksList()
 
     override fun onMainViewScrollDownLoader() = requestOlderBooks()
 
-    override fun getSearchView(): RecyclerView = searchResultsList
-
-    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
-
-    override fun getSearchViewAdapter() = BookAdapter()
-
-    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
-
     override fun hasUpdatableData(): Boolean = true
 
     override fun hasRemovableData(): Boolean = false
 
-    override fun getFragmentName() : String = TAG
+    // Search View
+
+    override fun getSearchView(): RecyclerView = searchResultsList
+
+    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getSearchViewAdapter() = BookAdapter { itemClickListener(it) }
+
+    // Search View Data
+
+    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
 
     override fun handleRefreshAction() {
@@ -79,6 +90,16 @@ class LatestFragment : ViewTypeFragment() {
             Log.d(TAG, "No more older books, end reached")
             bookAdapter.removeLoadingItem()
             context.toast(getString(R.string.end_reached))
+        }
+    }
+
+    private fun itemClickListener(item: ViewType) {
+        val book = item as? BookModel
+        book?.let {
+            Log.d(TAG, "Handling item click")
+            val toastMessage = if (it.saved) R.string.book_saved_to_collection
+            else R.string.book_removed_from_collection
+            context.toast(toastMessage)
         }
     }
 

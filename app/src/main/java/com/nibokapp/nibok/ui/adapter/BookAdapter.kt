@@ -16,7 +16,8 @@ import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
  * It delegates the managing of the items in the view to the respective adapters based on the
  * view type and adapter type.
  */
-class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
+class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item clicked")})
+        : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     companion object {
         private val TAG = BookAdapter::class.java.simpleName
@@ -33,9 +34,8 @@ class BookAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter
     // Adapter instances corresponding to adapter types
     private val delegateAdaptersMap = mapOf(
             AdapterTypes.LOADING to LoadingDelegateAdapter(),
-            AdapterTypes.BOOK to BookDelegateAdapter()
+            AdapterTypes.BOOK to BookDelegateAdapter(itemClickListener)
     )
-
 
     override fun getItemCount(): Int = items.size
 
