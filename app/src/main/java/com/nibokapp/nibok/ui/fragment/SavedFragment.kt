@@ -32,11 +32,11 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
 
-    override fun getSearchView(): RecyclerView = getMainView()
+    override fun getSearchView(): RecyclerView = searchResultsList
 
-    override fun getSearchViewLayoutManager() = getMainViewLayoutManager()
+    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = getMainViewAdapter()
+    override fun getSearchViewAdapter() = BookAdapter()
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
@@ -44,11 +44,14 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun hasRemovableData(): Boolean = true
 
+    override fun getFragmentName() : String = TAG
+
+
     override fun handleRefreshAction() {
         Log.i(TAG, "Refreshing")
     }
 
-    override fun getFragmentName() : String = TAG
+
 
     /**
      * Function passed to the infinite scroll listener to load older saved books.
