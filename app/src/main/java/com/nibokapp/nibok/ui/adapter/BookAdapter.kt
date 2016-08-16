@@ -70,14 +70,23 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      * @param insertAtPosition the desired position at which books are inserted. Default = 0 (top)
      * @param addToBottom true if the books have to be added at the end of the list of items,
      * false if they are to be inserted at the specified position. Default = false.
+     * @param preventDuplicates true if books with ids already present in the current items should not be added,
+     * false if books with the same id are allowed to be in the items list
      */
-    fun addBooks(books: List<ViewType>, insertAtPosition : Int = 0, addToBottom: Boolean = false) {
+    fun addBooks(books: List<ViewType>, insertAtPosition : Int = 0, addToBottom: Boolean = false,
+                 preventDuplicates: Boolean = true) {
         if (!books.isEmpty()) {
-            val insertPosition = if (addToBottom) itemCount - 1 else  insertAtPosition
-            val insertItemCount = books.size
-            items.addAll(insertPosition, books)
-            notifyItemRangeInserted(insertPosition, insertItemCount)
-            Log.d(TAG, "Added $insertItemCount books at position $insertPosition")
+            var booksToAdd = castItemsToBooks(books)
+            if (preventDuplicates) {
+                booksToAdd = booksToAdd?.filter { it.insertionId !in getCurrentBookIds() }
+            }
+            booksToAdd?.let {
+                val insertPosition = if (addToBottom) itemCount - 1 else  insertAtPosition
+                val insertItemCount = it.size
+                items.addAll(insertPosition, it as List<ViewType>)
+                notifyItemRangeInserted(insertPosition, insertItemCount)
+                Log.d(TAG, "Added $insertItemCount books at position $insertPosition")
+            }
         }
     }
 
@@ -102,9 +111,9 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      */
     fun updateBooks(books: List<ViewType>) {
         val updatedBooks = castItemsToBooks(books)
-        val currentBooksIds = getBookItems().map { it.insertionId }
+        val currentBookIds = getCurrentBookIds()
         updatedBooks?.let {
-            val (toReplace, toAdd) = it.partition { it.insertionId in currentBooksIds }
+            val (toReplace, toAdd) = it.partition { it.insertionId in currentBookIds }
             Log.d(TAG, "To replace: ${toReplace.size}; to add: ${toAdd.size}")
             replaceBooks(toReplace)
             addBooks(toAdd)
@@ -124,7 +133,7 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      * @param newBook the new version of the current book to update
      */
     fun replaceBook(newBook: BookModel) {
-        val currentBooks = getBookItems()
+        val currentBooks = getCurrentBookItems()
         val bookToReplace = currentBooks.find { it.insertionId == newBook.insertionId }
         bookToReplace?.let {
             Log.d(TAG, "Replacing book with id: ${bookToReplace.insertionId}")
@@ -153,7 +162,7 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      * @return the position in which the book was before being removed or -1 if no book was removed
      */
     fun removeBook(book: BookModel) : Int {
-        val currentBooks = getBookItems()
+        val currentBooks = getCurrentBookItems()
         val bookToRemove = currentBooks.find { it.insertionId == book.insertionId }
         var bookIndex: Int = -1
         bookToRemove?.let {
@@ -168,7 +177,12 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
     /**
      * Get only the book items present in the adapter's list.
      */
-    private fun getBookItems() : List<BookModel> = items.filterIsInstance<BookModel>()
+    private fun getCurrentBookItems() : List<BookModel> = items.filterIsInstance<BookModel>()
+
+    /**
+     * Get the ids of the books present in the items list.
+     */
+    private fun getCurrentBookIds() = getCurrentBookItems().map { it.insertionId }
 
     private fun castItemsToBooks(items: List<ViewType>) : List<BookModel>? {
         @Suppress("UNCHECKED_CAST")
