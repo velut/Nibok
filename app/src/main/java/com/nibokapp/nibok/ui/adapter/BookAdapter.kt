@@ -67,12 +67,13 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      * Add books to the list of items to display.
      *
      * @param books the list of books to add
-     * @param addToTop true if the books have to be added at the start of the list of items,
-     * false if they are to be inserted at the end of the list (before the loading item). Default true.
+     * @param insertAtPosition the desired position at which books are inserted. Default = 0 (top)
+     * @param addToBottom true if the books have to be added at the end of the list of items,
+     * false if they are to be inserted at the specified position. Default = false.
      */
-    fun addBooks(books: List<ViewType>, addToTop: Boolean = true) {
+    fun addBooks(books: List<ViewType>, insertAtPosition : Int = 0, addToBottom: Boolean = false) {
         if (!books.isEmpty()) {
-            val insertPosition = if (addToTop) 0 else itemCount - 1 // at top or at loading item position
+            val insertPosition = if (addToBottom) itemCount - 1 else  insertAtPosition
             val insertItemCount = books.size
             items.addAll(insertPosition, books)
             notifyItemRangeInserted(insertPosition, insertItemCount)
@@ -148,18 +149,21 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
      * Remove a book with a given id with the new version if the ids correspond.
      *
      * @param book the book to remove
+     *
+     * @return the position in which the book was before being removed or -1 if no book was removed
      */
-    fun removeBook(book: BookModel) {
+    fun removeBook(book: BookModel) : Int {
         val currentBooks = getBookItems()
         val bookToRemove = currentBooks.find { it.insertionId == book.insertionId }
+        var bookIndex: Int = -1
         bookToRemove?.let {
             Log.d(TAG, "Removing book with id: ${bookToRemove.insertionId}")
-            val bookIndex = items.indexOf(bookToRemove)
+            bookIndex = items.indexOf(bookToRemove)
             items.removeAt(bookIndex)
             notifyItemRemoved(bookIndex)
         }
+        return bookIndex
     }
-
 
     /**
      * Get only the book items present in the adapter's list.
