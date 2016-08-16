@@ -189,12 +189,12 @@ abstract class ViewTypeFragment : BaseFragment() {
         val viewAdapter = getAdapterForView(mainView)
 
         if (hasMainViewRemovableItems()) {
-            val toRemove = mainViewData.filter { !newData.contains(it) }
+            val toRemove = mainViewData.filter { it !in newData }
             Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
             if (toRemove.size > 0) viewAdapter?.removeItems(toRemove)
         }
         if (hasMainViewUpdatableItems()) {
-            val toUpdate = newData.filter { !mainViewData.contains(it) }
+            val toUpdate = newData.filter { it !in mainViewData }
             Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
             if (toUpdate.size > 0) viewAdapter?.updateItems(toUpdate)
         }
