@@ -81,6 +81,7 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
                 booksToAdd = booksToAdd?.filter { it.insertionId !in getCurrentBookIds() }
             }
             booksToAdd?.let {
+                if (it.isEmpty()) return
                 val insertPosition = if (addToBottom) itemCount - 1 else  insertAtPosition
                 val insertItemCount = it.size
                 items.addAll(insertPosition, it as List<ViewType>)
