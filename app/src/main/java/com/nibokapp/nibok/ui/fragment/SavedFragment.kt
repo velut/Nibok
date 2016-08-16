@@ -95,17 +95,20 @@ class SavedFragment : ViewTypeFragment() {
                     val oldBookPosition = mainViewAdapter.removeBook(book)
 
                     // Notify user of removal
-                    val snackBar = Snackbar.make(relativeLayoutContainer,
+                    val snackBar = Snackbar.make(savedFragmentRoot,
                             R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
 
                     // Provide reinsertion possibility
                     snackBar.setAction(R.string.snackbar_undo_action) {
-                        // Reinsert book
-                        book.saved = UserManager.toggleSaveInsertion(book.insertionId)
+                        // Reinsert book if necessary
+                        if (!UserManager.isInsertionSaved(book.insertionId)) {
+                            UserManager.toggleSaveInsertion(book.insertionId)
+                        }
+                        book.saved = true
                         mainViewAdapter.addBooks(listOf(book), insertAtPosition = oldBookPosition)
 
                         // Notify the reinsertion
-                        val childSnackBar = Snackbar.make(relativeLayoutContainer,
+                        val childSnackBar = Snackbar.make(savedFragmentRoot,
                                 R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
                         childSnackBar.show()
                     }
