@@ -180,6 +180,16 @@ abstract class ViewTypeFragment : BaseFragment() {
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
 
+    /**
+     * Refresh the data of the main view.
+     *
+     * Useful after click events to correctly synchronize the view with
+     * proper data.
+     */
+    fun refreshMainViewData() {
+        mainViewData = getMainViewData()
+    }
+
     private fun checkForUpdates() {
         val newData = getMainViewData()
         if (mainViewData == newData) {

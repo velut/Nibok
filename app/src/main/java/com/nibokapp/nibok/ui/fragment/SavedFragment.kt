@@ -115,6 +115,7 @@ class SavedFragment : ViewTypeFragment() {
                     snackBar.show()
                 }
             }
+            refreshMainViewData()
         }
     }
 
