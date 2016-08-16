@@ -43,9 +43,9 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun onMainViewScrollDownLoader() = requestOlderBooks()
 
-    override fun hasUpdatableData(): Boolean = true
+    override fun hasMainViewUpdatableItems(): Boolean = true
 
-    override fun hasRemovableData(): Boolean = false
+    override fun hasMainViewRemovableItems(): Boolean = false
 
     // Search View
 

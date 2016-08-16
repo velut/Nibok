@@ -100,9 +100,19 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun onMainViewScrollDownLoader()
 
-    abstract fun hasUpdatableData() : Boolean
+    /**
+     * Signal if items in the main view can be updated.
+     *
+     * @return true if the items can be updated, false otherwise
+     */
+    abstract fun hasMainViewUpdatableItems() : Boolean
 
-    abstract fun hasRemovableData() : Boolean
+    /**
+     * Signal if items in the main view can be deleted.
+     *
+     * @return true if the items can be deleted, false otherwise
+     */
+    abstract fun hasMainViewRemovableItems() : Boolean
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -178,12 +188,12 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
         val viewAdapter = getAdapterForView(mainView)
 
-        if (hasRemovableData()) {
+        if (hasMainViewRemovableItems()) {
             val toRemove = mainViewData.filter { !newData.contains(it) }
             Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
             if (toRemove.size > 0) viewAdapter?.removeItems(toRemove)
         }
-        if (hasUpdatableData()) {
+        if (hasMainViewUpdatableItems()) {
             val toUpdate = newData.filter { !mainViewData.contains(it) }
             Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
             if (toUpdate.size > 0) viewAdapter?.updateItems(toUpdate)
