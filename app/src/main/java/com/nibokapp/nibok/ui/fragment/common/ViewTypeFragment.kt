@@ -165,12 +165,13 @@ abstract class ViewTypeFragment : BaseFragment() {
     override fun handleOnSearchClose() {
         Log.d(TAG, "Search closed. Hide SearchView and show MainView")
         showMainView()
+        checkForUpdates()
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
 
     private fun checkForUpdates() {
-        var newData = getMainViewData()
+        val newData = getMainViewData()
         if (mainViewData == newData) {
             Log.d(TAG, "No need for main view update in ${getFragmentName()}")
             return
@@ -180,13 +181,12 @@ abstract class ViewTypeFragment : BaseFragment() {
         if (hasRemovableData()) {
             val toRemove = mainViewData.filter { !newData.contains(it) }
             Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
-            viewAdapter?.removeItems(toRemove)
+            if (toRemove.size > 0) viewAdapter?.removeItems(toRemove)
         }
         if (hasUpdatableData()) {
-            if (hasRemovableData()) newData = getMainViewData() // need to get new status after delete
             val toUpdate = newData.filter { !mainViewData.contains(it) }
             Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
-            viewAdapter?.updateItems(toUpdate)
+            if (toUpdate.size > 0) viewAdapter?.updateItems(toUpdate)
         }
         mainViewData = newData
     }
