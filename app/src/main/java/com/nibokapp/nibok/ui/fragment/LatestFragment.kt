@@ -85,7 +85,7 @@ class LatestFragment : ViewTypeFragment() {
         if (BookManager.hasOlderFeedBooks()) {
             Log.d(TAG, "Requesting older books on scroll down")
             val olderBooks = BookManager.getOlderFeedBooks()
-            bookAdapter.addBooks(olderBooks, addToTop = false)
+            bookAdapter.addBooks(olderBooks, addToBottom = true)
         } else {
             Log.d(TAG, "No more older books, end reached")
             bookAdapter.removeLoadingItem()
