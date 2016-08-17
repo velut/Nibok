@@ -24,7 +24,7 @@
     <string name="refresh_action">Refresh</string>
     <string name="back_to_top_action">Go back to top</string>
     <string name="settings_action">Settings</string>
-    
+
     <!-- Book detail view -->
     <string name="insertion_details">Insertion details</string>
     <string name="insertion_book_price">Price</string>
@@ -57,5 +57,6 @@
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>
     <string name="placeholder_author_plural">Author</string>
+    <string name="title_activity_publish">Sell</string>
 
 </resources>
