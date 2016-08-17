@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.nibokapp.nibok.R
-import io.realm.Realm
 import org.jetbrains.anko.toast
 
 /**
@@ -23,24 +22,9 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
         val TAG: String = BaseFragment::class.java.simpleName
     }
 
-    // Access to the realm DB, shared with subclasses
-    protected var realm: Realm? = null
-
     protected var menuSearchAction: MenuItem? = null
     protected var searchView: SearchView? = null
 
-    override fun onStart() {
-        super.onStart()
-        // Get realm connection
-        realm = Realm.getDefaultInstance()
-        Log.d(TAG, "Started, got realm")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        realm?.close()
-        Log.d(TAG, "Stopping, closed realm")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
