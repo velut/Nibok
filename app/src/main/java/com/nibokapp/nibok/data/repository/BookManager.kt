@@ -137,14 +137,14 @@ object BookManager {
      *
      * @return true if newer books are available, false otherwise
      */
-    fun hasNewerFeedBooks() = true
+    fun hasNewerFeedBooks() = false
 
     /**
      * Signals if older books are available.
      *
      * @return true if older books are available, false otherwise
      */
-    fun hasOlderFeedBooks() = true
+    fun hasOlderFeedBooks() = false
 
     /**
      * Signals if older saved books are available.
