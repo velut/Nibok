@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Insert the ISBN of the book to automatically retrieve book details"
+            android:text="@string/helper_isbn_input"
             android:textSize="20sp"/>
 
         <android.support.design.widget.TextInputLayout
@@ -56,11 +56,12 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
+            android:id="@+id/btnSkipISBN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_gravity="center_horizontal"
-            android:text="Skip"/>
+            android:text="@string/skip"/>
 
     </LinearLayout>
 
@@ -78,10 +79,11 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/helperBookDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Review the book's details"
+            android:text="@string/helper_book_details"
             android:textSize="20sp"/>
 
         <android.support.design.widget.TextInputLayout
@@ -152,17 +154,19 @@
             android:layout_gravity="end">
 
             <Button
+                android:id="@+id/btnChangeISBN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Change ISBN"/>
+                android:text="@string/change_isbn"/>
 
 
             <Button
+                android:id="@+id/btnConfirmBookDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:theme="@style/positiveButton"
-                android:text="Confirm"/>
+                android:text="@string/next"/>
 
         </LinearLayout>
 
@@ -185,7 +189,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Add price and book condition"
+            android:text="@string/helper_insertion_details"
             android:textSize="20sp"/>
 
         <android.support.design.widget.TextInputLayout
@@ -226,17 +230,19 @@
             android:layout_gravity="end">
 
             <Button
+                android:id="@+id/btnChangeBookDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Change book details"/>
+                android:text="@string/change_book_details"/>
 
 
             <Button
+                android:id="@+id/btnConfirmInsertionDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:theme="@style/positiveButton"
-                android:text="Confirm"/>
+                android:text="@string/next"/>
 
         </LinearLayout>
 

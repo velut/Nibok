@@ -62,6 +62,16 @@
     <string name="placeholder_no_info">Information not available</string>
     <string name="placeholder_author_plural">Author</string>
     <string name="title_activity_publish">Sell</string>
+
+    <!-- Insertion publishing -->
     <string name="book_authors">Authors (comma separated)</string>
+    <string name="next">Next</string>
+    <string name="change_book_details">Change book details</string>
+    <string name="helper_insertion_details">Add book condition and price</string>
+    <string name="change_isbn">Change ISBN</string>
+    <string name="helper_book_details">Review the book\'s details</string>
+    <string name="skip">Skip</string>
+    <string name="helper_isbn_input">Insert the ISBN of the book to automatically retrieve the book\'s details</string>
+    <string name="add_book_details">Add book\'s details</string>
 
 </resources>

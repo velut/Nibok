@@ -49,6 +49,31 @@ class PublishFragment : Fragment() {
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                 }
         )
+
+        btnSkipISBN.setOnClickListener {
+            inputISBNContainer.visibility = View.GONE
+            helperBookDetails.text = getString(R.string.add_book_details)
+            inputBookDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnChangeISBN.setOnClickListener {
+            inputBookDetailsContainer.visibility = View.GONE
+            inputISBNContainer.visibility = View.VISIBLE
+        }
+
+        btnConfirmBookDetails.setOnClickListener {
+            inputBookDetailsContainer.visibility = View.GONE
+            inputInsertionDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnChangeBookDetails.setOnClickListener {
+            inputInsertionDetailsContainer.visibility = View.GONE
+            inputBookDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnConfirmInsertionDetails.setOnClickListener {
+            Log.d("SELL", "Everything confirmed")
+        }
     }
 
     private fun validateISBNInput() {
@@ -78,12 +103,12 @@ class PublishFragment : Fragment() {
     private fun getBookDataFromISBN(isbn: String) {
         Log.d(TAG, "Valid Isbn: $isbn")
         inputISBNContainer.visibility = View.GONE
-        /*
         inputBookDetailsContainer.visibility = View.VISIBLE
+
+        // TODO get real data
         inputBookTitle.setText("Book Title Here")
         inputBookAuthors.setText("John Doe, Bob Zu")
         inputBookYear.setText("2016")
-        inputBookPublisher.setText("Mit Press")*/
-        inputInsertionDetailsContainer.visibility = View.VISIBLE
+        inputBookPublisher.setText("Mit Press")
     }
 }
