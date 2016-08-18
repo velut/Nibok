@@ -77,5 +77,13 @@ class PublishFragment : Fragment() {
 
     private fun getBookDataFromISBN(isbn: String) {
         Log.d(TAG, "Valid Isbn: $isbn")
+        inputISBNContainer.visibility = View.GONE
+        /*
+        inputBookDetailsContainer.visibility = View.VISIBLE
+        inputBookTitle.setText("Book Title Here")
+        inputBookAuthors.setText("John Doe, Bob Zu")
+        inputBookYear.setText("2016")
+        inputBookPublisher.setText("Mit Press")*/
+        inputInsertionDetailsContainer.visibility = View.VISIBLE
     }
 }
