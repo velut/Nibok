@@ -9,4 +9,10 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+    <style name="positiveButton"
+        parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/accent</item>
+        <item name="android:textColor">@color/icons</item>
+    </style>
+
 </resources>

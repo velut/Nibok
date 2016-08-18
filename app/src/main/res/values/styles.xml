@@ -23,5 +23,11 @@
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
+    
+    <style name="positiveButton"
+        parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/accent</item>
+        <item name="android:textColor">@color/icons</item>
+    </style>
 
 </resources>
