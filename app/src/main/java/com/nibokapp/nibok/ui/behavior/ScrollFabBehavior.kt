@@ -5,7 +5,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 
 @Suppress("unused", "UNUSED_PARAMETER")
@@ -29,11 +28,9 @@ class ScrollFabBehavior(context: Context, attrs: AttributeSet) : FloatingActionB
         child?.let {
             // If scrolled down and Fab still visible hide it
             if (dy > 0 && it.visibility == View.VISIBLE) {
-                Log.d(TAG, "Hiding Fab button")
                 it.hide()
             } else // else if scrolled up and Fab not visible show it
                 if (dy < 0 && it.visibility != View.VISIBLE) {
-                Log.d(TAG, "Showing Fab button")
                 it.show()
             }
         }
