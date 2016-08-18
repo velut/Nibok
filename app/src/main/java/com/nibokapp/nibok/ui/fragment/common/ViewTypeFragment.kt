@@ -13,6 +13,8 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import org.jetbrains.anko.async
+import org.jetbrains.anko.uiThread
 
 /**
  * Base fragment for fragments representing ViewTypes.
@@ -123,8 +125,8 @@ abstract class ViewTypeFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         setupMainView()
         mainView = getMainView()
-        mainViewData = getMainViewData()
-        getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
+        val mainViewAdapter = getAdapterForView(mainView)
+        mainViewAdapter?.clearAndAddItems(mainViewData)
     }
 
     override fun onBecomeVisible() {
@@ -174,41 +176,50 @@ abstract class ViewTypeFragment : BaseFragment() {
 
     override fun handleOnSearchClose() {
         Log.d(TAG, "Search closed. Hide SearchView and show MainView")
-        showMainView()
-        checkForUpdates()
+        onBecomeVisible()
     }
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
 
     /**
-     * Refresh the data of the main view.
+     * Refresh asynchronously the data of the main view.
      *
      * Useful after click events to correctly synchronize the view with
      * proper data.
      */
     fun refreshMainViewData() {
-        mainViewData = getMainViewData()
+        async() { mainViewData = getMainViewData() }
     }
 
-    private fun checkForUpdates() {
-        val newData = getMainViewData()
-        if (mainViewData == newData) {
-            Log.d(TAG, "No need for main view update in ${getFragmentName()}")
-            return
-        }
-        val viewAdapter = getAdapterForView(mainView)
+    /**
+     * Check asynchronously for item updates that happened since the last retrieval
+     * of the main view data.
+     *
+     * If there are updates to be applied then check what needs to be removed and what needs to
+     * be updated and inform accordingly in the ui thread the main view adapter.
+     */
+    fun checkForUpdates() {
+        async() {
+            val newData = getMainViewData()
 
-        if (hasMainViewRemovableItems()) {
-            val toRemove = mainViewData.filter { it !in newData }
-            Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
-            if (toRemove.size > 0) viewAdapter?.removeItems(toRemove)
+            if (mainViewData != newData) {
+                val viewAdapter = getAdapterForView(mainView)
+
+                if (hasMainViewRemovableItems()) {
+                    val toRemove = mainViewData.filter { it !in newData }
+                    Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
+                    if (toRemove.size > 0) uiThread { viewAdapter?.removeItems(toRemove) }
+                }
+
+                if (hasMainViewUpdatableItems()) {
+                    val toUpdate = newData.filter { it !in mainViewData }
+                    Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
+                    if (toUpdate.size > 0) uiThread { viewAdapter?.updateItems(toUpdate) }
+                }
+
+                mainViewData = newData
+            }
         }
-        if (hasMainViewUpdatableItems()) {
-            val toUpdate = newData.filter { it !in mainViewData }
-            Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
-            if (toUpdate.size > 0) viewAdapter?.updateItems(toUpdate)
-        }
-        mainViewData = newData
     }
 
     private fun getAdapterForView(view: RecyclerView?) : ListAdapter<ViewType>? {
