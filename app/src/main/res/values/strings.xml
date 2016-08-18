@@ -54,6 +54,10 @@
     <string name="search_hint_book">Search by title, author, ISBN…</string>
     <string name="search_hint_message">Search…</string>
 
+    <!-- Errors -->
+    <string name="error_input_isbn">Enter the 13 digits number found on the back of the book</string>
+    <string name="error_invalid_isbn">Invalid ISBN. ISBN codes look like 97#-##########</string>
+
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>
     <string name="placeholder_author_plural">Author</string>
