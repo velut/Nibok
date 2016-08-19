@@ -26,5 +26,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="detail_value_size">20sp</dimen>
     <dimen name="detail_key_size">20sp</dimen>
+    <dimen name="publish_header_distance">32dp</dimen>
+    <dimen name="publish_footer_distance">32dp</dimen>
 
 </resources>

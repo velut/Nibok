@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.inflate
 import kotlinx.android.synthetic.main.fragment_publish.*
@@ -38,6 +39,8 @@ class PublishFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        configureButtonNavigation()
+
         inputISBN.addTextChangedListener(
                 object : TextWatcher {
                     override fun afterTextChanged(s: Editable?) {
@@ -50,30 +53,8 @@ class PublishFragment : Fragment() {
                 }
         )
 
-        btnSkipISBN.setOnClickListener {
-            inputISBNContainer.visibility = View.GONE
-            helperBookDetails.text = getString(R.string.add_book_details)
-            inputBookDetailsContainer.visibility = View.VISIBLE
-        }
+        setupBookConditionSpinner()
 
-        btnChangeISBN.setOnClickListener {
-            inputBookDetailsContainer.visibility = View.GONE
-            inputISBNContainer.visibility = View.VISIBLE
-        }
-
-        btnConfirmBookDetails.setOnClickListener {
-            inputBookDetailsContainer.visibility = View.GONE
-            inputInsertionDetailsContainer.visibility = View.VISIBLE
-        }
-
-        btnChangeBookDetails.setOnClickListener {
-            inputInsertionDetailsContainer.visibility = View.GONE
-            inputBookDetailsContainer.visibility = View.VISIBLE
-        }
-
-        btnConfirmInsertionDetails.setOnClickListener {
-            Log.d("SELL", "Everything confirmed")
-        }
     }
 
     private fun validateISBNInput() {
@@ -104,11 +85,46 @@ class PublishFragment : Fragment() {
         Log.d(TAG, "Valid Isbn: $isbn")
         inputISBNContainer.visibility = View.GONE
         inputBookDetailsContainer.visibility = View.VISIBLE
+        helperBookDetails.text = getString(R.string.helper_book_details)
 
         // TODO get real data
         inputBookTitle.setText("Book Title Here")
         inputBookAuthors.setText("John Doe, Bob Zu")
         inputBookYear.setText("2016")
         inputBookPublisher.setText("Mit Press")
+    }
+
+    private fun configureButtonNavigation() {
+        btnSkipISBN.setOnClickListener {
+            inputISBNContainer.visibility = View.GONE
+            helperBookDetails.text = getString(R.string.add_book_details)
+            inputBookDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnChangeISBN.setOnClickListener {
+            inputBookDetailsContainer.visibility = View.GONE
+            inputISBNContainer.visibility = View.VISIBLE
+        }
+
+        btnConfirmBookDetails.setOnClickListener {
+            inputBookDetailsContainer.visibility = View.GONE
+            inputInsertionDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnChangeBookDetails.setOnClickListener {
+            inputInsertionDetailsContainer.visibility = View.GONE
+            inputBookDetailsContainer.visibility = View.VISIBLE
+        }
+
+        btnConfirmInsertionDetails.setOnClickListener {
+            Log.d("SELL", "Everything confirmed")
+        }
+    }
+
+    private fun setupBookConditionSpinner() {
+        val spinnerAdapter = ArrayAdapter.createFromResource(context,
+                R.array.book_condition_array, android.R.layout.simple_spinner_item)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        inputInsertionBookCondition.adapter = spinnerAdapter
     }
 }
