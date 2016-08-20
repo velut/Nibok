@@ -15,4 +15,9 @@ interface VisibleFragment {
      * This function is needed because the viewpager does not call onResume() when preloaded fragments become visible.
      */
     fun onBecomeVisible()
+
+    /**
+     * What to do when the fragment becomes invisible.
+     */
+    fun onBecomeInvisible()
 }

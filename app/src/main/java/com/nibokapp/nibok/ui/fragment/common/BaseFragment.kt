@@ -36,6 +36,10 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
         Log.d(TAG, "${getFragmentName()} became visible")
     }
 
+    override fun onBecomeInvisible() {
+        Log.d(TAG, "${getFragmentName()} is no longer visible")
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.toolbar_menu, menu)
