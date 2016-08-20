@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.LatestFragment
 import com.nibokapp.nibok.ui.fragment.MessagesFragment
@@ -21,6 +22,10 @@ import kotlinx.android.synthetic.main.activity_main.*
  * It sets up the ViewPager with the four main fragments.
  */
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private val TAG = MainActivity::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +54,12 @@ class MainActivity : AppCompatActivity() {
                 object : ViewPager.OnPageChangeListener {
                     override fun onPageSelected(position: Int) {
                         val fragment = adapter.getItem(position) as? VisibleFragment
+                        Log.d("$TAG ViewPager", "Fragment at position $position became visible")
                         fragment?.onBecomeVisible()
+
+                        // Alert other fragments that they became invisible
+                        val otherFragmentsPositions = (0..adapter.count - 1).filter { it != position }
+                        otherFragmentsPositions.forEach { (adapter.getItem(it) as? VisibleFragment)?.onBecomeInvisible() }
                     }
 
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
