@@ -1,6 +1,5 @@
 package com.nibokapp.nibok.ui.fragment
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -60,15 +59,6 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        /* Force data and view refresh as this is the first
-         * fragment shown and onBecomeVisible is not called by
-         * the viewpager at the start.
-          */
-        onBecomeVisible()
-    }
 
     override fun handleRefreshAction() {
         // If new books are available add them to the list and return to the top
