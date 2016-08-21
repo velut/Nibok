@@ -33,6 +33,8 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun getMainView(): RecyclerView = sellingBooksList
 
+    override fun getMainViewId() = R.id.sellingBooksList
+
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
     override fun getMainViewAdapter() = BookAdapter()
@@ -65,7 +67,7 @@ class SellingFragment : ViewTypeFragment() {
         Log.i(TAG, "Refreshing")
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         fab.setOnClickListener {
