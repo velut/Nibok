@@ -33,6 +33,8 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getMainView() : RecyclerView = latestBooksList
 
+    override fun getMainViewId() = R.id.latestBooksList
+
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
     override fun getMainViewAdapter() = BookAdapter { itemClickListener(it) }

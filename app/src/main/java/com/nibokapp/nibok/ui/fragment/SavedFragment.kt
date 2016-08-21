@@ -27,6 +27,8 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getMainView() : RecyclerView = savedBooksList
 
+    override fun getMainViewId() = R.id.savedBooksList
+
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
     override fun getMainViewAdapter() = BookAdapter { mainViewItemClickListener(it) }
