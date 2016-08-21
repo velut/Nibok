@@ -14,6 +14,7 @@ import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import org.jetbrains.anko.async
+import org.jetbrains.anko.find
 import org.jetbrains.anko.uiThread
 
 /**
@@ -26,6 +27,8 @@ abstract class ViewTypeFragment : BaseFragment() {
     companion object {
         private val TAG = ViewTypeFragment::class.java.simpleName
     }
+
+    private var isFragmentVisible = false
 
     private var oldQuery: String? = null
     private var oldResults: List<ViewType>? = null
@@ -49,6 +52,13 @@ abstract class ViewTypeFragment : BaseFragment() {
      * @return the main view defined in the fragment's layout.
      */
     abstract fun getMainView() : RecyclerView
+
+    /**
+     * Get the id of the main view
+     *
+     * @return the id of the main view
+     */
+    abstract fun getMainViewId() : Int
 
     /**
      * Get the layout manager used by the main view.
@@ -118,21 +128,37 @@ abstract class ViewTypeFragment : BaseFragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(getFragmentLayout())
+        val view = container?.inflate(getFragmentLayout())
+        view?.let {
+            val mainView = it.find<RecyclerView>(getMainViewId())
+            setupMainView(mainView)
+        }
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mainView = getMainView()
+        getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupMainView()
-        mainView = getMainView()
-        val mainViewAdapter = getAdapterForView(mainView)
-        mainViewAdapter?.clearAndAddItems(mainViewData)
+        checkForUpdates()
     }
 
     override fun onBecomeVisible() {
         super.onBecomeVisible()
+        isFragmentVisible = true
         showMainView()
         checkForUpdates()
+    }
+
+    override fun onBecomeInvisible() {
+        if (isFragmentVisible) {
+            isFragmentVisible = false
+            super.onBecomeInvisible()
+        }
     }
 
     /**
@@ -199,11 +225,13 @@ abstract class ViewTypeFragment : BaseFragment() {
      * be updated and inform accordingly in the ui thread the main view adapter.
      */
     fun checkForUpdates() {
+        Log.d(TAG, "${getFragmentName()} is checking for updates")
+        val viewAdapter = getAdapterForView(mainView)
+
         async() {
             val newData = getMainViewData()
 
             if (mainViewData != newData) {
-                val viewAdapter = getAdapterForView(mainView)
 
                 if (hasMainViewRemovableItems()) {
                     val toRemove = mainViewData.filter { it !in newData }
@@ -249,9 +277,7 @@ abstract class ViewTypeFragment : BaseFragment() {
             // Assign layout manager
             layoutManager = viewLM
             // Assign adapter
-            if (adapter == null) {
-                adapter = viewAdapter
-            }
+            adapter = viewAdapter
             if (hasCustomScrollListener) {
                 // Add infinite scroll listener
                 clearOnScrollListeners()
@@ -263,8 +289,8 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
     }
 
-    private fun setupMainView() =
-            setupView(getMainView(), getMainViewLayoutManager(), getMainViewAdapter(), true)
+    private fun setupMainView(view: RecyclerView) =
+            setupView(view, getMainViewLayoutManager(), getMainViewAdapter(), true)
 
     private fun setupSearchView() =
             setupView(getSearchView(), getSearchViewLayoutManager(), getSearchViewAdapter(), false)
