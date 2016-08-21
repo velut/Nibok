@@ -44,6 +44,13 @@ class MainActivity : AppCompatActivity() {
 
         setupViewPager(viewPager, fragments)
         tabLayout.setupWithViewPager(viewPager)
+
+        // If app was just started alert first fragment that it became visible
+        // as viewpager won't do it
+        if (savedInstanceState == null) {
+            val firstFragment = fragments.values.first() as? VisibleFragment
+            firstFragment?.onBecomeVisible()
+        }
     }
 
 
