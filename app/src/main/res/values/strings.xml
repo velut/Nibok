@@ -70,7 +70,7 @@
     <string name="change_book_details">Change book details</string>
     <string name="helper_insertion_details">Set price and select book condition</string>
     <string name="change_isbn">Change ISBN</string>
-    <string name="helper_book_details">Review the book\'s details</string>
+    <string name="review_book_details">Review the book\'s details</string>
     <string name="skip">Skip</string>
     <string name="helper_isbn_input">Insert the ISBN of the book to automatically retrieve the book\'s details</string>
     <string name="add_book_details">Add book\'s details</string>
