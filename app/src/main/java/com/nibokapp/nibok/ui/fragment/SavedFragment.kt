@@ -104,20 +104,22 @@ class SavedFragment : ViewTypeFragment() {
                     snackBar.setAction(R.string.snackbar_undo_action) {
                         // Reinsert book if necessary
                         if (!UserManager.isInsertionSaved(book.insertionId)) {
-                            UserManager.toggleSaveInsertion(book.insertionId)
+                            book.saved = UserManager.toggleSaveInsertion(book.insertionId)
+                            mainViewAdapter.addBooks(listOf(book), insertAtPosition = oldBookPosition)
+                            // Notify the reinsertion
+                            val childSnackBar = Snackbar.make(savedFragmentRoot,
+                                    R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
+                            childSnackBar.show()
+                        } else {
+                            // Book was reinserted from other pages before the undo operation
+                            val childSnackBar = Snackbar.make(savedFragmentRoot,
+                                    R.string.book_already_into_collection, Snackbar.LENGTH_SHORT)
+                            childSnackBar.show()
                         }
-                        book.saved = true
-                        mainViewAdapter.addBooks(listOf(book), insertAtPosition = oldBookPosition)
-
-                        // Notify the reinsertion
-                        val childSnackBar = Snackbar.make(savedFragmentRoot,
-                                R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
-                        childSnackBar.show()
                     }
                     snackBar.show()
                 }
             }
-            refreshMainViewData()
         }
     }
 
