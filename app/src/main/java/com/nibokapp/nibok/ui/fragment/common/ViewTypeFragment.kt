@@ -225,8 +225,8 @@ abstract class ViewTypeFragment : BaseFragment() {
      * be updated and inform accordingly in the ui thread the main view adapter.
      */
     fun checkForUpdates() {
-        Log.d(TAG, "${getFragmentName()} is checking for updates")
         val viewAdapter = getAdapterForView(mainView)
+        Log.d(TAG, "${getFragmentName()} is checking for updates;\n adapter: $viewAdapter")
 
         async() {
             val newData = getMainViewData()
