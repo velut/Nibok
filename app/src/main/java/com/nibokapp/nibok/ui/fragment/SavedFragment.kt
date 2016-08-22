@@ -98,7 +98,7 @@ class SavedFragment : ViewTypeFragment() {
 
                     // Notify user of removal
                     val snackBar = Snackbar.make(savedFragmentRoot,
-                            R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
+                            R.string.book_removed_from_collection, Snackbar.LENGTH_INDEFINITE)
 
                     // Provide reinsertion possibility
                     snackBar.setAction(R.string.snackbar_undo_action) {
@@ -120,6 +120,7 @@ class SavedFragment : ViewTypeFragment() {
                     snackBar.show()
                 }
             }
+            checkForUpdates()
         }
     }
 
