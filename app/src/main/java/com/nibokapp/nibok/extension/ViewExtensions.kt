@@ -1,6 +1,5 @@
 package com.nibokapp.nibok.extension
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,4 +72,7 @@ fun View.animateBounce() {
     this.animateScaleDown()
 }
 
-fun RecyclerView.getName() = this.toString().substringAfter("app:id/").substringBefore('}')
+/**
+ * Get the short name of a view.
+ */
+fun View.getName() = this.toString().substringAfter("app:id/").substringBefore('}')
