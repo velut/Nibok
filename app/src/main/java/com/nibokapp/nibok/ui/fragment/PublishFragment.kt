@@ -269,6 +269,7 @@ class PublishFragment : Fragment() {
         inputBookAuthors.setText("")
         inputBookYear.setText("")
         inputBookPublisher.setText("")
+        inputBookDetailsContainer.scrollTo(0,0)
     }
 
     /**
