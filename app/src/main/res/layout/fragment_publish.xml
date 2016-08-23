@@ -253,16 +253,15 @@
 
                 <TextView
                     android:id="@+id/helperInsertionBookWear"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:textSize="18sp"
                     android:text="@string/book_wear_condition"/>
 
                 <Spinner
                     android:id="@+id/inputInsertionBookCondition"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/helperInsertionBookWear"
+                    android:layout_width="wrap_content"
                     android:layout_alignParentEnd="true"/>
 
             </RelativeLayout>
