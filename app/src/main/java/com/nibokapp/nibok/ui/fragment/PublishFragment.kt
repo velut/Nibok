@@ -1,6 +1,10 @@
 package com.nibokapp.nibok.ui.fragment
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -36,11 +40,17 @@ class PublishFragment : Fragment() {
         val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
 
         /**
+         * Request code for picture taking
+         */
+        val REQUEST_IMAGE_CAPTURE = 1
+
+        /**
          * List of pages making up the insertion publishing process.
          */
         val PAGE_ISBN = 0
         val PAGE_BOOK_DETAILS = 1
         val PAGE_INSERTION_DETAILS = 2
+        val PAGE_INSERTION_PICTURES = 3
     }
 
     /**
@@ -78,6 +88,16 @@ class PublishFragment : Fragment() {
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val extras = data?.extras
+            val bitmap = extras?.get("data")
+            bitmap?.let {
+                thumbnailPicture.setImageBitmap(it as Bitmap)
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(KEY_CURRENT_PAGE, currentPage)
         outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
@@ -92,7 +112,8 @@ class PublishFragment : Fragment() {
         pages = mapOf(
                 PAGE_ISBN to inputISBNContainer,
                 PAGE_BOOK_DETAILS to inputBookDetailsContainer,
-                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer
+                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer,
+                PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
         )
 
         bookDetailsHelperText = getString(R.string.add_book_details)
@@ -233,8 +254,25 @@ class PublishFragment : Fragment() {
         }
 
         btnConfirmInsertionDetails.setOnClickListener {
-            Log.d("SELL", "Everything confirmed")
+            showPage(PAGE_INSERTION_PICTURES)
         }
+
+        btnChangeInsertionDetails.setOnClickListener {
+            showPage(PAGE_INSERTION_DETAILS)
+        }
+
+        btnTakePicture.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val takePictureActivity = takePictureIntent.resolveActivity(activity.packageManager)
+        takePictureActivity?.let {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+
     }
 
     /**

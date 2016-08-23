@@ -75,6 +75,10 @@
     <string name="helper_isbn_input">Insert the ISBN of the book to automatically retrieve the book\'s details</string>
     <string name="add_book_details">Add book\'s details</string>
     <string name="book_wear_condition">Wear</string>
+    <string name="helper_insertion_pictures">Take some pictures of the book</string>
+    <string name="publish_insertion">Sell</string>
+    <string name="change_insertion_details">Change Insertion Details</string>
+    <string name="take_picture">Take picture</string>
 
     <!-- Book wear conditions -->
     <string-array name="book_condition_array">
