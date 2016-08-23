@@ -99,7 +99,7 @@ class LatestFragment : ViewTypeFragment() {
         val book = item as? BookModel
         book?.let {
             Log.d(TAG, "Handling item click")
-            refreshMainViewData()
+            checkForUpdates()
             val toastMessage = if (it.saved) R.string.book_saved_to_collection
             else R.string.book_removed_from_collection
             context.toast(toastMessage)
