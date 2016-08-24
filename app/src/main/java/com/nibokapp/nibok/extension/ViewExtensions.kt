@@ -30,11 +30,11 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 /**
  * Load an image directly in a view.
  *
- * @param imageUrl the url of the image
+ * @param imageLocation the location of the image, it can be an url a uri or a path
  */
-fun ImageView.loadImg(imageUrl: String) {
+fun ImageView.loadImg(imageLocation: String) {
     Glide.with(context)
-            .load(imageUrl)
+            .load(imageLocation)
             .placeholder(R.drawable.book_placehoder_image)
             .error(R.drawable.book_placehoder_image)
             .into(this)
