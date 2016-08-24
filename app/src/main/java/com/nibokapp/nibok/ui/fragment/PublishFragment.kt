@@ -2,10 +2,12 @@ package com.nibokapp.nibok.ui.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.InputFilter
@@ -18,7 +20,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.inflate
+import com.nibokapp.nibok.extension.loadImg
 import kotlinx.android.synthetic.main.fragment_publish.*
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PublishFragment : Fragment() {
 
@@ -33,16 +40,22 @@ class PublishFragment : Fragment() {
         val ISBN_PREFIX_LENGTH = 3
 
         /**
-         * Keys for Bundle operations.
+         * Keys for Bundle save and restore operations.
          */
         val KEY_CURRENT_PAGE = "$TAG:currentPage"
         val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
         val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
+        val KEY_PICTURES_LIST = "$TAG:picturesList"
 
         /**
          * Request code for picture taking
          */
         val REQUEST_IMAGE_CAPTURE = 1
+
+        /**
+         * File provider authority constant
+         */
+        val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
 
         /**
          * List of pages making up the insertion publishing process.
@@ -74,6 +87,8 @@ class PublishFragment : Fragment() {
      */
     private var isISBNSet = false
 
+    private var picturesList = mutableListOf<String>()
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_publish)
@@ -89,11 +104,10 @@ class PublishFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val extras = data?.extras
-            val bitmap = extras?.get("data")
-            bitmap?.let {
-                thumbnailPicture.setImageBitmap(it as Bitmap)
+        if (data != null && resultCode != Activity.RESULT_CANCELED) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+                // TODO load pictures after rotation
+                pictureOne.loadImg(picturesList.first())
             }
         }
     }
@@ -102,6 +116,8 @@ class PublishFragment : Fragment() {
         outState.putInt(KEY_CURRENT_PAGE, currentPage)
         outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
         outState.putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
+        // TODO Check if working
+        outState.putStringArrayList(KEY_PICTURES_LIST, picturesList.toCollection(ArrayList<String>()))
         super.onSaveInstanceState(outState)
     }
 
@@ -126,6 +142,9 @@ class PublishFragment : Fragment() {
                     getString(R.string.add_book_details))
 
             isISBNSet = it.getBoolean(KEY_IS_ISBN_SET)
+
+            // TODO Check if working
+            picturesList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
         }
 
         helperBookDetails.text = bookDetailsHelperText
@@ -266,13 +285,75 @@ class PublishFragment : Fragment() {
         }
     }
 
+    /**
+     * Dispatch the intent to take a picture to already installed apps.
+     */
     private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        val takePictureActivity = takePictureIntent.resolveActivity(activity.packageManager)
-        takePictureActivity?.let {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+
+        val pictureFile = createImageFile()
+
+        pictureFile?.let {
+            val pictureURI = FileProvider.getUriForFile(context,
+                    CAPTURE_PICTURES_FILE_PROVIDER,
+                    it)
+
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+            // Default activities that can take a picture
+            val resolvedIntentActivities = context.packageManager
+                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY)
+
+            // Grant to each of these activities the permission to read
+            // and write to the picture URI.
+            // If this is not done SecurityException is raised and
+            // the camera apps crash.
+            resolvedIntentActivities.forEach {
+                val packageName = it.activityInfo.packageName
+                Log.d(TAG, "Granting permission to: $packageName")
+                context.grantUriPermission(packageName, pictureURI,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            // Finally start the activity to take the picture
+            val takePictureActivity = takePictureIntent.resolveActivity(activity.packageManager)
+            takePictureActivity?.let {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureURI)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+
+            // TODO Revoke permissions at the right time
+            //context.revokeUriPermission(pictureURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
+        }
+
+    /**
+     * Try to create an unique image file in which to store a picture.
+     *
+     * @return a File if the file was created successfully,
+     * null if no file could be created
+     */
+    private fun createImageFile() : File? {
+        var imageFile: File? = null
+
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_$timestamp"
+        val extension = ".jpg"
+
+        // Get the external public files directory
+        val storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        try {
+            imageFile = File.createTempFile(imageFileName, extension, storageDir)
+        } catch (ex: IOException) {
+            Log.d(TAG, "Could not create image file\nException:$ex")
+        }
+
+        imageFile?.let {
+            val pictureAbsolutePath = "file:${it.absolutePath}"
+            picturesList.add(pictureAbsolutePath)
+        }
+        return imageFile
     }
 
     /**
