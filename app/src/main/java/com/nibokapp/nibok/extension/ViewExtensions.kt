@@ -35,8 +35,8 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 fun ImageView.loadImg(imageLocation: String) {
     Glide.with(context)
             .load(imageLocation)
-            .placeholder(R.drawable.book_placehoder_image)
-            .error(R.drawable.book_placehoder_image)
+            .placeholder(R.drawable.book_placeholder_image)
+            .error(R.drawable.book_placeholder_image)
             .into(this)
 }
 
