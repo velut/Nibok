@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/inputInsertionPicturesContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:visibility="visible"
+    tools:showIn="@layout/fragment_publish">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/publish_header_distance" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/helper_insertion_pictures"
+            android:textSize="20sp" />
+
+        <!-- Pictures taken by the user, scrolled horizontally -->
+
+        <HorizontalScrollView
+            android:id="@+id/pictureScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:id="@+id/picturesContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp">
+
+                <ImageButton
+                    android:id="@+id/btnTakePicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/primary_dark"
+                    android:src="@drawable/ic_add_a_photo_white_48dp"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/take_picture_button_description"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="end">
+
+            <Button
+                android:id="@+id/btnChangeInsertionDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_insertion_details" />
+
+
+            <Button
+                android:id="@+id/btnFinalizeInsertion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:theme="@style/positiveButton"
+                android:text="@string/publish_insertion" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/publish_footer_distance" />
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

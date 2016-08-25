@@ -5,6 +5,7 @@
     <string name="book_cover_description">Picture of the book\'s cover</string>
     <string name="save_button_description">Save this book to your Saved collection</string>
     <string name="detail_image_description">Main image of the book</string>
+    <string name="take_picture_button_description">Tap button to take a picture</string>
 
     <!-- Main ViewPager Tabs names -->
     <string name="latest_tab">Latest</string>
@@ -77,8 +78,9 @@
     <string name="book_wear_condition">Wear</string>
     <string name="helper_insertion_pictures">Take some pictures of the book</string>
     <string name="publish_insertion">Sell</string>
-    <string name="change_insertion_details">Change Insertion Details</string>
+    <string name="change_insertion_details">Change price</string>
     <string name="take_picture">Take picture</string>
+
 
     <!-- Book wear conditions -->
     <string-array name="book_condition_array">
