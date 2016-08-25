@@ -18,10 +18,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import kotlinx.android.synthetic.main.fragment_publish.*
+import kotlinx.android.synthetic.main.publish_input_book_details.*
+import kotlinx.android.synthetic.main.publish_input_insertion_details.*
+import kotlinx.android.synthetic.main.publish_input_isbn.*
+import kotlinx.android.synthetic.main.publish_take_picture.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -45,7 +51,7 @@ class PublishFragment : Fragment() {
         val KEY_CURRENT_PAGE = "$TAG:currentPage"
         val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
         val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
-        val KEY_PICTURES_LIST = "$TAG:picturesList"
+        val KEY_PICTURES_LIST = "$TAG:picturesUriList"
 
         /**
          * Request code for picture taking
@@ -56,6 +62,11 @@ class PublishFragment : Fragment() {
          * File provider authority constant
          */
         val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
+
+        /**
+         * Constant for maximum number of pictures that the user can take
+         */
+        val MAX_PICTURE_NUMBER = 5
 
         /**
          * List of pages making up the insertion publishing process.
@@ -87,7 +98,12 @@ class PublishFragment : Fragment() {
      */
     private var isISBNSet = false
 
-    private var picturesList = mutableListOf<String>()
+    private var picturesUriList = mutableListOf<String>()
+
+    /**
+     * List of image views that hold the pictures taken by the user.
+     */
+    lateinit var pictureImgHosts: List<ImageView>
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -106,8 +122,8 @@ class PublishFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (data != null && resultCode != Activity.RESULT_CANCELED) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-                // TODO load pictures after rotation
-                pictureOne.loadImg(picturesList.first())
+                // TODO Check update
+                bindPictures()
             }
         }
     }
@@ -116,8 +132,7 @@ class PublishFragment : Fragment() {
         outState.putInt(KEY_CURRENT_PAGE, currentPage)
         outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
         outState.putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
-        // TODO Check if working
-        outState.putStringArrayList(KEY_PICTURES_LIST, picturesList.toCollection(ArrayList<String>()))
+        outState.putStringArrayList(KEY_PICTURES_LIST, picturesUriList.toCollection(ArrayList<String>()))
         super.onSaveInstanceState(outState)
     }
 
@@ -132,6 +147,9 @@ class PublishFragment : Fragment() {
                 PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
         )
 
+        // Initialize picture hosting views
+        pictureImgHosts = listOf(picView1, picView2, picView3, picView4, picView5)
+
         bookDetailsHelperText = getString(R.string.add_book_details)
 
         // Retrieve eventually saved values
@@ -143,11 +161,16 @@ class PublishFragment : Fragment() {
 
             isISBNSet = it.getBoolean(KEY_IS_ISBN_SET)
 
-            // TODO Check if working
-            picturesList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
+            picturesUriList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
         }
 
         helperBookDetails.text = bookDetailsHelperText
+
+        // TODO close keyboards
+        // TODO check for horizontal scroll in landscape
+
+        // Bind the available pictures in the image views
+        bindPictures()
 
         showPage(currentPage)
 
@@ -158,6 +181,25 @@ class PublishFragment : Fragment() {
         setupBookConditionSpinner()
         setupPriceFilters()
 
+    }
+
+    private fun bindPictures() {
+        if (picturesUriList.isNotEmpty()) {
+            if (picturesUriList.size == MAX_PICTURE_NUMBER) {
+                btnTakePicture.visibility = View.GONE
+                //picEndSpacing.visibility = View.GONE
+            } else {
+                //picEndSpacing.visibility = View.VISIBLE
+            }
+            picturesUriList.forEachIndexed { index, pictureUri ->
+                val host = pictureImgHosts[index]
+                host.loadImg(pictureUri)
+                host.visibility = View.VISIBLE
+            }
+            pictureScrollView.postDelayed(
+                    {pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)},
+                    120L)
+        }
     }
 
     /**
@@ -297,6 +339,9 @@ class PublishFragment : Fragment() {
                     CAPTURE_PICTURES_FILE_PROVIDER,
                     it)
 
+            // Add the picture uri to the current pictures list
+            picturesUriList.add(pictureURI.toString())
+
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
             // Default activities that can take a picture
@@ -349,10 +394,6 @@ class PublishFragment : Fragment() {
             Log.d(TAG, "Could not create image file\nException:$ex")
         }
 
-        imageFile?.let {
-            val pictureAbsolutePath = "file:${it.absolutePath}"
-            picturesList.add(pictureAbsolutePath)
-        }
         return imageFile
     }
 
