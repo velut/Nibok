@@ -6,7 +6,7 @@
     <string name="save_button_description">Save this book to your Saved collection</string>
     <string name="detail_image_description">Main image of the book</string>
     <string name="take_picture_button_description">Tap button to take a picture</string>
-
+    <string name="picture_button_description">Image of the book you took. Tap to show options</string>
     <!-- Main ViewPager Tabs names -->
     <string name="latest_tab">Latest</string>
     <string name="saved_tab">Saved</string>
