@@ -1,13 +1,17 @@
 package com.nibokapp.nibok.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
+import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.InputFilter
@@ -15,12 +19,15 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.extension.getName
+import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import kotlinx.android.synthetic.main.fragment_publish.*
@@ -54,17 +61,17 @@ class PublishFragment : Fragment() {
         val KEY_PICTURES_LIST = "$TAG:picturesUriList"
 
         /**
-         * Request code for picture taking
+         * Request code for picture taking.
          */
         val REQUEST_IMAGE_CAPTURE = 1
 
         /**
-         * File provider authority constant
+         * File provider authority constant.
          */
         val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
 
         /**
-         * Constant for maximum number of pictures that the user can take
+         * Constant for maximum number of pictures that the user can take.
          */
         val MAX_PICTURE_NUMBER = 5
 
@@ -78,15 +85,15 @@ class PublishFragment : Fragment() {
     }
 
     /**
+     * The mapping of pages to their views, initialized in onViewCreated.
+     */
+    lateinit var pages: Map<Int, View>
+
+    /**
      * The current page being displayed.
      * By default the first page to display is the ISBN code input page.
      */
     private var currentPage = PAGE_ISBN
-
-    /**
-     * The mapping of pages to their views, initialized in onViewCreated.
-     */
-    lateinit var pages: Map<Int, View>
 
     /**
      * Helper text for the book's details page.
@@ -98,6 +105,9 @@ class PublishFragment : Fragment() {
      */
     private var isISBNSet = false
 
+    /**
+     * List of URIs pointing to the images taken by the user.
+     */
     private var picturesUriList = mutableListOf<String>()
 
     /**
@@ -123,8 +133,16 @@ class PublishFragment : Fragment() {
         if (data != null && resultCode != Activity.RESULT_CANCELED) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
                 // TODO Check update
-                bindPictures()
+                val handler = Handler()
+                handler.postDelayed( { bindPictures() }, 120L)
             }
+        }
+
+        // Revoke Uri permissions
+        picturesUriList.forEach {
+            val pictureUri = Uri.parse(it)
+            context.revokeUriPermission(pictureUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }
 
@@ -132,25 +150,18 @@ class PublishFragment : Fragment() {
         outState.putInt(KEY_CURRENT_PAGE, currentPage)
         outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
         outState.putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
-        outState.putStringArrayList(KEY_PICTURES_LIST, picturesUriList.toCollection(ArrayList<String>()))
+        outState.putStringArrayList(KEY_PICTURES_LIST,
+                picturesUriList.toCollection(ArrayList<String>()))
         super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the pages map
-        pages = mapOf(
-                PAGE_ISBN to inputISBNContainer,
-                PAGE_BOOK_DETAILS to inputBookDetailsContainer,
-                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer,
-                PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
-        )
+        initPublishPagesMap()
+        initImgHosts()
 
-        // Initialize picture hosting views
-        pictureImgHosts = listOf(picView1, picView2, picView3, picView4, picView5)
-
-        bookDetailsHelperText = getString(R.string.add_book_details)
+        setBookHelperText()
 
         // Retrieve eventually saved values
         savedInstanceState?.let {
@@ -164,38 +175,79 @@ class PublishFragment : Fragment() {
             picturesUriList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
         }
 
-        helperBookDetails.text = bookDetailsHelperText
-
-        // TODO close keyboards
-        // TODO check for horizontal scroll in landscape
+        setBookHelperText(bookDetailsHelperText)
 
         // Bind the available pictures in the image views
         bindPictures()
 
         showPage(currentPage)
 
+        addHideKeyboardListeners()
         configureButtonNavigation()
 
         addInputISBNListener()
 
         setupBookConditionSpinner()
         setupPriceFilters()
+    }
 
+    /**
+     * Add touch listeners to all the page views.
+     *
+     * When the view is tapped hide the soft keyboard used for input.
+     */
+    private fun addHideKeyboardListeners() {
+        val pageViews = pages.values
+        pageViews.forEach {
+            it.setOnTouchListener { view, motionEvent ->
+                val action = MotionEventCompat.getActionMasked(motionEvent)
+                if (action == MotionEvent.ACTION_DOWN) { // If the view was tapped
+                    view.hideSoftKeyboard(context)
+                }
+                false // Let others consume the event
+            }
+        }
+    }
+
+    /**
+     * Initialize the list of image views hosting the pictures taken by the user.
+     */
+    private fun initImgHosts() {
+        pictureImgHosts = listOf(picView1, picView2, picView3, picView4, picView5)
+    }
+
+    /**
+     * Initialize the map (position -> view) for the pages making up the publishing process.
+     */
+    private fun initPublishPagesMap() {
+        pages = mapOf(
+                PAGE_ISBN to inputISBNContainer,
+                PAGE_BOOK_DETAILS to inputBookDetailsContainer,
+                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer,
+                PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
+        )
     }
 
     private fun bindPictures() {
-        if (picturesUriList.isNotEmpty()) {
-            if (picturesUriList.size == MAX_PICTURE_NUMBER) {
-                btnTakePicture.visibility = View.GONE
-                //picEndSpacing.visibility = View.GONE
-            } else {
-                //picEndSpacing.visibility = View.VISIBLE
-            }
-            picturesUriList.forEachIndexed { index, pictureUri ->
-                val host = pictureImgHosts[index]
-                host.loadImg(pictureUri)
-                host.visibility = View.VISIBLE
-            }
+
+        val picturesSize = picturesUriList.size
+
+        if (picturesSize == 0) return
+
+        // Bind at most MAX_PICTURE_NUMBER pictures in the corresponding image views
+        picturesUriList.take(MAX_PICTURE_NUMBER).forEachIndexed { index, pictureUri ->
+            val host = pictureImgHosts[index]
+            host.visibility = View.VISIBLE
+            host.loadImg(pictureUri)
+            Log.d(TAG, "ImgView: ${host.getName()} visible: ${host.visibility == View.VISIBLE}")
+        }
+
+        // Hide button to take pictures after the maximum number of pictures was taken
+        if (picturesSize == MAX_PICTURE_NUMBER) {
+            btnTakePicture.visibility = View.GONE
+        } else {
+            // After a delay scroll to the end of the horizontal scroll view to show the
+            // take picture button
             pictureScrollView.postDelayed(
                     {pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)},
                     120L)
@@ -224,7 +276,7 @@ class PublishFragment : Fragment() {
     /**
      * Initial validator for ISBN input.
      *
-     * Check if the ISBN code length is valid or not.
+     * Check if the ISBN code length is valid or not according to the ISBN-13 standard.
      * If valid proceed to the next step otherwise show and error
      * and eventually reset old fetched book data.
      */
@@ -288,8 +340,10 @@ class PublishFragment : Fragment() {
 
     /**
      * Update the book helper text and keep track of the change.
+     *
+     * @param text the text to show in the helper. Default = add_book_details text
      */
-    private fun setBookHelperText(text: String) {
+    private fun setBookHelperText(text: String = getString(R.string.add_book_details)) {
         bookDetailsHelperText = text
         helperBookDetails.text = text
     }
@@ -365,9 +419,6 @@ class PublishFragment : Fragment() {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureURI)
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
-
-            // TODO Revoke permissions at the right time
-            //context.revokeUriPermission(pictureURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
         }
@@ -380,7 +431,7 @@ class PublishFragment : Fragment() {
      */
     private fun createImageFile() : File? {
         var imageFile: File? = null
-
+        @SuppressLint("SimpleDateFormat")
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "JPEG_$timestamp"
         val extension = ".jpg"
@@ -400,14 +451,18 @@ class PublishFragment : Fragment() {
     /**
      * Show the page at the given position and update the current page value,
      * hide all other pages before doing so.
-     *
+     * Hide also the soft keyboard when the page is shown
      *
      * @param pagePosition the position of the page to show
      */
     private fun showPage(pagePosition: Int) {
         pages.values.forEach { it.visibility = View.GONE }
-        pages[pagePosition]?.visibility = View.VISIBLE
         currentPage = pagePosition
+        val currentView = pages[pagePosition]
+        currentView?.apply {
+            visibility = View.VISIBLE
+            hideSoftKeyboard(context)
+        }
     }
 
     /**
@@ -421,7 +476,7 @@ class PublishFragment : Fragment() {
     }
 
     /**
-     * Reset the screen of the book's details.
+     * Reset the screen of the book's details and scroll to top.
      */
     private fun clearBookDetails() {
         setBookHelperText(getString(R.string.add_book_details))
