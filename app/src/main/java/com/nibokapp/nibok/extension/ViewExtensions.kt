@@ -1,11 +1,13 @@
 package com.nibokapp.nibok.extension
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.nibokapp.nibok.R
@@ -76,3 +78,14 @@ fun View.animateBounce() {
  * Get the short name of a view.
  */
 fun View.getName() = this.toString().substringAfter("app:id/").substringBefore('}')
+
+/**
+ * Hide the soft keyboard in this view.
+ *
+ * @param context the context needed to get system services
+ */
+fun View.hideSoftKeyboard(context: Context) {
+    val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE)
+            as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
+}
