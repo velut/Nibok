@@ -36,7 +36,7 @@
             android:name=".ui.activity.PublishActivity"
             android:label="@string/title_activity_publish"
             android:theme="@style/NibokTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
