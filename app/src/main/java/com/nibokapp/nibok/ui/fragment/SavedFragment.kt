@@ -95,6 +95,7 @@ class SavedFragment : ViewTypeFragment() {
 
                     // Save old book position for possible reinsertion
                     val oldBookPosition = mainViewAdapter.removeBook(book)
+                    refreshMainViewData()
 
                     // Notify user of removal
                     val snackBar = Snackbar.make(savedFragmentRoot,
@@ -106,6 +107,7 @@ class SavedFragment : ViewTypeFragment() {
                         if (!UserManager.isInsertionSaved(book.insertionId)) {
                             book.saved = UserManager.toggleSaveInsertion(book.insertionId)
                             mainViewAdapter.addBooks(listOf(book), insertAtPosition = oldBookPosition)
+                            refreshMainViewData()
                             // Notify the reinsertion
                             val childSnackBar = Snackbar.make(savedFragmentRoot,
                                     R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
@@ -120,7 +122,6 @@ class SavedFragment : ViewTypeFragment() {
                     snackBar.show()
                 }
             }
-            checkForUpdates()
         }
     }
 
