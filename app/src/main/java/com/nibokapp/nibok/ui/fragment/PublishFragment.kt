@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
@@ -59,6 +58,7 @@ class PublishFragment : Fragment() {
         val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
         val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
         val KEY_PICTURES_LIST = "$TAG:picturesUriList"
+        val KEY_CURRENT_PICTURE_URI = "$TAG:currentPictureUri"
 
         /**
          * Request code for picture taking.
@@ -111,6 +111,11 @@ class PublishFragment : Fragment() {
     private var picturesUriList = mutableListOf<String>()
 
     /**
+     * Current Uri of the picture being taken.
+     */
+    private var currentPictureUri = ""
+
+    /**
      * List of image views that hold the pictures taken by the user.
      */
     lateinit var pictureImgHosts: List<ImageView>
@@ -130,19 +135,24 @@ class PublishFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (data != null && resultCode != Activity.RESULT_CANCELED) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-                // TODO Check update
-                val handler = Handler()
-                handler.postDelayed( { bindPictures() }, 120L)
-            }
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // If we have a valid URI revoke previously granted permissions on it
+        if (currentPictureUri != "") {
+            context.revokeUriPermission(Uri.parse(currentPictureUri),
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        // Revoke Uri permissions
-        picturesUriList.forEach {
-            val pictureUri = Uri.parse(it)
-            context.revokeUriPermission(pictureUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            // Image capture was successful, bind the pictures
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "Picture taken, binding pictures")
+                picturesUriList.add(currentPictureUri)
+                bindPictures()
+            } else { // Image capture was unsuccessful, delete unused file and discard the last URI
+                context.contentResolver.delete(Uri.parse(currentPictureUri), null, null)
+                currentPictureUri = ""
+            }
         }
     }
 
@@ -150,6 +160,7 @@ class PublishFragment : Fragment() {
         outState.putInt(KEY_CURRENT_PAGE, currentPage)
         outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
         outState.putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
+        outState.putString(KEY_CURRENT_PICTURE_URI, currentPictureUri)
         outState.putStringArrayList(KEY_PICTURES_LIST,
                 picturesUriList.toCollection(ArrayList<String>()))
         super.onSaveInstanceState(outState)
@@ -171,6 +182,8 @@ class PublishFragment : Fragment() {
                     getString(R.string.add_book_details))
 
             isISBNSet = it.getBoolean(KEY_IS_ISBN_SET)
+
+            currentPictureUri = it.getString(KEY_CURRENT_PICTURE_URI, "")
 
             picturesUriList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
         }
@@ -393,8 +406,7 @@ class PublishFragment : Fragment() {
                     CAPTURE_PICTURES_FILE_PROVIDER,
                     it)
 
-            // Add the picture uri to the current pictures list
-            picturesUriList.add(pictureURI.toString())
+            currentPictureUri = pictureURI.toString()
 
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
