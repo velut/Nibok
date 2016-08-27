@@ -243,7 +243,7 @@ class PublishFragment : Fragment() {
         }
 
         // Hide button to take pictures after the maximum number of pictures was taken
-        if (picturesSize == MAX_PICTURE_NUMBER) {
+        if (picturesSize >= MAX_PICTURE_NUMBER) {
             btnTakePicture.visibility = View.GONE
         } else {
             // After a delay scroll to the end of the horizontal scroll view to show the
