@@ -1,12 +1,10 @@
 package com.nibokapp.nibok.ui.fragment
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
@@ -27,18 +25,12 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.extension.getName
-import com.nibokapp.nibok.extension.hideSoftKeyboard
-import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.extension.loadImg
+import com.nibokapp.nibok.extension.*
 import kotlinx.android.synthetic.main.fragment_publish.*
 import kotlinx.android.synthetic.main.publish_input_book_details.*
 import kotlinx.android.synthetic.main.publish_input_insertion_details.*
 import kotlinx.android.synthetic.main.publish_input_isbn.*
 import kotlinx.android.synthetic.main.publish_take_picture.*
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class PublishFragment : Fragment() {
@@ -464,7 +456,7 @@ class PublishFragment : Fragment() {
      */
     private fun dispatchTakePictureIntent() {
 
-        val pictureFile = createImageFile()
+        val pictureFile = createImageFile(context)
 
         pictureFile?.let {
             val pictureURI = FileProvider.getUriForFile(context,
@@ -499,31 +491,6 @@ class PublishFragment : Fragment() {
         }
 
         }
-
-    /**
-     * Try to create an unique image file in which to store a picture.
-     *
-     * @return a File if the file was created successfully,
-     * null if no file could be created
-     */
-    private fun createImageFile() : File? {
-        var imageFile: File? = null
-        @SuppressLint("SimpleDateFormat")
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val imageFileName = "JPEG_$timestamp"
-        val extension = ".jpg"
-
-        // Get the external public files directory
-        val storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-
-        try {
-            imageFile = File.createTempFile(imageFileName, extension, storageDir)
-        } catch (ex: IOException) {
-            Log.d(TAG, "Could not create image file\nException:$ex")
-        }
-
-        return imageFile
-    }
 
     /**
      * Show the page at the given position and update the current page value,
