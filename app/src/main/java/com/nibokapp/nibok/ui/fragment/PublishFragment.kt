@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
@@ -24,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.hideSoftKeyboard
@@ -120,6 +122,12 @@ class PublishFragment : Fragment() {
      */
     lateinit var pictureImgHosts: List<ImageView>
 
+    /**
+     * Dialogs notifying the user.
+     */
+    var confirmationDialog: MaterialDialog? = null
+    var progressDialog: MaterialDialog? = null
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_publish)
@@ -132,6 +140,13 @@ class PublishFragment : Fragment() {
         val hostingActivity = (activity as AppCompatActivity)
         hostingActivity.setSupportActionBar(toolbar)
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Dismiss dialogs to prevent leaked windows
+        progressDialog?.dismiss()
+        confirmationDialog?.dismiss()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -392,6 +407,56 @@ class PublishFragment : Fragment() {
         btnTakePicture.setOnClickListener {
             dispatchTakePictureIntent()
         }
+
+        btnFinalizeInsertion.setOnClickListener {
+            showPublishAlertDialog()
+        }
+    }
+
+    /**
+     * Show alert dialog with insertion info recap before publishing
+     * and ask user if he really wants to publish the insertion.
+     * Show a progress dialog while the insertion is being published.
+     */
+    private fun showPublishAlertDialog() {
+        progressDialog = MaterialDialog.Builder(context)
+                .content(getString(R.string.progress_publishing))
+                .progress(true, 0)
+                .build()
+
+        val confirmationMessage = getPublishAlertDialogContent()
+
+        confirmationDialog = MaterialDialog.Builder(context)
+                .title(getString(R.string.alert_publish_title))
+                .content(confirmationMessage)
+                .positiveText(getString(R.string.alert_publish_positive_text))
+                .negativeText(getString(R.string.alert_publish_negative_text))
+                .onPositive { materialDialog, dialogAction ->
+                    progressDialog!!.show()
+                    // TODO dismiss progress after successful publishing and alert user
+                    Handler().postDelayed({ progressDialog!!.dismiss() }, 2000L)
+                }
+                .build()
+
+        confirmationDialog!!.show()
+    }
+
+    /**
+     * Build the content string used in the publish alert dialog
+     * representing an overview of the insertion data submitted by the user.
+     *
+     * @return a string summarising the data that the user submitted for the insertion
+     */
+    private fun getPublishAlertDialogContent(): String {
+        val confirmationQuestion = "${getString(R.string.alert_publish_content_question)}\n"
+        val title = "${getString(R.string.book_title)}: \n"
+        val authors = "${resources.getQuantityString(R.plurals.book_author, 2)}: \n"
+        val year = "${getString(R.string.book_year)}: \n"
+        val publisher = "${getString(R.string.book_publisher)}: \n"
+        val isbn = "${getString(R.string.book_isbn)}: \n"
+        val price = "${getString(R.string.insertion_book_price)}: \n"
+        val wearCondition = "${getString(R.string.book_wear_condition)}: \n"
+        return "$confirmationQuestion\n$title$authors$year$publisher$isbn$price$wearCondition"
     }
 
     /**

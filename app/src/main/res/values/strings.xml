@@ -90,5 +90,13 @@
         <item>Heavy wear</item>
     </string-array>
 
+    <!-- Dialogs -->
+    <string name="progress_publishing">Publishing…</string>
+    <string name="alert_publish_title">Publish insertion</string>
+    <string name="alert_publish_content_question">Publish the following book insertion?</string>
+    <string name="alert_publish_positive_text">Publish</string>
+    <string name="alert_publish_negative_text">Cancel</string>
+
+
 
 </resources>
