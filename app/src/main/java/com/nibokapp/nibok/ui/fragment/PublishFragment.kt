@@ -12,8 +12,6 @@ import android.support.v4.content.FileProvider
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +23,8 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.ui.filters.getPriceLeadingZerosFilter
+import com.nibokapp.nibok.ui.filters.getPriceLengthFilter
 import com.nibokapp.nibok.extension.*
 import kotlinx.android.synthetic.main.fragment_publish.*
 import kotlinx.android.synthetic.main.publish_input_book_details.*
@@ -535,64 +535,8 @@ class PublishFragment : Fragment() {
      * Add input filters to the price input form to allow only well formed prices.
      */
     private fun setupPriceFilters() {
-
         val inputPrice = inputInsertionBookPrice
-
-        val priceFilter = object : InputFilter {
-
-            val MAX_INTEGER_DIGITS = 4
-            val MAX_DECIMAL_DIGITS = 2
-            val SEPARATOR = "."
-
-            override fun filter(source: CharSequence, start: Int, end: Int,
-                                dest: Spanned, dstart: Int, dend: Int): CharSequence? {
-
-                val currentPrice = inputPrice.text.toString() + source.toString()
-                val currentPriceLen = currentPrice.length
-                val separatorIndex = currentPrice.indexOf(SEPARATOR)
-                var result: String? = null
-
-                when (separatorIndex) {
-                // Price input is "." and gets replaced with "0."
-                    0 -> result = "0$SEPARATOR"
-
-                // Price contains only integer digits -> limit length if necessary
-                    -1 -> if (currentPriceLen > MAX_INTEGER_DIGITS) result = ""
-
-                // Price contains separator and may contain decimal digits
-                //  -> limit length if necessary
-                    else -> {
-                        val decimalDigitsLen = currentPrice.substring(separatorIndex + 1).length
-                        if (decimalDigitsLen > MAX_DECIMAL_DIGITS) result = ""
-                    }
-                }
-
-                return result
-            }
-        }
-
-        val zeroFilter = object : InputFilter {
-
-            val SEPARATOR = "."
-
-            override fun filter(source: CharSequence, start: Int, end: Int,
-                                dest: Spanned, dstart: Int, dend: Int): CharSequence? {
-
-                val oldPrice = inputPrice.text.toString()
-                val nextChar = source.toString()
-                var result: String? = null
-
-                // A price starting with a 0 can only be in the form 0.xx, exclude prices where 0
-                // is the leading digit and more digits follow before the separator (e.g. 0123.45)
-                if (oldPrice == "0" && nextChar != SEPARATOR) {
-                    result = ""
-                }
-
-                return result
-            }
-        }
-
-        val filters = arrayOf(priceFilter, zeroFilter)
-        inputInsertionBookPrice.filters = filters
+        inputInsertionBookPrice.filters =
+                arrayOf(getPriceLengthFilter(inputPrice), getPriceLeadingZerosFilter(inputPrice))
     }
 }
