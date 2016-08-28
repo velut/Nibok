@@ -69,7 +69,10 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        // Wait before making fab visible
+        // otherwise it's initially positioned in the upper left corner
+        // Appeared with version 24 of design library
+        fab.post { fab.visibility = View.VISIBLE }
         fab.setOnClickListener {
             // TODO Check that user is logged in
             Log.d(TAG, "Open publishing activity")

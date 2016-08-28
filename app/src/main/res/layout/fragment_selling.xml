@@ -23,7 +23,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="com.nibokapp.nibok.ui.behavior.ScrollFabBehavior"
         app:layout_anchor="@id/sellingBooksList"
-        app:layout_anchorGravity="bottom|right|end"/>
+        app:layout_anchorGravity="bottom|right|end"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/searchResultsList"
