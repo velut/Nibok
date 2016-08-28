@@ -13,7 +13,7 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
-import org.jetbrains.anko.async
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
 import org.jetbrains.anko.uiThread
 
@@ -214,7 +214,7 @@ abstract class ViewTypeFragment : BaseFragment() {
      * proper data.
      */
     fun refreshMainViewData() {
-        async() { mainViewData = getMainViewData() }
+        doAsync() { mainViewData = getMainViewData() }
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class ViewTypeFragment : BaseFragment() {
         val viewAdapter = getAdapterForView(mainView)
         Log.d(TAG, "${getFragmentName()} is checking for updates;\n adapter: $viewAdapter")
 
-        async() {
+        doAsync() {
             val newData = getMainViewData()
 
             if (mainViewData != newData) {
