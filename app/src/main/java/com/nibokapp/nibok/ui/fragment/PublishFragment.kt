@@ -402,15 +402,15 @@ class PublishFragment : Fragment() {
                 .title(getString(R.string.alert_publish_title))
                 .content(confirmationMessage)
                 .positiveText(getString(R.string.alert_publish_positive_text))
-                .negativeText(getString(R.string.alert_publish_negative_text))
+                .negativeText(getString(R.string.text_cancel))
                 .onPositive { materialDialog, dialogAction ->
-                    progressDialog!!.show()
+                    progressDialog?.show()
                     // TODO dismiss progress after successful publishing and alert user
-                    Handler().postDelayed({ progressDialog!!.dismiss() }, 2000L)
+                    Handler().postDelayed({ progressDialog?.dismiss() }, 2000L)
                 }
                 .build()
 
-        confirmationDialog!!.show()
+        confirmationDialog?.show()
     }
 
     /**
