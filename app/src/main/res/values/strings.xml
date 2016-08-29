@@ -95,6 +95,9 @@
     <string name="alert_publish_title">Publish insertion</string>
     <string name="alert_publish_content_question">Publish the following book insertion?</string>
     <string name="alert_publish_positive_text">Publish</string>
+    <string name="alert_quit_publish_title">Quit insertion publishing?</string>
+    <string name="alert_quit_publish_content">"Insertion data will be lost on quit.\nProceed?"</string>
+    <string name="alert_quit_publish_positive_text">Quit</string>
     <string name="text_cancel">Cancel</string>
 
 
