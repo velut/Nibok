@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.filters
+package com.nibokapp.nibok.ui.filter
 
 import android.support.design.widget.TextInputEditText
 import android.text.InputFilter

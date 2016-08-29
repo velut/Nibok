@@ -23,9 +23,9 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.filters.getPriceLeadingZerosFilter
-import com.nibokapp.nibok.ui.filters.getPriceLengthFilter
 import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
+import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
 import kotlinx.android.synthetic.main.fragment_publish.*
 import kotlinx.android.synthetic.main.publish_input_book_details.*
 import kotlinx.android.synthetic.main.publish_input_insertion_details.*
