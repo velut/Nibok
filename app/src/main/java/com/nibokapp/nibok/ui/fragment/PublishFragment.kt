@@ -23,6 +23,7 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.rule.IsbnValidator
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
 import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
@@ -37,13 +38,6 @@ class PublishFragment : Fragment() {
 
     companion object {
         private val TAG = PublishFragment::class.java.simpleName
-
-        /**
-         * Values for ISBN parsing.
-         */
-        val ISBN_13_LENGTH = 13
-        val ISBN_PREFIXES = listOf("977", "978", "979")
-        val ISBN_PREFIX_LENGTH = 3
 
         /**
          * Keys for Bundle save and restore operations.
@@ -294,45 +288,31 @@ class PublishFragment : Fragment() {
     }
 
     /**
-     * Initial validator for ISBN input.
+     * Validate codes submitted to the isbn input form.
      *
-     * Check if the ISBN code length is valid or not according to the ISBN-13 standard.
-     * If valid proceed to the next step otherwise show and error
-     * and eventually reset old fetched book data.
+     * According to the validity of the current input display error messages and
+     * set isISBNSet value.
+     * If the isbn code is valid try to fetch corresponding book data.
      */
     private fun validateISBNInput() {
-        val isbn = inputISBN.text.toString().trim()
-        when (isbn.length) {
-            ISBN_13_LENGTH -> parseISBN(isbn)
-            else -> {
-                inputISBNLayout.error = getString(R.string.error_input_isbn)
-                inputISBNLayout.requestFocus()
-                if (isISBNSet) {
-                    isISBNSet = false
-                    clearBookDetails()
-                }
-            }
-        }
-    }
+        val isbnCode = inputISBN.text.toString().trim()
+        val validator = IsbnValidator()
 
-    /**
-     * Second validator for ISBN codes.
-     *
-     * If the code starts with a valid ISBN prefix then try to fetch the book's data and
-     * show the next view, now the isbn is set.
-     * Otherwise show that the code is invalid.
-     */
-    private fun parseISBN(isbn: String) {
-        val isbnPrefix = isbn.substring(0, ISBN_PREFIX_LENGTH)
-        when (isbnPrefix) {
-            in ISBN_PREFIXES -> {
+        if (validator.isIsbnLengthValid(isbnCode)) {
+            if (validator.isIsbnValid(isbnCode)) {
                 inputISBNLayout.error = null
-                showBookDataForISBN(isbn)
+                showBookDataForISBN(isbnCode)
                 isISBNSet = true
-            }
-            else -> {
+            } else { // Isbn code is not valid
                 inputISBNLayout.error = getString(R.string.error_invalid_isbn)
                 inputISBNLayout.requestFocus()
+            }
+        } else { // Isbn code length is incorrect
+            inputISBNLayout.error = getString(R.string.error_input_isbn)
+            inputISBNLayout.requestFocus()
+            if (isISBNSet) {
+                isISBNSet = false
+                clearBookDetails()
             }
         }
     }
