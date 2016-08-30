@@ -1,56 +1,64 @@
 package com.nibokapp.nibok.ui.fragment
 
-import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.fragment.common.BaseFragment
+import com.nibokapp.nibok.data.repository.BookManager
+import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import kotlinx.android.synthetic.main.fragment_messages.*
 
 /**
  * Fragment managing the messaging between users.
  */
-class MessagesFragment : BaseFragment() {
+class MessagesFragment : ViewTypeFragment() {
 
     companion object {
         private val TAG = MessagesFragment::class.java.simpleName
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    // Fragment
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.fragment_messages)
-    }
-
-    override fun handleRefreshAction() {
-        Log.i(TAG, "Refreshing")
-    }
-
-    override fun handleBackToTopAction() {
-        Log.i(TAG, "Going back to top")
-    }
-
-    override fun handleOnQueryTextSubmit(query: String) {
-        Log.i(TAG, "TODO")
-    }
-
-    override fun handleOnQueryTextChange(query: String) {
-        Log.i(TAG, "TODO")
-    }
-
-    override fun handleOnSearchOpen() {
-        Log.i(TAG, "TODO")
-    }
-
-    override fun handleOnSearchClose() {
-        Log.i(TAG, "TODO")
-    }
-
-    override fun getSearchHint() : String = getString(R.string.search_hint_message)
+    override fun getFragmentLayout() = R.layout.fragment_messages
 
     override fun getFragmentName() : String = TAG
+
+    // Main View
+
+    override fun getMainView() : RecyclerView = messagesList
+
+    override fun getMainViewId() = R.id.messagesList
+
+    override fun getMainViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getMainViewAdapter() = BookAdapter()
+
+    // Main View Data
+
+    override fun getMainViewData(): List<ViewType> = emptyList()
+
+    override fun onMainViewScrollDownLoader() = {}()
+
+    override fun hasMainViewUpdatableItems(): Boolean = true
+
+    override fun hasMainViewRemovableItems(): Boolean = false
+
+    // Search View
+
+    override fun getSearchView(): RecyclerView = searchResultsListMessages
+
+    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+
+    override fun getSearchViewAdapter() = BookAdapter()
+
+    // Search View Data
+
+    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
+
+    override fun handleRefreshAction() {
+        // TODO Implement
+        Log.d(TAG, "TODO")
+    }
 }
