@@ -63,7 +63,7 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item
 
     override fun addItems(items: List<ViewType>) = addViewTypeItems(items)
 
-    override fun clearAndAddItems(items: List<ViewType>) = clearAndAddBooks(items)
+    override fun clearAndAddItems(items: List<ViewType>) = clearAndAddViewTypeItems(items)
 
     override fun updateItems(items: List<ViewType>) = updateBooks(items)
 
@@ -108,21 +108,21 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item
     /**
      * Clear the items list and add the given items.
      *
-     * @param books the items to add to the items list
+     * @param items the items to add to the items list
      */
-    fun clearAndAddBooks(books: List<ViewType>) {
+    fun clearAndAddViewTypeItems(items: List<ViewType>) {
         val oldItemCount = itemCount
-        items.clear()
+        this.items.clear()
         notifyItemRangeRemoved(0, oldItemCount)
         Log.d(TAG, "Cleared items")
-        addViewTypeItems(books)
+        addViewTypeItems(items)
     }
 
     /**
-     * Update the current list of items with the new items.
+     * Update the current list of items with the new books.
      * A book already present in the current list is updated, a new book is inserted into the list.
      *
-     * @param books the list of items to add or update in the current list of displayed items
+     * @param books the list of books to add or update in the current list of displayed items
      */
     fun updateBooks(books: List<ViewType>) {
         val updatedBooks = castItemsToBooks(books)
