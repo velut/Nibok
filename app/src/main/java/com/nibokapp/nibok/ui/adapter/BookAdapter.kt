@@ -9,6 +9,7 @@ import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
 
 /**
  * The adapter responsible for the overall book view.
@@ -34,7 +35,8 @@ class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item cli
     // Adapter instances corresponding to adapter types
     private val delegateAdaptersMap = mapOf(
             AdapterTypes.LOADING to LoadingDelegateAdapter(),
-            AdapterTypes.BOOK to BookDelegateAdapter(itemClickListener)
+            AdapterTypes.BOOK to BookDelegateAdapter(itemClickListener),
+            AdapterTypes.MESSAGE to MessageDelegateAdapter()
     )
 
     override fun getItemCount(): Int = items.size
