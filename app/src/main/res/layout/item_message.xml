@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <ImageView
+        android:id="@+id/messageAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Profile image of the message receiver"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/messagePartner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/messageAvatar"
+        android:textStyle="bold"
+        android:textSize="14.5sp"
+        android:text="Message Partner"/>
+
+    <TextView
+        android:id="@+id/messageContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/messageAvatar"
+        android:layout_below="@id/messagePartner"
+        android:text="Message Content"/>
+
+    <TextView
+        android:id="@+id/messageDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentEnd="true"
+        android:textSize="12sp"
+        android:text="Message Date"/>
+
+    <View style="@style/horizontal_detail_divider"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toEndOf="@id/messageAvatar"
+        android:layout_below="@id/messageAvatar"/>
+
+</RelativeLayout>
