@@ -51,7 +51,7 @@ class SellingFragment : ViewTypeFragment() {
 
     // Search view
 
-    override fun getSearchView(): RecyclerView = getMainView() // TODO add search view and methods
+    override fun getSearchView(): RecyclerView = searchResultsListSelling
 
     override fun getSearchViewLayoutManager() = getMainViewLayoutManager()
 

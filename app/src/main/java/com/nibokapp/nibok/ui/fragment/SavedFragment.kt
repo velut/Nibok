@@ -37,7 +37,7 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
 
-    override fun getSearchView(): RecyclerView = searchResultsList
+    override fun getSearchView(): RecyclerView = searchResultsListSaved
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 

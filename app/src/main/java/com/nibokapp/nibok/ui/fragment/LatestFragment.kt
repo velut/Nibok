@@ -51,7 +51,7 @@ class LatestFragment : ViewTypeFragment() {
 
     // Search View
 
-    override fun getSearchView(): RecyclerView = searchResultsList
+    override fun getSearchView(): RecyclerView = searchResultsListLatest
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
