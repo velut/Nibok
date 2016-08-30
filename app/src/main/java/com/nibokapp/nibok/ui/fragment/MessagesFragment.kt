@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_messages.*
@@ -33,7 +33,7 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = BookAdapter()
+    override fun getMainViewAdapter() = ViewTypeAdapter()
 
     // Main View Data
 
@@ -51,7 +51,7 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = BookAdapter()
+    override fun getSearchViewAdapter() = ViewTypeAdapter()
 
     // Search View Data
 

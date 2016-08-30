@@ -12,16 +12,18 @@ import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
 
 /**
- * The adapter responsible for the overall book view.
+ * The adapter responsible for managing and displaying ViewType items.
  *
- * It delegates the managing of the items in the view to the respective adapters based on the
- * view type and adapter type.
+ * This adapter delegates the managing of subclasses of ViewType items to its delegate adapters
+ * based on a correspondence (view type -> delegate adapter).
+ *
+ * @param itemClickListener function to be called if an item is clicked. Optional
  */
-class BookAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item clicked")})
+class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item clicked")})
         : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     companion object {
-        private val TAG = BookAdapter::class.java.simpleName
+        private val TAG = ViewTypeAdapter::class.java.simpleName
     }
 
     // The loading item singleton

@@ -8,7 +8,7 @@ import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.PublishActivity
-import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_selling.*
@@ -37,7 +37,7 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = BookAdapter()
+    override fun getMainViewAdapter() = ViewTypeAdapter()
 
     // Main view data
 

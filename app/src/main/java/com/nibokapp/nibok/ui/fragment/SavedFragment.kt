@@ -8,7 +8,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.domain.model.BookModel
-import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_saved.*
@@ -31,7 +31,7 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = BookAdapter { mainViewItemClickListener(it) }
+    override fun getMainViewAdapter() = ViewTypeAdapter { mainViewItemClickListener(it) }
 
     override fun getMainViewData(): List<ViewType> = BookManager.getSavedBooksList()
 
@@ -41,7 +41,7 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = BookAdapter { searchViewItemClickListener(it) }
+    override fun getSearchViewAdapter() = ViewTypeAdapter { searchViewItemClickListener(it) }
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
@@ -67,7 +67,7 @@ class SavedFragment : ViewTypeFragment() {
      * otherwise a message is shown and the loading item is removed.
      */
     private fun requestOlderSavedBooks() {
-        val bookAdapter = getMainView().adapter as BookAdapter
+        val bookAdapter = getMainView().adapter as ViewTypeAdapter
 
         if (BookManager.hasOlderSavedBooks()) {
             Log.i(TAG, "Requesting older saved books on scroll down")
@@ -90,7 +90,7 @@ class SavedFragment : ViewTypeFragment() {
         bookItemClickListener(item) {
             val book = it
             if (!book.saved) { // If book was removed
-                val mainViewAdapter = getMainView().adapter as? BookAdapter
+                val mainViewAdapter = getMainView().adapter as? ViewTypeAdapter
                 mainViewAdapter?.let {
 
                     // Save old book position for possible reinsertion

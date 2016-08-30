@@ -6,7 +6,7 @@ import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.domain.model.BookModel
-import com.nibokapp.nibok.ui.adapter.BookAdapter
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_latest.*
@@ -37,7 +37,7 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = BookAdapter { itemClickListener(it) }
+    override fun getMainViewAdapter() = ViewTypeAdapter { itemClickListener(it) }
 
     // Main View Data
 
@@ -55,7 +55,7 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = BookAdapter { itemClickListener(it) }
+    override fun getSearchViewAdapter() = ViewTypeAdapter { itemClickListener(it) }
 
     // Search View Data
 
@@ -66,7 +66,7 @@ class LatestFragment : ViewTypeFragment() {
         // If new books are available add them to the list and return to the top
         if (BookManager.hasNewerFeedBooks()) {
             val newerBooks = BookManager.getNewerFeedBooks()
-            (latestBooksList.adapter as BookAdapter).addBooks(newerBooks)
+            (latestBooksList.adapter as ViewTypeAdapter).addBooks(newerBooks)
             handleBackToTopAction()
         } else {
             context.toast(getString(R.string.no_newer_books))
@@ -82,7 +82,7 @@ class LatestFragment : ViewTypeFragment() {
      * otherwise a message is shown and the loading item is removed.
      */
     private fun requestOlderBooks() {
-        val bookAdapter = latestBooksList.adapter as BookAdapter
+        val bookAdapter = latestBooksList.adapter as ViewTypeAdapter
 
         if (BookManager.hasOlderFeedBooks()) {
             Log.d(TAG, "Requesting older books on scroll down")
