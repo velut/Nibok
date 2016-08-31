@@ -126,12 +126,21 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun hasMainViewRemovableItems() : Boolean
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // TODO Get cached data to improve performance
+        // In order to preserve scroll position
+        // get the data before setting up the view and later pass it to
+        // the view adapter before layout manager state is restored
+        mainViewData = getMainViewData()
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(getFragmentLayout())
         view?.let {
             val mainView = it.find<RecyclerView>(getMainViewId())
             setupMainView(mainView)
+            getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
         }
         return view
     }
@@ -139,7 +148,6 @@ abstract class ViewTypeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainView = getMainView()
-        getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
