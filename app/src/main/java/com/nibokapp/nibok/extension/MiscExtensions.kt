@@ -32,3 +32,18 @@ fun Date.toSimpleDateString(pattern: String = "dd/MM/yy") : String {
     val formatter = SimpleDateFormat(pattern, Locale.getDefault())
     return formatter.format(this)
 }
+
+/**
+ * Ellipsize a string.
+ *
+ * @param maxLength the maximum length for the string
+ * @param ellipsis the string representing the ellipsis. Default = …
+ *
+ * @return if the string is longer than maxLength then the string is cut off at maxLength,
+ * trimmed and padded with the ellipsis; otherwise the original string is returned
+ */
+fun String.ellipsize(maxLength: Int, ellipsis: String = "…"): String =
+        if (this.length > maxLength)
+            this.take(maxLength).trim() + ellipsis
+        else
+            this
