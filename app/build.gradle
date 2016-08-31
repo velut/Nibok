@@ -48,6 +48,9 @@ dependencies {
     // Material dialogs
     compile 'com.afollestad.material-dialogs:core:0.9.0.1'
 
+    // Circular Image View
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
 }
 
 buildscript {
