@@ -30,16 +30,31 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 }
 
 /**
- * Load an image directly in a view.
+ * Load an image, given its location, in this ImageView.
  *
  * @param imageLocation the location of the image, it can be an url a uri or a path
+ * @param placeholderResourceId the id of the resource to be shown as a placeholder
+ * @param errorResourceId the id of the resource to be shown if there was an error loading the image
+ * @param animate true if animation should be used when loading, false otherwise. Default = true
  */
-fun ImageView.loadImg(imageLocation: String) {
-    Glide.with(context)
-            .load(imageLocation)
-            .placeholder(R.drawable.book_placeholder_image)
-            .error(R.drawable.book_placeholder_image)
-            .into(this)
+fun ImageView.loadImg(imageLocation: String,
+                      placeholderResourceId: Int = R.drawable.book_placeholder_image,
+                      errorResourceId: Int = R.drawable.book_placeholder_image,
+                      animate: Boolean = true) {
+    if (animate) {
+        Glide.with(context)
+                .load(imageLocation)
+                .placeholder(placeholderResourceId)
+                .error(errorResourceId)
+                .into(this)
+    } else {
+        Glide.with(context)
+                .load(imageLocation)
+                .placeholder(placeholderResourceId)
+                .error(errorResourceId)
+                .dontAnimate()
+                .into(this)
+    }
 }
 
 /**
