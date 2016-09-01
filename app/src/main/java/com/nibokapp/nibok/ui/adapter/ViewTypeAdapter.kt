@@ -65,7 +65,7 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
 
     override fun clearAndAddItems(items: List<ViewType>) = clearAndAddViewTypeItems(items)
 
-    override fun updateItems(items: List<ViewType>) = updateBooks(items)
+    override fun updateItems(items: List<ViewType>) = updateViewTypeItems(items)
 
     override fun removeItems(items: List<ViewType>) = removeBooks(items)
 
@@ -119,26 +119,36 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
     }
 
     /**
-     * Update the current list of items with the new books.
-     * A book already present in the current list is updated, a new book is inserted into the list.
+     * Update the current list of items with the new items.
+     * An item already present in the current list is updated, a new item is inserted into the list.
      *
-     * @param books the list of books to add or update in the current list of displayed items
+     * @param items the list of items to add or update in the current list of displayed items
      */
-    fun updateBooks(books: List<ViewType>) {
-        val updatedBooks = castItemsToBooks(books)
-        val currentBookIds = getCurrentBookIds()
-        updatedBooks?.let {
-            val (toReplace, toAdd) = it.partition { it.insertionId in currentBookIds }
-            Log.d(TAG, "To replace: ${toReplace.size}; to add: ${toAdd.size}")
+    fun updateViewTypeItems(items: List<ViewType>) {
+        val updatedBooks = items.filterIsInstance<BookModel>()
+        val updatedMessages = items.filterIsInstance<MessageModel>()
+
+        if (updatedBooks.isNotEmpty()) {
+            val currentBookIds = getCurrentBookIds()
+            val (toReplace, toAdd) = updatedBooks.partition { it.insertionId in currentBookIds }
+            Log.d(TAG, "Books to replace: ${toReplace.size}; to add: ${toAdd.size}")
             replaceBooks(toReplace)
+            addViewTypeItems(toAdd)
+        }
+
+        if (updatedMessages.isNotEmpty()) {
+            val currentMessageIds = getCurrentMessageIds()
+            val (toReplace, toAdd) = updatedMessages.partition { it.conversationId in currentMessageIds }
+            Log.d(TAG, "Messages to replace: ${toReplace.size}; to add: ${toAdd.size}")
+            replaceMessages(toReplace)
             addViewTypeItems(toAdd)
         }
     }
 
     /**
-     * Replace items in the current list with the given ones with the same id.
+     * Replace books in the current list with the given ones with the same id.
      *
-     * @param newBooks the new version of the current items to update
+     * @param newBooks the new version of the current book items to update
      */
     fun replaceBooks(newBooks: List<BookModel>) = newBooks.forEach { replaceBook(it) }
 
@@ -155,6 +165,29 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
             val bookIndex = items.indexOf(bookToReplace)
             items[bookIndex] = newBook
             notifyItemChanged(bookIndex)
+        }
+    }
+
+    /**
+     * Replace messages in the current list with the given ones with the same id.
+     *
+     * @param newMessages the new version of the current message items to update
+     */
+    fun replaceMessages(newMessages: List<MessageModel>) = newMessages.forEach { replaceMessage(it) }
+
+    /**
+     * Replace a message with a given id with the new version if the ids correspond.
+     *
+     * @param newMessage the new version of the current message to update
+     */
+    fun replaceMessage(newMessage: MessageModel) {
+        val currentMessages = getCurrentMessageItems()
+        val messageToReplace = currentMessages.find { it.conversationId == newMessage.conversationId }
+        messageToReplace?.let {
+            Log.d(TAG, "Replacing message with id: ${messageToReplace.conversationId}")
+            val messageIndex = items.indexOf(messageToReplace)
+            items[messageIndex] = newMessage
+            notifyItemChanged(messageIndex)
         }
     }
 
