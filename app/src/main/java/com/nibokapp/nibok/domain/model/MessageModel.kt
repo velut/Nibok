@@ -2,6 +2,7 @@ package com.nibokapp.nibok.domain.model
 
 import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import java.util.*
 
 /**
  * Schema representing essential information about a message conversation.
@@ -17,7 +18,7 @@ data class MessageModel(
         val partnerAvatar: String,
         val partnerName: String,
         val previewText: String,
-        val date: String
+        val date: Date
 ) : ViewType {
     override fun getViewType() : Int = AdapterTypes.MESSAGE
 }
