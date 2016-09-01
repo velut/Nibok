@@ -6,6 +6,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.MessageModel
 import com.nibokapp.nibok.extension.ellipsize
 import com.nibokapp.nibok.extension.inflate
+import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.extension.toDeltaBasedSimpleDateString
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
@@ -33,7 +34,12 @@ class MessageDelegateAdapter : ViewTypeDelegateAdapter {
         private val MAX_MESSAGE_CONTENT_LENGTH = 25
 
         fun bind(item: MessageModel) {
+            loadAvatar(item.partnerAvatar)
             bindData(item)
+        }
+
+        private fun loadAvatar(avatarSource: String) = with(itemView) {
+            messageAvatar.loadImg(avatarSource, animate = false)
         }
 
         private fun bindData(item: MessageModel) = with(itemView) {
