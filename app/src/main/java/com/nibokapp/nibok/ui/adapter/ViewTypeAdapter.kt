@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.ViewGroup
 import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.domain.model.MessageModel
-import com.nibokapp.nibok.extension.TAG
 import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
@@ -21,7 +20,8 @@ import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
  *
  * @param itemClickListener function to be called if an item is clicked. Optional
  */
-class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit = { Log.d(TAG, "Item clicked") })
+class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
+                      { Log.d(ViewTypeAdapter.TAG, "Item clicked") })
         : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     companion object {
