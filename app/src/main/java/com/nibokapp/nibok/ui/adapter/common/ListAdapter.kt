@@ -9,8 +9,13 @@ interface ListAdapter<in T> {
      * Add items to a list.
      *
      * @param items the list of items to add
+     * @param insertPosition the position at which to insert the items. Default is 0 which means at the top
+     * @param insertAtBottom true if the items should be inserted at the bottom, false otherwise. Default is false
+     * @param excludeDuplicates true if from the given items should be excluded items already present,
+     * false if duplicates are allowed. Default is true which exclude duplicates
      */
-    fun addItems(items: List<T>)
+    fun addItems(items: List<T>, insertPosition: Int = 0,
+                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true)
 
     /**
      * Clear the list and add the given items.
@@ -32,5 +37,15 @@ interface ListAdapter<in T> {
      * @param items the items to be removed from the list
      */
     fun removeItems(items: List<T>)
+
+    /**
+     * Remove the given item from the list and return its index.
+     *
+     * @param item the item to remove
+     *
+     * @return the index of the item if the item was remove successfully
+     * or -1 if the item couldn't be found
+     */
+    fun removeItem(item: T) : Int
 
 }
