@@ -20,8 +20,7 @@ import kotlinx.android.synthetic.main.card_book.view.*
 import org.jetbrains.anko.startActivity
 
 /**
- * Delegated adapter managing the creation and binding of book view holders.
- *
+ * Delegate adapter managing the creation and binding of book view holders.
  */
 class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeDelegateAdapter {
 
@@ -53,13 +52,13 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
         private var insertionId: Long? = null
 
         /**
-         * Binds the itemView of the view holder to the given item.
+         * Binds the itemView of the view holder to the given item's data.
          *
-         * @param item the item of which the properties will be bound in the itemView
+         * @param item the item containing data about the book preview
          */
         fun bind(item: BookModel) {
             insertionId = item.insertionId
-            addThumbnail(item.thumbnail)
+            loadThumbnail(item.thumbnail)
             bindData(item)
             updateSaveButton(itemView.saveButton, item.saved)
             addSaveButtonListener(item)
@@ -68,12 +67,12 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
         }
 
         /**
-         * Load the thumbnail of the book's cover into the view.
+         * Load the thumbnail of the book's cover into the image view.
          *
-         * @param imgSrc the source of the image
+         * @param imgSource the source of the book's cover image
          */
-        private fun addThumbnail(imgSrc: String) = with(itemView) {
-            bookThumbnail.loadImg(imgSrc)
+        private fun loadThumbnail(imgSource: String) = with(itemView) {
+            bookThumbnail.loadImg(imgSource)
         }
 
         /**

@@ -9,6 +9,9 @@ import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
 import kotlinx.android.synthetic.main.item_message.view.*
 
+/**
+ * Delegate adapter managing the creation and binding of message view holders.
+ */
 class MessageDelegateAdapter : ViewTypeDelegateAdapter {
 
     companion object {
@@ -32,16 +35,33 @@ class MessageDelegateAdapter : ViewTypeDelegateAdapter {
         private val MAX_PARTNER_NAME_LENGTH_LANDSCAPE = 25
         private val MAX_MESSAGE_CONTENT_LENGTH_LANDSCAPE = 40
 
+        /**
+         * Bind the itemView of the view holder to the given item's data.
+         *
+         * @param item the item containing data about the message
+         */
         fun bind(item: MessageModel) {
             loadAvatar(item.partnerAvatar)
             bindData(item)
         }
 
+        /**
+         * Load the avatar of the conversation's partner into the image view.
+         *
+         * @param avatarSource the source of the avatar image
+         */
         private fun loadAvatar(avatarSource: String) = with(itemView) {
             // TODO change placeholders
             messageAvatar.loadImg(avatarSource, animate = false)
         }
 
+        /**
+         * Bind the textual data of the message to the view.
+         *
+         * Shorten the message text data if necessary.
+         *
+         * @param item the item from which we extract the data
+         */
         private fun bindData(item: MessageModel) = with(itemView) {
             // Change text views max length based on orientation
             val portrait = context.isOrientationPortrait()
