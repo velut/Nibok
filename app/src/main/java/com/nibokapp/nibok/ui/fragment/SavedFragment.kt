@@ -72,7 +72,7 @@ class SavedFragment : ViewTypeFragment() {
         if (BookManager.hasOlderSavedBooks()) {
             Log.i(TAG, "Requesting older saved books on scroll down")
             val olderBooks = BookManager.getOlderSavedBooks()
-            bookAdapter.addViewTypeItems(olderBooks, addToBottom = true)
+            bookAdapter.addItems(olderBooks, insertAtBottom = true)
         } else {
             Log.i(TAG, "No more older saved books, end reached")
             bookAdapter.removeLoadingItem()
@@ -94,7 +94,7 @@ class SavedFragment : ViewTypeFragment() {
                 mainViewAdapter?.let {
 
                     // Save old book position for possible reinsertion
-                    val oldBookPosition = mainViewAdapter.removeBook(book)
+                    val oldBookPosition = mainViewAdapter.removeItem(book)
                     refreshMainViewData()
 
                     // Notify user of removal
@@ -106,7 +106,7 @@ class SavedFragment : ViewTypeFragment() {
                         // Reinsert book if necessary
                         if (!UserManager.isInsertionSaved(book.insertionId)) {
                             book.saved = UserManager.toggleSaveInsertion(book.insertionId)
-                            mainViewAdapter.addViewTypeItems(listOf(book), insertAtPosition = oldBookPosition)
+                            mainViewAdapter.addItems(listOf(book), insertPosition = oldBookPosition)
                             refreshMainViewData()
                             // Notify the reinsertion
                             val childSnackBar = Snackbar.make(savedFragmentRoot,
