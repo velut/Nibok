@@ -3,8 +3,6 @@ package com.nibokapp.nibok.ui.adapter
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
-import com.nibokapp.nibok.domain.model.BookModel
-import com.nibokapp.nibok.domain.model.MessageModel
 import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
@@ -45,6 +43,9 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
             AdapterTypes.MESSAGE to MessageDelegateAdapter()
     )
 
+    // The currently supported view types
+    private val supportedViewTypes = delegateAdaptersMap.keys
+
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int = items[position].getViewType()
@@ -63,13 +64,17 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
         return delegateAdaptersMap[getItemViewType(position)]!!.onBindViewHolder(holder, items[position])
     }
 
-    override fun addItems(items: List<ViewType>) = addViewTypeItems(items)
+    override fun addItems(items: List<ViewType>, insertPosition: Int,
+                          insertAtBottom: Boolean, excludeDuplicates: Boolean) =
+            addViewTypeItems(items, insertPosition, insertAtBottom, excludeDuplicates)
 
     override fun clearAndAddItems(items: List<ViewType>) = clearAndAddViewTypeItems(items)
 
     override fun updateItems(items: List<ViewType>) = updateViewTypeItems(items)
 
-    override fun removeItems(items: List<ViewType>) = removeBooks(items)
+    override fun removeItems(items: List<ViewType>) = removeViewTypeItems(items)
+
+    override fun removeItem(item: ViewType) = removeViewTypeItem(item)
 
     /**
      * Add given items to the list of items to display.
@@ -78,24 +83,28 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
      * @param insertAtPosition the desired position at which items are inserted. Default = 0 (top)
      * @param addToBottom true if the items have to be added at the end of the list of items,
      * false if they are to be inserted at the specified position. Default = false.
-     * @param preventDuplicates true if items with ids already present in the current items
-     * should not be added, false if items with the same id are allowed to be in the items list
+     * @param excludeDuplicates true if items with ids already present in the current items
+     * with the same view type should not be added,
+     * false if items with the same id and the same view type are allowed to be in the items list
      */
-    fun addViewTypeItems(items: List<ViewType>, insertAtPosition : Int = 0,
-                         addToBottom: Boolean = false, preventDuplicates: Boolean = true) {
+    private fun addViewTypeItems(items: List<ViewType>, insertAtPosition : Int = 0,
+                                 addToBottom: Boolean = false, excludeDuplicates: Boolean = true) {
 
         if (items.isEmpty()) return
 
         var itemsToAdd: List<ViewType> = items
 
-        if (preventDuplicates) {
-            var booksToAdd: List<BookModel> = items.filterIsInstance<BookModel>()
-            var messagesToAdd: List<MessageModel> = items.filterIsInstance<MessageModel>()
-
-            booksToAdd = booksToAdd.filter { it.insertionId !in getCurrentBookIds() }
-            messagesToAdd = messagesToAdd.filter { it.conversationId !in getCurrentMessageIds() }
-
-            itemsToAdd = booksToAdd + messagesToAdd
+        if (excludeDuplicates) {
+            itemsToAdd = emptyList()
+            supportedViewTypes.forEach {
+                val currentType = it
+                val candidateItems = items.filter { it.getViewType() == currentType }
+                if (candidateItems.isNotEmpty()) {
+                    val currentIds = getCurrentIdsForViewType(currentType)
+                    itemsToAdd += candidateItems.filter { it.getItemId() !in currentIds }
+                }
+            }
+            Log.d(TAG, "After duplicates removal size is: ${itemsToAdd.size}")
         }
 
         if (itemsToAdd.isNotEmpty()) {
@@ -112,7 +121,7 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
      *
      * @param items the items to add to the items list
      */
-    fun clearAndAddViewTypeItems(items: List<ViewType>) {
+    private fun clearAndAddViewTypeItems(items: List<ViewType>) {
         val oldItemCount = itemCount
         this.items.clear()
         notifyItemRangeRemoved(0, oldItemCount)
@@ -121,134 +130,102 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
     }
 
     /**
-     * Update the current list of items with the new items.
-     * An item already present in the current list is updated, a new item is inserted into the list.
+     * Update the current list of items with the given new items.
+     *
+     * An item already present in the current list is updated with its new version,
+     * a new item not already present in the list is inserted into it.
      *
      * @param items the list of items to add or update in the current list of displayed items
      */
-    fun updateViewTypeItems(items: List<ViewType>) {
-        val updatedBooks = items.filterIsInstance<BookModel>()
-        val updatedMessages = items.filterIsInstance<MessageModel>()
-
-        if (updatedBooks.isNotEmpty()) {
-            val currentBookIds = getCurrentBookIds()
-            val (toReplace, toAdd) = updatedBooks.partition { it.insertionId in currentBookIds }
-            Log.d(TAG, "Books to replace: ${toReplace.size}; to add: ${toAdd.size}")
-            replaceBooks(toReplace)
-            addViewTypeItems(toAdd)
-        }
-
-        if (updatedMessages.isNotEmpty()) {
-            val currentMessageIds = getCurrentMessageIds()
-            val (toReplace, toAdd) = updatedMessages.partition { it.conversationId in currentMessageIds }
-            Log.d(TAG, "Messages to replace: ${toReplace.size}; to add: ${toAdd.size}")
-            replaceMessages(toReplace)
-            addViewTypeItems(toAdd)
+    private fun updateViewTypeItems(items: List<ViewType>) {
+        supportedViewTypes.forEach {
+            val currentType = it
+            val newItems = items.filter { it.getViewType() == currentType }
+            if (newItems.isNotEmpty()) {
+                val currentIds = getCurrentIdsForViewType(currentType)
+                val (toReplace, toAdd) = newItems.partition { it.getItemId() in currentIds }
+                Log.d(TAG, "Items of type: ${AdapterTypes.getTypeName(currentType)}\n" +
+                        "To replace: ${toReplace.size}; to add: ${toAdd.size}")
+                replaceViewTypeItems(toReplace, currentType)
+                addViewTypeItems(toAdd)
+            }
         }
     }
 
     /**
-     * Replace books in the current list with the given ones with the same id.
+     * Replace current items with a certain view type
+     * with the given new items with the same view type.
      *
-     * @param newBooks the new version of the current book items to update
+     * @param items the new version of items already present in the current items list
+     * @param itemsType the view type being considered
      */
-    fun replaceBooks(newBooks: List<BookModel>) = newBooks.forEach { replaceBook(it) }
+    private fun replaceViewTypeItems(items: List<ViewType>, itemsType: Int) =
+            items.forEach { replaceViewTypeItem(it, itemsType) }
 
     /**
-     * Replace a book with a given id with the new version if the ids correspond.
+     * Replace an old item with a certain view type with its new version.
      *
-     * @param newBook the new version of the current book to update
+     * @param item the new version of the item
+     * @param itemType the view type of the item
      */
-    fun replaceBook(newBook: BookModel) {
-        val currentBooks = getCurrentBookItems()
-        val bookToReplace = currentBooks.find { it.insertionId == newBook.insertionId }
-        bookToReplace?.let {
-            Log.d(TAG, "Replacing book with id: ${bookToReplace.insertionId}")
-            val bookIndex = items.indexOf(bookToReplace)
-            items[bookIndex] = newBook
-            notifyItemChanged(bookIndex)
+    private fun replaceViewTypeItem(item: ViewType, itemType: Int) {
+        val candidateItems = getCurrentItemsForViewType(itemType)
+        val itemToReplace = candidateItems.find { it.getItemId() == item.getItemId() }
+        itemToReplace?.let {
+            Log.d(TAG, "Replacing ${AdapterTypes.getTypeName(itemType)} with id: ${it.getItemId()}")
+            val itemToReplaceIndex = this.items.indexOf(it)
+            this.items[itemToReplaceIndex] = item
+            notifyItemChanged(itemToReplaceIndex)
         }
     }
 
     /**
-     * Replace messages in the current list with the given ones with the same id.
+     * Remove the given items from the current list of items.
      *
-     * @param newMessages the new version of the current message items to update
+     * @param items the list of items to remove
      */
-    fun replaceMessages(newMessages: List<MessageModel>) = newMessages.forEach { replaceMessage(it) }
+    private fun removeViewTypeItems(items: List<ViewType>) {
+        Log.d(TAG, "To remove: ${items.size}")
+        items.forEach { removeViewTypeItem(it) }
+    }
 
     /**
-     * Replace a message with a given id with the new version if the ids correspond.
+     * Remove the given item if it's present in the current list of items.
      *
-     * @param newMessage the new version of the current message to update
+     * @param item the item to remove
+     *
+     * @return the position that the item had in the list
+     * or -1 if the item wasn't present in the list
      */
-    fun replaceMessage(newMessage: MessageModel) {
-        val currentMessages = getCurrentMessageItems()
-        val messageToReplace = currentMessages.find { it.conversationId == newMessage.conversationId }
-        messageToReplace?.let {
-            Log.d(TAG, "Replacing message with id: ${messageToReplace.conversationId}")
-            val messageIndex = items.indexOf(messageToReplace)
-            items[messageIndex] = newMessage
-            notifyItemChanged(messageIndex)
+    private fun removeViewTypeItem(item: ViewType): Int {
+        val itemIndex = this.items.indexOf(item)
+        if (itemIndex != -1) {
+            this.items.removeAt(itemIndex)
+            notifyItemRemoved(itemIndex)
+            Log.d(TAG, "Removed ${AdapterTypes.getTypeName(item.getViewType())} with id: ${item.getItemId()}")
         }
+        return itemIndex
     }
 
     /**
-     * Remove a list of items from the current items.
+     * Get the items in the current list that match the given view type.
      *
-     * @param books the list of items to remove
-     */
-    fun removeBooks(books: List<ViewType>) {
-        val booksToRemove = castItemsToBooks(books)
-        Log.d(TAG, "To remove: ${booksToRemove?.size}")
-        booksToRemove?.forEach { removeBook(it) }
-    }
-
-    /**
-     * Remove a book with a given id with the new version if the ids correspond.
+     * @param viewType the desired view type
      *
-     * @param book the book to remove
+     * @return the list of currently managed items with the given view type
+     */
+    private fun getCurrentItemsForViewType(viewType: Int) =
+            items.filter { it.getViewType() == viewType }
+
+    /**
+     * Get the ids of the items in the current list that match the given view type.
      *
-     * @return the position in which the book was before being removed or -1 if no book was removed
+     * @param viewType the desired view type
+     *
+     * @return the list of ids of the currently managed items with the given view type
      */
-    fun removeBook(book: BookModel) : Int {
-        val currentBooks = getCurrentBookItems()
-        val bookToRemove = currentBooks.find { it.insertionId == book.insertionId }
-        var bookIndex: Int = -1
-        bookToRemove?.let {
-            Log.d(TAG, "Removing book with id: ${bookToRemove.insertionId}")
-            bookIndex = items.indexOf(bookToRemove)
-            items.removeAt(bookIndex)
-            notifyItemRemoved(bookIndex)
-        }
-        return bookIndex
-    }
-
-    /**
-     * Get only the book items present in the adapter's items list.
-     */
-    private fun getCurrentBookItems() : List<BookModel> = items.filterIsInstance<BookModel>()
-
-    /**
-     * Get the ids of the books present in the items list.
-     */
-    private fun getCurrentBookIds() = getCurrentBookItems().map { it.insertionId }
-
-    /**
-     * Get only the message items present in the adapter's item list.
-     */
-    private fun getCurrentMessageItems() : List<MessageModel> = items.filterIsInstance<MessageModel>()
-
-    /**
-     * Get the ids of the messages present in the items list.
-     */
-    private fun getCurrentMessageIds() = getCurrentMessageItems().map { it.conversationId }
-
-    private fun castItemsToBooks(items: List<ViewType>) : List<BookModel>? {
-        @Suppress("UNCHECKED_CAST")
-        val result = items as? List<BookModel>
-        return result
-    }
+    private fun getCurrentIdsForViewType(viewType: Int) =
+            getCurrentItemsForViewType(viewType).map { it.getItemId() }
 
     /**
      * Remove the loading item from the list of items to be displayed.
