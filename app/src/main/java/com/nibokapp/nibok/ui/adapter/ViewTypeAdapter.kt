@@ -30,6 +30,8 @@ class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
 
     // The loading item object
     private val loadingItem = object : ViewType {
+        override fun getItemId(): Long = 0L
+
         override fun getViewType(): Int = AdapterTypes.LOADING
     }
 

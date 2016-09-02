@@ -20,5 +20,8 @@ data class MessageModel(
         val previewText: String,
         val date: Date
 ) : ViewType {
+
+    override fun getItemId(): Long = conversationId
+
     override fun getViewType() : Int = AdapterTypes.MESSAGE
 }

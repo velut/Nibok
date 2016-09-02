@@ -27,6 +27,9 @@ data class BookModel(
         val thumbnail: String,
         var saved: Boolean = false
 ) : ViewType {
+
+    override fun getItemId(): Long = insertionId
+
     override fun getViewType(): Int = AdapterTypes.BOOK
 }
 
