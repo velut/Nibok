@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.data.repository.UserManager
+import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_latest.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -37,7 +39,7 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter { itemClickListener(it) }
+    override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickListener)
 
     // Main View Data
 
@@ -55,7 +57,7 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter { itemClickListener(it) }
+    override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
@@ -97,15 +99,22 @@ class LatestFragment : ViewTypeFragment() {
         }
     }
 
-    private fun itemClickListener(item: ViewType) {
-        val book = item as? BookModel
-        book?.let {
-            Log.d(TAG, "Handling item click")
+    // Item click listener for the book cards
+    private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+
+        override fun onButtonClick(itemId: Long) {
+            // Save button was clicked, save the insertion and alert user
+            val saved = UserManager.toggleSaveInsertion(itemId)
             checkForUpdates()
-            val toastMessage = if (it.saved) R.string.book_saved_to_collection
-            else R.string.book_removed_from_collection
+            val toastMessage = if (saved) R.string.book_saved_to_collection
+                                else R.string.book_removed_from_collection
             context.toast(toastMessage)
         }
+
+        override fun onItemClick(itemId: Long) =
+                // Book card was clicked, display detail view
+            context.startActivity<InsertionDetailActivity>(
+                    InsertionDetailFragment.INSERTION_ID to itemId)
     }
 
 }
