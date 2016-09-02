@@ -57,6 +57,8 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getSearchViewAdapter() = ViewTypeAdapter { itemClickListener(it) }
 
+    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+
     // Search View Data
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)

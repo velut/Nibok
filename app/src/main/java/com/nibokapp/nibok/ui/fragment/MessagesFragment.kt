@@ -53,9 +53,12 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getSearchViewAdapter() = ViewTypeAdapter()
 
+    override fun getSearchHint() : String = getString(R.string.search_hint_message)
+
     // Search View Data
 
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
+
 
     override fun handleRefreshAction() {
         // TODO Implement

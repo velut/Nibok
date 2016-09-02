@@ -57,10 +57,11 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun getSearchViewAdapter() = getMainViewAdapter()
 
+    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+
     // Search view data
 
     override fun searchStrategy(query: String): List<ViewType> = emptyList() // TODO add real search
-
 
 
     override fun handleRefreshAction() {

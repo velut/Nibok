@@ -23,7 +23,13 @@ class SavedFragment : ViewTypeFragment() {
         private val TAG = SavedFragment::class.java.simpleName
     }
 
+    // Fragment
+
     override fun getFragmentLayout() = R.layout.fragment_saved
+
+    override fun getFragmentName() : String = TAG
+
+    // Main View
 
     override fun getMainView() : RecyclerView = savedBooksList
 
@@ -33,9 +39,17 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getMainViewAdapter() = ViewTypeAdapter { mainViewItemClickListener(it) }
 
+    // Main View Data
+
     override fun getMainViewData(): List<ViewType> = BookManager.getSavedBooksList()
 
     override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
+
+    override fun hasMainViewUpdatableItems(): Boolean = true
+
+    override fun hasMainViewRemovableItems(): Boolean = true
+
+    // Search View
 
     override fun getSearchView(): RecyclerView = searchResultsListSaved
 
@@ -43,13 +57,11 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getSearchViewAdapter() = ViewTypeAdapter { searchViewItemClickListener(it) }
 
+    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+
+    // Search View Data
+
     override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
-
-    override fun hasMainViewUpdatableItems(): Boolean = true
-
-    override fun hasMainViewRemovableItems(): Boolean = true
-
-    override fun getFragmentName() : String = TAG
 
 
     override fun handleRefreshAction() {

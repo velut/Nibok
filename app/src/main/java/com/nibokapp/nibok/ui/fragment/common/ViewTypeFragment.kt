@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
@@ -54,7 +53,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     abstract fun getMainView() : RecyclerView
 
     /**
-     * Get the id of the main view
+     * Get the id of the main view.
      *
      * @return the id of the main view
      */
@@ -212,8 +211,6 @@ abstract class ViewTypeFragment : BaseFragment() {
         Log.d(TAG, "Search closed. Hide SearchView and show MainView")
         onBecomeVisible()
     }
-
-    override fun getSearchHint() : String = getString(R.string.search_hint_book) //TODO remove
 
     /**
      * Refresh asynchronously the data of the main view.
