@@ -18,12 +18,31 @@ import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
  *
  * @param itemClickListener function to be called if an item is clicked. Optional
  */
-class ViewTypeAdapter(itemClickListener: (ViewType) -> Unit =
-                      { Log.d(ViewTypeAdapter.TAG, "Item clicked") })
+class ViewTypeAdapter(itemClickListener: ItemClickListener)
         : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     companion object {
         private val TAG = ViewTypeAdapter::class.java.simpleName
+    }
+
+    /**
+     * Interface for objects that want to listen to clicks on a view type item.
+     */
+    interface ItemClickListener {
+
+        /**
+         * Listen to a click of a button of the item.
+         *
+         * @param itemId the id of the item that was clicked
+         */
+        fun onButtonClick(itemId: Long)
+
+        /**
+         * Listen to a click on the item itself.
+         *
+         * @param itemId the id of the item that was clicked
+         */
+        fun onItemClick(itemId: Long)
     }
 
     // The loading item object
