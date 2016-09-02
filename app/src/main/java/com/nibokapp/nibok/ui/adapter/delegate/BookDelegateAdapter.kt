@@ -6,23 +6,20 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.extension.toCurrency
-import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
-import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import kotlinx.android.synthetic.main.card_book.view.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Delegate adapter managing the creation and binding of book view holders.
  */
-class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeDelegateAdapter {
+class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = BookDelegateAdapter::class.java.simpleName
@@ -46,8 +43,8 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
     /**
      * Book view holder.
      */
-    class BookVH(parent: ViewGroup, val itemClickListener: (ViewType) -> Unit) : RecyclerView.ViewHolder(
-            parent.inflate(R.layout.card_book)) {
+    class BookVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
+            RecyclerView.ViewHolder(parent.inflate(R.layout.card_book)) {
 
         private var insertionId: Long? = null
 
@@ -93,7 +90,9 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
          */
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
-                startDetailActivity()
+                insertionId?.let {
+                    itemClickListener.onItemClick(it)
+                }
             }
         }
 
@@ -102,15 +101,9 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
          */
         private fun addThumbnailListener() = with(itemView) {
             bookThumbnail.setOnClickListener {
-                startDetailActivity()
-            }
-        }
-
-        private fun startDetailActivity() {
-            insertionId?.let {
-                itemView.context.startActivity<InsertionDetailActivity>(
-                        InsertionDetailFragment.INSERTION_ID to it
-                )
+                insertionId?.let {
+                    itemClickListener.onItemClick(it)
+                }
             }
         }
 
@@ -126,22 +119,17 @@ class BookDelegateAdapter(val itemClickListener: (ViewType) -> Unit) : ViewTypeD
         private fun addSaveButtonListener(item: BookModel) = with(itemView) {
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
-                item.saved = toggleItemSave(item.insertionId)
+                insertionId?.let {
+                    itemClickListener.onButtonClick(it)
+                }
+                // Optimistic update of the save button
+                item.saved = !item.saved
                 updateSaveButton(saveButton, item.saved)
                 if (item.saved) {
                     saveButton.animateBounce()
                 }
-                itemClickListener(item)
             }
         }
-
-        /**
-         * Toggle the save status of the considered item.
-         *
-         * @param itemId the id of the item subject to the toggle of the save status
-         */
-        private fun toggleItemSave(itemId: Long) : Boolean =
-                UserManager.toggleSaveInsertion(itemId)
 
         /**
          * Update the graphics of the save button given the saved status.
