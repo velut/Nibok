@@ -35,14 +35,14 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
          *
          * @param itemId the id of the item that was clicked
          */
-        fun onButtonClick(itemId: Long)
+        fun onButtonClick(itemId: Long, itemType: Int)
 
         /**
          * Listen to a click on the item itself.
          *
          * @param itemId the id of the item that was clicked
          */
-        fun onItemClick(itemId: Long)
+        fun onItemClick(itemId: Long, itemType: Int)
     }
 
     // The loading item object
@@ -54,6 +54,9 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
 
     // Items to be displayed
     private val items = mutableListOf<ViewType>(loadingItem)
+
+    // List of removed items
+    private val removedItems = mutableListOf<ViewType>()
 
     // Adapter instances corresponding to adapter types
     private val delegateAdaptersMap = mapOf(
@@ -94,6 +97,25 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     override fun removeItems(items: List<ViewType>) = removeViewTypeItems(items)
 
     override fun removeItem(item: ViewType) = removeViewTypeItem(item)
+
+    override fun removeItemById(itemId: Long, itemType: Int): Int {
+        var result = -1
+        val itemToRemove = getCurrentItemsForViewType(itemType).find { it.getItemId() == itemId }
+        itemToRemove?.let {
+            removedItems.add(it)
+            result = removeItem(it)
+        }
+        return result
+    }
+
+    override fun restoreItemById(itemId: Long, itemType: Int, position: Int) {
+        val itemToRestore = removedItems.find { it.getItemId() == itemId
+                                                && it.getViewType() == itemType }
+        itemToRestore?.let {
+            addViewTypeItems(listOf(it), insertAtPosition = position)
+            removedItems.remove(it)
+        }
+    }
 
     /**
      * Add given items to the list of items to display.
