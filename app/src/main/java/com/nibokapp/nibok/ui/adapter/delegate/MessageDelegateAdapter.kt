@@ -1,25 +1,28 @@
 package com.nibokapp.nibok.ui.adapter.delegate
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.MessageModel
 import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import kotlinx.android.synthetic.main.item_message.view.*
 
 /**
  * Delegate adapter managing the creation and binding of message view holders.
  */
-class MessageDelegateAdapter : ViewTypeDelegateAdapter {
+class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = MessageDelegateAdapter::class.java.simpleName
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return MessageVH(parent)
+        return MessageVH(parent, itemClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
@@ -27,7 +30,7 @@ class MessageDelegateAdapter : ViewTypeDelegateAdapter {
         holder.bind(item as MessageModel)
     }
 
-    class MessageVH(parent: ViewGroup) :
+    class MessageVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
             RecyclerView.ViewHolder(parent.inflate(R.layout.item_message)) {
 
         private val MAX_PARTNER_NAME_LENGTH_PORTRAIT = 15
@@ -35,14 +38,18 @@ class MessageDelegateAdapter : ViewTypeDelegateAdapter {
         private val MAX_PARTNER_NAME_LENGTH_LANDSCAPE = 25
         private val MAX_MESSAGE_CONTENT_LENGTH_LANDSCAPE = 40
 
+        private var conversationId: Long? = null
+
         /**
          * Bind the itemView of the view holder to the given item's data.
          *
          * @param item the item containing data about the message
          */
         fun bind(item: MessageModel) {
+            conversationId = item.conversationId
             loadAvatar(item.partnerAvatar)
             bindData(item)
+            addClickListener()
         }
 
         /**
@@ -75,6 +82,18 @@ class MessageDelegateAdapter : ViewTypeDelegateAdapter {
             messagePartner.text = item.partnerName.ellipsize(maxPartnerNameLength)
             messageContent.text = item.previewText.ellipsize(maxMessageContentLength)
             messageDate.text = item.date.toDeltaBasedSimpleDateString(context.getString(R.string.yesterday))
+        }
+
+        /**
+         * Add a click listener to the layout's root.
+         */
+        private fun addClickListener() = with(itemView) {
+            Log.d(TAG, "Message item clicked")
+            setOnClickListener {
+                conversationId?.let {
+                    itemClickListener.onItemClick(it, ViewTypes.MESSAGE)
+                }
+            }
         }
     }
 }
