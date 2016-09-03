@@ -33,7 +33,7 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter()
+    override fun getMainViewAdapter() = ViewTypeAdapter(messageItemClickListener)
 
     // Main View Data
 
@@ -51,7 +51,7 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter()
+    override fun getSearchViewAdapter() = ViewTypeAdapter(messageItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
 
@@ -63,5 +63,17 @@ class MessagesFragment : ViewTypeFragment() {
     override fun handleRefreshAction() {
         // TODO Implement
         Log.d(TAG, "TODO")
+    }
+
+    private val messageItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+        override fun onButtonClick(itemId: Long, itemType: Int) {
+            // TODO Implement
+            Log.d(TAG, "TODO")
+        }
+
+        override fun onItemClick(itemId: Long, itemType: Int) {
+            // TODO Implement
+            Log.d(TAG, "TODO")
+        }
     }
 }
