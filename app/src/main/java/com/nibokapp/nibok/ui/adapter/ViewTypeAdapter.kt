@@ -112,7 +112,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         val itemToRestore = removedItems.find { it.getItemId() == itemId
                                                 && it.getViewType() == itemType }
         itemToRestore?.let {
-            addViewTypeItems(listOf(it), insertAtPosition = position)
+            addViewTypeItems(listOf(it), insertPosition = position)
             removedItems.remove(it)
         }
     }
@@ -121,15 +121,15 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
      * Add given items to the list of items to display.
      *
      * @param items the list of items to add
-     * @param insertAtPosition the desired position at which items are inserted. Default = 0 (top)
-     * @param addToBottom true if the items have to be added at the end of the list of items,
+     * @param insertPosition the desired position at which items are inserted. Default = 0 (top)
+     * @param insertAtBottom true if the items have to be added at the end of the list of items,
      * false if they are to be inserted at the specified position. Default = false.
      * @param excludeDuplicates true if items with ids already present in the current items
      * with the same view type should not be added,
      * false if items with the same id and the same view type are allowed to be in the items list
      */
-    private fun addViewTypeItems(items: List<ViewType>, insertAtPosition : Int = 0,
-                                 addToBottom: Boolean = false, excludeDuplicates: Boolean = true) {
+    private fun addViewTypeItems(items: List<ViewType>, insertPosition: Int = 0,
+                                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true) {
 
         if (items.isEmpty()) return
 
@@ -149,11 +149,12 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         }
 
         if (itemsToAdd.isNotEmpty()) {
-            val insertPosition = if (addToBottom) itemCount - 1 else  insertAtPosition
+            var insertPos = if (insertAtBottom) itemCount - 1 else insertPosition
+            if (insertPos < 0 || insertPos >= itemCount) insertPos = 0
             val insertItemCount = itemsToAdd.size
-            this.items.addAll(insertPosition, itemsToAdd)
-            notifyItemRangeInserted(insertPosition, insertItemCount)
-            Log.d(TAG, "Added $insertItemCount items at position $insertPosition")
+            this.items.addAll(insertPos, itemsToAdd)
+            notifyItemRangeInserted(insertPos, insertItemCount)
+            Log.d(TAG, "Added $insertItemCount items at position $insertPos")
         }
     }
 
