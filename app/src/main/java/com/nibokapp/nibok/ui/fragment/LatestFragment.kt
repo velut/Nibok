@@ -9,6 +9,7 @@ import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.startActivity
@@ -102,7 +103,8 @@ class LatestFragment : ViewTypeFragment() {
     // Item click listener for the book cards
     private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
 
-        override fun onButtonClick(itemId: Long) {
+        override fun onButtonClick(itemId: Long, itemType: Int) {
+            if (itemType != ViewTypes.BOOK) return
             // Save button was clicked, save the insertion and alert user
             val saved = UserManager.toggleSaveInsertion(itemId)
             checkForUpdates()
@@ -111,10 +113,16 @@ class LatestFragment : ViewTypeFragment() {
             context.toast(toastMessage)
         }
 
-        override fun onItemClick(itemId: Long) =
-                // Book card was clicked, display detail view
+        override fun onItemClick(itemId: Long, itemType: Int) {
+            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+        }
+    }
+
+    /**
+     * Start the detail activity about the given insertion.
+     */
+    private fun startDetailActivity(itemId: Long) =
             context.startActivity<InsertionDetailActivity>(
                     InsertionDetailFragment.INSERTION_ID to itemId)
-    }
 
 }
