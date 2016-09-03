@@ -9,4 +9,5 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="text_input_color">#737373</color>
+    <color name="gray_light">#E8E8E8</color>
 </resources>
