@@ -3,9 +3,9 @@ package com.nibokapp.nibok.ui.adapter
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
-import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
@@ -49,7 +49,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     private val loadingItem = object : ViewType {
         override fun getItemId(): Long = 0L
 
-        override fun getViewType(): Int = AdapterTypes.LOADING
+        override fun getViewType(): Int = ViewTypes.LOADING
     }
 
     // Items to be displayed
@@ -58,11 +58,11 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     // List of removed items
     private val removedItems = mutableListOf<ViewType>()
 
-    // Adapter instances corresponding to adapter types
+    // Adapter instances corresponding to view types
     private val delegateAdaptersMap = mapOf(
-            AdapterTypes.LOADING to LoadingDelegateAdapter(),
-            AdapterTypes.BOOK to BookDelegateAdapter(itemClickListener),
-            AdapterTypes.MESSAGE to MessageDelegateAdapter()
+            ViewTypes.LOADING to LoadingDelegateAdapter(),
+            ViewTypes.BOOK to BookDelegateAdapter(itemClickListener),
+            ViewTypes.MESSAGE to MessageDelegateAdapter()
     )
 
     // The currently supported view types
@@ -185,7 +185,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
             if (newItems.isNotEmpty()) {
                 val currentIds = getCurrentIdsForViewType(currentType)
                 val (toReplace, toAdd) = newItems.partition { it.getItemId() in currentIds }
-                Log.d(TAG, "Items of type: ${AdapterTypes.getTypeName(currentType)}\n" +
+                Log.d(TAG, "Items of type: ${ViewTypes.getTypeName(currentType)}\n" +
                         "To replace: ${toReplace.size}; to add: ${toAdd.size}")
                 replaceViewTypeItems(toReplace, currentType)
                 addViewTypeItems(toAdd)
@@ -213,7 +213,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         val candidateItems = getCurrentItemsForViewType(itemType)
         val itemToReplace = candidateItems.find { it.getItemId() == item.getItemId() }
         itemToReplace?.let {
-            Log.d(TAG, "Replacing ${AdapterTypes.getTypeName(itemType)} with id: ${it.getItemId()}")
+            Log.d(TAG, "Replacing ${ViewTypes.getTypeName(itemType)} with id: ${it.getItemId()}")
             val itemToReplaceIndex = this.items.indexOf(it)
             this.items[itemToReplaceIndex] = item
             notifyItemChanged(itemToReplaceIndex)
@@ -243,7 +243,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         if (itemIndex != -1) {
             this.items.removeAt(itemIndex)
             notifyItemRemoved(itemIndex)
-            Log.d(TAG, "Removed ${AdapterTypes.getTypeName(item.getViewType())} with id: ${item.getItemId()}")
+            Log.d(TAG, "Removed ${ViewTypes.getTypeName(item.getViewType())} with id: ${item.getItemId()}")
         }
         return itemIndex
     }

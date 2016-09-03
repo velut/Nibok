@@ -1,6 +1,6 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import java.util.*
 
@@ -23,5 +23,5 @@ data class MessageModel(
 
     override fun getItemId(): Long = conversationId
 
-    override fun getViewType() : Int = AdapterTypes.MESSAGE
+    override fun getViewType() : Int = ViewTypes.MESSAGE
 }

@@ -1,6 +1,6 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.common.AdapterTypes
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 
 /**
@@ -30,6 +30,6 @@ data class BookModel(
 
     override fun getItemId(): Long = insertionId
 
-    override fun getViewType(): Int = AdapterTypes.BOOK
+    override fun getViewType(): Int = ViewTypes.BOOK
 }
 

@@ -1,9 +1,10 @@
 package com.nibokapp.nibok.ui.adapter.common
 
 /**
- * Enumeration of adapter types for the delegate adapters.
+ * Enumeration of view types.
  */
-object AdapterTypes {
+object ViewTypes {
+
     val LOADING = 1
     val BOOK = 2
     val MESSAGE = 3
