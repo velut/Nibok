@@ -14,6 +14,7 @@ import com.nibokapp.nibok.extension.toCurrency
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import kotlinx.android.synthetic.main.card_book.view.*
 
 /**
@@ -91,7 +92,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it)
+                    itemClickListener.onItemClick(it, ViewTypes.BOOK)
                 }
             }
         }
@@ -102,7 +103,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
         private fun addThumbnailListener() = with(itemView) {
             bookThumbnail.setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it)
+                    itemClickListener.onItemClick(it, ViewTypes.BOOK)
                 }
             }
         }
@@ -120,7 +121,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
                 insertionId?.let {
-                    itemClickListener.onButtonClick(it)
+                    itemClickListener.onButtonClick(it, ViewTypes.BOOK)
                 }
                 // Optimistic update of the save button
                 item.saved = !item.saved
