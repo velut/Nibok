@@ -7,11 +7,13 @@ import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.data.repository.UserManager
-import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import kotlinx.android.synthetic.main.fragment_saved.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -37,7 +39,7 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter { mainViewItemClickListener(it) }
+    override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickListener)
 
     // Main View Data
 
@@ -55,7 +57,7 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter { searchViewItemClickListener(it) }
+    override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
@@ -92,75 +94,78 @@ class SavedFragment : ViewTypeFragment() {
         }
     }
 
+    private val mainViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+        override fun onButtonClick(itemId: Long, itemType: Int) {
+            if (itemType == ViewTypes.BOOK) mainViewItemClickListener(itemId, itemType)
+        }
+
+        override fun onItemClick(itemId: Long, itemType: Int) {
+            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+        }
+    }
+
+    private val searchViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+        override fun onButtonClick(itemId: Long, itemType: Int) {
+            if (itemType != ViewTypes.BOOK) return
+            val saved = UserManager.toggleSaveInsertion(itemId)
+            val toastMessage = if (saved) R.string.book_saved_to_collection
+                                else R.string.book_removed_from_collection
+            context.toast(toastMessage)
+        }
+
+        override fun onItemClick(itemId: Long, itemType: Int) {
+            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+        }
+    }
+
+    /**
+     * Start the detail activity about the given insertion.
+     */
+    private fun startDetailActivity(itemId: Long) =
+            context.startActivity<InsertionDetailActivity>(
+                    InsertionDetailFragment.INSERTION_ID to itemId)
+
     /**
      * Remove book insertions once unsaved, notify the user and offer the possibility to restore the
      * insertion after removal.
      *
-     * @param item the item that was clicked
+     * @param itemId the id of the item that was clicked
+     * @param itemType the type of the item that was clicked
      */
-    private fun mainViewItemClickListener(item: ViewType) {
-        bookItemClickListener(item) {
-            val book = it
-            if (!book.saved) { // If book was removed
-                val mainViewAdapter = getMainView().adapter as? ViewTypeAdapter
-                mainViewAdapter?.let {
+    private fun mainViewItemClickListener(itemId: Long, itemType: Int) {
+        val saved = UserManager.toggleSaveInsertion(itemId)
+        val mainViewAdapter = getMainView().adapter as? ViewTypeAdapter
 
-                    // Save old book position for possible reinsertion
-                    val oldBookPosition = mainViewAdapter.removeItem(book)
-                    refreshMainViewData()
+        if (saved || mainViewAdapter == null) return
 
-                    // Notify user of removal
-                    val snackBar = Snackbar.make(savedFragmentRoot,
-                            R.string.book_removed_from_collection, Snackbar.LENGTH_INDEFINITE)
+        // Remove the book
 
-                    // Provide reinsertion possibility
-                    snackBar.setAction(R.string.snackbar_undo_action) {
-                        // Reinsert book if necessary
-                        if (!UserManager.isInsertionSaved(book.insertionId)) {
-                            book.saved = UserManager.toggleSaveInsertion(book.insertionId)
-                            mainViewAdapter.addItems(listOf(book), insertPosition = oldBookPosition)
-                            refreshMainViewData()
-                            // Notify the reinsertion
-                            val childSnackBar = Snackbar.make(savedFragmentRoot,
-                                    R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
-                            childSnackBar.show()
-                        } else {
-                            // Book was reinserted from other pages before the undo operation
-                            val childSnackBar = Snackbar.make(savedFragmentRoot,
-                                    R.string.book_already_into_collection, Snackbar.LENGTH_SHORT)
-                            childSnackBar.show()
-                        }
-                    }
-                    snackBar.show()
-                }
+        // Save old book position for possible reinsertion
+        val oldBookPosition = mainViewAdapter.removeItemById(itemId, itemType)
+        refreshMainViewData() // Book was removed, sync fragment data
+
+        // Notify user of removal
+        val snackBar = Snackbar.make(savedFragmentRoot,
+                R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
+
+        // Provide reinsertion possibility
+        snackBar.setAction(R.string.snackbar_undo_action) {
+            // Reinsert book if necessary
+            if (!UserManager.isInsertionSaved(itemId)) {
+                UserManager.toggleSaveInsertion(itemId)
+                mainViewAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
+                checkForUpdates() // Sync fragment data and view
+                // Notify the reinsertion
+                val childSnackBar = Snackbar.make(savedFragmentRoot,
+                        R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
+                childSnackBar.show()
+            } else {
+                // Book was reinserted from other pages before the undo operation
+                val childSnackBar = Snackbar.make(savedFragmentRoot,
+                        R.string.book_already_into_collection, Snackbar.LENGTH_SHORT)
+                childSnackBar.show()
             }
         }
-    }
-
-    /**
-     * Notify with toasts the user of the saved status of the clicked book insertion.
-     *
-     * @param item the item that was clicked
-     */
-    private fun searchViewItemClickListener(item: ViewType) {
-        bookItemClickListener(item) {
-            val toastMessage = if (it.saved) R.string.book_saved_to_collection
-            else R.string.book_removed_from_collection
-            context.toast(toastMessage)
-        }
-    }
-
-    /**
-     * Handle click on books.
-     *
-     * @param item the item that was clicked
-     * @param onClick the function to execute given the clicked item
-     */
-    private fun bookItemClickListener(item: ViewType, onClick: (BookModel) -> Unit) {
-        val book = item as? BookModel
-        book?.let {
-            Log.d(TAG, "Handling item click")
-            onClick(it)
-        }
+        snackBar.show()
     }
 }
