@@ -9,7 +9,7 @@
         android:id="@+id/leftBubbleContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="300dp"
+        android:maxWidth="@dimen/max_message_bubble_width"
         android:layout_marginStart="8dp"
         android:background="@drawable/drawable_chat_bubble_left"
         android:textColor="@color/primary_text"

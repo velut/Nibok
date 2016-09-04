@@ -29,4 +29,7 @@
     <dimen name="publish_header_distance">32dp</dimen>
     <dimen name="publish_footer_distance">32dp</dimen>
 
+    <!-- Chat sizes -->
+    <dimen name="max_message_bubble_width">300dp</dimen>
+
 </resources>
