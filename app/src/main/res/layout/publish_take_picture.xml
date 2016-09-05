@@ -9,7 +9,7 @@
     android:focusableInTouchMode="true"
     android:focusable="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:visibility="visible"
+    android:visibility="gone"
     tools:showIn="@layout/fragment_publish">
 
     <LinearLayout
