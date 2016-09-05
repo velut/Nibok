@@ -20,4 +20,63 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     </android.support.design.widget.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Input form to send a message -->
+
+        <LinearLayout
+            android:id="@+id/chatInputForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <EditText
+                android:id="@+id/chatInputText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_gravity="center_vertical"
+                android:inputType="textMultiLine"
+                android:maxLength="300"
+                android:gravity="top|start"
+                android:maxLines="4"
+                android:scrollbars="vertical"
+                android:hint="@string/hint_message_input"
+                android:background="@color/gray_light"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center_vertical"
+                app:elevation="2dp"
+                android:src="@drawable/ic_send_white_24dp"/>
+
+        </LinearLayout>
+
+        <!-- List of exchanged messages -->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chatMessagesView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/chatInputForm"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"/>
+
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

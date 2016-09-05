@@ -46,7 +46,8 @@
 
         <activity
             android:name=".ui.activity.ChatActivity"
-            android:theme="@style/NibokTheme">
+            android:theme="@style/NibokTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
