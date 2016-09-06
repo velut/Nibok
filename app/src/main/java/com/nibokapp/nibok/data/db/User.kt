@@ -11,6 +11,7 @@ import io.realm.annotations.PrimaryKey
  * @param id the id of the user
  * @param savedInsertions the insertions saved by the user - One to many
  * @param publishedInsertions the insertions published by the user - One to many
+ * @param conversations the conversations that the user has with other external users
  */
 open class User(
 
@@ -18,6 +19,8 @@ open class User(
 
         open var savedInsertions: RealmList<Insertion>? = null,
 
-        open var publishedInsertions: RealmList<Insertion>? = null
+        open var publishedInsertions: RealmList<Insertion>? = null,
+
+        open var conversations: RealmList<Conversation>? = null
 
 ) : RealmObject() {}
