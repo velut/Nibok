@@ -1,11 +1,12 @@
 package com.nibokapp.nibok.ui.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.ChatMessage
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.extension.toSimpleDateString
+import com.nibokapp.nibok.extension.toDeltaBasedSimpleDateString
 import kotlinx.android.synthetic.main.message_chat_bubble_left.view.*
 import kotlinx.android.synthetic.main.message_chat_bubble_right.view.*
 
@@ -38,6 +39,27 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
          * @param message the message object containing the data to be bound
          */
         fun bind(message: ChatMessage)
+
+        /**
+         * Get the text content of the message.
+         *
+         * @param message the message containing the text
+         *
+         * @return the text of the message
+         */
+        fun getMessageText(message: ChatMessage) = message.text
+
+        /**
+         * Get the date of the message.
+         *
+         * @param message the message containing the date
+         * @param context the context used to retrieve string resources
+         *
+         * @return the a string representing the time at which the message was sent
+         */
+        fun getMessageDate(message: ChatMessage, context: Context) =
+                message.date.toDeltaBasedSimpleDateString(
+                        context.resources.getString(R.string.yesterday), alwaysAddHour = true)
     }
 
     /**
@@ -100,11 +122,11 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         private fun bindText(message: ChatMessage) = with(itemView) {
-            rightBubbleContent.text = message.text
+            rightBubbleContent.text = getMessageText(message)
         }
 
         private fun bindDate(message: ChatMessage) = with(itemView) {
-            rightBubbleDate.text = message.date.toSimpleDateString()
+            rightBubbleDate.text = getMessageDate(message, context)
         }
     }
 
@@ -121,11 +143,11 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         private fun bindText(message: ChatMessage) = with(itemView) {
-            leftBubbleContent.text = message.text
+            leftBubbleContent.text = getMessageText(message)
         }
 
         private fun bindDate(message: ChatMessage) = with(itemView) {
-            leftBubbleDate.text = message.date.toSimpleDateString()
+            leftBubbleDate.text = getMessageDate(message, context)
         }
     }
 }
