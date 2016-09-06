@@ -15,6 +15,7 @@
         android:layout_gravity="end"
         android:background="@drawable/drawable_chat_bubble_right"
         android:textColor="@color/primary_text"
+        android:textSize="@dimen/chat_bubble_text_size"
         android:text="Lorem ipsum "/>
 
     <TextView

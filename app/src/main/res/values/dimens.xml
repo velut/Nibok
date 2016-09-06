@@ -31,5 +31,6 @@
 
     <!-- Chat sizes -->
     <dimen name="max_message_bubble_width">300dp</dimen>
+    <dimen name="chat_bubble_text_size">16sp</dimen>
 
 </resources>
