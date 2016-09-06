@@ -9,11 +9,11 @@ import io.realm.annotations.PrimaryKey
  * Model class for the books.
  * Used by the local database.
  *
- * @property id the id of the book - Primary Key
- * @property authors the list of authors of the book
- * @property year the year in which the book was published
- * @property publisher the publisher of the book
- * @property isbn the isbn of the book
+ * @param id the id of the book - Primary Key
+ * @param authors the list of authors of the book
+ * @param year the year in which the book was published
+ * @param publisher the publisher of the book
+ * @param isbn the isbn of the book
  */
 open class Book(
 

@@ -8,9 +8,9 @@ import io.realm.annotations.PrimaryKey
  * Model class for the local user.
  * Used by the local database.
  *
- * @property id the id of the user
- * @property savedInsertions the insertions saved by the user - One to many
- * @property publishedInsertions the insertions published by the user - One to many
+ * @param id the id of the user
+ * @param savedInsertions the insertions saved by the user - One to many
+ * @param publishedInsertions the insertions published by the user - One to many
  */
 open class User(
 

@@ -10,13 +10,13 @@ import java.util.*
  * Model class for the books insertions.
  * Used by the local database.
  *
- * @property id the id of the insertion - Primary Key
- * @property date the date of the insertion
- * @property seller the user that created the insertion - One to one
- * @property book the book being sold in this insertion - One to one
- * @property bookPrice the price the user set for the book
- * @property bookCondition the wear condition of the book
- * @property bookImagesSources the sources of the pictures of the book taken by the user
+ * @param id the id of the insertion - Primary Key
+ * @param date the date of the insertion
+ * @param seller the user that created the insertion - One to one
+ * @param book the book being sold in this insertion - One to one
+ * @param bookPrice the price the user set for the book
+ * @param bookCondition the wear condition of the book
+ * @param bookImagesSources the sources of the pictures of the book taken by the user
  */
 open class Insertion(
 
