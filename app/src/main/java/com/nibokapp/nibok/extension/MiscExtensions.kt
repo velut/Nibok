@@ -38,10 +38,12 @@ fun Date.toSimpleDateString(pattern: String = "dd/MM/yy") : String {
  * the current date, two days before, one week before or any other time.
  *
  * @param yesterdayString the string to be used if this date refers to yesterday
+ * @param alwaysAddHour true if the hour of the date should always be added, false otherwise. Default is false.
  *
  * @return a string that describes this date based on when it happened
  */
-fun Date.toDeltaBasedSimpleDateString(yesterdayString: String): String {
+fun Date.toDeltaBasedSimpleDateString(yesterdayString: String, alwaysAddHour: Boolean = false):
+        String {
 
     val calendar = Calendar.getInstance()
 
@@ -54,22 +56,28 @@ fun Date.toDeltaBasedSimpleDateString(yesterdayString: String): String {
     calendar.add(Calendar.DATE, -5)
     val oneWeekBefore = calendar.time
 
+    val hourPattern = "H:mm"
+    val defaultPattern: String
+
     if (this.after(oneDayBefore)) {
         // This date refers to today, describe it with the hour (e.g. 14:23)
-        return this.toSimpleDateString("H:mm")
+        return this.toSimpleDateString(hourPattern)
     } else if (this.after(twoDaysBefore)) {
         // This date refers to yesterday,
         // describe it with the yesterday string (e.g. Yesterday)
-        return yesterdayString
+        if (!alwaysAddHour) return yesterdayString
+        return "$yesterdayString ${this.toSimpleDateString(hourPattern)}"
     } else if (this.after(oneWeekBefore)) {
         // This date belongs to the current week,
         // describe it with the day of the week (e.g. Monday)
-        return this.toSimpleDateString("EEEE")
+        defaultPattern = "EEEE"
     } else {
         // This date refers to a time before the current week,
         // describe it with the full notation (e.g. 01/09/16)
-        return this.toSimpleDateString()
+        defaultPattern = "dd/MM/yy"
     }
+    val pattern = if (!alwaysAddHour) defaultPattern else "$defaultPattern $hourPattern"
+    return this.toSimpleDateString(pattern)
 }
 
 /**
