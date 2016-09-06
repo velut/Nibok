@@ -1,21 +1,21 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 
 /**
  * Schema representing essential information about a book to display in a card.
  *
  * The book card model is used in the book delegate adapter to bind data into the card view.
  *
- * @property insertionId the id of the insertion in which the book appears
- * @property title the title of the book
- * @property author the author of the book
- * @property year the year in which the book was published
- * @property quality the wear condition of the book
- * @property price the price of the book
- * @property thumbnail the thumbnail of the book
- * @property saved true if the book was saved by the user, false otherwise
+ * @param insertionId the id of the insertion in which the book appears
+ * @param title the title of the book
+ * @param author the author of the book
+ * @param year the year in which the book was published
+ * @param quality the wear condition of the book
+ * @param price the price of the book
+ * @param thumbnail the thumbnail of the book
+ * @param saved true if the book was saved by the user, false otherwise
  */
 data class BookModel(
         val insertionId: Long,

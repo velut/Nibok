@@ -1,17 +1,17 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import java.util.*
 
 /**
  * Schema representing essential information about a message conversation.
  *
- * @property conversationId the id of the conversation in which messages are exchanged
- * @property partnerAvatar the source for the profile picture of the conversation's partner
- * @property partnerName the name of the conversation's partner
- * @property previewText the short text previewing the latest message in the conversation
- * @property date the date in which the conversation was last updated
+ * @param conversationId the id of the conversation in which messages are exchanged
+ * @param partnerAvatar the source for the profile picture of the conversation's partner
+ * @param partnerName the name of the conversation's partner
+ * @param previewText the short text previewing the latest message in the conversation
+ * @param date the date in which the conversation was last updated
  */
 data class MessageModel(
         val conversationId: Long,
