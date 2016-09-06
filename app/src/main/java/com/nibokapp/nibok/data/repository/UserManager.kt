@@ -44,6 +44,20 @@ object UserManager {
     }
 
     /**
+     * Get the id of the user if the user exists.
+     *
+     * @return the user's id if the user exists, otherwise 0
+     */
+    fun getUserId(): Long {
+        if (userExists) {
+            val user = queryOneWithRealm { it.where(User::class.java).findFirst() }
+            return user!!.id
+        } else {
+            return 0L
+        }
+    }
+
+    /**
      * Get the list of insertions saved by the user if such list is available.
      *
      * @return the list of insertions saved by the user
