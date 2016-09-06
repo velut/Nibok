@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.domain.model.MessageModel
+import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
@@ -46,7 +46,7 @@ class MessagesFragment : ViewTypeFragment() {
         val delta = it-1
         cal.add(Calendar.DATE, -delta)
         val date = cal.time
-        MessageModel(it.toLong(), "avatar", "John Doe",
+        ConversationModel(it.toLong(), "avatar", "John Doe",
                 "Once upon a time in a land far far away $it",
                 date) }
 

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.domain.model.MessageModel
+import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
@@ -27,7 +27,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
         holder as MessageVH
-        holder.bind(item as MessageModel)
+        holder.bind(item as ConversationModel)
     }
 
     class MessageVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
@@ -45,7 +45,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
          *
          * @param item the item containing data about the message
          */
-        fun bind(item: MessageModel) {
+        fun bind(item: ConversationModel) {
             conversationId = item.conversationId
             loadAvatar(item.partnerAvatar)
             bindData(item)
@@ -69,7 +69,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
          *
          * @param item the item from which we extract the data
          */
-        private fun bindData(item: MessageModel) = with(itemView) {
+        private fun bindData(item: ConversationModel) = with(itemView) {
             // Change text views max length based on orientation
             val portrait = context.isOrientationPortrait()
             val maxPartnerNameLength =

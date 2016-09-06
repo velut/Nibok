@@ -5,7 +5,8 @@ import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import java.util.*
 
 /**
- * Schema representing essential information about a message conversation.
+ * Schema representing essential information about a message conversation
+ * between the local user and an external user (partner).
  *
  * @param conversationId the id of the conversation in which messages are exchanged
  * @param partnerAvatar the source for the profile picture of the conversation's partner
@@ -13,7 +14,7 @@ import java.util.*
  * @param previewText the short text previewing the latest message in the conversation
  * @param date the date in which the conversation was last updated
  */
-data class MessageModel(
+data class ConversationModel(
         val conversationId: Long,
         val partnerAvatar: String,
         val partnerName: String,
