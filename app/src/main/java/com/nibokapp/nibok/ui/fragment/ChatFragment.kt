@@ -43,6 +43,7 @@ class ChatFragment() : Fragment() {
         })
 
         setupChatMessagesView()
+        addSendButtonLister()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,6 +53,19 @@ class ChatFragment() : Fragment() {
         val hostingActivity = (activity as AppCompatActivity)
         hostingActivity.setSupportActionBar(toolbar)
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun addSendButtonLister() {
+        btnSendMessage.setOnClickListener {
+            val messageText = chatInputText.text.trim().toString()
+            chatInputText.text.clear()
+            if (messageText.isNotEmpty()) {
+                // TODO retrieve real ids and send message
+                val message = ChatMessage(0, getUserId(), messageText, Calendar.getInstance().time)
+                val messagePosition = chatAdapter.addMessage(message)
+                chatMessagesView.smoothScrollToPosition(messagePosition)
+            }
+        }
     }
 
     /**
