@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.UserManager
-import com.nibokapp.nibok.domain.model.ChatMessage
+import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.ChatAdapter
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -39,7 +39,7 @@ class ChatFragment() : Fragment() {
             date.add(Calendar.DATE, -10 + it)
             val content = arrayOf("Lorem Ipsum", "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem IpsumLorem IpsumLorem IpsumLorem Ipsum")
             val user = it % 2
-            ChatMessage(1L, user.toLong(), content[user], date.time)
+            ChatMessageModel(1L, user.toLong(), content[user], date.time)
         })
 
         setupChatMessagesView()
@@ -61,7 +61,7 @@ class ChatFragment() : Fragment() {
             chatInputText.text.clear()
             if (messageText.isNotEmpty()) {
                 // TODO retrieve real ids and send message
-                val message = ChatMessage(0, getUserId(), messageText, Calendar.getInstance().time)
+                val message = ChatMessageModel(0, getUserId(), messageText, Calendar.getInstance().time)
                 val messagePosition = chatAdapter.addMessage(message)
                 chatMessagesView.smoothScrollToPosition(messagePosition)
             }

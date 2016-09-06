@@ -10,7 +10,7 @@ import java.util.*
  * @param text the text content of the message
  * @param date the date in which the message was sent
  */
-data class ChatMessage(
+data class ChatMessageModel(
         val conversationId: Long,
         val senderId: Long,
         val text: String,

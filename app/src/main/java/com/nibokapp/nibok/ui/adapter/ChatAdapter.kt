@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.domain.model.ChatMessage
+import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.toDeltaBasedSimpleDateString
 import kotlinx.android.synthetic.main.message_chat_bubble_left.view.*
@@ -38,7 +38,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
          *
          * @param message the message object containing the data to be bound
          */
-        fun bind(message: ChatMessage)
+        fun bind(message: ChatMessageModel)
 
         /**
          * Get the text content of the message.
@@ -47,7 +47,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
          *
          * @return the text of the message
          */
-        fun getMessageText(message: ChatMessage) = message.text
+        fun getMessageText(message: ChatMessageModel) = message.text
 
         /**
          * Get the date of the message.
@@ -57,7 +57,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
          *
          * @return the a string representing the time at which the message was sent
          */
-        fun getMessageDate(message: ChatMessage, context: Context) =
+        fun getMessageDate(message: ChatMessageModel, context: Context) =
                 message.date.toDeltaBasedSimpleDateString(
                         context.resources.getString(R.string.yesterday), alwaysAddHour = true)
     }
@@ -65,7 +65,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
     /**
      * List of messages exchanged by the user and the conversation's partner.
      */
-    private val messages = mutableListOf<ChatMessage>()
+    private val messages = mutableListOf<ChatMessageModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == USER_MESSAGE) {
@@ -98,7 +98,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @return the position in which the last message was added
      */
-    fun addMessages(messageList: List<ChatMessage>) : Int {
+    fun addMessages(messageList: List<ChatMessageModel>) : Int {
         var position: Int = 0
         messageList.forEach { position = addMessage(it) }
         return position
@@ -112,7 +112,7 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @return the position in which the message was added
      */
-    fun addMessage(message: ChatMessage) : Int {
+    fun addMessage(message: ChatMessageModel) : Int {
         messages.add(message)
         val position = itemCount - 1
         notifyItemInserted(position)
@@ -126,16 +126,16 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
             RecyclerView.ViewHolder(parent.inflate(R.layout.message_chat_bubble_right)),
             ChatMessageVH {
 
-        override fun bind(message: ChatMessage) {
+        override fun bind(message: ChatMessageModel) {
             bindText(message)
             bindDate(message)
         }
 
-        private fun bindText(message: ChatMessage) = with(itemView) {
+        private fun bindText(message: ChatMessageModel) = with(itemView) {
             rightBubbleContent.text = getMessageText(message)
         }
 
-        private fun bindDate(message: ChatMessage) = with(itemView) {
+        private fun bindDate(message: ChatMessageModel) = with(itemView) {
             rightBubbleDate.text = getMessageDate(message, context)
         }
     }
@@ -147,16 +147,16 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
             RecyclerView.ViewHolder(parent.inflate(R.layout.message_chat_bubble_left)),
             ChatMessageVH {
 
-        override fun bind(message: ChatMessage) {
+        override fun bind(message: ChatMessageModel) {
             bindText(message)
             bindDate(message)
         }
 
-        private fun bindText(message: ChatMessage) = with(itemView) {
+        private fun bindText(message: ChatMessageModel) = with(itemView) {
             leftBubbleContent.text = getMessageText(message)
         }
 
-        private fun bindDate(message: ChatMessage) = with(itemView) {
+        private fun bindDate(message: ChatMessageModel) = with(itemView) {
             leftBubbleDate.text = getMessageDate(message, context)
         }
     }
