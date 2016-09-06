@@ -95,18 +95,28 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      * Messages are always added to the bottom of the current list.
      *
      * @param messageList the list of messages to add
+     *
+     * @return the position in which the last message was added
      */
-    fun addMessages(messageList: List<ChatMessage>) = messageList.forEach { addMessage(it) }
+    fun addMessages(messageList: List<ChatMessage>) : Int {
+        var position: Int = 0
+        messageList.forEach { position = addMessage(it) }
+        return position
+    }
 
     /**
      * Add a message to the current message list.
      * The message is added to the bottom of the current list.
      *
      * @param message the message to add
+     *
+     * @return the position in which the message was added
      */
-    fun addMessage(message: ChatMessage) {
+    fun addMessage(message: ChatMessage) : Int {
         messages.add(message)
-        notifyItemInserted(itemCount - 1)
+        val position = itemCount - 1
+        notifyItemInserted(position)
+        return position
     }
 
     /**
