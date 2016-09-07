@@ -12,6 +12,7 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
 import org.jetbrains.anko.uiThread
@@ -32,6 +33,8 @@ abstract class ViewTypeFragment : BaseFragment() {
     private var oldQuery: String? = null
     private var oldResults: List<ViewType>? = null
 
+    private val presenter: ViewTypePresenter by lazy { getFragmentPresenter() }
+
     private var mainView: RecyclerView? = null
     private var searchResultsView: RecyclerView? = null
     private var currentView: RecyclerView? = null
@@ -44,6 +47,13 @@ abstract class ViewTypeFragment : BaseFragment() {
      * @return the fragment's layout id
      */
     abstract fun getFragmentLayout() : Int
+
+    /**
+     * Get the presenter used by the fragment.
+     *
+     * @return the fragment's presenter
+     */
+    abstract fun getFragmentPresenter() : ViewTypePresenter
 
     /**
      * Get the main view defined in the fragment's layout.
@@ -74,11 +84,6 @@ abstract class ViewTypeFragment : BaseFragment() {
     abstract fun getMainViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
-     * The initial set of data to display in the main view.
-     */
-    abstract fun getMainViewData() : List<ViewType>
-
-    /**
      * Get the search view defined in the fragment's layout.
      *
      * @return the search view defined in the fragment's layout.
@@ -100,13 +105,6 @@ abstract class ViewTypeFragment : BaseFragment() {
     abstract fun getSearchViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     /**
-     * The method that given a query returns a list of ViewType results.
-     *
-     * @return the list of ViewType representing the results of the query
-     */
-    abstract fun searchStrategy(query: String) : List<ViewType>
-
-    /**
      * The loading function called when scrolling down the main view.
      */
     abstract fun onMainViewScrollDownLoader()
@@ -125,13 +123,13 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun hasMainViewRemovableItems() : Boolean
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO Get cached data to improve performance
         // In order to preserve scroll position
         // get the data before setting up the view and later pass it to
         // the view adapter before layout manager state is restored
-        mainViewData = getMainViewData()
+        mainViewData = presenter.getCachedData()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -187,7 +185,7 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
         oldQuery = query
 
-        val results = searchStrategy(query)
+        val results = presenter.getQueryData(query)
         if (results.equals(oldResults)) {
             Log.d(TAG, "Same results as before, return")
             return
@@ -219,7 +217,8 @@ abstract class ViewTypeFragment : BaseFragment() {
      * proper data.
      */
     fun refreshMainViewData() {
-        doAsync() { mainViewData = getMainViewData() }
+        // TODO remove async from here
+        doAsync() { mainViewData = presenter.getData() }
     }
 
     /**
@@ -230,27 +229,28 @@ abstract class ViewTypeFragment : BaseFragment() {
      * be updated and inform accordingly in the ui thread the main view adapter.
      */
     fun checkForUpdates() {
+
         val viewAdapter = getAdapterForView(mainView)
-        Log.d(TAG, "${getFragmentName()} is checking for updates;\n adapter: $viewAdapter")
+        if (viewAdapter == null) {
+            Log.d(TAG, "No adapter for main view, cannot update")
+            return
+        }
+        Log.d(TAG, "${getFragmentName()} is checking for updates")
 
+        // TODO remove async from here
         doAsync() {
-            val newData = getMainViewData()
+            val oldData = mainViewData
+            val (toUpdate, toRemove, newData) = presenter.getDiffData(oldData)
+            mainViewData = newData
 
-            if (mainViewData != newData) {
+            if (hasMainViewRemovableItems()) {
+                Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
+                if (toRemove.size > 0) uiThread { viewAdapter.removeItems(toRemove) }
+            }
 
-                if (hasMainViewRemovableItems()) {
-                    val toRemove = mainViewData.filter { it !in newData }
-                    Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
-                    if (toRemove.size > 0) uiThread { viewAdapter?.removeItems(toRemove) }
-                }
-
-                if (hasMainViewUpdatableItems()) {
-                    val toUpdate = newData.filter { it !in mainViewData }
-                    Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
-                    if (toUpdate.size > 0) uiThread { viewAdapter?.updateItems(toUpdate) }
-                }
-
-                mainViewData = newData
+            if (hasMainViewUpdatableItems()) {
+                Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
+                if (toUpdate.size > 0) uiThread { viewAdapter.updateItems(toUpdate) }
             }
         }
     }
