@@ -6,11 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.PublishActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import kotlinx.android.synthetic.main.fragment_selling.*
 import org.jetbrains.anko.startActivity
 
@@ -29,6 +28,10 @@ class SellingFragment : ViewTypeFragment() {
 
     override fun getFragmentName() : String = TAG
 
+    // Presenter TODO use correct presenter
+
+    override fun getFragmentPresenter() = InsertionFeedPresenter()
+
     // Main view
 
     override fun getMainView(): RecyclerView = sellingBooksList
@@ -40,8 +43,6 @@ class SellingFragment : ViewTypeFragment() {
     override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickListener)
 
     // Main view data
-
-    override fun getMainViewData(): List<ViewType> = BookManager.getFeedBooksList() // TODO replace
 
     override fun hasMainViewUpdatableItems(): Boolean = true
 
@@ -58,10 +59,6 @@ class SellingFragment : ViewTypeFragment() {
     override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
-
-    // Search view data
-
-    override fun searchStrategy(query: String): List<ViewType> = emptyList() // TODO add real search
 
 
     override fun handleRefreshAction() {

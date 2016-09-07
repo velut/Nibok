@@ -4,15 +4,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.presenter.viewtype.MessagePresenter
 import kotlinx.android.synthetic.main.fragment_messages.*
 import org.jetbrains.anko.startActivity
-import java.util.*
 
 /**
  * Fragment managing the messaging between users.
@@ -29,6 +26,10 @@ class MessagesFragment : ViewTypeFragment() {
 
     override fun getFragmentName() : String = TAG
 
+    // Presenter
+
+    override fun getFragmentPresenter() = MessagePresenter()
+
     // Main View
 
     override fun getMainView() : RecyclerView = messagesList
@@ -40,15 +41,6 @@ class MessagesFragment : ViewTypeFragment() {
     override fun getMainViewAdapter() = ViewTypeAdapter(messageItemClickListener)
 
     // Main View Data
-
-    override fun getMainViewData(): List<ViewType> = (1..20).map {
-        val cal = Calendar.getInstance()
-        val delta = it-1
-        cal.add(Calendar.DATE, -delta)
-        val date = cal.time
-        ConversationModel(it.toLong(), "avatar", "John Doe",
-                "Once upon a time in a land far far away $it",
-                date) }
 
     override fun onMainViewScrollDownLoader() = {}()
 
@@ -65,10 +57,6 @@ class MessagesFragment : ViewTypeFragment() {
     override fun getSearchViewAdapter() = ViewTypeAdapter(messageItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
-
-    // Search View Data
-
-    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
 
     override fun handleRefreshAction() {

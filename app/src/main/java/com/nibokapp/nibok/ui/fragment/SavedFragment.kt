@@ -9,9 +9,9 @@ import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.presenter.viewtype.SavedInsertionPresenter
 import kotlinx.android.synthetic.main.fragment_saved.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -31,6 +31,10 @@ class SavedFragment : ViewTypeFragment() {
 
     override fun getFragmentName() : String = TAG
 
+    // Presenter
+
+    override fun getFragmentPresenter() = SavedInsertionPresenter()
+
     // Main View
 
     override fun getMainView() : RecyclerView = savedBooksList
@@ -42,8 +46,6 @@ class SavedFragment : ViewTypeFragment() {
     override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickListener)
 
     // Main View Data
-
-    override fun getMainViewData(): List<ViewType> = BookManager.getSavedBooksList()
 
     override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
 
@@ -60,10 +62,6 @@ class SavedFragment : ViewTypeFragment() {
     override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickListener)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
-
-    // Search View Data
-
-    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
 
 
     override fun handleRefreshAction() {

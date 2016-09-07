@@ -8,9 +8,9 @@ import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
 import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -32,6 +32,10 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getFragmentName() : String = TAG
 
+    // Presenter
+
+    override fun getFragmentPresenter() = InsertionFeedPresenter()
+
     // Main View
 
     override fun getMainView() : RecyclerView = latestBooksList
@@ -43,8 +47,6 @@ class LatestFragment : ViewTypeFragment() {
     override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickListener)
 
     // Main View Data
-
-    override fun getMainViewData(): List<ViewType> = BookManager.getFeedBooksList()
 
     override fun onMainViewScrollDownLoader() = requestOlderBooks()
 
@@ -62,12 +64,9 @@ class LatestFragment : ViewTypeFragment() {
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
-    // Search View Data
-
-    override fun searchStrategy(query: String): List<ViewType> = BookManager.getBooksFromQuery(query)
-
 
     override fun handleRefreshAction() {
+        // TODO Use presenter
         // If new books are available add them to the list and return to the top
         if (BookManager.hasNewerFeedBooks()) {
             val newerBooks = BookManager.getNewerFeedBooks()
