@@ -120,6 +120,13 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /**
+     * Return the last message exchanged.
+     *
+     * @return the last message exchanged
+     */
+    fun getLastMessage() : ChatMessageModel = messages.last()
+
+    /**
      * ViewHolder for messages sent by the user.
      */
     private class UserMessageVH(parent: ViewGroup) :
