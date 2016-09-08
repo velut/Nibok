@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment.common
+package com.nibokapp.nibok.ui.fragment.main.common
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

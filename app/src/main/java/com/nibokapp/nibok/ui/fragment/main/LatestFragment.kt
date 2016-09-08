@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,7 +8,8 @@ import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewTypes
-import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
+import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter

@@ -8,11 +8,11 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.fragment.LatestFragment
-import com.nibokapp.nibok.ui.fragment.MessagesFragment
-import com.nibokapp.nibok.ui.fragment.SavedFragment
-import com.nibokapp.nibok.ui.fragment.SellingFragment
-import com.nibokapp.nibok.ui.fragment.common.VisibleFragment
+import com.nibokapp.nibok.ui.fragment.main.LatestFragment
+import com.nibokapp.nibok.ui.fragment.main.MessagesFragment
+import com.nibokapp.nibok.ui.fragment.main.SavedFragment
+import com.nibokapp.nibok.ui.fragment.main.SellingFragment
+import com.nibokapp.nibok.ui.fragment.main.common.VisibleFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**

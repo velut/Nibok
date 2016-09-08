@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment.common
+package com.nibokapp.nibok.ui.fragment.main.common
 
 /**
  * Interface for fragments shown in the view pager.

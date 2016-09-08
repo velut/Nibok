@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -6,7 +6,7 @@ import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
+import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.MessagePresenter
 import kotlinx.android.synthetic.main.fragment_messages.*
 import org.jetbrains.anko.startActivity
