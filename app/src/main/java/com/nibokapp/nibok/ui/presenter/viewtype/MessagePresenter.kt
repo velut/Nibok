@@ -1,7 +1,7 @@
 package com.nibokapp.nibok.ui.presenter.viewtype
 
 import com.nibokapp.nibok.domain.model.ConversationModel
-import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import java.util.*
 

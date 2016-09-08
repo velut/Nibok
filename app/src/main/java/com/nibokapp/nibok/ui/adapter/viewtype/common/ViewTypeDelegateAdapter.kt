@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter.common
+package com.nibokapp.nibok.ui.adapter.viewtype.common
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup

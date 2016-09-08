@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter.delegate
+package com.nibokapp.nibok.ui.adapter.viewtype.delegate
 
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.extension.*
-import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
-import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
+import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import kotlinx.android.synthetic.main.item_message.view.*
 
 /**

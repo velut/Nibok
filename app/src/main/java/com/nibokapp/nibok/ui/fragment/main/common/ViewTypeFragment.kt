@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.adapter.common.InfiniteScrollListener
-import com.nibokapp.nibok.ui.adapter.common.ListAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.InfiniteScrollListener
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find

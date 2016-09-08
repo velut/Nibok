@@ -1,11 +1,11 @@
-package com.nibokapp.nibok.ui.adapter.delegate
+package com.nibokapp.nibok.ui.adapter.viewtype.delegate
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.adapter.common.ViewType
-import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypeDelegateAdapter
 
 /**
  * Delegated adapter that displays the loading item (an animated icon).

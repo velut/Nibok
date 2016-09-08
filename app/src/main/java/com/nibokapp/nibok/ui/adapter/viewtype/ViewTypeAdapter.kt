@@ -1,14 +1,14 @@
-package com.nibokapp.nibok.ui.adapter
+package com.nibokapp.nibok.ui.adapter.viewtype
 
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
-import com.nibokapp.nibok.ui.adapter.common.ListAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
-import com.nibokapp.nibok.ui.adapter.delegate.BookDelegateAdapter
-import com.nibokapp.nibok.ui.adapter.delegate.LoadingDelegateAdapter
-import com.nibokapp.nibok.ui.adapter.delegate.MessageDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
+import com.nibokapp.nibok.ui.adapter.viewtype.delegate.BookDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.delegate.LoadingDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.delegate.MessageDelegateAdapter
 
 /**
  * The adapter responsible for managing and displaying ViewType items.

@@ -1,6 +1,6 @@
 package com.nibokapp.nibok.ui.presenter.viewtype.common
 
-import com.nibokapp.nibok.ui.adapter.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 
 /**
  * Interface for ViewType presenters, that is objects whose duty is to retrieve ViewType data

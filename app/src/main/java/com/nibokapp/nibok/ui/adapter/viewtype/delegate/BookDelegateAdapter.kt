@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter.delegate
+package com.nibokapp.nibok.ui.adapter.viewtype.delegate
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -11,10 +11,10 @@ import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.extension.toCurrency
-import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewType
-import com.nibokapp.nibok.ui.adapter.common.ViewTypeDelegateAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
+import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypeDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import kotlinx.android.synthetic.main.card_book.view.*
 
 /**

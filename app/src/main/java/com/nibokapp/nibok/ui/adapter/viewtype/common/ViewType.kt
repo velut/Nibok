@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter.common
+package com.nibokapp.nibok.ui.adapter.viewtype.common
 
 /**
  * Interface for items managed by the ViewTypeAdapter.

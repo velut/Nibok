@@ -7,8 +7,8 @@ import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
-import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
-import com.nibokapp.nibok.ui.adapter.common.ViewTypes
+import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.SavedInsertionPresenter

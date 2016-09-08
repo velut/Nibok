@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.activity.PublishActivity
-import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.UserInsertionPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
