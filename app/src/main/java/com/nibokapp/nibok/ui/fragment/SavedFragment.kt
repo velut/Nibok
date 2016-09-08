@@ -6,12 +6,13 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.SavedInsertionPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_saved.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -19,7 +20,8 @@ import org.jetbrains.anko.toast
 /**
  * Fragment managing the books saved by the user.
  */
-class SavedFragment : ViewTypeFragment() {
+class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()) :
+        ViewTypeFragment() {
 
     companion object {
         private val TAG = SavedFragment::class.java.simpleName
@@ -33,7 +35,7 @@ class SavedFragment : ViewTypeFragment() {
 
     // Presenter
 
-    override fun getFragmentPresenter() = SavedInsertionPresenter()
+    override fun getFragmentPresenter() = presenter
 
     // Main View
 
@@ -104,8 +106,10 @@ class SavedFragment : ViewTypeFragment() {
 
     private val searchViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {
-            if (itemType != ViewTypes.BOOK) return
-            val saved = UserManager.toggleSaveInsertion(itemId)
+
+            if (itemType != ViewTypes.BOOK || presenter !is InsertionSaveStatusPresenter) return
+
+            val saved = presenter.toggleInsertionSave(itemId)
             val toastMessage = if (saved) R.string.book_saved_to_collection
                                 else R.string.book_removed_from_collection
             context.toast(toastMessage)
@@ -131,7 +135,10 @@ class SavedFragment : ViewTypeFragment() {
      * @param itemType the type of the item that was clicked
      */
     private fun mainViewItemClickListener(itemId: Long, itemType: Int) {
-        val saved = UserManager.toggleSaveInsertion(itemId)
+
+        if (presenter !is InsertionSaveStatusPresenter) return
+
+        val saved = presenter.toggleInsertionSave(itemId)
         val mainViewAdapter = getMainView().adapter as? ViewTypeAdapter
 
         if (saved || mainViewAdapter == null) return
@@ -149,8 +156,8 @@ class SavedFragment : ViewTypeFragment() {
         // Provide reinsertion possibility
         snackBar.setAction(R.string.snackbar_undo_action) {
             // Reinsert book if necessary
-            if (!UserManager.isInsertionSaved(itemId)) {
-                UserManager.toggleSaveInsertion(itemId)
+            if (!presenter.isInsertionSaved(itemId)) {
+                presenter.toggleInsertionSave(itemId)
                 mainViewAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
                 checkForUpdates() // Sync fragment data and view
                 // Notify the reinsertion

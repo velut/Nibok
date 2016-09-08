@@ -5,12 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.common.ViewTypes
 import com.nibokapp.nibok.ui.fragment.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -20,7 +21,8 @@ import org.jetbrains.anko.toast
  *
  * It fetches the latest books published on the platform, it requests newer and older books.
  */
-class LatestFragment : ViewTypeFragment() {
+class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()) :
+        ViewTypeFragment() {
 
     companion object {
         private val TAG = LatestFragment::class.java.simpleName
@@ -34,7 +36,7 @@ class LatestFragment : ViewTypeFragment() {
 
     // Presenter
 
-    override fun getFragmentPresenter() = InsertionFeedPresenter()
+    override fun getFragmentPresenter() = presenter
 
     // Main View
 
@@ -103,10 +105,12 @@ class LatestFragment : ViewTypeFragment() {
     private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
 
         override fun onButtonClick(itemId: Long, itemType: Int) {
-            if (itemType != ViewTypes.BOOK) return
+
+            if (itemType != ViewTypes.BOOK || presenter !is InsertionSaveStatusPresenter) return
+
             // Save button was clicked, save the insertion and alert user
-            val saved = UserManager.toggleSaveInsertion(itemId)
-            checkForUpdates()
+            val saved = presenter.toggleInsertionSave(itemId)
+            refreshMainViewData()
             val toastMessage = if (saved) R.string.book_saved_to_collection
                                 else R.string.book_removed_from_collection
             context.toast(toastMessage)
