@@ -9,14 +9,16 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.activity.PublishActivity
 import com.nibokapp.nibok.ui.adapter.ViewTypeAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
-import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.UserInsertionPresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_selling.*
 import org.jetbrains.anko.startActivity
 
 /**
  * Fragment managing the books being sold the user.
  */
-class SellingFragment : ViewTypeFragment() {
+class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter()) :
+        ViewTypeFragment() {
 
     companion object {
         private val TAG = SellingFragment::class.java.simpleName
@@ -30,7 +32,7 @@ class SellingFragment : ViewTypeFragment() {
 
     // Presenter TODO use correct presenter
 
-    override fun getFragmentPresenter() = InsertionFeedPresenter()
+    override fun getFragmentPresenter() = presenter
 
     // Main view
 
