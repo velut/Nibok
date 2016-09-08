@@ -60,6 +60,7 @@
     <!-- Errors -->
     <string name="error_input_isbn">Enter the 13 digits number found on the back of the book</string>
     <string name="error_invalid_isbn">Invalid ISBN.\nISBN codes look like 97# - ##########</string>
+    <string name="error_message_not_sent">"Could not send message, try again later"</string>
 
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>
@@ -102,5 +103,7 @@
     <string name="text_cancel">Cancel</string>
     <string name="hint_message_input">Message</string>
 
+    <!-- Chat -->
+    <string name="partner_reply">%1s has replied</string>
 
 </resources>
