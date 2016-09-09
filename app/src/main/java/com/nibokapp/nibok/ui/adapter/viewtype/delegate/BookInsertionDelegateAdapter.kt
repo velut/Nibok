@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.domain.model.BookModel
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.animateBounce
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.loadImg
@@ -20,10 +20,10 @@ import kotlinx.android.synthetic.main.card_book.view.*
 /**
  * Delegate adapter managing the creation and binding of book view holders.
  */
-class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
+class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
 
     companion object {
-        private val TAG = BookDelegateAdapter::class.java.simpleName
+        private val TAG = BookInsertionDelegateAdapter::class.java.simpleName
     }
 
     /**
@@ -38,7 +38,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
      */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
         holder as BookVH
-        holder.bind(item as BookModel)
+        holder.bind(item as BookInsertionModel)
     }
 
     /**
@@ -47,6 +47,10 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
     class BookVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
             RecyclerView.ViewHolder(parent.inflate(R.layout.card_book)) {
 
+        companion object {
+            private val MAX_AUTHORS = 2
+        }
+
         private var insertionId: Long? = null
 
         /**
@@ -54,11 +58,12 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
          *
          * @param item the item containing data about the book preview
          */
-        fun bind(item: BookModel) {
+        fun bind(item: BookInsertionModel) {
             insertionId = item.insertionId
-            loadThumbnail(item.thumbnail)
+            val hasThumbnail = item.bookPictureSources.size >= 1
+            if (hasThumbnail) loadThumbnail(item.bookPictureSources[0])
             bindData(item)
-            updateSaveButton(itemView.saveButton, item.saved)
+            updateSaveButton(itemView.saveButton, item.savedByUser)
             addSaveButtonListener(item)
             addThumbnailListener()
             addCardListener()
@@ -78,12 +83,16 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
          *
          * @param item the item from which we extract the data
          */
-        private fun bindData(item: BookModel) = with(itemView) {
-            bookTitle.text = item.title
-            bookAuthor.text = item.author
-            bookYear.text = item.year.toString()
-            bookQuality.text = item.quality
-            bookPrice.text = item.price.toCurrency()
+        private fun bindData(item: BookInsertionModel) = with(itemView) {
+            with(item) {
+                with(bookInfo) {
+                    bookTitle.text = title
+                    bookAuthor.text = authors.take(MAX_AUTHORS).joinToString("\n")
+                    bookYear.text = year.toString()
+                }
+                bookQuality.text = bookCondition
+                bookPriceValue.text = bookPrice.toCurrency()
+            }
         }
 
         /**
@@ -117,16 +126,16 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
          *
          * @param item the item being saved/unsaved
          */
-        private fun addSaveButtonListener(item: BookModel) = with(itemView) {
+        private fun addSaveButtonListener(item: BookInsertionModel) = with(itemView) {
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
                 insertionId?.let {
                     itemClickListener.onButtonClick(it, ViewTypes.BOOK_INSERTION)
                 }
                 // Optimistic update of the save button
-                item.saved = !item.saved
-                updateSaveButton(saveButton, item.saved)
-                if (item.saved) {
+                item.savedByUser = !item.savedByUser
+                updateSaveButton(saveButton, item.savedByUser)
+                if (item.savedByUser) {
                     saveButton.animateBounce()
                 }
             }

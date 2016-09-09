@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
-import com.nibokapp.nibok.ui.adapter.viewtype.delegate.BookDelegateAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.delegate.BookInsertionDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.delegate.LoadingDelegateAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.delegate.MessageDelegateAdapter
 
@@ -61,7 +61,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     // Adapter instances corresponding to view types
     private val delegateAdaptersMap = mapOf(
             ViewTypes.LOADING to LoadingDelegateAdapter(),
-            ViewTypes.BOOK_INSERTION to BookDelegateAdapter(itemClickListener),
+            ViewTypes.BOOK_INSERTION to BookInsertionDelegateAdapter(itemClickListener),
             ViewTypes.MESSAGE to MessageDelegateAdapter(itemClickListener)
     )
 

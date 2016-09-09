@@ -77,7 +77,7 @@
             tools:text="Light wear"/>
 
         <TextView
-            android:id="@+id/bookPrice"
+            android:id="@+id/bookPriceValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/med_jump"
