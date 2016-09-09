@@ -137,7 +137,7 @@
                 tools:text="Insertion date"/>
 
             <TextView
-                android:id="@+id/insertionDate"
+                android:id="@+id/insertionDateField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"

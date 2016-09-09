@@ -52,21 +52,24 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
      *
      * @param item the item containing detail data
      */
-    private fun bindData(item: BookInsertionModel) {
+    private fun bindData(item: BookInsertionModel) = with(item) {
         // Insertion details
-        insertionBookPrice.text = item.bookPrice.toCurrency()
-        insertionBookCondition.text = item.bookCondition
-        insertionSoldBy.text = item.sellerName
-        insertionDate.text = item.insertionDate.toSimpleDateString()
+        insertionBookPrice.text = bookPrice.toCurrency()
+        insertionBookCondition.text = bookCondition
+        insertionSoldBy.text = seller.name
+        insertionDateField.text = insertionDate.toSimpleDateString()
 
         // Book details
-        detailBookTitle.text = item.bookTitle
-        val numAuthors = item.bookAuthors.size
-        val authors = item.bookAuthors.joinToString("\n")
-        detailBookAuthorPlural.text = resources.getQuantityString(R.plurals.book_author, numAuthors)
-        detailBookAuthor.text = authors
-        detailBookYear.text = item.bookYear.toString()
-        detailBookPublisher.text = item.bookPublisher
-        detailBookISBN.text = item.bookISBN
+        with(bookInfo) {
+            detailBookTitle.text = title
+            val numAuthors = authors.size
+            val authorsString = authors.joinToString("\n")
+            detailBookAuthorPlural.text =
+                    resources.getQuantityString(R.plurals.book_author, numAuthors)
+            detailBookAuthor.text = authorsString
+            detailBookYear.text = year.toString()
+            detailBookPublisher.text = publisher
+            detailBookISBN.text = isbn
+        }
     }
 }
