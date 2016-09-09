@@ -5,7 +5,7 @@ import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.common.RealmString
 import com.nibokapp.nibok.data.repository.UserManager
 import com.nibokapp.nibok.domain.model.BookModel
-import com.nibokapp.nibok.domain.model.DetailModel
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.ui.App
 import io.realm.RealmList
@@ -18,14 +18,14 @@ class DbDataMapper {
     }
 
     /**
-     * Build a DetailModel from insertion data.
+     * Build a BookInsertionModel from insertion data.
      *
      * @param insertion the considered insertion
      *
-     * @return a DetailModel instance containing detail data about the insertion
+     * @return a BookInsertionModel instance containing detail data about the insertion
      */
-    fun convertInsertionToDetailDomain(insertion: Insertion) : DetailModel = with(insertion) {
-        DetailModel(
+    fun convertInsertionToDetailDomain(insertion: Insertion) : BookInsertionModel = with(insertion) {
+        BookInsertionModel(
                 id,
                 bookPrice,
                 bookCondition,

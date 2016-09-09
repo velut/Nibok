@@ -3,7 +3,7 @@ package com.nibokapp.nibok.domain.model
 import java.util.*
 
 /**
- * Schema representing detail information about a book to display in a detail view.
+ * Schema representing information about a book's insertion.
  *
  * @param insertionId the id of the insertion in which the book appears
  * @param bookPrice the price of the book
@@ -16,7 +16,7 @@ import java.util.*
  * @param bookPublisher the publisher of the book
  * @param bookISBN the ISBN of the book
  */
-data class DetailModel(
+data class BookInsertionModel(
         val insertionId: Long,
         val bookPrice: Float,
         val bookCondition: String,

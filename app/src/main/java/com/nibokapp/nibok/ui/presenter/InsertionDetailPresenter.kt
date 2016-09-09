@@ -1,7 +1,7 @@
 package com.nibokapp.nibok.ui.presenter
 
 import com.nibokapp.nibok.data.repository.BookManager
-import com.nibokapp.nibok.domain.model.DetailModel
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 
 /**
  * Presenter that retrieves full details about an insertion.
@@ -15,6 +15,6 @@ class InsertionDetailPresenter {
      *
      * @return detail data about the insertion if the insertion was found, null otherwise
      */
-    fun getInsertionDetails(insertionId: Long) : DetailModel? =
+    fun getInsertionDetails(insertionId: Long) : BookInsertionModel? =
             BookManager.getInsertionDetails(insertionId)
 }

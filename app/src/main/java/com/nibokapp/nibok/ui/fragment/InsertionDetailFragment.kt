@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.domain.model.DetailModel
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.extension.toCurrency
 import com.nibokapp.nibok.extension.toSimpleDateString
@@ -52,7 +52,7 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
      *
      * @param item the item containing detail data
      */
-    private fun bindData(item: DetailModel) {
+    private fun bindData(item: BookInsertionModel) {
         // Insertion details
         insertionBookPrice.text = item.bookPrice.toCurrency()
         insertionBookCondition.text = item.bookCondition

@@ -4,7 +4,7 @@ import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.mapper.DbDataMapper
 import com.nibokapp.nibok.domain.model.BookModel
-import com.nibokapp.nibok.domain.model.DetailModel
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
 import io.realm.Case
@@ -31,19 +31,19 @@ object BookManager {
      *
      * @param insertionId the id of the insertion
      *
-     * @return a DetailModel instance containing detailed data about the insertion
+     * @return a BookInsertionModel instance containing detailed data about the insertion
      */
-    fun getInsertionDetails(insertionId: Long) : DetailModel? {
+    fun getInsertionDetails(insertionId: Long) : BookInsertionModel? {
         val insertion = queryOneWithRealm {
                             it.where(Insertion::class.java)
                             .equalTo("id", insertionId)
                             .findFirst()
         }
-        var detail: DetailModel? = null
+        var bookInsertion: BookInsertionModel? = null
         insertion?.let {
-            detail = DbDataMapper().convertInsertionToDetailDomain(it)
+            bookInsertion = DbDataMapper().convertInsertionToDetailDomain(it)
         }
-        return detail
+        return bookInsertion
     }
 
     /**
