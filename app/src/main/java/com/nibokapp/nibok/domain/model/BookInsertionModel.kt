@@ -14,8 +14,8 @@ import java.util.*
  * @param bookCondition the wear condition of the book
  * @param bookPictureSources the list of sources for pictures of the book
  * associated to the insertion. The first picture is the thumbnail
- * @param savedByUser true if the insertion is saved by the user, false if it is not
  * @param insertionDate the date in which the insertion was published
+ * @param savedByUser true if the insertion is saved by the user, false if it is not. VAR
  */
 data class BookInsertionModel(
         val insertionId: Long,
@@ -24,8 +24,8 @@ data class BookInsertionModel(
         val bookPrice: Float,
         val bookCondition: String,
         val bookPictureSources: List<String>,
-        val savedByUser: Boolean,
-        val insertionDate: Date
+        val insertionDate: Date,
+        var savedByUser: Boolean
 ) : ViewType {
 
     override fun getItemId(): Long = insertionId
