@@ -24,7 +24,7 @@ open class Insertion(
 
         open var date: Date? = null,
 
-        open var seller: Seller? = null,
+        open var seller: ExternalUser? = null,
 
         open var book: Book? = null,
 

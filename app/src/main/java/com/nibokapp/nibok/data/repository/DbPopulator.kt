@@ -3,7 +3,7 @@ package com.nibokapp.nibok.data.repository
 import android.util.Log
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.db.Seller
+import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.data.db.common.RealmString
 import com.nibokapp.nibok.extension.withRealm
 import io.realm.Realm
@@ -38,8 +38,8 @@ class DbPopulator {
         }
     }
 
-    private fun genSeller(realm: Realm, id: Long, name: String) : Seller {
-        val seller = realm.createObject(Seller::class.java)
+    private fun genSeller(realm: Realm, id: Long, name: String) : ExternalUser {
+        val seller = realm.createObject(ExternalUser::class.java)
         seller.id = id
         seller.name = name
         return seller
@@ -69,7 +69,7 @@ class DbPopulator {
         return book
     }
 
-    private fun genInsertion(realm: Realm, id: Long, seller: Seller,
+    private fun genInsertion(realm: Realm, id: Long, seller: ExternalUser,
                              book: Book, price: Float, condition: String,
                              thumbnail: RealmString, date: Date = Date()) : Insertion {
         val insertion = realm.createObject(Insertion::class.java)
