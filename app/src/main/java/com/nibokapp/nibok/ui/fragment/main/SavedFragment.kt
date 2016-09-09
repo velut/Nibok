@@ -86,8 +86,8 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
 
         if (BookManager.hasOlderSavedBooks()) {
             Log.i(TAG, "Requesting older saved books on scroll down")
-            val olderBooks = BookManager.getOlderSavedBooks()
-            bookAdapter.addItems(olderBooks, insertAtBottom = true)
+            /*val olderBooks = BookManager.getOlderSavedBooks()
+            bookAdapter.addItems(olderBooks, insertAtBottom = true)*/
         } else {
             Log.i(TAG, "No more older saved books, end reached")
             bookAdapter.removeLoadingItem()

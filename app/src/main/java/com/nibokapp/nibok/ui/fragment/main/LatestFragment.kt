@@ -72,8 +72,9 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
         // TODO Use presenter
         // If new books are available add them to the list and return to the top
         if (BookManager.hasNewerFeedBooks()) {
+            /*
             val newerBooks = BookManager.getNewerFeedBooks()
-            (latestBooksList.adapter as ViewTypeAdapter).addItems(newerBooks)
+            (latestBooksList.adapter as ViewTypeAdapter).addItems(newerBooks)*/
             handleBackToTopAction()
         } else {
             context.toast(getString(R.string.no_newer_books))
@@ -93,8 +94,8 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
         if (BookManager.hasOlderFeedBooks()) {
             Log.d(TAG, "Requesting older books on scroll down")
-            val olderBooks = BookManager.getOlderFeedBooks()
-            bookAdapter.addItems(olderBooks, insertAtBottom = true)
+            /*val olderBooks = BookManager.getOlderFeedBooks()
+            bookAdapter.addItems(olderBooks, insertAtBottom = true)*/
         } else {
             Log.d(TAG, "No more older books, end reached")
             bookAdapter.removeLoadingItem()
