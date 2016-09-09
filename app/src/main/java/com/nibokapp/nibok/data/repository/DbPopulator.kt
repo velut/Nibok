@@ -2,8 +2,8 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Book
-import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.ExternalUser
+import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.common.RealmString
 import com.nibokapp.nibok.extension.withRealm
 import io.realm.Realm
@@ -42,6 +42,7 @@ class DbPopulator {
         val seller = realm.createObject(ExternalUser::class.java)
         seller.id = id
         seller.name = name
+        seller.avatar = ""
         return seller
     }
 
@@ -62,7 +63,7 @@ class DbPopulator {
         val book = realm.createObject(Book::class.java)
         book.id = id
         book.title = title
-        book.authors?.addAll(authors)
+        book.authors.addAll(authors)
         book.year = year
         book.publisher = publisher
         book.isbn = isbn
@@ -78,7 +79,7 @@ class DbPopulator {
         insertion.book = book
         insertion.bookPrice = price
         insertion.bookCondition = condition
-        insertion.bookImagesSources?.add(thumbnail)
+        insertion.bookImagesSources.add(thumbnail)
         insertion.date = date
         return insertion
     }
