@@ -1,5 +1,7 @@
 package com.nibokapp.nibok.ui.presenter
 
+import com.nibokapp.nibok.domain.model.BookInfoModel
+
 /**
  * Presenter for the insertion's publishing view.
  */
@@ -12,8 +14,9 @@ class PublishInsertionPresenter {
      *
      * @return data about the book with the given isbn code or null if not data was found
      */
-    fun getBookDataFromISBN(isbnCode: String) {
+    fun getBookDataFromISBN(isbnCode: String) : BookInfoModel? {
         // TODO
+        return null
     }
 
     /**
