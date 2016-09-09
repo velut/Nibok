@@ -3,8 +3,8 @@ package com.nibokapp.nibok.data.repository
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.mapper.DbDataMapper
-import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.domain.model.BookInsertionModel
+import com.nibokapp.nibok.domain.model.BookModel
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
 import io.realm.Case
@@ -41,7 +41,7 @@ object BookManager {
         }
         var bookInsertion: BookInsertionModel? = null
         insertion?.let {
-            bookInsertion = DbDataMapper().convertInsertionToDetailDomain(it)
+            bookInsertion = DbDataMapper().convertInsertionToDomain(it)
         }
         return bookInsertion
     }
@@ -53,7 +53,7 @@ object BookManager {
      *
      * @return a list of BookModel instances with data about the found books
      */
-    fun getBooksFromQuery(query: String) : List<BookModel> {
+    fun getBooksFromQuery(query: String) : List<BookInsertionModel> {
 
         // Remove leading and trailing whitespaces
         val trimmedQuery = query.trim()
@@ -74,7 +74,7 @@ object BookManager {
                     .findAll()
         }
         Log.d(TAG, "Books corresponding to query '$query' = ${results.size}")
-        val booksList = DbDataMapper().convertInsertionListToBookDomain(results)
+        val booksList = DbDataMapper().convertInsertionListToDomain(results)
         Log.d(TAG, "BookModel list size: ${booksList.size}")
         return booksList
     }
@@ -84,10 +84,10 @@ object BookManager {
      *
      * @return the list of currently available book for the feed
      */
-    fun getFeedBooksList() : List<BookModel> {
+    fun getFeedBooksList() : List<BookInsertionModel> {
         val results = queryRealm { it.where(Insertion::class.java).findAll() }
         Log.d(TAG, "Found ${results.size} feed items")
-        return DbDataMapper().convertInsertionListToBookDomain(results)
+        return DbDataMapper().convertInsertionListToDomain(results)
     }
 
     /**
@@ -95,8 +95,8 @@ object BookManager {
      *
      * @return the list of saved books
      */
-    fun getSavedBooksList(): List<BookModel> =
-            DbDataMapper().convertInsertionListToBookDomain(UserManager.getUserSavedInsertions())
+    fun getSavedBooksList(): List<BookInsertionModel> =
+            DbDataMapper().convertInsertionListToDomain(UserManager.getUserSavedInsertions())
 
     /**
      * Get newer books published since the last retrieval and add them to the books list.
