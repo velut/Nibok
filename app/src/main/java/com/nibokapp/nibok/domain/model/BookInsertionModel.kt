@@ -1,32 +1,35 @@
 package com.nibokapp.nibok.domain.model
 
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import java.util.*
 
 /**
  * Schema representing information about a book's insertion.
  *
  * @param insertionId the id of the insertion in which the book appears
+ * @param seller the user who published the insertion
+ * @param bookInfo editorial data about the book
  * @param bookPrice the price of the book
  * @param bookCondition the wear condition of the book
- * @param sellerName the name of the seller
- * @param insertionDate the publishing date of the insertion
- * @param bookTitle the title of the book
- * @param bookAuthors the author of the book
- * @param bookYear the year in which the book was published
- * @param bookPublisher the publisher of the book
- * @param bookISBN the ISBN of the book
+ * @param bookPictureSources the list of sources for pictures of the book
+ * associated to the insertion. The first picture is the thumbnail
+ * @param savedByUser true if the insertion is saved by the user, false if it is not
+ * @param insertionDate the date in which the insertion was published
  */
 data class BookInsertionModel(
         val insertionId: Long,
+        val seller: UserModel,
+        val bookInfo: BookInfoModel,
         val bookPrice: Float,
         val bookCondition: String,
-        val sellerName: String,
-        val insertionDate: Date,
-        val bookTitle: String,
-        val bookAuthors: List<String>,
-        val bookYear: Int,
-        val bookPublisher: String,
-        val bookISBN: String,
-        val bookImgSources: List<String> = listOf("")
-)
+        val bookPictureSources: List<String>,
+        val savedByUser: Boolean,
+        val insertionDate: Date
+) : ViewType {
+
+    override fun getItemId(): Long = insertionId
+
+    override fun getViewType(): Int = ViewTypes.BOOK_INSERTION
+}
 
