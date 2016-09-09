@@ -35,7 +35,7 @@
                 android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.PublishActivity"
+            android:name=".ui.activity.PublishInsertionActivity"
             android:label="@string/title_activity_publish"
             android:theme="@style/NibokTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">

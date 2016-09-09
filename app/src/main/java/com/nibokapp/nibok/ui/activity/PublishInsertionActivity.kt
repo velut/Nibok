@@ -7,25 +7,25 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.fragment.PublishFragment
+import com.nibokapp.nibok.ui.fragment.PublishInsertionFragment
 
 /**
  * Activity hosting the publishing fragment
  */
-class PublishActivity : AppCompatActivity() {
+class PublishInsertionActivity : AppCompatActivity() {
 
     private var alertQuitDialog: MaterialDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_publish)
+        setContentView(R.layout.activity_publish_insertion)
 
         // If restoring do not create overlapping fragments
         if (savedInstanceState != null) {
             return
         }
 
-        val publishFragment = PublishFragment()
+        val publishFragment = PublishInsertionFragment()
 
         // Pass eventual intent extras to the fragment
         publishFragment.arguments = intent.extras

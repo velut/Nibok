@@ -10,7 +10,7 @@
     android:focusable="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:visibility="gone"
-    tools:showIn="@layout/fragment_publish">
+    tools:showIn="@layout/fragment_publish_insertion">
 
     <LinearLayout
         android:layout_width="match_parent"

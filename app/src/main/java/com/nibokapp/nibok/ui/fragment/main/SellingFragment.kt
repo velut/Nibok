@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.activity.PublishActivity
+import com.nibokapp.nibok.ui.activity.PublishInsertionActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.UserInsertionPresenter
@@ -76,7 +76,7 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
         fab.setOnClickListener {
             // TODO Check that user is logged in
             Log.d(TAG, "Open publishing activity")
-            context.startActivity<PublishActivity>()
+            context.startActivity<PublishInsertionActivity>()
         }
     }
 

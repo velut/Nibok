@@ -27,17 +27,17 @@ import com.nibokapp.nibok.domain.rule.IsbnValidator
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
 import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
-import kotlinx.android.synthetic.main.fragment_publish.*
+import kotlinx.android.synthetic.main.fragment_publish_insertion.*
 import kotlinx.android.synthetic.main.publish_input_book_details.*
 import kotlinx.android.synthetic.main.publish_input_insertion_details.*
 import kotlinx.android.synthetic.main.publish_input_isbn.*
 import kotlinx.android.synthetic.main.publish_take_picture.*
 import java.util.*
 
-class PublishFragment : Fragment() {
+class PublishInsertionFragment : Fragment() {
 
     companion object {
-        private val TAG = PublishFragment::class.java.simpleName
+        private val TAG = PublishInsertionFragment::class.java.simpleName
 
         /**
          * Keys for Bundle save and restore operations.
@@ -116,7 +116,7 @@ class PublishFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.fragment_publish)
+        return container?.inflate(R.layout.fragment_publish_insertion)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

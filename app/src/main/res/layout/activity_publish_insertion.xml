@@ -4,6 +4,6 @@
     android:id="@+id/publishFragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nibokapp.nibok.ui.activity.PublishActivity">
+    tools:context="com.nibokapp.nibok.ui.activity.PublishInsertionActivity">
 
 </FrameLayout>
