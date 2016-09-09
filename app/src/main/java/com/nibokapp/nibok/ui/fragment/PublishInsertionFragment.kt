@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
@@ -27,6 +26,7 @@ import com.nibokapp.nibok.domain.rule.IsbnValidator
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
 import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
+import com.nibokapp.nibok.ui.presenter.PublishInsertionPresenter
 import kotlinx.android.synthetic.main.fragment_publish_insertion.*
 import kotlinx.android.synthetic.main.publish_input_book_details.*
 import kotlinx.android.synthetic.main.publish_input_insertion_details.*
@@ -34,7 +34,8 @@ import kotlinx.android.synthetic.main.publish_input_isbn.*
 import kotlinx.android.synthetic.main.publish_take_picture.*
 import java.util.*
 
-class PublishInsertionFragment : Fragment() {
+class PublishInsertionFragment(
+        val presenter : PublishInsertionPresenter = PublishInsertionPresenter()) : Fragment() {
 
     companion object {
         private val TAG = PublishInsertionFragment::class.java.simpleName
@@ -113,6 +114,8 @@ class PublishInsertionFragment : Fragment() {
      */
     private var confirmationDialog: MaterialDialog? = null
     private var progressDialog: MaterialDialog? = null
+    private var successDialog: MaterialDialog? = null
+    private var errorDialog: MaterialDialog? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -133,6 +136,8 @@ class PublishInsertionFragment : Fragment() {
         // Dismiss dialogs to prevent leaked windows
         progressDialog?.dismiss()
         confirmationDialog?.dismiss()
+        successDialog?.dismiss()
+        errorDialog?.dismiss()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -332,6 +337,7 @@ class PublishInsertionFragment : Fragment() {
         setBookHelperText(getString(R.string.review_book_details))
 
         // TODO get real data
+        presenter.getBookDataFromISBN(isbn)
         inputBookTitle.setText("Book Title Here")
         inputBookAuthors.setText("John Doe, Bob Zu")
         inputBookYear.setText("2016")
@@ -393,7 +399,21 @@ class PublishInsertionFragment : Fragment() {
     private fun showPublishAlertDialog() {
         progressDialog = MaterialDialog.Builder(context)
                 .content(getString(R.string.progress_publishing))
-                .progress(true, 0)
+                .progress(true, 0) // Indeterminate progress dialog
+                .cancelable(false) // Clicking outside the dialog does not close it
+                .build()
+
+        successDialog = MaterialDialog.Builder(context)
+                .title(getString(R.string.publish_insertion_success_title))
+                .content(getString(R.string.publish_insertion_success_content))
+                .positiveText(getString(R.string.publish_insertion_success_quit))
+                .onPositive { materialDialog, dialogAction -> activity.finish() }
+                .build()
+
+        errorDialog = MaterialDialog.Builder(context)
+                .title(getString(R.string.publish_insertion_error_title))
+                .content(getString(R.string.publish_insertion_error_content))
+                .positiveText(getString(android.R.string.ok))
                 .build()
 
         val confirmationMessage = getPublishAlertDialogContent()
@@ -405,8 +425,14 @@ class PublishInsertionFragment : Fragment() {
                 .negativeText(getString(R.string.text_cancel))
                 .onPositive { materialDialog, dialogAction ->
                     progressDialog?.show()
-                    // TODO dismiss progress after successful publishing and alert user
-                    Handler().postDelayed({ progressDialog?.dismiss() }, 2000L)
+                    // TODO publish insertion
+                    val published = presenter.publishInsertion()
+                    progressDialog?.dismiss()
+                    if (published) {
+                        successDialog?.show()
+                    } else {
+                        errorDialog?.show()
+                    }
                 }
                 .build()
 

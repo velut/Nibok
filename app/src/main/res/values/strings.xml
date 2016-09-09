@@ -98,10 +98,15 @@
     <string name="alert_publish_content_question">Publish the following book insertion?</string>
     <string name="alert_publish_positive_text">Publish</string>
     <string name="alert_quit_publish_title">Quit insertion publishing?</string>
-    <string name="alert_quit_publish_content">"Insertion data will be lost on quit.\nProceed?"</string>
+    <string name="alert_quit_publish_content">Insertion data will be lost on quit.\nProceed?</string>
     <string name="alert_quit_publish_positive_text">Quit</string>
     <string name="text_cancel">Cancel</string>
     <string name="hint_message_input">Message</string>
+    <string name="publish_insertion_success_title">Insertion Published</string>
+    <string name="publish_insertion_success_content">The insertion was successfully published</string>
+    <string name="publish_insertion_success_quit">Quit publishing</string>
+    <string name="publish_insertion_error_title">Insertion Publishing Failed</string>
+    <string name="publish_insertion_error_content">The insertion could not be published.\nTry again later</string>
 
     <!-- Chat -->
     <string name="partner_reply">%1s has replied</string>
