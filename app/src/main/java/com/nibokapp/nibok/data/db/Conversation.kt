@@ -21,6 +21,6 @@ open class Conversation(
 
         open var partnerAvatar: String = "",
 
-        open var messages: RealmList<Message>? = null
+        open var messages: RealmList<Message> = RealmList()
 
 ) : RealmObject() {}

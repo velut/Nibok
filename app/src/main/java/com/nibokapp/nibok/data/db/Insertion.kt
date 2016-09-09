@@ -32,6 +32,6 @@ open class Insertion(
 
         open var bookCondition: String = "",
 
-        open var bookImagesSources: RealmList<RealmString>? = null
+        open var bookImagesSources: RealmList<RealmString> = RealmList()
 
 ) : RealmObject() {}

@@ -17,10 +17,10 @@ open class User(
 
         @PrimaryKey open var id: Long = 0,
 
-        open var savedInsertions: RealmList<Insertion>? = null,
+        open var savedInsertions: RealmList<Insertion> = RealmList(),
 
-        open var publishedInsertions: RealmList<Insertion>? = null,
+        open var publishedInsertions: RealmList<Insertion> = RealmList(),
 
-        open var conversations: RealmList<Conversation>? = null
+        open var conversations: RealmList<Conversation> = RealmList()
 
 ) : RealmObject() {}

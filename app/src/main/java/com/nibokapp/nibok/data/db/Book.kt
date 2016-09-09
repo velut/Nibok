@@ -21,7 +21,7 @@ open class Book(
 
         open var title: String = "",
 
-        open var authors: RealmList<RealmString>? = null,
+        open var authors: RealmList<RealmString> = RealmList(),
 
         open var year: Int = 0,
 
