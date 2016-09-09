@@ -42,40 +42,40 @@ class PublishInsertionFragment : Fragment() {
         /**
          * Keys for Bundle save and restore operations.
          */
-        val KEY_CURRENT_PAGE = "$TAG:currentPage"
-        val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
-        val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
-        val KEY_PICTURES_LIST = "$TAG:picturesUriList"
-        val KEY_CURRENT_PICTURE_URI = "$TAG:currentPictureUri"
+        private val KEY_CURRENT_PAGE = "$TAG:currentPage"
+        private val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
+        private val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
+        private val KEY_PICTURES_LIST = "$TAG:picturesUriList"
+        private val KEY_CURRENT_PICTURE_URI = "$TAG:currentPictureUri"
 
         /**
          * Request code for picture taking.
          */
-        val REQUEST_IMAGE_CAPTURE = 1
+        private val REQUEST_IMAGE_CAPTURE = 1
 
         /**
          * File provider authority constant.
          */
-        val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
+        private val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
 
         /**
          * Constant for maximum number of pictures that the user can take.
          */
-        val MAX_PICTURE_NUMBER = 5
+        private val MAX_PICTURE_NUMBER = 5
 
         /**
          * List of pages making up the insertion publishing process.
          */
-        val PAGE_ISBN = 0
-        val PAGE_BOOK_DETAILS = 1
-        val PAGE_INSERTION_DETAILS = 2
-        val PAGE_INSERTION_PICTURES = 3
+        private val PAGE_ISBN = 0
+        private val PAGE_BOOK_DETAILS = 1
+        private val PAGE_INSERTION_DETAILS = 2
+        private val PAGE_INSERTION_PICTURES = 3
     }
 
     /**
      * The mapping of pages to their views, initialized in onViewCreated.
      */
-    lateinit var pages: Map<Int, View>
+    lateinit private var pages: Map<Int, View>
 
     /**
      * The current page being displayed.
@@ -106,13 +106,13 @@ class PublishInsertionFragment : Fragment() {
     /**
      * List of image views that hold the pictures taken by the user.
      */
-    lateinit var pictureImgHosts: List<ImageView>
+    lateinit private var pictureImgHosts: List<ImageView>
 
     /**
      * Dialogs notifying the user.
      */
-    var confirmationDialog: MaterialDialog? = null
-    var progressDialog: MaterialDialog? = null
+    private var confirmationDialog: MaterialDialog? = null
+    private var progressDialog: MaterialDialog? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -470,7 +470,7 @@ class PublishInsertionFragment : Fragment() {
             }
         }
 
-        }
+    }
 
     /**
      * Show the page at the given position and update the current page value,
