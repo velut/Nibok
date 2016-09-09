@@ -30,6 +30,6 @@ data class BookModel(
 
     override fun getItemId(): Long = insertionId
 
-    override fun getViewType(): Int = ViewTypes.BOOK
+    override fun getViewType(): Int = ViewTypes.BOOK_INSERTION
 }
 

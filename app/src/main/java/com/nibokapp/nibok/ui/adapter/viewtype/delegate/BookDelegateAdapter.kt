@@ -92,7 +92,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it, ViewTypes.BOOK)
+                    itemClickListener.onItemClick(it, ViewTypes.BOOK_INSERTION)
                 }
             }
         }
@@ -103,7 +103,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
         private fun addThumbnailListener() = with(itemView) {
             bookThumbnail.setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it, ViewTypes.BOOK)
+                    itemClickListener.onItemClick(it, ViewTypes.BOOK_INSERTION)
                 }
             }
         }
@@ -121,7 +121,7 @@ class BookDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListen
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
                 insertionId?.let {
-                    itemClickListener.onButtonClick(it, ViewTypes.BOOK)
+                    itemClickListener.onButtonClick(it, ViewTypes.BOOK_INSERTION)
                 }
                 // Optimistic update of the save button
                 item.saved = !item.saved

@@ -61,7 +61,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     // Adapter instances corresponding to view types
     private val delegateAdaptersMap = mapOf(
             ViewTypes.LOADING to LoadingDelegateAdapter(),
-            ViewTypes.BOOK to BookDelegateAdapter(itemClickListener),
+            ViewTypes.BOOK_INSERTION to BookDelegateAdapter(itemClickListener),
             ViewTypes.MESSAGE to MessageDelegateAdapter(itemClickListener)
     )
 

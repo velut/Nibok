@@ -97,18 +97,21 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
 
     private val mainViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK) mainViewItemClickListener(itemId, itemType)
+            if (itemType == ViewTypes.BOOK_INSERTION) mainViewItemClickListener(itemId, itemType)
         }
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+            if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
         }
     }
 
     private val searchViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {
 
-            if (itemType != ViewTypes.BOOK || presenter !is InsertionSaveStatusPresenter) return
+            if (itemType != ViewTypes.BOOK_INSERTION ||
+                    presenter !is InsertionSaveStatusPresenter) {
+                return
+            }
 
             val saved = presenter.toggleInsertionSave(itemId)
             val toastMessage = if (saved) R.string.book_saved_to_collection
@@ -117,7 +120,7 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
         }
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+            if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
         }
     }
 

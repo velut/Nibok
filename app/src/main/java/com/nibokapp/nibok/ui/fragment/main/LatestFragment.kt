@@ -107,7 +107,10 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
         override fun onButtonClick(itemId: Long, itemType: Int) {
 
-            if (itemType != ViewTypes.BOOK || presenter !is InsertionSaveStatusPresenter) return
+            if (itemType != ViewTypes.BOOK_INSERTION ||
+                    presenter !is InsertionSaveStatusPresenter) {
+                return
+            }
 
             // Save button was clicked, save the insertion and alert user
             val saved = presenter.toggleInsertionSave(itemId)
@@ -118,7 +121,7 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
         }
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK) startDetailActivity(itemId)
+            if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
         }
     }
 
