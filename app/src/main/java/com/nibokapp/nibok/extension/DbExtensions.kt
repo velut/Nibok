@@ -32,11 +32,24 @@ fun <T: RealmModel> RealmList<T>.toNormalList() : List<T> =
         this.map { it }
 
 /**
- * Perform a transaction with Realm.
+ * Execute the function with a realm as the parameter.
+ *
+ * @param func the function to execute with realm
  */
-inline fun withRealm(transaction: (realm: Realm) -> Unit) {
+inline fun withRealm(func: (realm: Realm) -> Unit) {
     val realm = Realm.getDefaultInstance()
-    transaction(realm)
+    func(realm)
+    realm.close()
+}
+
+/**
+ * Execute a realm transaction.
+ *
+ * @param transaction the transaction to be executed with realm
+ */
+inline fun executeRealmTransaction(crossinline transaction: (realm: Realm) -> Unit) {
+    val realm = Realm.getDefaultInstance()
+    realm.executeTransaction { transaction(realm) }
     realm.close()
 }
 
