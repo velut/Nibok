@@ -34,7 +34,7 @@ object UserRepository {
      *
      * @return the user's id if the user exists, an IllegalStateException if the user does not exist
      */
-    fun getLocalUserId(): Long = getUserFromDB()?.id ?:
+    fun getLocalUserId(): Long = getLocalUser()?.id ?:
             throw IllegalStateException(
                     "Local user does not exist. Call createLocalUser() before retrieving data")
 
@@ -43,7 +43,7 @@ object UserRepository {
      *
      * @return the user if it exists, null otherwise
      */
-    private fun getUserFromDB() : User? =
+     fun getLocalUser() : User? =
             queryOneWithRealm { it.where(User::class.java).findFirst() }
 
     /**
@@ -51,5 +51,5 @@ object UserRepository {
      *
      * @return true if the user exists, false otherwise
      */
-    private fun localUserExists() : Boolean = getUserFromDB() != null
+    fun localUserExists() : Boolean = getLocalUser() != null
 }
