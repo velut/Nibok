@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.main.LatestFragment
-import com.nibokapp.nibok.ui.fragment.main.MessagesFragment
+import com.nibokapp.nibok.ui.fragment.main.MessageListFragment
 import com.nibokapp.nibok.ui.fragment.main.SavedFragment
 import com.nibokapp.nibok.ui.fragment.main.SellingFragment
 import com.nibokapp.nibok.ui.fragment.main.common.VisibleFragment
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  *  LatestFragment: the fragment for the feed of latest insertions published
  *  SavedFragment: the fragment for the list of insertions bookmarked by the user
  *  SellingFragment: the fragment for the list of insertions published by the user
- *  MessagesFragment: the fragment for the list of messages exchanged with other users
+ *  MessageListFragment: the fragment for the list of messages exchanged with other users
  */
 class MainActivity : AppCompatActivity() {
 
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.latest_tab) to LatestFragment(),
                 getString(R.string.saved_tab) to SavedFragment(),
                 getString(R.string.selling_tab) to SellingFragment(),
-                getString(R.string.messages_tab) to MessagesFragment()
+                getString(R.string.messages_tab) to MessageListFragment()
         )
 
         setupViewPager(viewPager, fragments)
