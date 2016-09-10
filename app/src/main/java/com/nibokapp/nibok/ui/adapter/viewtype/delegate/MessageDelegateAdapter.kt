@@ -88,8 +88,8 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
          * Add a click listener to the layout's root.
          */
         private fun addClickListener() = with(itemView) {
-            Log.d(TAG, "Message item clicked")
             setOnClickListener {
+                Log.d(TAG, "Message item clicked")
                 conversationId?.let {
                     itemClickListener.onItemClick(it, ViewTypes.MESSAGE)
                 }
