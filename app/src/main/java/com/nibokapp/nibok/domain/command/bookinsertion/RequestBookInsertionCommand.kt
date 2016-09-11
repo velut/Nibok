@@ -1,6 +1,10 @@
 package com.nibokapp.nibok.domain.command.bookinsertion
 
+import com.nibokapp.nibok.data.repository.BookInsertionRepository
+import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.domain.command.common.Command
+import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapper
+import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapperInterface
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 
 /**
@@ -11,7 +15,14 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
  * @return a BookInsertionModel representing the insertion with the given id
  * if such insertion exists, null if no such insertion exists
  */
-class RequestBookInsertionCommand(val insertionId: Long) : Command<BookInsertionModel?> {
+class RequestBookInsertionCommand(
+        val insertionId: Long,
+        val dataMapper: BookInsertionDataMapperInterface = BookInsertionDataMapper(),
+        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
+) : Command<BookInsertionModel?> {
 
-    override fun execute(): BookInsertionModel? = null
+    override fun execute(): BookInsertionModel? =
+            dataMapper.convertInsertionToDomain(
+                    bookRepository.getBookInsertionById(insertionId)
+            )
 }
