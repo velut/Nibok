@@ -4,6 +4,7 @@ import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
+import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
 import com.nibokapp.nibok.extension.toNormalList
@@ -18,6 +19,8 @@ import java.util.*
 object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     const private val TAG = "BookInsertionRepository"
+
+    val userRepository : UserRepositoryInterface = UserRepository
 
     var feedCache : List<Insertion> = emptyList()
     var savedCache : List<Insertion> = emptyList()
@@ -99,7 +102,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
-        savedCache = UserRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
+        savedCache = userRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
         return savedCache
     }
 
@@ -119,7 +122,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
         publishedCache =
-                UserRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
+                userRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
         return publishedCache
     }
 
@@ -141,7 +144,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean {
 
-        if (!UserRepository.localUserExists())
+        if (!userRepository.localUserExists())
             throw IllegalStateException("Local user does not exist. Cannot save insertion")
 
         var saved = false
@@ -186,19 +189,19 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
 
     private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
-        if (!UserRepository.localUserExists()) {
+        if (!userRepository.localUserExists()) {
             return this
         } else {
-            val userId = UserRepository.getLocalUserId()
+            val userId = userRepository.getLocalUserId()
             return this.filter { it.seller?.id != userId }
         }
     }
 
     private fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
-        if (!UserRepository.localUserExists()) {
+        if (!userRepository.localUserExists()) {
             return this
         } else {
-            val userId = UserRepository.getLocalUserId()
+            val userId = userRepository.getLocalUserId()
             return this.filter { it.seller?.id == userId }
         }
     }
