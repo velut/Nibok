@@ -1,6 +1,10 @@
 package com.nibokapp.nibok.domain.command.bookinsertion.feed
 
+import com.nibokapp.nibok.data.repository.BookInsertionRepository
+import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.domain.command.common.Command
+import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapper
+import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapperInterface
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 
 /**
@@ -9,8 +13,16 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
  *
  * @param firstBookInsertion the first book insertion before the newer ones
  */
-class RequestNewerBookInsertionFeedCommand(val firstBookInsertion: BookInsertionModel) :
+class RequestNewerBookInsertionFeedCommand(
+        val firstBookInsertion: BookInsertionModel,
+        val dataMapper: BookInsertionDataMapperInterface = BookInsertionDataMapper(),
+        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository) :
         Command<List<BookInsertionModel>> {
 
-    override fun execute(): List<BookInsertionModel> = emptyList()
+    override fun execute(): List<BookInsertionModel> =
+            dataMapper.convertInsertionListToDomain(
+                    bookRepository.getFeedBookInsertionListAfterDate(
+                            firstBookInsertion.insertionDate
+                    )
+            )
 }
