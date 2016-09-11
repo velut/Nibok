@@ -26,6 +26,6 @@ interface BookInsertionDataMapperInterface {
      * @return a BookInsertionModel instance containing detail data about the book's insertion
      * if insertion data is complete, null otherwise
      */
-    fun convertInsertionToDomain(insertion: Insertion) : BookInsertionModel?
+    fun convertInsertionToDomain(insertion: Insertion?) : BookInsertionModel?
 
 }

@@ -15,30 +15,35 @@ class BookInsertionDataMapper : BookInsertionDataMapperInterface {
     override fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel> =
             insertions.map { convertInsertionToDomain(it) }.filterNotNull()
 
-    override fun convertInsertionToDomain(insertion: Insertion) : BookInsertionModel? = with(insertion) {
-        if (isWellFormed()) {
-            BookInsertionModel(
-                    insertionId = id,
-                    seller = with(seller!!) {
-                        UserModel(id, name, avatar)
-                    },
-                    bookInfo = with(book!!) {
-                        BookInfoModel(title, authors.toStringList(), year, publisher, isbn)
-                    },
-                    bookPrice = bookPrice,
-                    bookCondition = bookCondition,
-                    bookPictureSources = bookImagesSources.toStringList(),
-                    insertionDate = date!!,
-                    savedByUser = UserManager.isInsertionSaved(id) // TODO maybe a better solution?
-            )
+    override fun convertInsertionToDomain(insertion: Insertion?) : BookInsertionModel? {
+
+        if (insertion == null || !insertion.isWellFormed()) {
+            return null
         } else {
-            null
+            return with(insertion) {
+                BookInsertionModel(
+                        insertionId = id,
+                        seller = with(seller!!) {
+                            UserModel(id, name, avatar)
+                        },
+                        bookInfo = with(book!!) {
+                            BookInfoModel(title, authors.toStringList(), year, publisher, isbn)
+                        },
+                        bookPrice = bookPrice,
+                        bookCondition = bookCondition,
+                        bookPictureSources = bookImagesSources.toStringList(),
+                        insertionDate = date!!,
+                        savedByUser = UserManager.isInsertionSaved(id) // TODO maybe a better solution?
+                )
+            }
         }
     }
 
+    /*
+     * EXTENSIONS
+     */
+
     private fun Insertion.isWellFormed(): Boolean = with(this) {
-            seller != null
-            date != null
-            book != null
+            seller != null && date != null && book != null
     }
 }
