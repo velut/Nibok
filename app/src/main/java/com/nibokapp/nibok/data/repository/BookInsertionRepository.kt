@@ -155,6 +155,14 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     }
 
     /*
+     * BOOK INSERTION PUBLISHING
+     */
+
+    override fun publishBookInsertion(insertion: Insertion) : Boolean =
+            // TODO
+            throw UnsupportedOperationException()
+
+    /*
      * REPOSITORY EXTENSIONS
      */
 

@@ -203,4 +203,17 @@ interface BookInsertionRepositoryInterface {
      */
     fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean
 
+    /*
+     * BOOK INSERTION PUBLISHING
+     */
+
+    /**
+     * Publish the given book insertion.
+     *
+     * @param insertion the insertion to publish
+     *
+     * @return true if the book insertion was published successfully, false otherwise
+     */
+    fun publishBookInsertion(insertion: Insertion) : Boolean
+
 }
