@@ -8,30 +8,14 @@ import com.nibokapp.nibok.domain.model.UserModel
 import com.nibokapp.nibok.extension.toStringList
 
 /**
- * Mapper that uses database objects to build domain models.
+ * Book insertion data mapper implementation.
  */
-class BookInsertionDataMapper {
+class BookInsertionDataMapper : BookInsertionDataMapperInterface {
 
-    /**
-     * Build a list of BookInsertionModel given a list of insertions from the DB.
-     * Insertions with invalid data are dropped from the returned list.
-     *
-     * @param insertions the list of insertions obtained from the DB
-     *
-     * @return a list of BookInsertionModel instances
-     */
-    fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel> =
+    override fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel> =
             insertions.map { convertInsertionToDomain(it) }.filterNotNull()
 
-    /**
-     * Build a BookInsertionModel from a DB insertion.
-     *
-     * @param insertion the considered insertion
-     *
-     * @return a BookInsertionModel instance containing detail data about the book's insertion
-     * if insertion data is complete, null otherwise
-     */
-    fun convertInsertionToDomain(insertion: Insertion) : BookInsertionModel? = with(insertion) {
+    override fun convertInsertionToDomain(insertion: Insertion) : BookInsertionModel? = with(insertion) {
         if (isWellFormed()) {
             BookInsertionModel(
                     insertionId = id,
@@ -57,5 +41,4 @@ class BookInsertionDataMapper {
             date != null
             book != null
     }
-
 }
