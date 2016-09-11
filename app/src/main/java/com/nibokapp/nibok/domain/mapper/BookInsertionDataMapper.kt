@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.data.mapper
+package com.nibokapp.nibok.domain.mapper
 
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.UserManager
@@ -10,7 +10,7 @@ import com.nibokapp.nibok.extension.toStringList
 /**
  * Mapper that uses database objects to build domain models.
  */
-class DbDataMapper {
+class BookInsertionDataMapper {
 
     /**
      * Build a list of BookInsertionModel given a list of insertions from the DB.

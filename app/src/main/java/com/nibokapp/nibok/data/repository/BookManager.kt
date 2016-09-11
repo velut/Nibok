@@ -2,7 +2,7 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.mapper.DbDataMapper
+import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapper
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
@@ -31,7 +31,7 @@ object BookManager {
         }
         var bookInsertion: BookInsertionModel? = null
         insertion?.let {
-            bookInsertion = DbDataMapper().convertInsertionToDomain(it)
+            bookInsertion = BookInsertionDataMapper().convertInsertionToDomain(it)
         }
         return bookInsertion
     }
@@ -64,7 +64,7 @@ object BookManager {
                     .findAll()
         }
         Log.d(TAG, "Books corresponding to query '$query' = ${results.size}")
-        val booksList = DbDataMapper().convertInsertionListToDomain(results)
+        val booksList = BookInsertionDataMapper().convertInsertionListToDomain(results)
         Log.d(TAG, "Books list size: ${booksList.size}")
         return booksList
     }
@@ -77,7 +77,7 @@ object BookManager {
     fun getFeedBooksList() : List<BookInsertionModel> {
         val results = queryRealm { it.where(Insertion::class.java).findAll() }
         Log.d(TAG, "Found ${results.size} feed items")
-        return DbDataMapper().convertInsertionListToDomain(results)
+        return BookInsertionDataMapper().convertInsertionListToDomain(results)
     }
 
     /**
@@ -86,7 +86,7 @@ object BookManager {
      * @return the list of saved books
      */
     fun getSavedBooksList(): List<BookInsertionModel> =
-            DbDataMapper().convertInsertionListToDomain(UserManager.getUserSavedInsertions())
+            BookInsertionDataMapper().convertInsertionListToDomain(UserManager.getUserSavedInsertions())
 
     /**
      * Signals if newer books are available.
