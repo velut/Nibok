@@ -3,6 +3,7 @@ package com.nibokapp.nibok.data.repository
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
+import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
 import com.nibokapp.nibok.extension.toNormalList
@@ -14,7 +15,7 @@ import java.util.*
 /**
  * Repository for book insertions.
  */
-object BookInsertionRepository {
+object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     const private val TAG = "BookInsertionRepository"
 
@@ -22,29 +23,13 @@ object BookInsertionRepository {
      * COMMON FUNCTIONS
      */
 
-    /**
-     * Get the insertion with the given id.
-     *
-     * @param insertionId the id of the insertion
-     *
-     * @return the insertion with the given id or null if no such insertion was found
-     */
-    fun getBookInsertionById(insertionId: Long) : Insertion? = queryOneWithRealm {
+    override fun getBookInsertionById(insertionId: Long) : Insertion? = queryOneWithRealm {
         it.where(Insertion::class.java)
                 .equalTo("id", insertionId)
                 .findFirst()
     }
 
-    /**
-     * Get the list of insertions matching the given query.
-     * The query can match on the following book attributes:
-     *  Title, Authors, Publisher, ISBN code
-     *
-     *  @param query the string describing the query
-     *
-     *  @return the list of book insertions matching the query
-     */
-    fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
+    override fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
 
         val trimmedQuery = query.trim()
 
@@ -65,14 +50,7 @@ object BookInsertionRepository {
         return results
     }
 
-    /**
-     * Get the list of insertions with a date greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
+    override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
         val results = queryRealm {
             it.where(Insertion::class.java)
                     .greaterThanOrEqualTo("date", date)
@@ -81,14 +59,7 @@ object BookInsertionRepository {
         return results
     }
 
-    /**
-     * Get the list of insertions with a date smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
+    override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
         val results = queryRealm {
             it.where(Insertion::class.java)
                     .lessThanOrEqualTo("date", date)
@@ -101,171 +72,62 @@ object BookInsertionRepository {
      * FEED BOOK INSERTIONS
      */
 
-    /**
-     * Get the current list of book insertions to display in a feed.
-     *
-     * Insertions published by the local user are excluded from this list.
-     *
-     * @return the list of currently available book insertions published by external users
-     */
-    fun getFeedBookInsertionList(): List<Insertion> {
+    override fun getFeedBookInsertionList(): List<Insertion> {
         val results = queryRealm { it.where(Insertion::class.java).findAll()}
                 .excludeUserOwnInsertions()
         Log.d(TAG, "Found ${results.size} feed insertions")
         return results
     }
 
-    /**
-     * Get the list of insertions not published by the user matching the given query.
-     * The query can match on the following book attributes:
-     *  Title, Authors, Publisher, ISBN code
-     *
-     *  @param query the string describing the query
-     *
-     *  @return the list of book insertions matching the query
-     */
-    fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
+    override fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
             getBookInsertionListFromQuery(query).excludeUserOwnInsertions()
 
-    /**
-     * Get the list of insertions not published by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getFeedBookInsertionListAfterDate(date: Date) : List<Insertion> =
+    override fun getFeedBookInsertionListAfterDate(date: Date) : List<Insertion> =
             getBookInsertionListAfterDate(date).excludeUserOwnInsertions()
 
-    /**
-     * Get the list of insertions not published by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getFeedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getFeedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
             getBookInsertionListBeforeDate(date).excludeUserOwnInsertions()
 
     /*
      * SAVED BOOK INSERTIONS
      */
 
-    /**
-     * Get the list of insertions saved by the user if such list is available.
-     *
-     * @return the list of insertions saved by the user
-     * or an empty list if no saved insertions could be found
-     */
-    fun getSavedBookInsertionList() : List<Insertion> =
+    override fun getSavedBookInsertionList() : List<Insertion> =
             UserRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
 
-    /**
-     * Get the list of insertions saved by the user matching the given query.
-     * The query can match on the following book attributes:
-     *  Title, Authors, Publisher, ISBN code
-     *
-     *  @param query the string describing the query
-     *
-     *  @return the list of book insertions matching the query
-     */
-    fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion> =
+    override fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion> =
             getBookInsertionListFromQuery(query).includeOnlySavedInsertions()
 
-    /**
-     * Get the list of insertions saved by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getSavedBookInsertionLisAftereDate(date: Date) : List<Insertion> =
+    override fun getSavedBookInsertionLisAfterDate(date: Date) : List<Insertion> =
             getBookInsertionListAfterDate(date).includeOnlySavedInsertions()
 
-    /**
-     * Get the list of insertions saved by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getSavedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getSavedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
             getBookInsertionListBeforeDate(date).includeOnlySavedInsertions()
 
     /*
      * PUBLISHED BOOK INSERTIONS
      */
 
-    /**
-     * Get the list of insertions published by the user if such list is available.
-     *
-     * @return the list of insertions published by the user
-     * or an empty list if no published insertions could be found
-     */
-    fun getPublishedBookInsertionList() : List<Insertion> =
+    override fun getPublishedBookInsertionList() : List<Insertion> =
             UserRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
 
-    /**
-     * Get the list of insertions published by the user matching the given query.
-     * The query can match on the following book attributes:
-     *  Title, Authors, Publisher, ISBN code
-     *
-     *  @param query the string describing the query
-     *
-     *  @return the list of book insertions matching the query
-     */
-    fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion> =
+    override fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion> =
             getBookInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
 
-    /**
-     * Get the list of insertions published by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getPublishedBookInsertionListAfterDate(date: Date) : List<Insertion> =
+    override fun getPublishedBookInsertionListAfterDate(date: Date) : List<Insertion> =
             getBookInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
 
-    /**
-     * Get the list of insertions published by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getPublishedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getPublishedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
             getBookInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
-    /**
-     * Check if the book insertion with the given id is among the ones saved by the user or not.
-     *
-     * @param insertionId the id of the book insertion
-     *
-     * @return true if the book insertion belongs to the user's saved insertions, false otherwise
-     */
-    fun isBookInsertionSaved(insertionId: Long) : Boolean =
+    override fun isBookInsertionSaved(insertionId: Long) : Boolean =
             insertionId in getSavedBookInsertionList().map { it.id }
 
-    /**
-     * Toggle the save status for an insertion either by adding it to the user saved insertions
-     * if it was not already saved or by removing it if it was already saved.
-     *
-     * @param insertionId the id of the insertion to add or remove
-     *
-     * @return true if the insertion was saved false if it was removed
-     */
-    fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean {
+    override fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean {
 
         if (!UserRepository.localUserExists())
             throw IllegalStateException("Local user does not exist. Cannot save insertion")
