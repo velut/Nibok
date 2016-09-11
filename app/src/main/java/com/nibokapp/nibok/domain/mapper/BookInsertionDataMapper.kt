@@ -32,24 +32,30 @@ class BookInsertionDataMapper {
      * if insertion data is complete, null otherwise
      */
     fun convertInsertionToDomain(insertion: Insertion) : BookInsertionModel? = with(insertion) {
+        if (isWellFormed()) {
+            BookInsertionModel(
+                    insertionId = id,
+                    seller = with(seller!!) {
+                        UserModel(id, name, avatar)
+                    },
+                    bookInfo = with(book!!) {
+                        BookInfoModel(title, authors.toStringList(), year, publisher, isbn)
+                    },
+                    bookPrice = bookPrice,
+                    bookCondition = bookCondition,
+                    bookPictureSources = bookImagesSources.toStringList(),
+                    insertionDate = date!!,
+                    savedByUser = UserManager.isInsertionSaved(id) // TODO maybe a better solution?
+            )
+        } else {
+            null
+        }
+    }
 
-        // Discard malformed insertions and return null
-        if (seller == null || book == null || date == null) return@with null
-
-        BookInsertionModel(
-                insertionId = id,
-                seller = with(seller!!) {
-                    UserModel(id, name, avatar)
-                },
-                bookInfo = with(book!!) {
-                    BookInfoModel(title, authors.toStringList(), year, publisher, isbn)
-                },
-                bookPrice = bookPrice,
-                bookCondition = bookCondition,
-                bookPictureSources = bookImagesSources.toStringList(),
-                insertionDate = date!!,
-                savedByUser = UserManager.isInsertionSaved(id) // TODO maybe a better solution?
-        )
+    private fun Insertion.isWellFormed(): Boolean = with(this) {
+            seller != null
+            date != null
+            book != null
     }
 
 }
