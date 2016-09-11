@@ -59,9 +59,11 @@ interface BookInsertionRepositoryInterface {
      *
      * Insertions published by the local user are excluded from this list.
      *
+     * @param cached set to true to return cached data. Default is false
+     *
      * @return the list of currently available book insertions published by external users
      */
-    fun getFeedBookInsertionList(): List<Insertion>
+    fun getFeedBookInsertionList(cached: Boolean = false): List<Insertion>
 
     /**
      * Get the list of insertions not published by the user matching the given query.
@@ -101,10 +103,12 @@ interface BookInsertionRepositoryInterface {
     /**
      * Get the list of insertions saved by the user if such list is available.
      *
+     * @param cached set to true to return cached data. Default is false
+     *
      * @return the list of insertions saved by the user
      * or an empty list if no saved insertions could be found
      */
-    fun getSavedBookInsertionList() : List<Insertion>
+    fun getSavedBookInsertionList(cached: Boolean = false) : List<Insertion>
 
     /**
      * Get the list of insertions saved by the user matching the given query.
@@ -144,10 +148,12 @@ interface BookInsertionRepositoryInterface {
     /**
      * Get the list of insertions published by the user if such list is available.
      *
+     * @param cached set to true to return cached data. Default is false
+     *
      * @return the list of insertions published by the user
      * or an empty list if no published insertions could be found
      */
-    fun getPublishedBookInsertionList() : List<Insertion>
+    fun getPublishedBookInsertionList(cached: Boolean = false) : List<Insertion>
 
     /**
      * Get the list of insertions published by the user matching the given query.

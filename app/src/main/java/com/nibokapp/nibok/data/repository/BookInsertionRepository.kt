@@ -19,6 +19,10 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     const private val TAG = "BookInsertionRepository"
 
+    var feedCache : List<Insertion> = emptyList()
+    var savedCache : List<Insertion> = emptyList()
+    var publishedCache : List<Insertion> = emptyList()
+
     /*
      * COMMON FUNCTIONS
      */
@@ -72,11 +76,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * FEED BOOK INSERTIONS
      */
 
-    override fun getFeedBookInsertionList(): List<Insertion> {
-        val results = queryRealm { it.where(Insertion::class.java).findAll()}
+    override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
+        if (cached) return feedCache
+        feedCache = queryRealm { it.where(Insertion::class.java).findAll()}
                 .excludeUserOwnInsertions()
-        Log.d(TAG, "Found ${results.size} feed insertions")
-        return results
+        Log.d(TAG, "Found ${feedCache.size} feed insertions")
+        return feedCache
     }
 
     override fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
@@ -92,8 +97,11 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * SAVED BOOK INSERTIONS
      */
 
-    override fun getSavedBookInsertionList() : List<Insertion> =
-            UserRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
+    override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
+        if (cached) return savedCache
+        savedCache = UserRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
+        return savedCache
+    }
 
     override fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion> =
             getBookInsertionListFromQuery(query).includeOnlySavedInsertions()
@@ -108,8 +116,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * PUBLISHED BOOK INSERTIONS
      */
 
-    override fun getPublishedBookInsertionList() : List<Insertion> =
-            UserRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
+    override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
+        if (cached) return publishedCache
+        publishedCache =
+                UserRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
+        return publishedCache
+    }
 
     override fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion> =
             getBookInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
