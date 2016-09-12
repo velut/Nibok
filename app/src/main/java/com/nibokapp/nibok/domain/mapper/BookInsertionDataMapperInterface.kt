@@ -53,9 +53,9 @@ interface BookInsertionDataMapperInterface {
      *
      * @param book the DB Book
      *
-     * @return a BookInfoModel
+     * @return a BookInfoModel if book data was found, null otherwise
      */
-    fun convertBookToDomain(book: Book) : BookInfoModel
+    fun convertBookToDomain(book: Book?) : BookInfoModel?
 
     /**
      * Build a Book given a domain BookInfoModel.

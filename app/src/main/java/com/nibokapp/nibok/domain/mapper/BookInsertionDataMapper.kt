@@ -34,7 +34,7 @@ class BookInsertionDataMapper(
                 BookInsertionModel(
                         insertionId = id,
                         seller = convertSellerToDomain(seller!!),
-                        bookInfo = convertBookToDomain(book!!),
+                        bookInfo = convertBookToDomain(book!!)!!,
                         bookPrice = bookPrice,
                         bookCondition = bookCondition,
                         bookPictureSources = bookImagesSources.toStringList(),
@@ -64,14 +64,20 @@ class BookInsertionDataMapper(
      * BOOK INFO
      */
 
-    override fun convertBookToDomain(book: Book): BookInfoModel = with(book) {
-        BookInfoModel(
-                title = title,
-                authors = authors.toStringList(),
-                year = year,
-                publisher = publisher,
-                isbn = isbn
-        )
+    override fun convertBookToDomain(book: Book?): BookInfoModel? {
+        if (book == null) {
+            return null
+        } else {
+            return with(book) {
+                BookInfoModel(
+                        title = title,
+                        authors = authors.toStringList(),
+                        year = year,
+                        publisher = publisher,
+                        isbn = isbn
+                )
+            }
+        }
     }
 
     override fun convertBookFromDomain(bookInfo: BookInfoModel): Book = with(bookInfo) {
