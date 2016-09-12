@@ -1,13 +1,13 @@
 package com.nibokapp.nibok.ui.presenter.viewtype.common
 
-import com.nibokapp.nibok.data.repository.UserManager
+import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 
 /**
  * Interface for presenters that can check or change the save status of an insertion.
  */
 interface InsertionSaveStatusPresenter {
 
-    // TODO extract user manager
+    val insertionRepository: BookInsertionRepositoryInterface
 
     /**
      * Check if the insertion with the given id is saved or not.
@@ -17,7 +17,7 @@ interface InsertionSaveStatusPresenter {
      * @return true if the insertion is saved, false otherwise
      */
     fun isInsertionSaved(insertionId: Long) : Boolean =
-            UserManager.isInsertionSaved(insertionId)
+            insertionRepository.isBookInsertionSaved(insertionId)
 
     /**
      * Toggle the save status of the insertion with the given id.
@@ -28,6 +28,6 @@ interface InsertionSaveStatusPresenter {
      * @return true if the insertion was saved, false if it was unsaved
      */
     fun toggleInsertionSave(insertionId: Long) : Boolean =
-            UserManager.toggleSaveInsertion(insertionId)
+            insertionRepository.toggleBookInsertionSaveStatus(insertionId)
 
 }
