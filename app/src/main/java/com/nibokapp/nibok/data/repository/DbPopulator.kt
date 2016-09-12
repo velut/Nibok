@@ -27,7 +27,7 @@ class DbPopulator {
             it.executeTransaction {
                 for (i in 1..50) {
                     val authors = listOf(genAuthor(it,"John Doe $i"), genAuthor(it, "Bob Zu $i"))
-                    val book = genBook(it, i.toLong(), "Title $i", authors, 2016, "Mit Press", "$i")
+                    val book = genBook(it, "Title $i", authors, 2016, "Mit Press", "$i")
 
                     val thumbnail = genThumbnail(it)
                     val seller = genSeller(it, i.toLong(), "Tom Seller $i")
@@ -58,10 +58,9 @@ class DbPopulator {
         return thumbnail
     }
 
-    private fun genBook(realm: Realm, id: Long, title: String, authors: List<RealmString>,
+    private fun genBook(realm: Realm, title: String, authors: List<RealmString>,
                         year: Int, publisher: String, isbn: String) : Book {
         val book = realm.createObject(Book::class.java)
-        book.id = id
         book.title = title
         book.authors.addAll(authors)
         book.year = year
