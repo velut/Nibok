@@ -1,5 +1,7 @@
 package com.nibokapp.nibok.ui.presenter
 
+import android.util.Log
+import com.nibokapp.nibok.domain.command.bookinsertion.publishing.RequestBookInfoByIsbnCommand
 import com.nibokapp.nibok.domain.model.BookInfoModel
 
 /**
@@ -7,16 +9,20 @@ import com.nibokapp.nibok.domain.model.BookInfoModel
  */
 class PublishInsertionPresenter {
 
+    companion object {
+        private val TAG = PublishInsertionPresenter::class.java.simpleName
+    }
+
     /**
      * Get book data given a book ISBN code.
      *
-     * @param isbnCode the isbn code of a book
+     * @param isbn the isbn code of a book
      *
      * @return data about the book with the given isbn code or null if not data was found
      */
-    fun getBookDataFromISBN(isbnCode: String) : BookInfoModel? {
-        // TODO
-        return null
+    fun getBookDataByISBN(isbn: String) : BookInfoModel? {
+        Log.d(TAG, "Requesting book data for ISBN: $isbn")
+        return RequestBookInfoByIsbnCommand(isbn).execute()
     }
 
     /**

@@ -337,7 +337,7 @@ class PublishInsertionFragment(
         setBookHelperText(getString(R.string.review_book_details))
 
         // TODO get real data
-        presenter.getBookDataFromISBN(isbn)
+        presenter.getBookDataByISBN(isbn)
         inputBookTitle.setText("Book Title Here")
         inputBookAuthors.setText("John Doe, Bob Zu")
         inputBookYear.setText("2016")
