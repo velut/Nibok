@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.ui.presenter
 
-import com.nibokapp.nibok.data.repository.UserManager
+import android.util.Log
+import com.nibokapp.nibok.domain.command.user.RequestLocalUserIdCommand
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 import java.util.*
 
@@ -9,12 +10,19 @@ import java.util.*
  */
 class ChatPresenter {
 
+    companion object {
+        private val TAG = ChatPresenter::class.java.simpleName
+    }
+
     /**
      * Get the id of the local user.
      *
      * @return the id of the local user
      */
-    fun getUserId() : Long = UserManager.getUserId()
+    fun getUserId() : Long {
+        Log.d(TAG, "Requesting local user id")
+        return RequestLocalUserIdCommand().execute()
+    }
 
     /**
      * TODO
