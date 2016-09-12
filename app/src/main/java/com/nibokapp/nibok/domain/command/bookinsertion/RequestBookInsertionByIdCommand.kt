@@ -15,7 +15,7 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
  * @return a BookInsertionModel representing the insertion with the given id
  * if such insertion exists, null if no such insertion exists
  */
-class RequestBookInsertionCommand(
+class RequestBookInsertionByIdCommand(
         val insertionId: Long,
         val dataMapper: BookInsertionDataMapperInterface = BookInsertionDataMapper(),
         val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
