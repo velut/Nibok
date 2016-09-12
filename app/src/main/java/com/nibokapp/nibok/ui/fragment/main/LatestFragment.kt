@@ -115,7 +115,6 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
             // Save button was clicked, save the insertion and alert user
             val saved = presenter.toggleInsertionSave(itemId)
-            refreshMainViewData()
             val toastMessage = if (saved) R.string.book_saved_to_collection
                                 else R.string.book_removed_from_collection
             context.toast(toastMessage)
