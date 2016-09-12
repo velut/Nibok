@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.ui.presenter.viewtype.common
 
+import android.util.Log
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 
 /**
@@ -9,6 +10,8 @@ interface InsertionSaveStatusPresenter {
 
     val insertionRepository: BookInsertionRepositoryInterface
 
+    val TAG : String
+
     /**
      * Check if the insertion with the given id is saved or not.
      *
@@ -16,8 +19,10 @@ interface InsertionSaveStatusPresenter {
      *
      * @return true if the insertion is saved, false otherwise
      */
-    fun isInsertionSaved(insertionId: Long) : Boolean =
-            insertionRepository.isBookInsertionSaved(insertionId)
+    fun isInsertionSaved(insertionId: Long) : Boolean {
+        Log.d(TAG, "Checking if insertion $insertionId is saved")
+        return insertionRepository.isBookInsertionSaved(insertionId)
+    }
 
     /**
      * Toggle the save status of the insertion with the given id.
@@ -27,7 +32,11 @@ interface InsertionSaveStatusPresenter {
      *
      * @return true if the insertion was saved, false if it was unsaved
      */
-    fun toggleInsertionSave(insertionId: Long) : Boolean =
-            insertionRepository.toggleBookInsertionSaveStatus(insertionId)
+    fun toggleInsertionSave(insertionId: Long) : Boolean {
+        Log.d(TAG, "Toggling insertion $insertionId save status")
+        val saved = insertionRepository.toggleBookInsertionSaveStatus(insertionId)
+        Log.d(TAG, "After toggle insertion $insertionId saved: $saved")
+        return saved
+    }
 
 }
