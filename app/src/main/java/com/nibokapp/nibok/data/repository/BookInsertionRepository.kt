@@ -20,11 +20,11 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     const private val TAG = "BookInsertionRepository"
 
-    val userRepository : UserRepositoryInterface = UserRepository
+    private val userRepository : UserRepositoryInterface = UserRepository
 
-    var feedCache : List<Insertion> = emptyList()
-    var savedCache : List<Insertion> = emptyList()
-    var publishedCache : List<Insertion> = emptyList()
+    private var feedCache : List<Insertion> = emptyList()
+    private var savedCache : List<Insertion> = emptyList()
+    private var publishedCache : List<Insertion> = emptyList()
 
     /*
      * COMMON FUNCTIONS
