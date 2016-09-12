@@ -1,6 +1,8 @@
 package com.nibokapp.nibok.ui.presenter.viewtype
 
+import android.util.Log
 import com.nibokapp.nibok.domain.model.ConversationModel
+import com.nibokapp.nibok.extension.TAG
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import java.util.*
@@ -22,6 +24,18 @@ class MessagePresenter : ViewTypePresenter {
                     "Once upon a time in a land far far away $it",
                     date) }
         return cachedData
+    }
+
+    override fun getDataNewerThanItem(item: ViewType): List<ViewType> {
+        // TODO Implement
+        Log.d(TAG, "TODO")
+        return emptyList()
+    }
+
+    override fun getDataOlderThanItem(item: ViewType): List<ViewType> {
+        // TODO Implement
+        Log.d(TAG, "TODO")
+        return emptyList()
     }
 
     override fun getCachedData(): List<ViewType> = cachedData
