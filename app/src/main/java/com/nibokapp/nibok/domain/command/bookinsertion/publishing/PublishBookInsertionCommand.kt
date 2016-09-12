@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.domain.command.bookinsertion
+package com.nibokapp.nibok.domain.command.bookinsertion.publishing
 
 import com.nibokapp.nibok.domain.command.common.Command
 import com.nibokapp.nibok.domain.model.BookInsertionModel
