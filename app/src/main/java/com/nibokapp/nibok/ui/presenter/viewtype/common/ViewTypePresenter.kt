@@ -23,6 +23,20 @@ interface ViewTypePresenter {
     fun getCachedData() : List<ViewType>
 
     /**
+     * Get the list of ViewType items newer than the given item to present in a view.
+     *
+     * @return the list of items newer than the given item
+     */
+    fun getDataNewerThanItem(item: ViewType) : List<ViewType>
+
+    /**
+     * Get the list of ViewType items older than the given item to present in a view.
+     *
+     * @return the list of items older than the given item
+     */
+    fun getDataOlderThanItem(item: ViewType) : List<ViewType>
+
+    /**
      * Get the difference between the new available data and the given old data.
      *
      * @param oldData the old version of the data used as the base to calculate the difference
