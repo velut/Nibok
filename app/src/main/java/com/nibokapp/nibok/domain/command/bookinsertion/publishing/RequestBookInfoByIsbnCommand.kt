@@ -22,6 +22,6 @@ class RequestBookInfoByIsbnCommand(
 
     override fun execute(): BookInfoModel? =
             dataMapper.convertBookToDomain(
-                    bookRepository.getBookFromISBN(isbn)
+                    bookRepository.getBookByISBN(isbn)
             )
 }

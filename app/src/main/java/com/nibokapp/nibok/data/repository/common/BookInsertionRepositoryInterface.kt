@@ -29,7 +29,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return book data about the book with the given ISBN code if the book was found, null otherwise
      */
-    fun getBookFromISBN(isbn: String) : Book?
+    fun getBookByISBN(isbn: String) : Book?
 
     /**
      * Get the list of insertions matching the given query.

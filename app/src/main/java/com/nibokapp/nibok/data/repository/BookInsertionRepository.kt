@@ -37,7 +37,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
                 .findFirst()
     }
 
-    override fun getBookFromISBN(isbn: String): Book? = queryOneWithRealm {
+    override fun getBookByISBN(isbn: String): Book? = queryOneWithRealm {
         it.where(Book::class.java)
                 .equalTo("isbn", isbn)
                 .findFirst()
