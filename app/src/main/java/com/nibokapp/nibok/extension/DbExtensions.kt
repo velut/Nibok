@@ -24,6 +24,17 @@ fun RealmList<RealmString>.toStringList() : List<String> =
         this.map { it.value }
 
 /**
+ * Convert a List of String into a RealmList of RealmString.
+ *
+ * @return a a RealmList of RealmString
+ */
+fun List<String>.toRealmStringList() : RealmList<RealmString> {
+    val realmList = RealmList<RealmString>()
+    this.forEach { realmList.add(RealmString(it)) }
+    return realmList
+}
+
+/**
  * Convert a RealmList of RealmModels into a normal list of RealmModel.
  *
  * @return a list of RealmModel
