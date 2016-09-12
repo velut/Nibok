@@ -1,11 +1,14 @@
 package com.nibokapp.nibok.domain.mapper
 
+import com.nibokapp.nibok.data.db.Book
+import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.BookInsertionRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.domain.model.BookInfoModel
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.domain.model.UserModel
+import com.nibokapp.nibok.extension.toRealmStringList
 import com.nibokapp.nibok.extension.toStringList
 
 /**
@@ -14,6 +17,10 @@ import com.nibokapp.nibok.extension.toStringList
 class BookInsertionDataMapper(
         val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
 ) : BookInsertionDataMapperInterface {
+
+    /*
+     * BOOK INSERTION
+     */
 
     override fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel> =
             insertions.map { convertInsertionToDomain(it) }.filterNotNull()
@@ -26,12 +33,8 @@ class BookInsertionDataMapper(
             return with(insertion) {
                 BookInsertionModel(
                         insertionId = id,
-                        seller = with(seller!!) {
-                            UserModel(id, name, avatar)
-                        },
-                        bookInfo = with(book!!) {
-                            BookInfoModel(title, authors.toStringList(), year, publisher, isbn)
-                        },
+                        seller = convertSellerToDomain(seller!!),
+                        bookInfo = convertBookToDomain(book!!),
                         bookPrice = bookPrice,
                         bookCondition = bookCondition,
                         bookPictureSources = bookImagesSources.toStringList(),
@@ -40,6 +43,65 @@ class BookInsertionDataMapper(
                 )
             }
         }
+    }
+
+    override fun convertInsertionListFromDomain(insertions: List<BookInsertionModel>):
+            List<Insertion> = insertions.map { convertInsertionFromDomain(it) }
+
+    override fun convertInsertionFromDomain(insertion: BookInsertionModel): Insertion = with(insertion) {
+        Insertion(
+                id = insertionId,
+                date = insertionDate,
+                seller = convertSellerFromDomain(seller),
+                book = convertBookFromDomain(bookInfo),
+                bookPrice = bookPrice,
+                bookCondition = bookCondition,
+                bookImagesSources = bookPictureSources.toRealmStringList()
+        )
+    }
+
+    /*
+     * BOOK INFO
+     */
+
+    override fun convertBookToDomain(book: Book): BookInfoModel = with(book) {
+        BookInfoModel(
+                title = title,
+                authors = authors.toStringList(),
+                year = year,
+                publisher = publisher,
+                isbn = isbn
+        )
+    }
+
+    override fun convertBookFromDomain(bookInfo: BookInfoModel): Book = with(bookInfo) {
+        Book(
+                title = title,
+                authors = authors.toRealmStringList(),
+                year = year,
+                publisher = publisher,
+                isbn = isbn
+        )
+    }
+
+    /*
+     * SELLER
+     */
+
+    private fun convertSellerToDomain(seller: ExternalUser): UserModel = with(seller) {
+        UserModel(
+                id = id,
+                name = name,
+                avatar = avatar
+        )
+    }
+
+    private fun convertSellerFromDomain(seller: UserModel): ExternalUser = with(seller) {
+        ExternalUser(
+                id = id,
+                name = name,
+                avatar = avatar
+        )
     }
 
     /*
