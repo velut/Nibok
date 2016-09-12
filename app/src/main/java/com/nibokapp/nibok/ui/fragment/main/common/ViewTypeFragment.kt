@@ -138,6 +138,7 @@ abstract class ViewTypeFragment : BaseFragment() {
             val mainView = it.find<RecyclerView>(getMainViewId())
             setupMainView(mainView)
             getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
+            currentView = mainView
         }
         return view
     }
