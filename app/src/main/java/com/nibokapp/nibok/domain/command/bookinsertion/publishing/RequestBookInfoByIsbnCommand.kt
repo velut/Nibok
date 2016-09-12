@@ -8,7 +8,7 @@ import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapperInterface
 import com.nibokapp.nibok.domain.model.BookInfoModel
 
 /**
- * Request infromations about a book given its ISBN code.
+ * Request information about a book given its ISBN code.
  *
  * @param isbn the ISBN code of the book
  *
