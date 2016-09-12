@@ -31,7 +31,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     private var isFragmentVisible = false
 
     private var oldQuery: String? = null
-    private var oldResults: List<ViewType>? = null
+    private var oldResults: List<ViewType> = emptyList()
 
     private val presenter: ViewTypePresenter by lazy { getFragmentPresenter() }
 
@@ -186,6 +186,8 @@ abstract class ViewTypeFragment : BaseFragment() {
         oldQuery = query
 
         val results = presenter.getQueryData(query)
+        Log.d(TAG, "Results size: ${results.size}")
+
         if (results.equals(oldResults)) {
             Log.d(TAG, "Same results as before, return")
             return
@@ -207,6 +209,8 @@ abstract class ViewTypeFragment : BaseFragment() {
 
     override fun handleOnSearchClose() {
         Log.d(TAG, "Search closed. Hide SearchView and show MainView")
+        oldQuery = null
+        oldResults = emptyList()
         onBecomeVisible()
     }
 
