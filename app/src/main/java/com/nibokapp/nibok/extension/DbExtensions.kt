@@ -9,6 +9,7 @@ import io.realm.RealmResults
 
 val QUERY_TAG = "DB Query"
 val CLOSE_REALM_MSG = "Closing realm after query"
+val VERBOSE = false
 
 /**
  * Extension functions related to the Realm db.
@@ -78,7 +79,7 @@ inline fun <T: RealmModel> queryRealm(query: (realm: Realm) -> RealmResults<T>) 
     } catch (e: IllegalArgumentException) {
         Log.d(QUERY_TAG, "No list of objects found in Realm")
     } finally {
-        Log.d(QUERY_TAG, CLOSE_REALM_MSG)
+        if (VERBOSE) Log.d(QUERY_TAG, CLOSE_REALM_MSG)
         realm.close()
     }
     return results
@@ -98,7 +99,7 @@ inline fun <T: RealmModel> queryOneWithRealm(query: (realm: Realm) -> T) : T? {
     } catch (e: IllegalArgumentException) {
         Log.d(QUERY_TAG, "No object found in Realm")
     } finally {
-        Log.d(QUERY_TAG, CLOSE_REALM_MSG)
+        if (VERBOSE) Log.d(QUERY_TAG, CLOSE_REALM_MSG)
         realm.close()
     }
     return result
