@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.data.repository
 
 import android.util.Log
+import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
@@ -33,6 +34,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun getBookInsertionById(insertionId: Long) : Insertion? = queryOneWithRealm {
         it.where(Insertion::class.java)
                 .equalTo("id", insertionId)
+                .findFirst()
+    }
+
+    override fun getBookFromISBN(isbn: String): Book? = queryOneWithRealm {
+        it.where(Book::class.java)
+                .equalTo("isbn", isbn)
                 .findFirst()
     }
 

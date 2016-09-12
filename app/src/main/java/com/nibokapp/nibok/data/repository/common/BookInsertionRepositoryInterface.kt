@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.data.repository.common
 
+import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import java.util.*
 
@@ -20,6 +21,15 @@ interface BookInsertionRepositoryInterface {
      * @return the insertion with the given id or null if no such insertion was found
      */
     fun getBookInsertionById(insertionId: Long) : Insertion?
+
+    /**
+     * Get the book data for the book with the given ISBN code.
+     *
+     * @param isbn the ISBN code of the book
+     *
+     * @return book data about the book with the given ISBN code if the book was found, null otherwise
+     */
+    fun getBookFromISBN(isbn: String) : Book?
 
     /**
      * Get the list of insertions matching the given query.
