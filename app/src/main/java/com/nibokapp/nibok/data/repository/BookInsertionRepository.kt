@@ -215,6 +215,6 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     private fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
         val savedInsertions = getSavedBookInsertionList()
-        return this.filter { it in savedInsertions }
+        return this.filter { it.id in savedInsertions.map { it.id } }
     }
 }
