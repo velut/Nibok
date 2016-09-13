@@ -42,8 +42,6 @@ class MessageListFragment : ViewTypeFragment() {
 
     // Main View Data
 
-    override fun onMainViewScrollDownLoader() = {}()
-
     override fun hasMainViewUpdatableItems(): Boolean = true
 
     override fun hasMainViewRemovableItems(): Boolean = false

@@ -2,9 +2,7 @@ package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
@@ -51,8 +49,6 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
     // Main View Data
 
-    override fun onMainViewScrollDownLoader() = requestOlderBooks()
-
     override fun hasMainViewUpdatableItems(): Boolean = true
 
     override fun hasMainViewRemovableItems(): Boolean = false
@@ -71,27 +67,6 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
     override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
 
-    /**
-     * Function passed to the infinite scroll listener to load older books.
-     *
-     * It requests books published on the platform before the ones currently displayed.
-     *
-     * If older books are available they are added to the bottom of the list,
-     * otherwise a message is shown and the loading item is removed.
-     */
-    private fun requestOlderBooks() {
-        val bookAdapter = latestBooksList.adapter as ViewTypeAdapter
-
-        if (BookManager.hasOlderFeedBooks()) {
-            Log.d(TAG, "Requesting older books on scroll down")
-            /*val olderBooks = BookManager.getOlderFeedBooks()
-            bookAdapter.addItems(olderBooks, insertAtBottom = true)*/
-        } else {
-            Log.d(TAG, "No more older books, end reached")
-            bookAdapter.removeLoadingItem()
-            context.toast(getString(R.string.end_reached))
-        }
-    }
 
     // Item click listener for the book cards
     private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {

@@ -52,8 +52,6 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
 
     override fun hasMainViewRemovableItems(): Boolean = false
 
-    override fun onMainViewScrollDownLoader() = Unit
-
     // Search view
 
     override fun getSearchView(): RecyclerView = searchResultsListSelling

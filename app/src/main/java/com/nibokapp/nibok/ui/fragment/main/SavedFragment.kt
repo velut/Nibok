@@ -3,9 +3,7 @@ package com.nibokapp.nibok.ui.fragment.main
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.data.repository.BookManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
@@ -50,8 +48,6 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
 
     // Main View Data
 
-    override fun onMainViewScrollDownLoader() = requestOlderSavedBooks()
-
     override fun hasMainViewUpdatableItems(): Boolean = true
 
     override fun hasMainViewRemovableItems(): Boolean = true
@@ -69,29 +65,6 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
     // Refresh
 
     override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
-
-
-    /**
-     * Function passed to the infinite scroll listener to load older saved books.
-     *
-     * It requests books saved by the user before the ones currently displayed.
-     *
-     * If older saved books are available they are added to the bottom of the list,
-     * otherwise a message is shown and the loading item is removed.
-     */
-    private fun requestOlderSavedBooks() {
-        val bookAdapter = getMainView().adapter as ViewTypeAdapter
-
-        if (BookManager.hasOlderSavedBooks()) {
-            Log.i(TAG, "Requesting older saved books on scroll down")
-            /*val olderBooks = BookManager.getOlderSavedBooks()
-            bookAdapter.addItems(olderBooks, insertAtBottom = true)*/
-        } else {
-            Log.i(TAG, "No more older saved books, end reached")
-            bookAdapter.removeLoadingItem()
-            context.toast(getString(R.string.end_reached))
-        }
-    }
 
     private val mainViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {

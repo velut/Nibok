@@ -1,12 +1,14 @@
 package com.nibokapp.nibok.ui.fragment.main.common
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.viewtype.common.InfiniteScrollListener
@@ -102,11 +104,6 @@ abstract class ViewTypeFragment : BaseFragment() {
      * @return the adapter used by the search view
      */
     abstract fun getSearchViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
-
-    /**
-     * The loading function called when scrolling down the main view.
-     */
-    abstract fun onMainViewScrollDownLoader()
 
     /**
      * Signal if items in the main view can be updated.
@@ -310,8 +307,37 @@ abstract class ViewTypeFragment : BaseFragment() {
                 clearOnScrollListeners()
                 addOnScrollListener(InfiniteScrollListener(viewLM) {
                     // Custom loading function executed on scroll down
-                    onMainViewScrollDownLoader()
+                    loadMoreItems()
                 })
+            }
+        }
+    }
+
+    private fun loadMoreItems() {
+        val mainViewAdapter = getAdapterForView(mainView)
+
+        if (mainViewAdapter == null) {
+            Log.d(TAG, "No adapter for main view, cannot load more items")
+            return
+        }
+
+        Log.d(TAG, "Loading more items")
+
+        var numAdded : Int
+        val handler = Handler()
+
+        val lastItem = getMainViewData().lastOrNull()
+
+        handler.post {
+            if (lastItem == null) {
+                numAdded = mainViewAdapter.addItems(presenter.getData())
+            } else {
+                val olderData = presenter.getDataOlderThanItem(lastItem)
+                numAdded = mainViewAdapter.addItems(olderData, insertAtBottom = true)
+            }
+
+            if (numAdded == 0) {
+                context.toast(getString(R.string.end_reached))
             }
         }
     }
