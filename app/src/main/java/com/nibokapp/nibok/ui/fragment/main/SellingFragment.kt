@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.ui.activity.PublishInsertionActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.UserInsertionPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
@@ -77,6 +79,11 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
             Log.d(TAG, "Open publishing activity")
             context.startActivity<PublishInsertionActivity>()
         }
+    }
+
+    override fun getMainViewData() : List<ViewType> {
+        val data = super.getMainViewData()
+        return data.filterIsInstance<BookInsertionModel>().sortedBy { it.insertionDate }
     }
 
     private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {

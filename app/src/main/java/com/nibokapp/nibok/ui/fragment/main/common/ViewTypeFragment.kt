@@ -268,7 +268,14 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
     }
 
-    fun getMainViewData() : List<ViewType> = getAdapterForView(mainView)?.getItems() ?: emptyList()
+    /**
+     * Get the data currently displayed in the main view by the
+     * main view adapter.
+     *
+     * @return the data currently displayed in the main view
+     */
+    open fun getMainViewData() : List<ViewType> =
+            getAdapterForView(mainView)?.getItems() ?: emptyList()
 
     private fun getAdapterForView(view: RecyclerView?) : ListAdapter<ViewType>? {
         @Suppress("UNCHECKED_CAST")
