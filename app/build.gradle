@@ -51,6 +51,10 @@ dependencies {
     // Circular Image View
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
+    // Fresco and image gallery
+    compile 'com.facebook.fresco:fresco:0.13.0'
+    compile 'com.github.stfalcon:frescoimageviewer:0.1.0'
+
 }
 
 buildscript {

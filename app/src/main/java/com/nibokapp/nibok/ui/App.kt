@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.ui
 
 import android.app.Application
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.nibokapp.nibok.data.repository.DbPopulator
 import com.nibokapp.nibok.data.repository.UserManager
 import io.realm.Realm
@@ -18,6 +19,9 @@ class App : Application() {
 
         // Save instance
         instance = this
+
+        // Initialize Fresco
+        Fresco.initialize(this)
 
         // Get Realm configuration
         val realmConfig = RealmConfiguration.Builder(this)
