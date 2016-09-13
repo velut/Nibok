@@ -100,6 +100,8 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
             if (itemType == ViewTypes.BOOK_INSERTION) mainViewItemClickListener(itemId, itemType)
         }
 
+        override fun updateItemOnButtonClick(): Boolean = false
+
         override fun onItemClick(itemId: Long, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
         }
@@ -118,6 +120,8 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
                                 else R.string.book_removed_from_collection
             context.toast(toastMessage)
         }
+
+        override fun updateItemOnButtonClick(): Boolean = true
 
         override fun onItemClick(itemId: Long, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
@@ -151,7 +155,6 @@ class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()
 
         // Save old book position for possible reinsertion
         val oldBookPosition = mainViewAdapter.removeItemById(itemId, itemType)
-        refreshMainViewData() // Book was removed, sync fragment data
 
         // Notify user of removal
         val snackBar = Snackbar.make(savedFragmentRoot,

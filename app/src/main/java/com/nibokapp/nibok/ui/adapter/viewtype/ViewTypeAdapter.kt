@@ -38,6 +38,13 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         fun onButtonClick(itemId: Long, itemType: Int)
 
         /**
+         * Tell the adapter if the item has to be updated after a button click.
+         *
+         * @return true if the item has to be updated, false otherwise
+         */
+        fun updateItemOnButtonClick() : Boolean
+
+        /**
          * Listen to a click on the item itself.
          *
          * @param itemId the id of the item that was clicked

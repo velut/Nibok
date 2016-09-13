@@ -68,6 +68,12 @@ class MessageListFragment : ViewTypeFragment() {
         override fun onButtonClick(itemId: Long, itemType: Int) {
         }
 
+        override fun updateItemOnButtonClick(): Boolean {
+            // TODO Implement
+            Log.d(TAG, "TODO")
+            return false
+        }
+
         override fun onItemClick(itemId: Long, itemType: Int) {
             // TODO Implement
             Log.d(TAG, "Clicked $itemId")

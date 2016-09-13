@@ -132,11 +132,12 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
                 insertionId?.let {
                     itemClickListener.onButtonClick(it, ViewTypes.BOOK_INSERTION)
                 }
-                // Optimistic update of the save button
-                item.savedByUser = !item.savedByUser
-                updateSaveButton(saveButton, item.savedByUser)
-                if (item.savedByUser) {
-                    saveButton.animateBounce()
+                if (itemClickListener.updateItemOnButtonClick()) {
+                    item.savedByUser = !item.savedByUser
+                    updateSaveButton(saveButton, item.savedByUser)
+                    if (item.savedByUser) {
+                        saveButton.animateBounce()
+                    }
                 }
             }
         }

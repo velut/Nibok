@@ -86,6 +86,12 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
             Log.d(TAG, "TODO")
         }
 
+        override fun updateItemOnButtonClick(): Boolean {
+            // TODO Implement
+            Log.d(TAG, "TODO")
+            return false
+        }
+
         override fun onItemClick(itemId: Long, itemType: Int) {
             // TODO Implement
             Log.d(TAG, "TODO")

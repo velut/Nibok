@@ -120,6 +120,8 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
             context.toast(toastMessage)
         }
 
+        override fun updateItemOnButtonClick(): Boolean = true
+
         override fun onItemClick(itemId: Long, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
         }
