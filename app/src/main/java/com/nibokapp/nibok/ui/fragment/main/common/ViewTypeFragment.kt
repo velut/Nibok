@@ -39,8 +39,6 @@ abstract class ViewTypeFragment : BaseFragment() {
     private var searchResultsView: RecyclerView? = null
     private var currentView: RecyclerView? = null
 
-    private var mainViewData: List<ViewType> = emptyList()
-
     /**
      * Get the layout used by the fragment.
      *
@@ -124,20 +122,13 @@ abstract class ViewTypeFragment : BaseFragment() {
     abstract fun hasMainViewRemovableItems() : Boolean
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // In order to preserve scroll position
-        // get the data before setting up the view and later pass it to
-        // the view adapter before layout manager state is restored
-        mainViewData = presenter.getCachedData()
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(getFragmentLayout())
         view?.let {
             val mainView = it.find<RecyclerView>(getMainViewId())
             setupMainView(mainView)
-            getAdapterForView(mainView)?.clearAndAddItems(mainViewData)
+            // Set cached items to restore scroll position
+            getAdapterForView(mainView)?.clearAndAddItems(presenter.getCachedData())
             currentView = mainView
         }
         return view
@@ -216,17 +207,6 @@ abstract class ViewTypeFragment : BaseFragment() {
     }
 
     /**
-     * Refresh asynchronously the data of the main view.
-     *
-     * Useful after click events to correctly synchronize the view with
-     * proper data.
-     */
-    fun refreshMainViewData() {
-        // TODO remove async from here
-        doAsync() { mainViewData = presenter.getData() }
-    }
-
-    /**
      * Check asynchronously for item updates that happened since the last retrieval
      * of the main view data.
      *
@@ -242,11 +222,11 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
         Log.d(TAG, "${getFragmentName()} is checking for updates")
 
-        // TODO remove async from here
         doAsync() {
-            val oldData = mainViewData
-            val (toUpdate, toRemove, newData) = presenter.getDiffData(oldData)
-            mainViewData = newData
+            val oldData = viewAdapter.getItems()
+            val (toUpdate, toRemove) = presenter.getDiffData(oldData)
+
+            Log.d(TAG, "${getFragmentName()}: Update: ${toUpdate.size}; Remove: ${toRemove.size}")
 
             if (hasMainViewRemovableItems()) {
                 Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
