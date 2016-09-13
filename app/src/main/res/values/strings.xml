@@ -18,7 +18,8 @@
     <string name="book_removed_from_collection">Book removed from your collection</string>
     <string name="book_reinserted_into_collection">Book reinserted into your collection</string>
     <string name="book_already_into_collection">Book is already into your collection</string>
-    <string name="no_newer_books">No newer books found</string>
+    <string name="no_newer_book_insertions">No newer book insertions found</string>
+    <string name="no_newer_messages">No newer messages found</string>
     <string name="end_reached">You have reached the end</string>
 
     <!-- Main Toolbar menu actions -->

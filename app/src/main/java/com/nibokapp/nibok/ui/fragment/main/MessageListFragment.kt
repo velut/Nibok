@@ -58,11 +58,9 @@ class MessageListFragment : ViewTypeFragment() {
 
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
 
+    // Refresh
 
-    override fun handleRefreshAction() {
-        // TODO Implement
-        Log.d(TAG, "TODO")
-    }
+    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_messages)
 
     private val messageItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {

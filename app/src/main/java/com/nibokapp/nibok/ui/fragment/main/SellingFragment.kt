@@ -62,10 +62,9 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
+    // Refresh
 
-    override fun handleRefreshAction() {
-        Log.i(TAG, "Refreshing")
-    }
+    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

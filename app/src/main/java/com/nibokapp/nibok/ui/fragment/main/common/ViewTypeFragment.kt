@@ -15,6 +15,7 @@ import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 /**
@@ -121,6 +122,8 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun hasMainViewRemovableItems() : Boolean
 
+    abstract fun getNoNewerItemsFromRefreshString() : String
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(getFragmentLayout())
@@ -165,6 +168,31 @@ abstract class ViewTypeFragment : BaseFragment() {
         currentView?.let {
             Log.d(TAG, "Going back to top")
             it.layoutManager.scrollToPosition(0)
+        }
+    }
+
+    override fun handleRefreshAction() {
+
+        val mainViewAdapter = getAdapterForView(mainView)
+        if (mainViewAdapter == null) {
+            Log.d(TAG, "Main view adapter is null, cannot refresh")
+            return
+        }
+
+        val numAdded : Int
+
+        val firstItem = getMainViewData().firstOrNull()
+        if (firstItem == null) {
+            numAdded = mainViewAdapter.addItems(presenter.getData())
+        } else {
+            val newerData = presenter.getDataNewerThanItem(firstItem)
+            numAdded = mainViewAdapter.addItems(newerData)
+        }
+
+        if (numAdded == 0) {
+            context.toast(getNoNewerItemsFromRefreshString())
+        } else {
+            handleBackToTopAction()
         }
     }
 
@@ -239,6 +267,8 @@ abstract class ViewTypeFragment : BaseFragment() {
             }
         }
     }
+
+    fun getMainViewData() : List<ViewType> = getAdapterForView(mainView)?.getItems() ?: emptyList()
 
     private fun getAdapterForView(view: RecyclerView?) : ListAdapter<ViewType>? {
         @Suppress("UNCHECKED_CAST")

@@ -67,19 +67,9 @@ class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
+    // Refresh
 
-    override fun handleRefreshAction() {
-        // TODO Use presenter
-        // If new books are available add them to the list and return to the top
-        if (BookManager.hasNewerFeedBooks()) {
-            /*
-            val newerBooks = BookManager.getNewerFeedBooks()
-            (latestBooksList.adapter as ViewTypeAdapter).addItems(newerBooks)*/
-            handleBackToTopAction()
-        } else {
-            context.toast(getString(R.string.no_newer_books))
-        }
-    }
+    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
 
     /**
      * Function passed to the infinite scroll listener to load older books.
