@@ -13,9 +13,11 @@ interface ListAdapter<T> {
      * @param insertAtBottom true if the items should be inserted at the bottom, false otherwise. Default is false
      * @param excludeDuplicates true if from the given items should be excluded items already present,
      * false if duplicates are allowed. Default is true which exclude duplicates
+     *
+     * @return the number of items that were added
      */
     fun addItems(items: List<T>, insertPosition: Int = 0,
-                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true)
+                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true) : Int
 
     /**
      * Clear the list and add the given items.

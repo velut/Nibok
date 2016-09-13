@@ -136,11 +136,14 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
      * @param excludeDuplicates true if items with ids already present in the current items
      * with the same view type should not be added,
      * false if items with the same id and the same view type are allowed to be in the items list
+     *
+     * @return the number of items that were added
      */
     private fun addViewTypeItems(items: List<ViewType>, insertPosition: Int = 0,
-                                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true) {
+                                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true)
+            : Int {
 
-        if (items.isEmpty()) return
+        if (items.isEmpty()) return 0
 
         var itemsToAdd: List<ViewType> = items
 
@@ -164,6 +167,9 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
             this.items.addAll(insertPos, itemsToAdd)
             notifyItemRangeInserted(insertPos, insertItemCount)
             Log.d(TAG, "Added $insertItemCount items at position $insertPos")
+            return itemCount
+        } else {
+            return 0
         }
     }
 
