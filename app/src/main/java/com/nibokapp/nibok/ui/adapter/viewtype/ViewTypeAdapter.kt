@@ -117,6 +117,8 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         }
     }
 
+    override fun getItems(): List<ViewType> = items
+
     /**
      * Add given items to the list of items to display.
      *
@@ -214,7 +216,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         val candidateItems = getCurrentItemsForViewType(itemType)
         val itemToReplace = candidateItems.find { it.getItemId() == item.getItemId() }
         itemToReplace?.let {
-            Log.d(TAG, "Replacing ${ViewTypes.getTypeName(itemType)} with id: ${it.getItemId()}")
+            Log.d(TAG, "Replacing ${item.getItemDetailString()}")
             val itemToReplaceIndex = this.items.indexOf(it)
             this.items[itemToReplaceIndex] = item
             notifyItemChanged(itemToReplaceIndex)
@@ -244,7 +246,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
         if (itemIndex != -1) {
             this.items.removeAt(itemIndex)
             notifyItemRemoved(itemIndex)
-            Log.d(TAG, "Removed ${ViewTypes.getTypeName(item.getViewType())} with id: ${item.getItemId()}")
+            Log.d(TAG, "Removed ${item.getItemDetailString()}")
         }
         return itemIndex
     }
@@ -268,6 +270,9 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
      */
     private fun getCurrentIdsForViewType(viewType: Int) =
             getCurrentItemsForViewType(viewType).map { it.getItemId() }
+
+    private fun ViewType.getItemDetailString() =
+            "${ViewTypes.getTypeName(this.getViewType())} with id: ${this.getItemId()}"
 
     /**
      * Remove the loading item from the list of items to be displayed.

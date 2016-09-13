@@ -3,7 +3,7 @@ package com.nibokapp.nibok.ui.adapter.viewtype.common
 /**
  * Interface of adapters dealing with lists of objects.
  */
-interface ListAdapter<in T> {
+interface ListAdapter<T> {
 
     /**
      * Add items to a list.
@@ -67,5 +67,12 @@ interface ListAdapter<in T> {
      * @param position the position in the items' list in which to restore the item
      */
     fun restoreItemById(itemId: Long, itemType: Int, position: Int)
+
+    /**
+     * Get the items currently managed by the adapter.
+     *
+     * @return the items currently managed by the adapter
+     */
+    fun getItems() : List<T>
 
 }
