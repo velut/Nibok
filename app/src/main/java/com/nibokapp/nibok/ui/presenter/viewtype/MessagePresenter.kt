@@ -1,46 +1,39 @@
 package com.nibokapp.nibok.ui.presenter.viewtype
 
 import android.util.Log
+import com.nibokapp.nibok.domain.command.conversation.*
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.extension.TAG
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
-import java.util.*
 
 /**
  * Presenter that operates on messages conversations.
  */
 class MessagePresenter : ViewTypePresenter {
 
-    private var cachedData: List<ViewType> = emptyList()
-
     override fun getData(): List<ViewType> {
-        cachedData = (1..20).map {
-            val cal = Calendar.getInstance()
-            val delta = it-1
-            cal.add(Calendar.DATE, -delta)
-            val date = cal.time
-            ConversationModel(it.toLong(), "avatar", "John Doe",
-                    "Once upon a time in a land far far away $it",
-                    date) }
-        return cachedData
+        Log.d(TAG, "Getting conversation data")
+        return RequestUserConversationListCommand().execute()
+    }
+
+    override fun getCachedData(): List<ViewType> {
+        Log.d(TAG, "Getting cached conversation data")
+        return RequestCachedUserConversationListCommand().execute()
     }
 
     override fun getDataNewerThanItem(item: ViewType): List<ViewType> {
-        // TODO Implement
-        Log.d(TAG, "TODO")
-        return emptyList()
+        Log.d(TAG, "Getting newer conversation data")
+        return RequestNewerConversationCommand(item as ConversationModel).execute()
     }
 
     override fun getDataOlderThanItem(item: ViewType): List<ViewType> {
-        // TODO Implement
-        Log.d(TAG, "TODO")
-        return emptyList()
+        Log.d(TAG, "Getting older conversation data")
+        return RequestOlderConversationCommand(item as ConversationModel).execute()
     }
 
-    override fun getCachedData(): List<ViewType> = cachedData
-
     override fun getQueryData(query: String): List<ViewType> {
-        return emptyList() // TODO
+        Log.d(TAG, "Getting query conversation data")
+        return RequestConversationListFromQueryCommand(query).execute()
     }
 }
