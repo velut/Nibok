@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.SellingFragment">
+    tools:context=".ui.fragment.main.SellingFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sellingBooksList"
@@ -30,7 +30,6 @@
         android:id="@+id/searchResultsListSelling"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/fab_margin"
         android:scrollbars="vertical"
         android:fadeScrollbars="true"
         android:visibility="gone"/>
