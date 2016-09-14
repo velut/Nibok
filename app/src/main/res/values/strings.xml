@@ -66,6 +66,7 @@
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>
     <string name="placeholder_author_plural">Author</string>
+    <string name="placeholder_book_detail">Book details</string>
     <string name="title_activity_publish">Sell</string>
 
     <!-- Insertion publishing -->
