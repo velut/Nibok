@@ -2,8 +2,9 @@ package com.nibokapp.nibok.ui
 
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.nibokapp.nibok.data.repository.BookInsertionRepository
 import com.nibokapp.nibok.data.repository.DbPopulator
-import com.nibokapp.nibok.data.repository.UserManager
+import com.nibokapp.nibok.data.repository.UserRepository
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlin.properties.Delegates
@@ -34,12 +35,12 @@ class App : Application() {
         Realm.setDefaultConfiguration(realmConfig)
 
         // Create the local user
-        UserManager.createUser()
+        UserRepository.createLocalUser()
 
         // Populate the DB with test data
         DbPopulator().populateDb()
 
         // For testing
-        UserManager.toggleSaveInsertion(1)
+        BookInsertionRepository.toggleBookInsertionSaveStatus(2)
     }
 }
