@@ -12,6 +12,7 @@ import java.util.*
  * @param userId the id of the local user
  * @param partner the conversation's partner
  * @param previewText the short text previewing the latest message in the conversation
+ * @param chatMessages the list of chat messages in the conversation
  * @param date the date in which the conversation was last updated
  */
 data class ConversationModel(
@@ -19,6 +20,7 @@ data class ConversationModel(
         val userId: Long,
         val partner: UserModel,
         val previewText: String,
+        val chatMessages: List<ChatMessageModel>,
         val date: Date
 ) : ViewType {
 
