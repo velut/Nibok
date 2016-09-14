@@ -111,5 +111,6 @@
 
     <!-- Chat -->
     <string name="partner_reply">%1s has replied</string>
+    <string name="profile_image_of_the_message_receiver">Profile image of the message receiver</string>
 
 </resources>
