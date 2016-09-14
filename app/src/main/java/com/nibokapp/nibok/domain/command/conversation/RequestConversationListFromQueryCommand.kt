@@ -11,6 +11,8 @@ import com.nibokapp.nibok.domain.model.ConversationModel
 /**
  * Request a list of ConversationModel instances that make up the conversations in which
  * the local user is participating and matching the given query.
+ *
+ * @param query the string describing the query
  */
 class RequestConversationListFromQueryCommand(
         val query: String,
