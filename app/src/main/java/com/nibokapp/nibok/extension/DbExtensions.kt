@@ -39,6 +39,7 @@ fun List<String>.toRealmStringList() : RealmList<RealmString> {
     this.forEach { realmList.add(it.toRealmString()) }
     return realmList
 }
+
 /**
  * Convert a List of RealmModel into a RealmList of RealmModel.
  *
