@@ -9,17 +9,14 @@ import io.realm.annotations.PrimaryKey
  * Used by the local database.
  *
  * @param id the id of the conversation
- * @param partnerId the id of the external user
- * @param partnerAvatar the source for the external user's avatar
+ * @param partner the external user participating in the conversation
  * @param messages the list of messages exchanged in the conversation - One to many
  */
 open class Conversation(
 
         @PrimaryKey open var id: Long = 0,
 
-        open var partnerId: Long = 0,
-
-        open var partnerAvatar: String = "",
+        open var partner: ExternalUser? = null,
 
         open var messages: RealmList<Message> = RealmList()
 
