@@ -62,6 +62,7 @@
     <string name="error_input_isbn">Enter the 13 digits number found on the back of the book</string>
     <string name="error_invalid_isbn">Invalid ISBN.\nISBN codes look like 97# - ##########</string>
     <string name="error_message_not_sent">"Could not send message, try again later"</string>
+    <string name="error_invalid_seller_messaging">"Cannot send a message to this user"</string>
 
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>
