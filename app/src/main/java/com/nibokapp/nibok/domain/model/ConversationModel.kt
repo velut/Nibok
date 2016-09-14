@@ -9,15 +9,15 @@ import java.util.*
  * between the local user and an external user (partner).
  *
  * @param conversationId the id of the conversation in which messages are exchanged
- * @param partnerAvatar the source for the profile picture of the conversation's partner
- * @param partnerName the name of the conversation's partner
+ * @param userId the id of the local user
+ * @param partner the conversation's partner
  * @param previewText the short text previewing the latest message in the conversation
  * @param date the date in which the conversation was last updated
  */
 data class ConversationModel(
         val conversationId: Long,
-        val partnerAvatar: String,
-        val partnerName: String,
+        val userId: Long,
+        val partner: UserModel,
         val previewText: String,
         val date: Date
 ) : ViewType {
