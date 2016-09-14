@@ -6,7 +6,7 @@
     android:id="@+id/savedFragmentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.SavedFragment">
+    tools:context=".ui.fragment.main.SavedFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/savedBooksList"
