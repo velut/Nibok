@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.domain.mapper
+package com.nibokapp.nibok.domain.mapper.bookinsertion
 
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion

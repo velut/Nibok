@@ -2,7 +2,7 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.domain.mapper.BookInsertionDataMapper
+import com.nibokapp.nibok.domain.mapper.bookinsertion.BookInsertionDataMapper
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.queryOneWithRealm
 import com.nibokapp.nibok.extension.queryRealm
