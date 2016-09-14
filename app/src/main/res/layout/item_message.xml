@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
@@ -12,7 +13,7 @@
         android:layout_height="58dp"
         android:layout_marginTop="5.5dp"
         android:layout_marginEnd="16dp"
-        android:contentDescription="Profile image of the message receiver"
+        android:contentDescription="@string/profile_image_of_the_message_receiver"
         android:src="@drawable/book_placeholder_image"/>
 
     <TextView
@@ -23,7 +24,7 @@
         android:layout_toEndOf="@id/messageAvatar"
         android:textStyle="bold"
         android:textSize="16.5sp"
-        android:text="Message Partner"/>
+        tools:text="Message Partner"/>
 
     <TextView
         android:id="@+id/messageContent"
@@ -33,7 +34,7 @@
         android:layout_toEndOf="@id/messageAvatar"
         android:layout_below="@id/messagePartner"
         android:textSize="16sp"
-        android:text="Message Content"/>
+        tools:text="Message Content"/>
 
     <TextView
         android:id="@+id/messageDate"
@@ -43,13 +44,13 @@
         android:layout_marginEnd="6dp"
         android:layout_alignParentEnd="true"
         android:textSize="14sp"
-        android:text="Message Date"/>
+        tools:text="Message Date"/>
 
     <View style="@style/horizontal_detail_divider"
         android:layout_marginTop="16dp"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:layout_toEndOf="@id/messageAvatar"
-        android:layout_below="@id/messageAvatar"/>
+        android:layout_below="@id/messageContent"/>
 
 </RelativeLayout>
