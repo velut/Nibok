@@ -5,6 +5,8 @@ import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.BookInsertionRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
+import com.nibokapp.nibok.domain.mapper.user.UserMapper
+import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.BookInfoModel
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.domain.model.UserModel
@@ -15,7 +17,8 @@ import com.nibokapp.nibok.extension.toStringList
  * Book insertion data mapper implementation.
  */
 class BookInsertionDataMapper(
-        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
+        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository,
+        val userMapper: UserMapperInterface = UserMapper()
 ) : BookInsertionDataMapperInterface {
 
     /*
@@ -94,21 +97,11 @@ class BookInsertionDataMapper(
      * SELLER
      */
 
-    private fun convertSellerToDomain(seller: ExternalUser): UserModel = with(seller) {
-        UserModel(
-                id = id,
-                name = name,
-                avatar = avatar
-        )
-    }
+    private fun convertSellerToDomain(seller: ExternalUser): UserModel =
+            userMapper.convertUserToDomain(seller)
 
-    private fun convertSellerFromDomain(seller: UserModel): ExternalUser = with(seller) {
-        ExternalUser(
-                id = id,
-                name = name,
-                avatar = avatar
-        )
-    }
+    private fun convertSellerFromDomain(seller: UserModel): ExternalUser =
+            userMapper.convertUserFromDomain(seller)
 
     /*
      * EXTENSIONS

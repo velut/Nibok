@@ -3,9 +3,9 @@ package com.nibokapp.nibok.domain.mapper.user
 import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.domain.model.UserModel
 
-class UserMapper() {
+class UserMapper() : UserMapperInterface {
 
-    private fun convertUserToDomain(user: ExternalUser): UserModel = with(user) {
+    override fun convertUserToDomain(user: ExternalUser): UserModel = with(user) {
         UserModel(
                 id = id,
                 name = name,
@@ -13,7 +13,7 @@ class UserMapper() {
         )
     }
 
-    private fun convertUserFromDomain(user: UserModel): ExternalUser = with(user) {
+    override fun convertUserFromDomain(user: UserModel): ExternalUser = with(user) {
         ExternalUser(
                 id = id,
                 name = name,
