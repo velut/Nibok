@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.LatestFragment">
+    tools:context=".ui.fragment.main.LatestFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/latestBooksList"
@@ -30,4 +32,4 @@
         android:layout_centerInParent="true"/>
     -->
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
