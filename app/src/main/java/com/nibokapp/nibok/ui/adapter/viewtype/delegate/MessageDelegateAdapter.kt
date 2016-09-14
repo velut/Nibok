@@ -47,7 +47,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
          */
         fun bind(item: ConversationModel) {
             conversationId = item.conversationId
-            loadAvatar(item.partnerAvatar)
+            loadAvatar(item.partner.avatar)
             bindData(item)
             addClickListener()
         }
@@ -79,9 +79,12 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
                     if (portrait) MAX_MESSAGE_CONTENT_LENGTH_PORTRAIT
                     else MAX_MESSAGE_CONTENT_LENGTH_LANDSCAPE
 
-            messagePartner.text = item.partnerName.ellipsize(maxPartnerNameLength)
-            messageContent.text = item.previewText.ellipsize(maxMessageContentLength)
-            messageDate.text = item.date.toDeltaBasedSimpleDateString(context.getString(R.string.yesterday))
+            with(item) {
+                messagePartner.text = partner.name.ellipsize(maxPartnerNameLength)
+                messageContent.text = previewText.ellipsize(maxMessageContentLength)
+                messageDate.text = date.toDeltaBasedSimpleDateString(context.getString(R.string.yesterday))
+            }
+
         }
 
         /**
