@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_insertion_detail.*
 
 class InsertionDetailFragment(val presenter: InsertionDetailPresenter = InsertionDetailPresenter()) :
         Fragment() {
+
+    var actionBar: ActionBar? = null
 
     companion object {
         private val TAG = InsertionDetailFragment::class.java.simpleName
@@ -36,6 +39,8 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
         val hostingActivity = (activity as AppCompatActivity)
         hostingActivity.setSupportActionBar(toolbar)
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        actionBar = hostingActivity.supportActionBar
+        actionBar?.title = getString(R.string.placeholder_book_detail)
 
         // Retrieve the insertion id and bind the data into the view
         arguments?.let {
@@ -61,6 +66,10 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
 
         // Book details
         with(bookInfo) {
+
+            // Set actionbar's title to book's title
+            actionBar?.title = title
+
             detailBookTitle.text = title
             val numAuthors = authors.size
             val authorsString = authors.joinToString("\n")
