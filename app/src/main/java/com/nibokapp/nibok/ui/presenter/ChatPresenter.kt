@@ -1,9 +1,12 @@
 package com.nibokapp.nibok.ui.presenter
 
 import android.util.Log
+import com.nibokapp.nibok.domain.command.chat.RequestMessagesFromConversationCommand
+import com.nibokapp.nibok.domain.command.chat.RequestNewerMessagesFromConversationCommand
+import com.nibokapp.nibok.domain.command.chat.RequestOlderMessagesFromConversationCommand
+import com.nibokapp.nibok.domain.command.chat.SendMessageCommand
 import com.nibokapp.nibok.domain.command.user.RequestLocalUserIdCommand
 import com.nibokapp.nibok.domain.model.ChatMessageModel
-import java.util.*
 
 /**
  * Presenter for the chat view.
@@ -25,49 +28,50 @@ class ChatPresenter {
     }
 
     /**
-     * TODO
      * Get the messages in the conversation with the given id.
      *
      * @param conversationId the id of the conversation
      *
      * @return the messages in the conversation
      */
-    fun getConversationMessages(conversationId: Long) : List<ChatMessageModel> =
-            (1..10).map {
-                val date = Calendar.getInstance()
-                date.add(Calendar.DATE, -10 + it)
-                val content = arrayOf("Lorem Ipsum", "Lorem Ipsum Lorem Ipsum Lorem Ipsum")
-                val user = it % 2
-                ChatMessageModel(conversationId, user.toLong(), content[user], date.time)
-            }
+    fun getConversationMessages(conversationId: Long) : List<ChatMessageModel> {
+        Log.d(TAG, "Requesting messages for conversation: $conversationId")
+        return RequestMessagesFromConversationCommand(conversationId).execute()
+    }
 
     /**
-     * TODO
      * Send a message.
      *
      * @param chatMessage the message to send
      *
      * @return true if the message was sent successfully, false otherwise
      */
-    fun sendMessage(chatMessage: ChatMessageModel) : Boolean = true
+    fun sendMessage(chatMessage: ChatMessageModel) : Boolean {
+        Log.d(TAG, "Sending message")
+        return SendMessageCommand(chatMessage).execute()
+    }
 
     /**
-     * TODO
-     * Get the messages in the conversation with the given id
-     * that were exchanged after the given message.
+     * Get the messages in the conversation that were exchanged after the given message.
      *
-     * @param conversationId the id of the conversation
-     * @param afterMessage the message that comes before the new messages
+     * @param lastMessage the message that comes before the new messages
      *
-     * @return the messages that come after the given message in the conversation
+     * @return the messages that come after the given one in the conversation
      */
-    fun getNewMessages(conversationId: Long, afterMessage: ChatMessageModel) :
-            List<ChatMessageModel> =
-            (1..3).map {
-                val date = Calendar.getInstance()
-                date.add(Calendar.DATE, -10 + it)
-                val content = arrayOf("Lorem Ipsum", "Lorem Ipsum Lorem Ipsum Lorem Ipsum")
-                val user = 0
-                ChatMessageModel(conversationId, user.toLong(), content[user], date.time)
-            }
+    fun getNewerMessages(lastMessage: ChatMessageModel) : List<ChatMessageModel> {
+        Log.d(TAG, "Requesting newer messages")
+        return RequestNewerMessagesFromConversationCommand(lastMessage).execute()
+    }
+
+    /**
+     * Get the messages in the conversation that were exchanged before the given message.
+     *
+     * @param firstMessage the message that comes before the older ones
+     *
+     * @return the messages that come before the given one in the conversation
+     */
+    fun getOlderMessages(firstMessage: ChatMessageModel) : List<ChatMessageModel> {
+        Log.d(TAG, "Requesting older messages")
+        return RequestOlderMessagesFromConversationCommand(firstMessage).execute()
+    }
 }
