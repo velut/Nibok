@@ -113,6 +113,10 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      * @return the position in which the message was added
      */
     fun addMessage(message: ChatMessageModel) : Int {
+
+        val messageIndex = messages.indexOf(message)
+        if (messageIndex != -1) return messageIndex
+
         messages.add(message)
         val position = itemCount - 1
         notifyItemInserted(position)
