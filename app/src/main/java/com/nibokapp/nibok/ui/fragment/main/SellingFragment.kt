@@ -68,11 +68,11 @@ class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Wait before making fab visible
+        // Wait before making sellingFab visible
         // otherwise it's initially positioned in the upper left corner
         // Appeared with version 24 of design library
-        fab.post { fab.visibility = View.VISIBLE }
-        fab.setOnClickListener {
+        sellingFab.post { sellingFab.visibility = View.VISIBLE }
+        sellingFab.setOnClickListener {
             // TODO Check that user is logged in
             Log.d(TAG, "Open publishing activity")
             context.startActivity<PublishInsertionActivity>()

@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.fragment.main.common
 
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,10 +16,7 @@ import com.nibokapp.nibok.ui.adapter.viewtype.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.find
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 /**
  * Base fragment for fragments representing ViewTypes.
@@ -41,6 +39,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     private var mainView: RecyclerView? = null
     private var searchResultsView: RecyclerView? = null
     private var currentView: RecyclerView? = null
+    private var fab: FloatingActionButton? = null
 
     /**
      * Get the layout used by the fragment.
@@ -130,6 +129,7 @@ abstract class ViewTypeFragment : BaseFragment() {
             // Set cached items to restore scroll position
             getAdapterForView(mainView)?.clearAndAddItems(presenter.getCachedData())
             currentView = mainView
+            fab = it.findOptional(R.id.sellingFab)
         }
         return view
     }
@@ -217,6 +217,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     override fun handleOnSearchOpen() {
         Log.d(TAG, "Search opened. Hide MainView and show SearchView")
         mainView?.visibility = View.GONE
+        fab?.visibility = View.GONE
         setupSearchView()
         searchResultsView = getSearchView()
         searchResultsView?.visibility = View.VISIBLE
@@ -355,6 +356,9 @@ abstract class ViewTypeFragment : BaseFragment() {
     private fun showMainView() {
         searchResultsView?.visibility = View.GONE
         mainView?.visibility = View.VISIBLE
+        fab?.let {
+            it.post { it.visibility = View.VISIBLE }
+        }
         currentView = mainView
     }
 }
