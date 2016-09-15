@@ -6,6 +6,7 @@ import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
+import com.nibokapp.nibok.ui.fragment.ChatFragment
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.MessagePresenter
 import kotlinx.android.synthetic.main.fragment_message_list.*
@@ -64,16 +65,13 @@ class MessageListFragment : ViewTypeFragment() {
         override fun onButtonClick(itemId: Long, itemType: Int) {
         }
 
-        override fun updateItemOnButtonClick(): Boolean {
-            // TODO Implement
-            Log.d(TAG, "TODO")
-            return false
-        }
+        override fun updateItemOnButtonClick(): Boolean = false
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            // TODO Implement
-            Log.d(TAG, "Clicked $itemId")
-            context.startActivity<ChatActivity>()
+            Log.d(TAG, "Opening chat for conversation: $itemId")
+            context.startActivity<ChatActivity>(
+                    ChatFragment.CONVERSATION_ID to itemId
+            )
         }
     }
 }
