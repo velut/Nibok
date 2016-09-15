@@ -38,5 +38,12 @@ fun Realm.getBookInsertionById(insertionId: Long) : Insertion? =
 /*
  * CONVERSATION
  */
+/**
+ * Get conversation by id.
+ *
+ * @param conversationId the conversation's id
+ *
+ * @return the Conversation if it exits, null otherwise
+ */
 fun Realm.getConversationById(conversationId: Long) : Conversation? =
         this.where(Conversation::class.java).equalTo("id", conversationId).findFirst()
