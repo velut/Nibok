@@ -1,6 +1,10 @@
 package com.nibokapp.nibok.domain.command.chat
 
+import com.nibokapp.nibok.data.repository.ConversationRepository
+import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
 import com.nibokapp.nibok.domain.command.common.Command
+import com.nibokapp.nibok.domain.mapper.conversation.MessageDataMapper
+import com.nibokapp.nibok.domain.mapper.conversation.MessageDataMapperInterface
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 
 /**
@@ -8,9 +12,19 @@ import com.nibokapp.nibok.domain.model.ChatMessageModel
  * given message.
  *
  * @param lastMessage the last message before the requested newer messages
+ *
+ * @return messages dated after the given one
  */
-class RequestNewerMessagesFromConversationCommand(val lastMessage: ChatMessageModel) :
-        Command<List<ChatMessageModel>> {
+class RequestNewerMessagesFromConversationCommand(
+        val lastMessage: ChatMessageModel,
+        val dataMapper: MessageDataMapperInterface = MessageDataMapper(),
+        val conversationRepository: ConversationRepositoryInterface = ConversationRepository
+) : Command<List<ChatMessageModel>> {
 
-    override fun execute(): List<ChatMessageModel> = emptyList()
+    override fun execute(): List<ChatMessageModel> =
+            dataMapper.convertMessageListToDomain(
+                    conversationRepository.getMessageListAfterDateForConversation(
+                            lastMessage.conversationId, lastMessage.date
+                    )
+            )
 }
