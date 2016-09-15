@@ -4,12 +4,12 @@ import com.nibokapp.nibok.domain.command.common.Command
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 
 /**
- * Request the list of ChatMessageModel instances that represent messages arrived after the
+ * Request the list of ChatMessageModel instances that represent messages arrived before the
  * given message.
  *
- * @param lastMessage the last message before the requested newer messages
+ * @param firstMessage the first message before the requested older messages
  */
-class RequestNewerMessagesCommand(val lastMessage: ChatMessageModel) :
+class RequestOlderMessagesFromConversationCommand(val firstMessage: ChatMessageModel) :
         Command<List<ChatMessageModel>> {
 
     override fun execute(): List<ChatMessageModel> = emptyList()
