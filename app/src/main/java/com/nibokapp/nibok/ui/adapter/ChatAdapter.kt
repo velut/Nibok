@@ -120,11 +120,18 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /**
+     * Return the first message available.
+     *
+     * @return the first message available if it exists, null otherwise
+     */
+    fun getFirstMessage() : ChatMessageModel? = messages.firstOrNull()
+
+    /**
      * Return the last message exchanged.
      *
-     * @return the last message exchanged
+     * @return the last message exchanged if it exists, null otherwise
      */
-    fun getLastMessage() : ChatMessageModel = messages.last()
+    fun getLastMessage() : ChatMessageModel? = messages.lastOrNull()
 
     /**
      * ViewHolder for messages sent by the user.
