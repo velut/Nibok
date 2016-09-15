@@ -61,6 +61,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         arguments?.let {
             val conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
             if (!conversationId.equals(0L)) { // Exclude default case of getLong()
+                Log.d(TAG, "Got conversationId: $conversationId")
                 val messages = presenter.getConversationMessages(conversationId)
                 chatAdapter.addMessages(messages)
             }
