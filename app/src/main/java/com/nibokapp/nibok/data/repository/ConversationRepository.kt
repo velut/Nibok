@@ -2,11 +2,10 @@ package com.nibokapp.nibok.data.repository
 
 import android.util.Log
 import com.nibokapp.nibok.data.db.Conversation
+import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
-import com.nibokapp.nibok.extension.queryOneWithRealm
-import com.nibokapp.nibok.extension.queryRealm
-import com.nibokapp.nibok.extension.toNormalList
+import com.nibokapp.nibok.extension.*
 import io.realm.Case
 import java.util.*
 
@@ -78,4 +77,33 @@ object ConversationRepository : ConversationRepositoryInterface {
     override fun startConversation(conversation: Conversation) : Boolean =
             // TODO
             throw UnsupportedOperationException()
+
+    override fun getMessageListForConversation(conversationId: Long): List<Message> {
+        val conversation = getConversationById(conversationId)
+        return conversation?.messages?.toNormalList() ?: emptyList()
+    }
+
+    override fun getMessageListAfterDateForConversation(conversationId: Long, date: Date): List<Message> {
+        return getMessageListForConversation(conversationId)
+                .sortedBy { it.date }
+                .filter { it.date!! >= date }
+    }
+
+    override fun getMessageListBeforeDateForConversation(conversationId: Long, date: Date): List<Message> {
+        return getMessageListForConversation(conversationId)
+                .sortedBy { it.date }
+                .filter { it.date!! <= date }
+    }
+
+    override fun sendMessage(message: Message): Boolean {
+        var sent = false
+        executeRealmTransaction {
+            val conversation = it.getConversationById(message.conversationId)
+            conversation?.let {
+                it.messages.add(message)
+                sent = true
+            }
+        }
+        return sent
+    }
 }

@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.data.repository.common
 
 import com.nibokapp.nibok.data.db.Conversation
+import com.nibokapp.nibok.data.db.Message
 import java.util.*
 
 /**
@@ -63,4 +64,44 @@ interface ConversationRepositoryInterface {
      * @return true if the conversation was started successfully, false otherwise
      */
     fun startConversation(conversation: Conversation) : Boolean
+
+    /**
+     * Get the current list of messages in the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return the list of currently available messages in the conversation
+     */
+    fun getMessageListForConversation(conversationId: Long) : List<Message>
+
+    /**
+     * Get the list of messages in the conversation with the given id that are dated after the
+     * given date.
+     *
+     * @param conversationId the id of the conversation
+     * @param date the date used in comparisons
+     *
+     * @return the list messages in the conversation dated after the given date
+     */
+    fun getMessageListAfterDateForConversation(conversationId: Long, date: Date) : List<Message>
+
+    /**
+     * Get the list of messages in the conversation with the given id that are dated before the
+     * given date.
+     *
+     * @param conversationId the id of the conversation
+     * @param date the date used in comparisons
+     * @return the list messages in the conversation dated before the given date
+     */
+    fun getMessageListBeforeDateForConversation(conversationId: Long, date: Date) : List<Message>
+
+    /**
+     * Send the given message.
+     *
+     * @param message the message to send
+     *
+     * @return true if the message was sent successfully, false otherwise
+     */
+    fun sendMessage(message: Message) : Boolean
+
 }
