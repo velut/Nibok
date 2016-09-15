@@ -57,13 +57,13 @@ interface ConversationRepositoryInterface {
     fun getConversationListBeforeDate(date: Date) : List<Conversation>
 
     /**
-     * Start the given conversation.
+     * Start a conversation with the user with the given id.
      *
-     * @param conversation the conversation to start
+     * @param partnerId the id of the user with which the conversation is held
      *
-     * @return true if the conversation was started successfully, false otherwise
+     * @return the started conversation's id or -1 if the conversation could not be started
      */
-    fun startConversation(conversation: Conversation) : Boolean
+    fun startConversation(partnerId: Long) : Long
 
     /**
      * Get the current list of messages in the conversation with the given id.

@@ -74,9 +74,29 @@ object ConversationRepository : ConversationRepositoryInterface {
         return results
     }
 
-    override fun startConversation(conversation: Conversation) : Boolean =
-            // TODO
-            throw UnsupportedOperationException()
+    override fun startConversation(partnerId: Long): Long {
+        var conversationId = -1L
+        val localUserId = userRepository.getLocalUserId()
+        executeRealmTransaction {
+            val conversation = it.getConversationBetweenUsers(localUserId, partnerId)
+            if (conversation != null) {
+                conversationId = conversation.id
+            } else {
+                val conversationPartner =
+                        it.getExternalUserById(partnerId) ?: return@executeRealmTransaction
+
+                val newConversation = it.createObject(Conversation::class.java)
+                newConversation.apply {
+                    id = Random().nextLong()
+                    userId = localUserId
+                    partner = conversationPartner
+                    date = Date()
+                }
+                conversationId = newConversation.id
+            }
+        }
+        return conversationId
+    }
 
     override fun getMessageListForConversation(conversationId: Long): List<Message> {
         val conversation = getConversationById(conversationId)
