@@ -45,10 +45,6 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO use real conversation id
-        val chatMessages = presenter.getConversationMessages(0)
-        chatAdapter.addMessages(chatMessages)
-
         setupChatMessagesView()
         addSendButtonLister()
     }
@@ -60,6 +56,15 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         val hostingActivity = (activity as AppCompatActivity)
         hostingActivity.setSupportActionBar(toolbar)
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        // Retrieve the conversation's id and add messages
+        arguments?.let {
+            val conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
+            if (!conversationId.equals(0L)) { // Exclude default case of getLong()
+                val messages = presenter.getConversationMessages(conversationId)
+                chatAdapter.addMessages(messages)
+            }
+        }
     }
 
     override fun onStart() {
@@ -68,9 +73,11 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         checkNewMessagesTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_PERIOD) {
             Log.d(TAG, "Timer: Checking for new messages")
             val lastMessage = chatAdapter.getLastMessage()
-            val newMessages = presenter.getNewMessages(0, lastMessage)
-            activity.runOnUiThread {
-                addNewMessages(newMessages)
+            lastMessage?.let {
+                val newMessages = presenter.getNewerMessages(it)
+                activity.runOnUiThread {
+                    addNewMessages(newMessages)
+                }
             }
         }
     }
