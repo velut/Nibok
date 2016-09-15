@@ -3,15 +3,10 @@ package com.nibokapp.nibok.data.repository
 import android.util.Log
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
-import com.nibokapp.nibok.extension.queryOneWithRealm
-import com.nibokapp.nibok.extension.queryRealm
-import com.nibokapp.nibok.extension.toNormalList
-import com.nibokapp.nibok.extension.withRealm
+import com.nibokapp.nibok.extension.*
 import io.realm.Case
-import io.realm.Realm
 import java.util.*
 
 /**
@@ -183,16 +178,6 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun publishBookInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
-
-    /*
-     * REPOSITORY EXTENSIONS
-     */
-
-    private fun Realm.getBookInsertionById(insertionId: Long) : Insertion? =
-            this.where(Insertion::class.java).equalTo("id", insertionId).findFirst()
-
-    private fun Realm.getLocalUser() : User? =
-            this.where(User::class.java).findFirst()
 
 
     private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
