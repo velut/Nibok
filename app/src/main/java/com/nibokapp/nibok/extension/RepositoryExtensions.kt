@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.extension
 
+import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 import io.realm.Realm
@@ -33,3 +34,9 @@ fun Realm.getLocalUser() : User? =
  */
 fun Realm.getBookInsertionById(insertionId: Long) : Insertion? =
         this.where(Insertion::class.java).equalTo("id", insertionId).findFirst()
+
+/*
+ * CONVERSATION
+ */
+fun Realm.getConversationById(conversationId: Long) : Conversation? =
+        this.where(Conversation::class.java).equalTo("id", conversationId).findFirst()
