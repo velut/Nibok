@@ -75,8 +75,13 @@ object ConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun startConversation(partnerId: Long): Long {
+
         var conversationId = -1L
         val localUserId = userRepository.getLocalUserId()
+
+        // Prevent conversations between the user and himself
+        if (localUserId == partnerId) return conversationId
+
         executeRealmTransaction {
             val conversation = it.getConversationBetweenUsers(localUserId, partnerId)
             if (conversation != null) {
