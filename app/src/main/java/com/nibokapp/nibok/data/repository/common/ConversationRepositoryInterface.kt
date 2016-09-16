@@ -19,6 +19,16 @@ interface ConversationRepositoryInterface {
     fun getConversationById(conversationId: Long) : Conversation?
 
     /**
+     * Get the partner's name for the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return the partner's name for the conversation with the given id
+     * or null if no such conversation was found
+     */
+    fun getConversationPartnerName(conversationId: Long) : String?
+
+    /**
      * Get the list of conversations matching the given query.
      * The query can match on the following  attributes:
      *  Partner name, messages content

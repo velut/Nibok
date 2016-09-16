@@ -1,12 +1,11 @@
 package com.nibokapp.nibok.data.repository
 
 import android.util.Log
-import com.nibokapp.nibok.data.db.Book
-import com.nibokapp.nibok.data.db.ExternalUser
-import com.nibokapp.nibok.data.db.Insertion
+import com.nibokapp.nibok.data.db.*
 import com.nibokapp.nibok.data.db.common.RealmString
 import com.nibokapp.nibok.extension.withRealm
 import io.realm.Realm
+import io.realm.RealmList
 import java.util.*
 
 /**
@@ -25,15 +24,52 @@ class DbPopulator {
         Log.d(TAG, "Populating DB with test data")
         withRealm {
             it.executeTransaction {
-                for (i in 1..50) {
+                for (i in 1..10) {
                     val authors = listOf(genAuthor(it,"John Doe $i"), genAuthor(it, "Bob Zu $i"))
                     val book = genBook(it, "Title $i", authors, 2016, "Mit Press", "$i")
 
                     val thumbnail = genThumbnail(it)
                     val seller = genSeller(it, i.toLong(), "Tom Seller $i")
 
-                    genInsertion(it, i.toLong(), seller, book, 10.50f, "Light wear", thumbnail)
+                    val insertion = genInsertion(it, i.toLong(), seller, book, 10.50f, "Light wear", thumbnail)
+
+                    if (i == 1) {
+                        it.getLocalUser()!!.publishedInsertions.add(insertion)
+                    }
+
+                    genConversation(it, i.toLong(), seller)
                 }
+            }
+        }
+    }
+
+    private fun genConversation(realm: Realm, convid: Long, cpart: ExternalUser) {
+        val conv = realm.createObject(Conversation::class.java)
+        conv.apply {
+            id = convid
+            userId = 1
+            partner = cpart
+            date = Date()
+            messages = RealmList(realm.copyToRealm(Message(convid,cpart.id,"Hello",Date())))
+        }
+        realm.getLocalUser()?.conversations?.add(conv)
+    }
+
+    private fun Realm.getLocalUser() : User? =
+            this.where(User::class.java).findFirst()
+
+    fun populateDb2() {
+        Log.d(TAG, "Populating DB with test data")
+        withRealm {
+            it.executeTransaction {
+                val i = Random().nextInt()
+                val authors = listOf(genAuthor(it,"John Doe $i"), genAuthor(it, "Bob Zu $i"))
+                val book = genBook(it, "Title $i", authors, 2016, "Mit Press", "$i")
+
+                val thumbnail = genThumbnail(it)
+                val seller = genSeller(it, i.toLong(), "Tom Seller $i")
+
+                genInsertion(it, i.toLong(), seller, book, 10.50f, "Light wear", thumbnail)
             }
         }
     }
@@ -71,7 +107,7 @@ class DbPopulator {
 
     private fun genInsertion(realm: Realm, id: Long, seller: ExternalUser,
                              book: Book, price: Float, condition: String,
-                             thumbnail: RealmString, date: Date = Date()) : Insertion {
+                             thumbnail: RealmString, date: Date = Date(1000)) : Insertion {
         val insertion = realm.createObject(Insertion::class.java)
         insertion.id = id
         insertion.seller = seller

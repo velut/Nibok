@@ -69,6 +69,8 @@
     <string name="placeholder_author_plural">Author</string>
     <string name="placeholder_book_detail">Book details</string>
     <string name="title_activity_publish">Sell</string>
+    <string name="placeholder_chat_partner">Unknown user</string>
+    <string name="placeholder_chat">Chat</string>
 
     <!-- Insertion publishing -->
     <string name="book_authors">Authors (comma separated)</string>
@@ -113,6 +115,7 @@
 
     <!-- Chat -->
     <string name="partner_reply">%1s has replied</string>
+    <string name="chat_title">Chat with %1s</string>
     <string name="profile_image_of_the_message_receiver">Profile image of the message receiver</string>
 
 </resources>

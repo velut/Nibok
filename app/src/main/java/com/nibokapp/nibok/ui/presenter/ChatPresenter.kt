@@ -1,10 +1,7 @@
 package com.nibokapp.nibok.ui.presenter
 
 import android.util.Log
-import com.nibokapp.nibok.domain.command.chat.RequestMessagesFromConversationCommand
-import com.nibokapp.nibok.domain.command.chat.RequestNewerMessagesFromConversationCommand
-import com.nibokapp.nibok.domain.command.chat.RequestOlderMessagesFromConversationCommand
-import com.nibokapp.nibok.domain.command.chat.SendMessageCommand
+import com.nibokapp.nibok.domain.command.chat.*
 import com.nibokapp.nibok.domain.command.user.RequestLocalUserIdCommand
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 
@@ -25,6 +22,18 @@ class ChatPresenter {
     fun getUserId() : Long {
         Log.d(TAG, "Requesting local user id")
         return RequestLocalUserIdCommand().execute()
+    }
+
+    /**
+     * Get the partner's name for the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return a String with the partner's name or null if such name was not found
+     */
+    fun getConversationPartnerName(conversationId: Long): String? {
+        Log.d(TAG, "Requesting conversation: $conversationId partner's name")
+        return RequestConversationPartnerNameCommand(conversationId).execute()
     }
 
     /**
