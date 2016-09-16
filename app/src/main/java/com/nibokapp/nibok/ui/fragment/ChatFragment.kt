@@ -35,7 +35,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
     private val chatAdapter = ChatAdapter(getUserId())
     private val chatLayoutManager = LinearLayoutManager(context)
 
-    lateinit var checkNewMessagesTimer : Timer
+    lateinit private var checkNewMessagesTimer : Timer
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
