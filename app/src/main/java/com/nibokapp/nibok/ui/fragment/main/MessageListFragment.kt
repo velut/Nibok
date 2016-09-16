@@ -9,13 +9,16 @@ import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.fragment.ChatFragment
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.MessagePresenter
+import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_message_list.*
 import org.jetbrains.anko.startActivity
 
 /**
  * Fragment managing the messaging between users.
  */
-class MessageListFragment : ViewTypeFragment() {
+class MessageListFragment(
+        val presenter: ViewTypePresenter = MessagePresenter()
+) : ViewTypeFragment() {
 
     companion object {
         private val TAG = MessageListFragment::class.java.simpleName
@@ -29,7 +32,7 @@ class MessageListFragment : ViewTypeFragment() {
 
     // Presenter
 
-    override fun getFragmentPresenter() = MessagePresenter()
+    override fun getFragmentPresenter() = presenter
 
     // Main View
 

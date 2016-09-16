@@ -19,7 +19,9 @@ import org.jetbrains.anko.toast
 /**
  * Fragment managing the books saved by the user.
  */
-class SavedFragment(val presenter: ViewTypePresenter = SavedInsertionPresenter()) :
+class SavedFragment(
+        val presenter: ViewTypePresenter = SavedInsertionPresenter()
+) :
         ViewTypeFragment() {
 
     companion object {

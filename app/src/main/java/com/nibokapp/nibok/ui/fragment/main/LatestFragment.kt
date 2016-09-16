@@ -20,7 +20,9 @@ import org.jetbrains.anko.toast
  *
  * It fetches the latest books published on the platform, it requests newer and older books.
  */
-class LatestFragment(val presenter: ViewTypePresenter = InsertionFeedPresenter()) :
+class LatestFragment(
+        val presenter: ViewTypePresenter = InsertionFeedPresenter()
+) :
         ViewTypeFragment() {
 
     companion object {

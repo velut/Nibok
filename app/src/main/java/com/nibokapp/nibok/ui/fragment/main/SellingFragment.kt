@@ -19,7 +19,9 @@ import org.jetbrains.anko.startActivity
 /**
  * Fragment managing the books being sold the user.
  */
-class SellingFragment(val presenter: ViewTypePresenter = UserInsertionPresenter()) :
+class SellingFragment(
+        val presenter: ViewTypePresenter = UserInsertionPresenter()
+) :
         ViewTypeFragment() {
 
     companion object {
