@@ -127,6 +127,7 @@ abstract class ViewTypeFragment : BaseFragment() {
             val mainView = it.find<RecyclerView>(getMainViewId())
             setupMainView(mainView)
             // Set cached items to restore scroll position
+            Log.d(TAG, "Setting up view with cached data")
             getAdapterForView(mainView)?.clearAndAddItems(presenter.getCachedData())
             currentView = mainView
             fab = it.findOptional(R.id.sellingFab)
@@ -141,6 +142,7 @@ abstract class ViewTypeFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.d(TAG, "Activity created, checking for updates")
         checkForUpdates()
     }
 
