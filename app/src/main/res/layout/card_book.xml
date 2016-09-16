@@ -5,7 +5,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/card_margin"
@@ -22,11 +22,11 @@
         <ImageView
             android:id="@+id/bookThumbnail"
             android:layout_width="@dimen/book_cover_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/book_cover_height"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:layout_marginEnd="@dimen/card_content_margin"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/book_cover_description"
             tools:src="@mipmap/ic_launcher"/>
 
@@ -40,6 +40,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/bookThumbnail"
+            android:layout_marginTop="4dp"
             tools:text="Android programming"/>
 
         <TextView
@@ -101,10 +102,7 @@
             android:src="@drawable/ic_bookmark_border_black_24dp"
             android:contentDescription="@string/save_button_description"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            />
-
-
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
 

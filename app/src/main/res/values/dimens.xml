@@ -9,7 +9,8 @@
     <dimen name="card_content_margin">14dp</dimen>
 
     <!-- Card elements dimensions -->
-    <dimen name="book_cover_width">116dp</dimen>
+    <dimen name="book_cover_width">130dp</dimen>
+    <dimen name="book_cover_height">170dp</dimen>
     <dimen name="img_button_dim">48dp</dimen>
     <dimen name="img_button_padding">12dp</dimen>
 
