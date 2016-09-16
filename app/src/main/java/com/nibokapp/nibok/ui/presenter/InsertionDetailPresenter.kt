@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.presenter
 
 import android.util.Log
 import com.nibokapp.nibok.domain.command.bookinsertion.RequestBookInsertionByIdCommand
+import com.nibokapp.nibok.domain.command.user.RequestLocalUserIdCommand
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 
 /**
@@ -11,6 +12,16 @@ class InsertionDetailPresenter {
 
     companion object {
         private val TAG = InsertionDetailPresenter::class.java.simpleName
+    }
+
+    /**
+     * Get the id of the local user.
+     *
+     * @return the id of the local user
+     */
+    fun getUserId() : Long {
+        Log.d(TAG, "Requesting local user id")
+        return RequestLocalUserIdCommand().execute()
     }
 
     /**
