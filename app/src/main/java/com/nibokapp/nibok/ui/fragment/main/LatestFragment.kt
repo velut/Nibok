@@ -47,7 +47,7 @@ class LatestFragment(
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickListener)
+    override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
     // Main View Data
 
@@ -61,7 +61,7 @@ class LatestFragment(
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickListener)
+    override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
@@ -71,7 +71,7 @@ class LatestFragment(
 
 
     // Item click listener for the book cards
-    private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+    private val bookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
 
         override fun onButtonClick(itemId: Long, itemType: Int) {
 

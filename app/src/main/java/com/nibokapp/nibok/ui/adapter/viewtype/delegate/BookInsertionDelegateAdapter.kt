@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.card_book.view.*
 /**
  * Delegate adapter managing the creation and binding of book view holders.
  */
-class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
+class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickManager) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = BookInsertionDelegateAdapter::class.java.simpleName
@@ -30,7 +30,7 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
      * Creates a book view holder when needed.
      */
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return BookVH(parent, itemClickListener)
+        return BookVH(parent, itemClickManager)
     }
 
     /**
@@ -44,7 +44,7 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
     /**
      * Book view holder.
      */
-    class BookVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
+    class BookVH(parent: ViewGroup, val itemClickManager: ViewTypeAdapter.ItemClickManager) :
             RecyclerView.ViewHolder(parent.inflate(R.layout.card_book)) {
 
         companion object {
@@ -101,7 +101,7 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it, ViewTypes.BOOK_INSERTION)
+                    itemClickManager.onItemClick(it, ViewTypes.BOOK_INSERTION)
                 }
             }
         }
@@ -112,7 +112,7 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
         private fun addThumbnailListener() = with(itemView) {
             bookThumbnail.setOnClickListener {
                 insertionId?.let {
-                    itemClickListener.onItemClick(it, ViewTypes.BOOK_INSERTION)
+                    itemClickManager.onItemClick(it, ViewTypes.BOOK_INSERTION)
                 }
             }
         }
@@ -130,9 +130,9 @@ class BookInsertionDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemCl
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
                 insertionId?.let {
-                    itemClickListener.onButtonClick(it, ViewTypes.BOOK_INSERTION)
+                    itemClickManager.onButtonClick(it, ViewTypes.BOOK_INSERTION)
                 }
-                if (itemClickListener.updateItemOnButtonClick()) {
+                if (itemClickManager.updateItemOnButtonClick()) {
                     item.savedByUser = !item.savedByUser
                     updateSaveButton(saveButton, item.savedByUser)
                     if (item.savedByUser) {

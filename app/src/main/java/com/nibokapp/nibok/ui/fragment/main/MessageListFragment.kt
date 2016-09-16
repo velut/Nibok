@@ -42,7 +42,7 @@ class MessageListFragment(
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter(messageItemClickListener)
+    override fun getMainViewAdapter() = ViewTypeAdapter(messageItemClickManager)
 
     // Main View Data
 
@@ -56,7 +56,7 @@ class MessageListFragment(
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter(messageItemClickListener)
+    override fun getSearchViewAdapter() = ViewTypeAdapter(messageItemClickManager)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_message)
 
@@ -71,7 +71,7 @@ class MessageListFragment(
         checkForUpdates()
     }
 
-    private val messageItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+    private val messageItemClickManager = object : ViewTypeAdapter.ItemClickManager {
         override fun onButtonClick(itemId: Long, itemType: Int) {
         }
 

@@ -46,7 +46,7 @@ class SavedFragment(
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickListener)
+    override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickManager)
 
     // Main View Data
 
@@ -60,7 +60,7 @@ class SavedFragment(
 
     override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickListener)
+    override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickManager)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
@@ -68,7 +68,7 @@ class SavedFragment(
 
     override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
 
-    private val mainViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+    private val mainViewBookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
         override fun onButtonClick(itemId: Long, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION) mainViewItemClickListener(itemId, itemType)
         }
@@ -80,7 +80,7 @@ class SavedFragment(
         }
     }
 
-    private val searchViewBookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+    private val searchViewBookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
         override fun onButtonClick(itemId: Long, itemType: Int) {
 
             if (itemType != ViewTypes.BOOK_INSERTION ||

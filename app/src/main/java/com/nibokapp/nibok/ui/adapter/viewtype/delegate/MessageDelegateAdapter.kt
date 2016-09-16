@@ -15,14 +15,14 @@ import kotlinx.android.synthetic.main.item_message.view.*
 /**
  * Delegate adapter managing the creation and binding of message view holders.
  */
-class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickListener) : ViewTypeDelegateAdapter {
+class MessageDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickManager) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = MessageDelegateAdapter::class.java.simpleName
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return MessageVH(parent, itemClickListener)
+        return MessageVH(parent, itemClickManager)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
@@ -30,7 +30,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
         holder.bind(item as ConversationModel)
     }
 
-    class MessageVH(parent: ViewGroup, val itemClickListener: ViewTypeAdapter.ItemClickListener) :
+    class MessageVH(parent: ViewGroup, val itemClickManager: ViewTypeAdapter.ItemClickManager) :
             RecyclerView.ViewHolder(parent.inflate(R.layout.item_message)) {
 
         private val MAX_PARTNER_NAME_LENGTH_PORTRAIT = 15
@@ -94,7 +94,7 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
             setOnClickListener {
                 Log.d(TAG, "Message item clicked")
                 conversationId?.let {
-                    itemClickListener.onItemClick(it, ViewTypes.MESSAGE)
+                    itemClickManager.onItemClick(it, ViewTypes.MESSAGE)
                 }
             }
         }

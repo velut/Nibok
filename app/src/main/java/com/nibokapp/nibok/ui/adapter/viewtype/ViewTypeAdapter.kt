@@ -16,9 +16,9 @@ import com.nibokapp.nibok.ui.adapter.viewtype.delegate.MessageDelegateAdapter
  * This adapter delegates the managing of subclasses of ViewType items to its delegate adapters
  * based on a correspondence (view type -> delegate adapter).
  *
- * @param itemClickListener function to be called if an item is clicked. Optional
+ * @param itemClickManager function to be called if an item is clicked. Optional
  */
-class ViewTypeAdapter(itemClickListener: ItemClickListener)
+class ViewTypeAdapter(itemClickManager: ItemClickManager)
         : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListAdapter<ViewType> {
 
     companion object {
@@ -28,7 +28,7 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     /**
      * Interface for objects that want to listen to clicks on a view type item.
      */
-    interface ItemClickListener {
+    interface ItemClickManager {
 
         /**
          * Listen to a click of a button of the item.
@@ -68,8 +68,8 @@ class ViewTypeAdapter(itemClickListener: ItemClickListener)
     // Adapter instances corresponding to view types
     private val delegateAdaptersMap = mapOf(
             ViewTypes.LOADING to LoadingDelegateAdapter(),
-            ViewTypes.BOOK_INSERTION to BookInsertionDelegateAdapter(itemClickListener),
-            ViewTypes.MESSAGE to MessageDelegateAdapter(itemClickListener)
+            ViewTypes.BOOK_INSERTION to BookInsertionDelegateAdapter(itemClickManager),
+            ViewTypes.MESSAGE to MessageDelegateAdapter(itemClickManager)
     )
 
     // The currently supported view types

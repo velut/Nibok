@@ -34,7 +34,7 @@ class SellingFragment(
 
     override fun getFragmentName() : String = TAG
 
-    // Presenter TODO use correct presenter
+    // Presenter
 
     override fun getFragmentPresenter() = presenter
 
@@ -46,7 +46,7 @@ class SellingFragment(
 
     override fun getMainViewLayoutManager() = LinearLayoutManager(context)
 
-    override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickListener)
+    override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
     // Main view data
 
@@ -60,7 +60,7 @@ class SellingFragment(
 
     override fun getSearchViewLayoutManager() = getMainViewLayoutManager()
 
-    override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickListener)
+    override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
     override fun getSearchHint() : String = getString(R.string.search_hint_book)
 
@@ -86,7 +86,7 @@ class SellingFragment(
         return data.filterIsInstance<BookInsertionModel>().sortedBy { it.insertionDate }
     }
 
-    private val bookItemClickListener = object : ViewTypeAdapter.ItemClickListener {
+    private val bookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
         override fun onButtonClick(itemId: Long, itemType: Int) {
             // TODO Implement
             Log.d(TAG, "TODO")
