@@ -96,10 +96,10 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @param messageList the list of messages to add
      *
-     * @return the position in which the last message was added
+     * @return the position in which the last message was added or null if it was not added
      */
-    fun addMessages(messageList: List<ChatMessageModel>) : Int {
-        var position: Int = 0
+    fun addMessages(messageList: List<ChatMessageModel>) : Int? {
+        var position: Int? = null
         messageList.forEach { position = addMessage(it) }
         return position
     }
@@ -110,12 +110,11 @@ class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @param message the message to add
      *
-     * @return the position in which the message was added
+     * @return the position in which the message was added or null if it was not added
      */
-    fun addMessage(message: ChatMessageModel) : Int {
+    fun addMessage(message: ChatMessageModel) : Int? {
 
-        val messageIndex = messages.indexOf(message)
-        if (messageIndex != -1) return messageIndex
+        if (message in messages) return null
 
         messages.add(message)
         val position = itemCount - 1
