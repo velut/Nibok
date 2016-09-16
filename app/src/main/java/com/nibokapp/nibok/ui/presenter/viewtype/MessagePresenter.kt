@@ -3,7 +3,6 @@ package com.nibokapp.nibok.ui.presenter.viewtype
 import android.util.Log
 import com.nibokapp.nibok.domain.command.conversation.*
 import com.nibokapp.nibok.domain.model.ConversationModel
-import com.nibokapp.nibok.extension.TAG
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 
@@ -11,6 +10,10 @@ import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
  * Presenter that operates on messages conversations.
  */
 class MessagePresenter : ViewTypePresenter {
+
+    companion object {
+        private val TAG = MessagePresenter::class.java.simpleName
+    }
 
     override fun getData(): List<ViewType> {
         Log.d(TAG, "Getting conversation data")
