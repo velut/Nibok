@@ -64,6 +64,13 @@ class MessageListFragment(
 
     override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_messages)
 
+
+    override fun onStart() {
+        super.onStart()
+        // Update messages on start (e.g. after chat was closed)
+        checkForUpdates()
+    }
+
     private val messageItemClickListener = object : ViewTypeAdapter.ItemClickListener {
         override fun onButtonClick(itemId: Long, itemType: Int) {
         }
