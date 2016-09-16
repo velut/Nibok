@@ -35,13 +35,18 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
 
     private var actionBar: ActionBar? = null
 
-    private val chatAdapter = ChatAdapter(getUserId())
+    private var conversationId = 0L
+
+    private val userId by lazy { presenter.getUserId() }
+
+    private val chatAdapter = ChatAdapter(userId)
     private val chatLayoutManager = LinearLayoutManager(context)
 
     lateinit private var checkNewMessagesTimer: Timer
 
     lateinit private var partnerName: String
     private val partnerNamePlaceholder by lazy { getString(R.string.placeholder_chat_partner) }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_chat)
@@ -68,7 +73,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         // Retrieve the conversation's id and add messages
         arguments?.let {
 
-            val conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
+            conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
 
             if (!conversationId.equals(0L)) { // Exclude default case of getLong()
                 Log.d(TAG, "Got conversationId: $conversationId")
@@ -129,29 +134,30 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
 
     private fun sendMessage() {
         val messageText = chatInputText.text.trim().toString()
-        if (messageText.isNotEmpty()) {
-            // TODO retrieve real ids and send message
-            val message = ChatMessageModel(0, getUserId(), messageText, Calendar.getInstance().time)
-            val messageSent = presenter.sendMessage(message)
-            if (messageSent) {
-                chatInputText.text.clear()
-                val messagePosition = chatAdapter.addMessage(message)
-                chatMessagesView.smoothScrollToPosition(messagePosition)
-            } else {
-                context.toast(R.string.error_message_not_sent)
-            }
-        } else {
-            // Clear input if it contained only whitespace
-            chatInputText.text.clear()
-        }
-    }
 
-    /**
-     * Get the id of the local user.
-     *
-     * @return the id of the local user
-     */
-    private fun getUserId(): Long = presenter.getUserId()
+        if (messageText.isEmpty()) {
+            // Clear input if it contained only whitespace and return
+            chatInputText.text.clear()
+            return
+        }
+
+        val message = ChatMessageModel(
+                conversationId,
+                userId,
+                messageText,
+                Date()
+        )
+
+        val messageSent = presenter.sendMessage(message)
+        if (messageSent) {
+            chatInputText.text.clear()
+            val messagePosition = chatAdapter.addMessage(message)
+            chatMessagesView.smoothScrollToPosition(messagePosition)
+        } else {
+            context.toast(R.string.error_message_not_sent)
+        }
+
+    }
 
     private fun setupChatMessagesView() {
         Log.d(TAG, "Setting up chat messages view")
