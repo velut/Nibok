@@ -92,6 +92,8 @@ class SellingFragment(
             Log.d(TAG, "TODO")
         }
 
+        override fun showButton(): Boolean = false
+
         override fun updateItemOnButtonClick(): Boolean {
             // TODO Implement
             Log.d(TAG, "TODO")

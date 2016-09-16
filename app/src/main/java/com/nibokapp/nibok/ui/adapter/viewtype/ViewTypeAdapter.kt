@@ -38,6 +38,13 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
         fun onButtonClick(itemId: Long, itemType: Int)
 
         /**
+         * Signal if the item's button should be shown or not.
+         *
+         * @return true to show the button, false to hide it
+         */
+        fun showButton() : Boolean
+
+        /**
          * Tell the adapter if the item has to be updated after a button click.
          *
          * @return true if the item has to be updated, false otherwise

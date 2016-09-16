@@ -3,6 +3,7 @@ package com.nibokapp.nibok.ui.adapter.viewtype.delegate
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
@@ -60,13 +61,20 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
          */
         fun bind(item: BookInsertionModel) {
             insertionId = item.insertionId
-            val hasThumbnail = item.bookPictureSources.size >= 1
+            val hasThumbnail = item.bookPictureSources.isNotEmpty()
             if (hasThumbnail) loadThumbnail(item.bookPictureSources[0])
             bindData(item)
-            updateSaveButton(itemView.saveButton, item.savedByUser)
-            addSaveButtonListener(item)
             addThumbnailListener()
             addCardListener()
+            if (itemClickManager.showButton()) {
+                updateSaveButton(itemView.saveButton, item.savedByUser)
+                addSaveButtonListener(item)
+            } else {
+                itemView.saveButton.apply {
+                    isEnabled = false
+                    visibility = View.GONE
+                }
+            }
         }
 
         /**

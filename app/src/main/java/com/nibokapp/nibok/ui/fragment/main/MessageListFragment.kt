@@ -75,6 +75,8 @@ class MessageListFragment(
         override fun onButtonClick(itemId: Long, itemType: Int) {
         }
 
+        override fun showButton(): Boolean = false
+
         override fun updateItemOnButtonClick(): Boolean = false
 
         override fun onItemClick(itemId: Long, itemType: Int) {

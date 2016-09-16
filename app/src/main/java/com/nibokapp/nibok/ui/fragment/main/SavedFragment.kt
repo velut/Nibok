@@ -73,6 +73,8 @@ class SavedFragment(
             if (itemType == ViewTypes.BOOK_INSERTION) mainViewItemClickListener(itemId, itemType)
         }
 
+        override fun showButton(): Boolean = true
+
         override fun updateItemOnButtonClick(): Boolean = false
 
         override fun onItemClick(itemId: Long, itemType: Int) {
@@ -93,6 +95,8 @@ class SavedFragment(
                                 else R.string.book_removed_from_collection
             context.toast(toastMessage)
         }
+
+        override fun showButton(): Boolean = true
 
         override fun updateItemOnButtonClick(): Boolean = true
 

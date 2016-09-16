@@ -87,6 +87,8 @@ class LatestFragment(
             context.toast(toastMessage)
         }
 
+        override fun showButton(): Boolean = true
+
         override fun updateItemOnButtonClick(): Boolean = true
 
         override fun onItemClick(itemId: Long, itemType: Int) {
