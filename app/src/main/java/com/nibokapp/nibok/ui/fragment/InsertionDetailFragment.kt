@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_insertion_detail.*
 class InsertionDetailFragment(val presenter: InsertionDetailPresenter = InsertionDetailPresenter()) :
         Fragment() {
 
-    var actionBar: ActionBar? = null
+    private var actionBar: ActionBar? = null
 
     companion object {
         private val TAG = InsertionDetailFragment::class.java.simpleName
