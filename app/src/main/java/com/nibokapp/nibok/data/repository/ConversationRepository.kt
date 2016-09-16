@@ -21,17 +21,25 @@ object ConversationRepository : ConversationRepositoryInterface {
     private var conversationCache : List<Conversation> = emptyList()
 
 
-    override fun getConversationById(conversationId: Long) : Conversation? = queryOneWithRealm {
-        it.where(Conversation::class.java)
-                .equalTo("id", conversationId)
-                .equalTo("userId", userRepository.getLocalUserId())
-                .findFirst()
+    override fun getConversationById(conversationId: Long) : Conversation? {
+        if (userRepository.localUserExists()) {
+            return queryOneWithRealm {
+                it.where(Conversation::class.java)
+                        .equalTo("id", conversationId)
+                        .equalTo("userId", userRepository.getLocalUserId())
+                        .findFirst()
+            }
+        } else {
+            return null
+        }
     }
 
     override fun getConversationPartnerName(conversationId: Long): String? =
             getConversationById(conversationId)?.partner?.name
 
     override fun getConversationListFromQuery(query: String) : List<Conversation> {
+
+        if (!userRepository.localUserExists()) return emptyList()
 
         val trimmedQuery = query.trim()
 
@@ -58,6 +66,9 @@ object ConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun getConversationListAfterDate(date: Date) : List<Conversation> {
+
+        if (!userRepository.localUserExists()) return emptyList()
+
         val results = queryRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
@@ -68,6 +79,9 @@ object ConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun getConversationListBeforeDate(date: Date) : List<Conversation> {
+
+        if (!userRepository.localUserExists()) return emptyList()
+
         val results = queryRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
@@ -80,6 +94,9 @@ object ConversationRepository : ConversationRepositoryInterface {
     override fun startConversation(partnerId: Long): Long {
 
         var conversationId = -1L
+
+        if (!userRepository.localUserExists()) return conversationId
+
         val localUserId = userRepository.getLocalUserId()
 
         // Prevent conversations between the user and himself
