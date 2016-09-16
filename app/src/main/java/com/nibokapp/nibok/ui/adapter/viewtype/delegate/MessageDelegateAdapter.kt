@@ -58,8 +58,8 @@ class MessageDelegateAdapter(val itemClickListener: ViewTypeAdapter.ItemClickLis
          * @param avatarSource the source of the avatar image
          */
         private fun loadAvatar(avatarSource: String) = with(itemView) {
-            // TODO change placeholders
-            messageAvatar.loadImg(avatarSource, animate = false)
+            val placeholder = R.drawable.ic_account_circle_dark_green_48dp
+            messageAvatar.loadImg(avatarSource, placeholder, placeholder, animate = false)
         }
 
         /**
