@@ -112,7 +112,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
 
         val lm = chatMessagesView.layoutManager as LinearLayoutManager
         val viewIsAtBottom = lm.findLastVisibleItemPosition() == (lm.itemCount - 1)
-        val newBottomPosition = chatAdapter.addMessages(newMessages)
+        val newBottomPosition = chatAdapter.addMessages(newMessages) ?: return
 
         // After adding the new messages if the view was at the bottom scroll to the newer bottom
         // to make the new messages visible, instead if the user is reading older messages simply
@@ -152,7 +152,9 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         if (messageSent) {
             chatInputText.text.clear()
             val messagePosition = chatAdapter.addMessage(message)
-            chatMessagesView.smoothScrollToPosition(messagePosition)
+            messagePosition?.let {
+                chatMessagesView.smoothScrollToPosition(it)
+            }
         } else {
             context.toast(R.string.error_message_not_sent)
         }
