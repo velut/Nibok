@@ -2,6 +2,7 @@ package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -23,6 +24,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
     companion object {
         private val TAG = ChatFragment::class.java.simpleName
         val CONVERSATION_ID = "$TAG:conversationId"
+        val CONVERSATION_PARTNER = "$TAG:conversationPartner"
 
         /**
          * Timer constants.
@@ -32,11 +34,15 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         const private val TIMER_PERIOD = (10 * 1000).toLong()
     }
 
+    private var actionBar: ActionBar? = null
+
     private val chatAdapter = ChatAdapter(getUserId())
     private val chatLayoutManager = LinearLayoutManager(context)
 
-    lateinit private var checkNewMessagesTimer : Timer
+    lateinit private var checkNewMessagesTimer: Timer
 
+    lateinit private var partnerName: String
+    private val partnerNamePlaceholder by lazy { getString(R.string.placeholder_chat_partner) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_chat)
@@ -57,13 +63,23 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         hostingActivity.setSupportActionBar(toolbar)
         hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        actionBar = hostingActivity.supportActionBar
+        actionBar?.title = getString(R.string.placeholder_chat)
+
         // Retrieve the conversation's id and add messages
         arguments?.let {
+
             val conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
+            partnerName = it.getString(ChatFragment.CONVERSATION_PARTNER, partnerNamePlaceholder)
+
             if (!conversationId.equals(0L)) { // Exclude default case of getLong()
                 Log.d(TAG, "Got conversationId: $conversationId")
                 val messages = presenter.getConversationMessages(conversationId)
                 chatAdapter.addMessages(messages)
+            }
+
+            if (partnerName != partnerNamePlaceholder) {
+                actionBar?.title = partnerName
             }
         }
     }
@@ -103,9 +119,8 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         if (viewIsAtBottom) {
             chatMessagesView.smoothScrollToPosition(newBottomPosition)
         } else {
-            // TODO Use real partner name
             val toastMessage =
-                    String.format(resources.getString(R.string.partner_reply), "PARTNER")
+                    String.format(resources.getString(R.string.partner_reply), partnerName)
             context.toast(toastMessage)
         }
     }
