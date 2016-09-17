@@ -43,7 +43,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.activity.ChatActivity"
             android:theme="@style/NibokTheme"
@@ -52,6 +51,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nibokapp.nibok.ui.activity.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:theme="@style/NibokTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -62,7 +66,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
