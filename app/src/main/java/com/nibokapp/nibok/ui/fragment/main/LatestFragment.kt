@@ -3,16 +3,14 @@ package com.nibokapp.nibok.ui.fragment.main
 import android.support.v7.widget.RecyclerView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
-import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
+import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
-import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_latest.*
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -92,15 +90,9 @@ class LatestFragment(
         override fun updateItemOnButtonClick(): Boolean = true
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
+            if (itemType == ViewTypes.BOOK_INSERTION)
+                context.startDetailActivity(itemId)
         }
     }
-
-    /**
-     * Start the detail activity about the given insertion.
-     */
-    private fun startDetailActivity(itemId: Long) =
-            context.startActivity<InsertionDetailActivity>(
-                    InsertionDetailFragment.INSERTION_ID to itemId)
 
 }

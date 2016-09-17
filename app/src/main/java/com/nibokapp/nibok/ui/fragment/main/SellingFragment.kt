@@ -7,12 +7,11 @@ import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
-import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
+import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.PublishInsertionActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
-import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.UserInsertionPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
@@ -98,14 +97,9 @@ class SellingFragment(
         override fun updateItemOnButtonClick(): Boolean = false
 
         override fun onItemClick(itemId: Long, itemType: Int) {
-            if (itemType == ViewTypes.BOOK_INSERTION) startDetailActivity(itemId)
+            if (itemType == ViewTypes.BOOK_INSERTION)
+                context.startDetailActivity(itemId)
         }
     }
 
-    /**
-     * Start the detail activity about the given insertion.
-     */
-    private fun startDetailActivity(itemId: Long) =
-            context.startActivity<InsertionDetailActivity>(
-                    InsertionDetailFragment.INSERTION_ID to itemId)
 }
