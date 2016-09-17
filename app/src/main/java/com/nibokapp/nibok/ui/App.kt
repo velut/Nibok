@@ -1,10 +1,9 @@
 package com.nibokapp.nibok.ui
 
 import android.app.Application
+import com.baasbox.android.BaasBox
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.nibokapp.nibok.data.repository.BookInsertionRepository
 import com.nibokapp.nibok.data.repository.DbPopulator
-import com.nibokapp.nibok.data.repository.UserRepository
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlin.properties.Delegates
@@ -21,6 +20,13 @@ class App : Application() {
         // Save instance
         instance = this
 
+        // Initialize BaasBox
+        BaasBox.builder(this).setAuthentication(BaasBox.Config.AuthType.SESSION_TOKEN)
+                .setApiDomain("10.0.2.0")
+                .setPort(9000)
+                .setAppCode("1234567890")
+                .init()
+
         // Initialize Fresco
         Fresco.initialize(this)
 
@@ -35,12 +41,12 @@ class App : Application() {
         Realm.setDefaultConfiguration(realmConfig)
 
         // Create the local user
-        UserRepository.createLocalUser()
+        //UserRepository.createLocalUser()
 
         // Populate the DB with test data
         DbPopulator().populateDb()
 
         // For testing
-        BookInsertionRepository.toggleBookInsertionSaveStatus(2)
+        //BookInsertionRepository.toggleBookInsertionSaveStatus(2)
     }
 }
