@@ -1,9 +1,9 @@
 package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
@@ -44,7 +44,7 @@ class SavedFragment(
 
     override fun getMainViewId() = R.id.savedBooksList
 
-    override fun getMainViewLayoutManager() = LinearLayoutManager(context)
+    override fun getMainViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
     override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickManager)
 
@@ -58,7 +58,7 @@ class SavedFragment(
 
     override fun getSearchView(): RecyclerView = searchResultsListSaved
 
-    override fun getSearchViewLayoutManager() = LinearLayoutManager(context)
+    override fun getSearchViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickManager)
 

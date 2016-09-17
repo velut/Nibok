@@ -1,12 +1,12 @@
 package com.nibokapp.nibok.ui.fragment.main
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
+import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.activity.PublishInsertionActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
@@ -47,7 +47,7 @@ class SellingFragment(
 
     override fun getMainViewId() = R.id.sellingBooksList
 
-    override fun getMainViewLayoutManager() = LinearLayoutManager(context)
+    override fun getMainViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
     override fun getMainViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
@@ -61,7 +61,7 @@ class SellingFragment(
 
     override fun getSearchView(): RecyclerView = searchResultsListSelling
 
-    override fun getSearchViewLayoutManager() = getMainViewLayoutManager()
+    override fun getSearchViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
