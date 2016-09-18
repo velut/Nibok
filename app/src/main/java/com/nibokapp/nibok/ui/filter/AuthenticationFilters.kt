@@ -6,7 +6,6 @@ import android.text.InputFilter
  * Collection of InputFilters for price input forms in the application.
  */
 
-
 /**
  * Get an InputFilter that allows only alphanumeric characters.
  *
@@ -14,10 +13,6 @@ import android.text.InputFilter
  */
 fun getAlphanumericFilter() =
         InputFilter { source, start, end, dest, dstart, dend ->
-            val sourceIsAllowed = with(source) {
-                matches(Regex("[0-9]")) ||
-                        matches(Regex("[a-z]")) ||
-                        matches(Regex("[A-Z]"))
-            }
+            val sourceIsAllowed = source.matches(Regex("^[a-zA-Z0-9]+$"))
             if (sourceIsAllowed) source else ""
         }
