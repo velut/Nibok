@@ -3,15 +3,20 @@ package com.nibokapp.nibok.ui.activity
 import android.os.Bundle
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.rule.AuthenticationValidator
 import com.nibokapp.nibok.extension.hideSoftKeyboard
+import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
  * Login activity.
+ * Used by a guest to either login into the application or sign up.
  */
 class LoginActivity : AppCompatActivity() {
 
@@ -27,16 +32,28 @@ class LoginActivity : AppCompatActivity() {
     // Default view is the login one
     private var showLogin = true
 
+    // Authentication validator
+    private val authValidator = AuthenticationValidator()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Remove focus from edit text forms
+        authFormContainer.requestFocus()
+
+        // Restore previous view if it exists, otherwise show login
         showLogin = savedInstanceState?.getBoolean(KEY_AUTH_VIEW, true) ?: true
 
         showCurrentView()
 
         addHideKeyboardListener()
         addAuthViewSwitchListener()
+
+        setupUsernameInput()
+        setupPrimaryPasswordInput()
+        setupSecondaryPasswordInput()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -87,6 +104,119 @@ class LoginActivity : AppCompatActivity() {
                 view.hideSoftKeyboard(this)
             }
             false
+        }
+    }
+
+    /**
+     * Setup input filters and validator for username.
+     */
+    private fun setupUsernameInput() {
+
+        inputUsername.addTextChangedListener(
+                object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        validateUsername()
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                }
+        )
+
+        inputUsername.filters = arrayOf(getAlphanumericFilter(),
+                android.text.InputFilter.LengthFilter(AuthenticationValidator.MAX_USERNAME_LENGTH))
+    }
+
+    private fun validateUsername() {
+
+        val username = inputUsername.text.toString()
+
+        if (username.isEmpty()) return
+
+        if (authValidator.isUsernameMinLengthValid(username)) {
+            inputUsernameLayout.error = null
+        } else {
+            val usernameTooShortError = String.format(getString(R.string.error_username_too_short),
+                    AuthenticationValidator.MIN_USERNAME_LENGTH)
+            inputUsernameLayout.apply {
+                error = usernameTooShortError
+                requestFocus()
+            }
+        }
+
+        if (!showLogin) {
+            // TODO Alert of username already in use on sign up
+        }
+    }
+
+    /**
+     * Setup input filters and validator for primary password.
+     */
+    private fun setupPrimaryPasswordInput() {
+        inputPasswordPrimary.addTextChangedListener(
+                object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        validatePrimaryPassword()
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                }
+        )
+    }
+
+    private fun validatePrimaryPassword() {
+
+        val password = inputPasswordPrimary.text.toString()
+
+        if (password.isEmpty()) return
+
+        if (authValidator.isPasswordMinLengthValid(password)) {
+            inputPasswordPrimaryLayout.error = null
+        } else {
+            val passwordTooShortError = String.format(getString(R.string.error_password_too_short),
+                    AuthenticationValidator.MIN_PASSWORD_LENGTH)
+            inputPasswordPrimaryLayout.apply {
+                error = passwordTooShortError
+                requestFocus()
+            }
+        }
+    }
+
+    /**
+     * Setup input filters and validator for secondary (confirmation) password.
+     */
+    private fun setupSecondaryPasswordInput() {
+        inputPasswordSecondary.addTextChangedListener(
+                object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        validateSecondaryPassword()
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                }
+        )
+    }
+
+    private fun validateSecondaryPassword() {
+
+        val password = inputPasswordPrimary.text.toString()
+        val confirmPassword = inputPasswordSecondary.text.toString()
+
+        if (confirmPassword.isEmpty()) return
+
+        if (confirmPassword == password) {
+            inputPasswordSecondaryLayout.error = null
+        } else {
+            val differentPasswords = getString(R.string.error_password_do_not_match)
+            inputPasswordSecondaryLayout.apply {
+                error = differentPasswords
+                requestFocus()
+            }
         }
     }
 }
