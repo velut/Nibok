@@ -8,14 +8,14 @@ import io.realm.annotations.PrimaryKey
  * Model class for the local user.
  * Used by the local database.
  *
- * @param id the id of the user
+ * @param username the username of the user. Primary key
  * @param savedInsertions the insertions saved by the user - One to many
  * @param publishedInsertions the insertions published by the user - One to many
  * @param conversations the conversations that the user has with other external users
  */
 open class User(
 
-        @PrimaryKey open var id: Long = 0,
+        @PrimaryKey open var username: String = "",
 
         open var savedInsertions: RealmList<Insertion> = RealmList(),
 
