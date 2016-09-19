@@ -22,7 +22,7 @@ class App : Application() {
 
         // Initialize BaasBox
         BaasBox.builder(this).setAuthentication(BaasBox.Config.AuthType.SESSION_TOKEN)
-                .setApiDomain("10.0.2.0")
+                .setApiDomain("10.0.3.2") // 10.0.2.2 for AVD; 10.0.3.2 for Genymotion
                 .setPort(9000)
                 .setAppCode("1234567890")
                 .init()
