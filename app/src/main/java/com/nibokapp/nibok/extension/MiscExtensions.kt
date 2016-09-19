@@ -94,3 +94,15 @@ fun String.ellipsize(maxLength: Int, ellipsis: String = "…"): String =
             this.take(maxLength).trim() + ellipsis
         else
             this
+
+/**
+ * Parse a date from a string using the given pattern.
+ *
+ * @param pattern the pattern to use in order to parse the date. Default pattern is for RFC 1123
+ *
+ * @return the parsed Date
+ */
+fun String.parseDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : Date {
+    val dateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
+    return dateFormat.parse(this)
+}
