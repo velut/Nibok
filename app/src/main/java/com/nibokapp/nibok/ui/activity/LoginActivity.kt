@@ -8,17 +8,24 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.authentication.Authenticator
+import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.domain.rule.AuthenticationValidator
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
 import kotlinx.android.synthetic.main.activity_login.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 /**
  * Login activity.
  * Used by a guest to either login into the application or sign up.
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity(
+        val authenticator: AuthenticatorInterface = Authenticator
+) : AppCompatActivity() {
 
     companion object {
         private val TAG = LoginActivity::class.java.simpleName
@@ -35,6 +42,8 @@ class LoginActivity : AppCompatActivity() {
     // Authentication validator
     private val authValidator = AuthenticationValidator()
 
+    private var alertDialog: MaterialDialog? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,16 +59,93 @@ class LoginActivity : AppCompatActivity() {
 
         addHideKeyboardListener()
         addAuthViewSwitchListener()
+        addAuthButtonListener()
 
         setupUsernameInput()
         setupPrimaryPasswordInput()
         setupSecondaryPasswordInput()
+
+    }
+
+    private fun addAuthButtonListener() {
+        btnAuthenticate.setOnClickListener {
+            if (showLogin)
+                login()
+            else
+                signUp()
+        }
+    }
+
+    private fun login() {
+
+        if (inputUsernameLayout.error != null ||
+                inputPasswordPrimaryLayout.error != null) return
+
+        val username = inputUsername.text.toString()
+        val password = inputPasswordPrimary.text.toString()
+
+        if (username.isEmpty() || password. isEmpty()) return
+
+        val context = this
+
+        doAsync {
+            val loggedIn = authenticator.login(username, password)
+            if (loggedIn) {
+                uiThread { finish() } // TODO result?
+            } else {
+                uiThread {
+                    alertDialog = MaterialDialog.Builder(context)
+                            .title(getString(R.string.title_login_fail))
+                            .content(getString(R.string.content_login_fail))
+                            .positiveText(getString(android.R.string.ok))
+                            .build()
+                    alertDialog?.show()
+                }
+            }
+        }
+    }
+
+    private fun signUp() {
+
+        if (inputUsernameLayout.error != null ||
+                inputPasswordPrimaryLayout.error != null ||
+                inputPasswordSecondaryLayout.error != null) return
+
+        val username = inputUsername.text.toString()
+        val password = inputPasswordPrimary.text.toString()
+        val confirmPassword = inputPasswordSecondary.text.toString()
+
+        if (username.isEmpty() || password. isEmpty() || password != confirmPassword) return
+
+        val context = this
+
+        doAsync {
+            val signedUp = false //authenticator.signUp(username, password)
+            if (signedUp) {
+                uiThread { finish() } // TODO result?
+            } else {
+                uiThread {
+                    alertDialog = MaterialDialog.Builder(context)
+                            .title(getString(R.string.title_sign_up_fail))
+                            .content(getString(R.string.content_sign_up_fail))
+                            .positiveText(getString(android.R.string.ok))
+                            .build()
+                    alertDialog?.show()
+                }
+            }
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d(TAG, "Saving Login: $showLogin")
         outState.putBoolean(KEY_AUTH_VIEW, showLogin)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        alertDialog?.dismiss()
     }
 
     private fun showCurrentView() {
