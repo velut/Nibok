@@ -14,9 +14,9 @@ import java.util.*
  */
 open class Message(
 
-        open var conversationId: Long = 0,
+        open var conversationId: String = "",
 
-        open var senderId: Long = 0,
+        open var senderId: String = "",
 
         open var text: String = "",
 
