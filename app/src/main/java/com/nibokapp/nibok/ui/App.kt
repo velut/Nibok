@@ -3,7 +3,6 @@ package com.nibokapp.nibok.ui
 import android.app.Application
 import com.baasbox.android.BaasBox
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.nibokapp.nibok.data.repository.DbPopulator
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlin.properties.Delegates
@@ -44,7 +43,7 @@ class App : Application() {
         //UserRepository.createLocalUser()
 
         // Populate the DB with test data
-        DbPopulator().populateDb()
+        //DbPopulator().populateDb()
 
         // For testing
         //BookInsertionRepository.toggleBookInsertionSaveStatus(2)
