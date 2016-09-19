@@ -120,7 +120,7 @@ class LoginActivity(
         val context = this
 
         doAsync {
-            val signedUp = false //authenticator.signUp(username, password)
+            val signedUp = authenticator.signUp(username, password)
             if (signedUp) {
                 uiThread { finish() } // TODO result?
             } else {
