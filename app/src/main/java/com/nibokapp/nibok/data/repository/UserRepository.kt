@@ -6,6 +6,7 @@ import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.extension.executeRealmTransaction
+import com.nibokapp.nibok.extension.getLocalUser
 import com.nibokapp.nibok.extension.queryOneWithRealm
 
 /**
@@ -14,14 +15,6 @@ import com.nibokapp.nibok.extension.queryOneWithRealm
 object UserRepository : UserRepositoryInterface {
 
     const private val TAG = "UserRepository"
-
-    override fun signUp(username: String, password: String) : Boolean {
-        throw UnsupportedOperationException("Sign up can only be done with the server")
-    }
-
-    override fun login(username: String, password: String): Boolean {
-        throw UnsupportedOperationException("Login can only be done with the server")
-    }
 
     override fun createLocalUser(userId: String,
                                  savedInsertions: List<Insertion>,
@@ -41,6 +34,24 @@ object UserRepository : UserRepositoryInterface {
             }
         }
         Log.d(TAG, "Local user created")
+    }
+
+    override fun removeLocalUser() : Boolean {
+
+        if (!localUserExists()) {
+            Log.d(TAG, "Local user does not exist. Cannot remove it.")
+            return false
+        }
+
+        Log.d(TAG, "Removing local user")
+
+        executeRealmTransaction {
+            val user = it.getLocalUser()
+            user?.deleteFromRealm()
+        }
+
+        return localUserExists()
+
     }
 
     override fun getLocalUserId(): String = getLocalUser()?.username ?:

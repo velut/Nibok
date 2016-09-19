@@ -8,31 +8,18 @@ import com.nibokapp.nibok.data.db.User
 interface UserRepositoryInterface {
 
     /**
-     * Sign up as a new user with the given username and password.
-     *
-     * @param username the user's unique username
-     * @param password the user's password
-     *
-     * @return true if the sign up was successful, false otherwise
-     */
-    fun signUp(username: String, password: String) : Boolean
-
-    /**
-     * Login as a returning user with the given username and password.
-     *
-     * @param username the user's unique username
-     * @param password the user's password
-     *
-     * @return true if the login was successful, false otherwise
-     */
-    fun login(username: String, password: String) : Boolean
-
-    /**
      * Create the local user instance in the local db if necessary.
      */
     fun createLocalUser(userId: String, savedInsertions: List<Insertion> = emptyList(),
                         publishedInsertions: List<Insertion> = emptyList(),
                         conversations: List<Conversation> = emptyList())
+
+    /**
+     * Remove the local user instance in the local db if necessary.
+     *
+     * @return true if the local user instance was removed successfully, false otherwise
+     */
+    fun removeLocalUser() : Boolean
 
     /**
      * Get the id of the local user if the user exists.
