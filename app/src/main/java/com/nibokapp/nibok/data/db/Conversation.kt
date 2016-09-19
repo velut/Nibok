@@ -17,9 +17,9 @@ import java.util.*
  */
 open class Conversation(
 
-        @PrimaryKey open var id: Long = 0,
+        @PrimaryKey open var id: String = "",
 
-        open var userId: Long = 0,
+        open var userId: String = "",
 
         open var partner: ExternalUser? = null,
 
