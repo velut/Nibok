@@ -23,10 +23,10 @@
         android:title="@string/back_to_top_action"
         app:showAsAction="never"/>
 
-    <!-- Settings, in overflow -->
+    <!-- Authentication, in overflow -->
     <item
-        android:id="@+id/settingsAction"
-        android:title="@string/settings_action"
+        android:id="@+id/authAction"
+        android:title="@string/login_action"
         app:showAsAction="never"/>
 
 </menu>

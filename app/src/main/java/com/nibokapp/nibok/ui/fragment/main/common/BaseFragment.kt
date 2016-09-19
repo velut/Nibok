@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.extension.startLoginActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -24,6 +25,8 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
 
     protected var menuSearchAction: MenuItem? = null
     protected var searchView: SearchView? = null
+
+    private var menu: Menu? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
+        this.menu = menu
         inflater?.inflate(R.menu.toolbar_menu, menu)
 
         // Find the search action menu item and get the search view
@@ -103,7 +107,7 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
             R.id.searchAction -> handleSearchAction()
             R.id.refreshAction -> handleRefreshAction()
             R.id.backToTopAction -> handleBackToTopAction()
-            R.id.settingsAction -> handleSettingsAction()
+            R.id.authAction -> handleAuthAction()
             else -> handleUnknownAction(item)
         }
         return true
@@ -115,6 +119,17 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
     open fun handleSearchAction() {
         Log.d(TAG, "Searching")
     }
+
+    open fun handleAuthAction() {
+        Log.d(TAG, "Opening login")
+        context.startLoginActivity()
+
+        // TODO Change menu correctly
+        val authItem = menu?.findItem(R.id.authAction)
+        authItem?.title = "Logout"
+    }
+
+
 
     /**
      * Handle the refresh action.
@@ -159,13 +174,6 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
      * @return the name of the fragment instance
      */
     abstract fun getFragmentName() : String
-
-    /**
-     * Handle the settings action.
-     */
-    private fun handleSettingsAction() {
-        context.toast("Settings")
-    }
 
     /**
      * Handle every other action not directly handled.
