@@ -20,7 +20,7 @@ import java.util.*
  */
 open class Insertion(
 
-        @PrimaryKey open var id: Long = 0,
+        @PrimaryKey open var id: String = "",
 
         open var date: Date? = null,
 
