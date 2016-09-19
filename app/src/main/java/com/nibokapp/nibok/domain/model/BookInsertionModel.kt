@@ -18,7 +18,7 @@ import java.util.*
  * @param savedByUser true if the insertion is saved by the user, false if it is not. VAR
  */
 data class BookInsertionModel(
-        val insertionId: Long,
+        val insertionId: String,
         val seller: UserModel,
         val bookInfo: BookInfoModel,
         val bookPrice: Float,
@@ -28,7 +28,7 @@ data class BookInsertionModel(
         var savedByUser: Boolean
 ) : ViewType {
 
-    override fun getItemId(): Long = insertionId
+    override fun getItemId(): String = insertionId
 
     override fun getViewType(): Int = ViewTypes.BOOK_INSERTION
 }

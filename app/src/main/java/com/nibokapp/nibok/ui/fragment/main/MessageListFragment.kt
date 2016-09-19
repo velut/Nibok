@@ -72,14 +72,14 @@ class MessageListFragment(
     }
 
     private val messageItemClickManager = object : ViewTypeAdapter.ItemClickManager {
-        override fun onButtonClick(itemId: Long, itemType: Int) {
+        override fun onButtonClick(itemId: String, itemType: Int) {
         }
 
         override fun showButton(): Boolean = false
 
         override fun updateItemOnButtonClick(): Boolean = false
 
-        override fun onItemClick(itemId: Long, itemType: Int) {
+        override fun onItemClick(itemId: String, itemType: Int) {
             Log.d(TAG, "Opening chat for conversation: $itemId")
             context.startActivity<ChatActivity>(
                     ChatFragment.CONVERSATION_ID to itemId

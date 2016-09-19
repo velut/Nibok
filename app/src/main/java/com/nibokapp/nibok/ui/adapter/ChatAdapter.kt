@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.message_chat_bubble_right.view.*
  *
  * @param userId the id of the local user
  */
-class ChatAdapter(val userId: Long) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter(val userId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         /**

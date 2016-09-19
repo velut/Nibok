@@ -12,7 +12,7 @@ import com.nibokapp.nibok.domain.command.common.Command
  * @return true if the insertion is saved, false if it is not saved
  */
 class CheckBookInsertionSaveStatusCommand(
-        val insertionId: Long,
+        val insertionId: String,
         val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
 ) : Command<Boolean> {
 

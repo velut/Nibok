@@ -19,7 +19,7 @@ class ChatPresenter {
      *
      * @return the id of the local user
      */
-    fun getUserId() : Long {
+    fun getUserId() : String {
         Log.d(TAG, "Requesting local user id")
         return RequestLocalUserIdCommand().execute()
     }
@@ -31,7 +31,7 @@ class ChatPresenter {
      *
      * @return a String with the partner's name or null if such name was not found
      */
-    fun getConversationPartnerName(conversationId: Long): String? {
+    fun getConversationPartnerName(conversationId: String): String? {
         Log.d(TAG, "Requesting conversation: $conversationId partner's name")
         return RequestConversationPartnerNameCommand(conversationId).execute()
     }
@@ -43,7 +43,7 @@ class ChatPresenter {
      *
      * @return the messages in the conversation
      */
-    fun getConversationMessages(conversationId: Long) : List<ChatMessageModel> {
+    fun getConversationMessages(conversationId: String) : List<ChatMessageModel> {
         Log.d(TAG, "Requesting messages for conversation: $conversationId")
         return RequestMessagesFromConversationCommand(conversationId).execute()
     }

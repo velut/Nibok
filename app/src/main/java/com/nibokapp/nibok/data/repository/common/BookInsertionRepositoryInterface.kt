@@ -20,7 +20,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return the insertion with the given id or null if no such insertion was found
      */
-    fun getBookInsertionById(insertionId: Long) : Insertion?
+    fun getBookInsertionById(insertionId: String) : Insertion?
 
     /**
      * Get the book data for the book with the given ISBN code.
@@ -207,7 +207,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the book insertion belongs to the user's saved insertions, false otherwise
      */
-    fun isBookInsertionSaved(insertionId: Long) : Boolean
+    fun isBookInsertionSaved(insertionId: String) : Boolean
 
     /**
      * Toggle the save status for an insertion either by adding it to the user saved insertions
@@ -217,7 +217,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the insertion was saved false if it was removed
      */
-    fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean
+    fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean
 
     /*
      * BOOK INSERTION PUBLISHING

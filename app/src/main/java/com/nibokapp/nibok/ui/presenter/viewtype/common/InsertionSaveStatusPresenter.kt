@@ -18,7 +18,7 @@ interface InsertionSaveStatusPresenter {
      *
      * @return true if the insertion is saved, false otherwise
      */
-    fun isInsertionSaved(insertionId: Long) : Boolean {
+    fun isInsertionSaved(insertionId: String) : Boolean {
         val saved = CheckBookInsertionSaveStatusCommand(insertionId).execute()
         Log.d(TAG, "Insertion $insertionId is saved: $saved")
         return saved
@@ -32,7 +32,7 @@ interface InsertionSaveStatusPresenter {
      *
      * @return true if the insertion was saved, false if it was unsaved
      */
-    fun toggleInsertionSave(insertionId: Long) : Boolean {
+    fun toggleInsertionSave(insertionId: String) : Boolean {
         val saved = ToggleBookInsertionSaveStatusCommand(insertionId).execute()
         Log.d(TAG, "After toggle insertion $insertionId saved: $saved")
         return saved

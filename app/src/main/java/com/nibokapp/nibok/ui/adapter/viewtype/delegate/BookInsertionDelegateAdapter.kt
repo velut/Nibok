@@ -52,7 +52,7 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
             private val MAX_AUTHORS = 2
         }
 
-        private var insertionId: Long? = null
+        private var insertionId: String? = null
 
         /**
          * Binds the itemView of the view holder to the given item's data.

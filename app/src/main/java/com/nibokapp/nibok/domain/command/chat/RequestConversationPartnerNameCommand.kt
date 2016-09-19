@@ -12,7 +12,7 @@ import com.nibokapp.nibok.domain.command.common.Command
  * @return the String describing the partner's name or null if the partner's name was not found
  */
 class RequestConversationPartnerNameCommand(
-        val conversationId: Long,
+        val conversationId: String,
         val conversationRepository: ConversationRepositoryInterface = ConversationRepository
 ) : Command<String?> {
 

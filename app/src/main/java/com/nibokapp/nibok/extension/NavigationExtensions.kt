@@ -15,7 +15,7 @@ import org.jetbrains.anko.startActivity
  *
  * @param insertionId the id of the insertion to display in the InsertionDetailActivity
  */
-fun Context.startDetailActivity(insertionId: Long) =
+fun Context.startDetailActivity(insertionId: String) =
         this.startActivity<InsertionDetailActivity>(
                 InsertionDetailFragment.INSERTION_ID to insertionId)
 

@@ -13,7 +13,7 @@ interface ViewType {
      *
      * @return the id of the item
      */
-    fun getItemId(): Long
+    fun getItemId(): String
 
     /**
      * Get the view type of the item.

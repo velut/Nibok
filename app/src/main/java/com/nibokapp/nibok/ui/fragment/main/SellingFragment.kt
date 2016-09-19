@@ -90,13 +90,13 @@ class SellingFragment(
 
     private val bookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
 
-        override fun onButtonClick(itemId: Long, itemType: Int) {}
+        override fun onButtonClick(itemId: String, itemType: Int) {}
 
         override fun showButton(): Boolean = false
 
         override fun updateItemOnButtonClick(): Boolean = false
 
-        override fun onItemClick(itemId: Long, itemType: Int) {
+        override fun onItemClick(itemId: String, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION)
                 context.startDetailActivity(itemId)
         }

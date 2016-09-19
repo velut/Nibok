@@ -16,15 +16,15 @@ import java.util.*
  * @param date the date in which the conversation was last updated
  */
 data class ConversationModel(
-        val conversationId: Long,
-        val userId: Long,
+        val conversationId: String,
+        val userId: String,
         val partner: UserModel,
         val previewText: String,
         val chatMessages: List<ChatMessageModel>,
         val date: Date
 ) : ViewType {
 
-    override fun getItemId(): Long = conversationId
+    override fun getItemId(): String = conversationId
 
     override fun getViewType() : Int = ViewTypes.MESSAGE
 }

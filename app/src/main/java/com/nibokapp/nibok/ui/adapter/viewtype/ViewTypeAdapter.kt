@@ -35,7 +35,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
          *
          * @param itemId the id of the item that was clicked
          */
-        fun onButtonClick(itemId: Long, itemType: Int)
+        fun onButtonClick(itemId: String, itemType: Int)
 
         /**
          * Signal if the item's button should be shown or not.
@@ -56,12 +56,12 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
          *
          * @param itemId the id of the item that was clicked
          */
-        fun onItemClick(itemId: Long, itemType: Int)
+        fun onItemClick(itemId: String, itemType: Int)
     }
 
     // The loading item object
     private val loadingItem = object : ViewType {
-        override fun getItemId(): Long = 0L
+        override fun getItemId(): String = "loadingId"
 
         override fun getViewType(): Int = ViewTypes.LOADING
     }
@@ -112,7 +112,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
 
     override fun removeItem(item: ViewType) = removeViewTypeItem(item)
 
-    override fun removeItemById(itemId: Long, itemType: Int): Int {
+    override fun removeItemById(itemId: String, itemType: Int): Int {
         var result = -1
         val itemToRemove = getCurrentItemsForViewType(itemType).find { it.getItemId() == itemId }
         itemToRemove?.let {
@@ -122,7 +122,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
         return result
     }
 
-    override fun restoreItemById(itemId: Long, itemType: Int, position: Int) {
+    override fun restoreItemById(itemId: String, itemType: Int, position: Int) {
         val itemToRestore = removedItems.find { it.getItemId() == itemId
                                                 && it.getViewType() == itemType }
         itemToRestore?.let {

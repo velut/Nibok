@@ -15,7 +15,7 @@ import com.nibokapp.nibok.domain.model.ChatMessageModel
  * @return the list of ChatMessageModel messages belonging to the conversation with the given id
  */
 class RequestMessagesFromConversationCommand(
-        val conversationId: Long,
+        val conversationId: String,
         val dataMapper: MessageDataMapperInterface = MessageDataMapper(),
         val conversationRepository: ConversationRepositoryInterface = ConversationRepository
 ) : Command<List<ChatMessageModel>> {

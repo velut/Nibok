@@ -16,7 +16,7 @@ interface ConversationRepositoryInterface {
      *
      * @return the conversation with the given id or null if no such conversation was found
      */
-    fun getConversationById(conversationId: Long) : Conversation?
+    fun getConversationById(conversationId: String) : Conversation?
 
     /**
      * Get the partner's name for the conversation with the given id.
@@ -26,7 +26,7 @@ interface ConversationRepositoryInterface {
      * @return the partner's name for the conversation with the given id
      * or null if no such conversation was found
      */
-    fun getConversationPartnerName(conversationId: Long) : String?
+    fun getConversationPartnerName(conversationId: String) : String?
 
     /**
      * Get the list of conversations matching the given query.
@@ -71,9 +71,9 @@ interface ConversationRepositoryInterface {
      *
      * @param partnerId the id of the user with which the conversation is held
      *
-     * @return the started conversation's id or -1 if the conversation could not be started
+     * @return the started conversation's id or null if the conversation could not be started
      */
-    fun startConversation(partnerId: Long) : Long
+    fun startConversation(partnerId: String) : String?
 
     /**
      * Get the current list of messages in the conversation with the given id.
@@ -82,7 +82,7 @@ interface ConversationRepositoryInterface {
      *
      * @return the list of currently available messages in the conversation
      */
-    fun getMessageListForConversation(conversationId: Long) : List<Message>
+    fun getMessageListForConversation(conversationId: String) : List<Message>
 
     /**
      * Get the list of messages in the conversation with the given id that are dated after the
@@ -93,7 +93,7 @@ interface ConversationRepositoryInterface {
      *
      * @return the list messages in the conversation dated after the given date
      */
-    fun getMessageListAfterDateForConversation(conversationId: Long, date: Date) : List<Message>
+    fun getMessageListAfterDateForConversation(conversationId: String, date: Date) : List<Message>
 
     /**
      * Get the list of messages in the conversation with the given id that are dated before the
@@ -103,7 +103,7 @@ interface ConversationRepositoryInterface {
      * @param date the date used in comparisons
      * @return the list messages in the conversation dated before the given date
      */
-    fun getMessageListBeforeDateForConversation(conversationId: Long, date: Date) : List<Message>
+    fun getMessageListBeforeDateForConversation(conversationId: String, date: Date) : List<Message>
 
     /**
      * Send the given message.

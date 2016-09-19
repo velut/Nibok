@@ -26,7 +26,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: Long) : Insertion? = queryOneWithRealm {
+    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneWithRealm {
         it.where(Insertion::class.java)
                 .equalTo("id", insertionId)
                 .findFirst()
@@ -141,10 +141,10 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * BOOK INSERTION SAVE STATUS
      */
 
-    override fun isBookInsertionSaved(insertionId: Long) : Boolean =
+    override fun isBookInsertionSaved(insertionId: String) : Boolean =
             insertionId in getSavedBookInsertionList().map { it.id }
 
-    override fun toggleBookInsertionSaveStatus(insertionId: Long) : Boolean {
+    override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
 
         if (!userRepository.localUserExists())
             throw IllegalStateException("Local user does not exist. Cannot save insertion")
@@ -185,7 +185,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
             return this
         } else {
             val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.id != userId }
+            return this.filter { it.seller?.username != userId }
         }
     }
 
@@ -194,7 +194,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
             return this
         } else {
             val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.id == userId }
+            return this.filter { it.seller?.username == userId }
         }
     }
 

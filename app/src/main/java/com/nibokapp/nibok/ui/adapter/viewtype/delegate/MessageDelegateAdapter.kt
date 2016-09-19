@@ -38,7 +38,7 @@ class MessageDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickMana
         private val MAX_PARTNER_NAME_LENGTH_LANDSCAPE = 25
         private val MAX_MESSAGE_CONTENT_LENGTH_LANDSCAPE = 40
 
-        private var conversationId: Long? = null
+        private var conversationId: String? = null
 
         /**
          * Bind the itemView of the view holder to the given item's data.
@@ -80,7 +80,7 @@ class MessageDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickMana
                     else MAX_MESSAGE_CONTENT_LENGTH_LANDSCAPE
 
             with(item) {
-                messagePartner.text = partner.name.ellipsize(maxPartnerNameLength)
+                messagePartner.text = partner.username.ellipsize(maxPartnerNameLength)
                 messageContent.text = previewText.ellipsize(maxMessageContentLength)
                 messageDate.text = date.toDeltaBasedSimpleDateString(context.getString(R.string.yesterday))
             }

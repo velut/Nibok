@@ -67,7 +67,7 @@ class SavedFragment(
     override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
 
     private val mainViewBookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
-        override fun onButtonClick(itemId: Long, itemType: Int) {
+        override fun onButtonClick(itemId: String, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION) mainViewItemClickListener(itemId, itemType)
         }
 
@@ -75,14 +75,14 @@ class SavedFragment(
 
         override fun updateItemOnButtonClick(): Boolean = false
 
-        override fun onItemClick(itemId: Long, itemType: Int) {
+        override fun onItemClick(itemId: String, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION)
                 context.startDetailActivity(itemId)
         }
     }
 
     private val searchViewBookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
-        override fun onButtonClick(itemId: Long, itemType: Int) {
+        override fun onButtonClick(itemId: String, itemType: Int) {
 
             if (itemType != ViewTypes.BOOK_INSERTION ||
                     presenter !is InsertionSaveStatusPresenter) {
@@ -99,7 +99,7 @@ class SavedFragment(
 
         override fun updateItemOnButtonClick(): Boolean = true
 
-        override fun onItemClick(itemId: Long, itemType: Int) {
+        override fun onItemClick(itemId: String, itemType: Int) {
             if (itemType == ViewTypes.BOOK_INSERTION)
                 context.startDetailActivity(itemId)
         }
@@ -112,7 +112,7 @@ class SavedFragment(
      * @param itemId the id of the item that was clicked
      * @param itemType the type of the item that was clicked
      */
-    private fun mainViewItemClickListener(itemId: Long, itemType: Int) {
+    private fun mainViewItemClickListener(itemId: String, itemType: Int) {
 
         if (presenter !is InsertionSaveStatusPresenter) return
 

@@ -21,7 +21,7 @@ object ConversationRepository : ConversationRepositoryInterface {
     private var conversationCache : List<Conversation> = emptyList()
 
 
-    override fun getConversationById(conversationId: Long) : Conversation? {
+    override fun getConversationById(conversationId: String) : Conversation? {
         if (userRepository.localUserExists()) {
             return queryOneWithRealm {
                 it.where(Conversation::class.java)
@@ -34,8 +34,8 @@ object ConversationRepository : ConversationRepositoryInterface {
         }
     }
 
-    override fun getConversationPartnerName(conversationId: Long): String? =
-            getConversationById(conversationId)?.partner?.name
+    override fun getConversationPartnerName(conversationId: String): String? =
+            getConversationById(conversationId)?.partner?.username
 
     override fun getConversationListFromQuery(query: String) : List<Conversation> {
 
@@ -91,16 +91,16 @@ object ConversationRepository : ConversationRepositoryInterface {
         return results
     }
 
-    override fun startConversation(partnerId: Long): Long {
+    override fun startConversation(partnerId: String): String? {
 
-        var conversationId = -1L
-
-        if (!userRepository.localUserExists()) return conversationId
+        if (!userRepository.localUserExists()) return null
 
         val localUserId = userRepository.getLocalUserId()
 
         // Prevent conversations between the user and himself
-        if (localUserId == partnerId) return conversationId
+        if (localUserId == partnerId) return null
+
+        var conversationId: String? = null
 
         executeRealmTransaction {
             val conversation = it.getConversationBetweenUsers(localUserId, partnerId)
@@ -110,9 +110,10 @@ object ConversationRepository : ConversationRepositoryInterface {
                 val conversationPartner =
                         it.getExternalUserById(partnerId) ?: return@executeRealmTransaction
 
+                // TODO get values from server
                 val newConversation = it.createObject(Conversation::class.java)
                 newConversation.apply {
-                    id = Random().nextLong()
+                    id = Random().nextLong().toString()
                     userId = localUserId
                     partner = conversationPartner
                     date = Date()
@@ -123,18 +124,18 @@ object ConversationRepository : ConversationRepositoryInterface {
         return conversationId
     }
 
-    override fun getMessageListForConversation(conversationId: Long): List<Message> {
+    override fun getMessageListForConversation(conversationId: String): List<Message> {
         val conversation = getConversationById(conversationId)
         return conversation?.messages?.toNormalList() ?: emptyList()
     }
 
-    override fun getMessageListAfterDateForConversation(conversationId: Long, date: Date): List<Message> {
+    override fun getMessageListAfterDateForConversation(conversationId: String, date: Date): List<Message> {
         return getMessageListForConversation(conversationId)
                 .sortedBy { it.date }
                 .filter { it.date!! >= date }
     }
 
-    override fun getMessageListBeforeDateForConversation(conversationId: Long, date: Date): List<Message> {
+    override fun getMessageListBeforeDateForConversation(conversationId: String, date: Date): List<Message> {
         return getMessageListForConversation(conversationId)
                 .sortedBy { it.date }
                 .filter { it.date!! <= date }

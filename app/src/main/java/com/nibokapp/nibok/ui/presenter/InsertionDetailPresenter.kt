@@ -19,7 +19,7 @@ class InsertionDetailPresenter {
      *
      * @return the id of the local user
      */
-    fun getUserId() : Long {
+    fun getUserId() : String {
         Log.d(TAG, "Requesting local user id")
         return RequestLocalUserIdCommand().execute()
     }
@@ -31,7 +31,7 @@ class InsertionDetailPresenter {
      *
      * @return detail data about the insertion if the insertion was found, null otherwise
      */
-    fun getInsertionDetails(insertionId: Long) : BookInsertionModel? {
+    fun getInsertionDetails(insertionId: String) : BookInsertionModel? {
         Log.d(TAG, "Getting book insertion $insertionId details")
         return RequestBookInsertionByIdCommand(insertionId).execute()
     }

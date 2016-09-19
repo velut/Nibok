@@ -59,7 +59,7 @@ interface ListAdapter<T> {
      * @return the index of the item if the item was remove successfully
      * or -1 if the item couldn't be found
      */
-    fun removeItemById(itemId: Long, itemType: Int) : Int
+    fun removeItemById(itemId: String, itemType: Int) : Int
 
     /**
      * Restore an item into the current list of items given its id.
@@ -68,7 +68,7 @@ interface ListAdapter<T> {
      * @param itemType the view type of the item
      * @param position the position in the items' list in which to restore the item
      */
-    fun restoreItemById(itemId: Long, itemType: Int, position: Int)
+    fun restoreItemById(itemId: String, itemType: Int, position: Int)
 
     /**
      * Get the items currently managed by the adapter.

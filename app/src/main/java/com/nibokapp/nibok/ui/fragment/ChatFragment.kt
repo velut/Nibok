@@ -35,7 +35,7 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
 
     private var actionBar: ActionBar? = null
 
-    private var conversationId = 0L
+    private var conversationId: String? = null
 
     private val userId by lazy { presenter.getUserId() }
 
@@ -73,13 +73,13 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         // Retrieve the conversation's id and add messages
         arguments?.let {
 
-            conversationId = it.getLong(ChatFragment.CONVERSATION_ID)
+            conversationId = it.getString(ChatFragment.CONVERSATION_ID)
 
-            if (!conversationId.equals(0L)) { // Exclude default case of getLong()
-                Log.d(TAG, "Got conversationId: $conversationId")
-                partnerName = presenter.getConversationPartnerName(conversationId) ?: partnerNamePlaceholder
+            conversationId?.let {
+                Log.d(TAG, "Got conversationId: $it")
+                partnerName = presenter.getConversationPartnerName(it) ?: partnerNamePlaceholder
                 actionBar?.title = partnerName
-                val messages = presenter.getConversationMessages(conversationId)
+                val messages = presenter.getConversationMessages(it)
                 chatAdapter.addMessages(messages)
             }
         }
@@ -141,8 +141,10 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
             return
         }
 
+        val currentConversationId = conversationId ?: return
+
         val message = ChatMessageModel(
-                conversationId,
+                currentConversationId,
                 userId,
                 messageText,
                 Date()
