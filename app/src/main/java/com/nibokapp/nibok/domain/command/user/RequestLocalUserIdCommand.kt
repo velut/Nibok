@@ -10,8 +10,8 @@ import com.nibokapp.nibok.domain.command.common.Command
  */
 class RequestLocalUserIdCommand(
         val userRepository: UserRepositoryInterface = UserRepository
-) : Command<Long> {
+) : Command<String> {
 
-    override fun execute(): Long =
+    override fun execute(): String =
             userRepository.getLocalUserId()
 }
