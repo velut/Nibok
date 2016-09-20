@@ -91,4 +91,6 @@ object Authenticator : AuthenticatorInterface {
             return false
         }
     }
+
+    override fun currentUserExists(): Boolean = BaasUser.current() != null
 }

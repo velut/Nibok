@@ -32,5 +32,12 @@ interface AuthenticatorInterface {
      */
     fun logout() : Boolean
 
+    /**
+     * Check if there is a currently logged in user or not.
+     *
+     * @return true if there is a currently logged, false otherwise
+     */
+    fun currentUserExists() : Boolean
+
 }
 
