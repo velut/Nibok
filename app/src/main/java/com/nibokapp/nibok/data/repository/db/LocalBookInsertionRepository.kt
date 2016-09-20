@@ -179,28 +179,4 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface {
     override fun publishBookInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
-
-
-    private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
-            return this
-        } else {
-            val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.username != userId }
-        }
-    }
-
-    private fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
-            return this
-        } else {
-            val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.username == userId }
-        }
-    }
-
-    private fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
-        val savedInsertions = getSavedBookInsertionList()
-        return this.filter { it.id in savedInsertions.map { it.id } }
-    }
 }
