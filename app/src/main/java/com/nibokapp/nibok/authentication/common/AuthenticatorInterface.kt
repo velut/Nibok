@@ -39,5 +39,14 @@ interface AuthenticatorInterface {
      */
     fun currentUserExists() : Boolean
 
+    /**
+     * Check if the given username is available on the platform.
+     *
+     * @param username the username to check
+     *
+     * @return true if the username is available, false otherwise
+     */
+    fun isUsernameAvailable(username: String) : Boolean
+
 }
 

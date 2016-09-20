@@ -133,6 +133,7 @@
     <string name="link_sign_up">Not a member yet? Register here</string>
     <string name="login_action">Login</string>
     <string name="logout_action">Logout</string>
+    <string name="username_already_taken">This username is already taken</string>
 
     <!-- Authentication dialogs -->
     <string name="title_login_fail">Login Failed</string>

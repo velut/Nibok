@@ -1,7 +1,9 @@
 package com.nibokapp.nibok.authentication
 
 import android.util.Log
+import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasUser
+import com.baasbox.android.Rest
 import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.data.repository.UserRepository
@@ -93,4 +95,24 @@ object Authenticator : AuthenticatorInterface {
     }
 
     override fun currentUserExists(): Boolean = BaasUser.current() != null
+
+    override fun isUsernameAvailable(username: String): Boolean {
+        val rest = BaasBox.rest()
+
+        val result = rest.sync(
+                Rest.Method.GET,
+                "plugin/users.usernameAvailable?username=$username"
+        )
+
+        if (result.isSuccess) {
+            val data = result.value() ?: return true
+            val available =
+                    data.getString(ServerConstants.DATA) == ServerConstants.USERNAME_AVAILABLE
+            Log.d(TAG, "Username: $username available: $available")
+            return available
+        } else {
+            Log.d(TAG, "Username check fail")
+            return true
+        }
+    }
 }

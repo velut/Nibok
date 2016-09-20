@@ -58,4 +58,12 @@ class AuthPresenter(
             if (loggedUserExists())
                 RequestLocalUserIdCommand().execute()
             else null
+
+    /**
+     * Check if the given username is available or not.
+     *
+     * @return true if the username is available, false otherwise
+     */
+    fun isUsernameAvailable(username: String) : Boolean =
+            authenticator.isUsernameAvailable(username)
 }

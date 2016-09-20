@@ -6,6 +6,16 @@ package com.nibokapp.nibok.data.repository.server
 object ServerConstants {
 
     /**
+     * Generic data.
+     */
+    const val DATA = "data"
+
+    /**
+     * Username.
+     */
+    const val USERNAME_AVAILABLE = "available"
+
+    /**
      * User attributes.
      */
     const val SAVED_INSERTIONS = "savedInsertions"

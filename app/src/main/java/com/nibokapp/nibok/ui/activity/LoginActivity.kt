@@ -10,11 +10,10 @@ import android.view.MotionEvent
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.authentication.Authenticator
-import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.domain.rule.AuthenticationValidator
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
+import com.nibokapp.nibok.ui.presenter.AuthPresenter
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -24,7 +23,7 @@ import org.jetbrains.anko.uiThread
  * Used by a guest to either login into the application or sign up.
  */
 class LoginActivity(
-        val authenticator: AuthenticatorInterface = Authenticator
+        val authPresenter: AuthPresenter = AuthPresenter()
 ) : AppCompatActivity() {
 
     companion object {
@@ -89,9 +88,9 @@ class LoginActivity(
         val context = this
 
         doAsync {
-            val loggedIn = authenticator.login(username, password)
+            val loggedIn = authPresenter.login(username, password)
             if (loggedIn) {
-                uiThread { finish() } // TODO result?
+                uiThread { finish() }
             } else {
                 uiThread {
                     alertDialog = MaterialDialog.Builder(context)
@@ -120,9 +119,9 @@ class LoginActivity(
         val context = this
 
         doAsync {
-            val signedUp = authenticator.signUp(username, password)
+            val signedUp = authPresenter.signUp(username, password)
             if (signedUp) {
-                uiThread { finish() } // TODO result?
+                uiThread { finish() }
             } else {
                 uiThread {
                     alertDialog = MaterialDialog.Builder(context)
@@ -220,19 +219,34 @@ class LoginActivity(
 
         if (username.isEmpty()) return
 
-        if (authValidator.isUsernameMinLengthValid(username)) {
-            inputUsernameLayout.error = null
-        } else {
-            val usernameTooShortError = String.format(getString(R.string.error_username_too_short),
-                    AuthenticationValidator.MIN_USERNAME_LENGTH)
+        // On new input reset error
+        inputUsernameLayout.error = null
+
+        // Min length not valid error
+        if (!authValidator.isUsernameMinLengthValid(username)) {
+            val usernameTooShortError =
+                    String.format(getString(R.string.error_username_too_short),
+                            AuthenticationValidator.MIN_USERNAME_LENGTH)
             inputUsernameLayout.apply {
                 error = usernameTooShortError
                 requestFocus()
             }
+            return
         }
 
+        // Username already taken error. Only in Sign Up
         if (!showLogin) {
-            // TODO Alert of username already in use on sign up
+            doAsync {
+                val available = authPresenter.isUsernameAvailable(username)
+                uiThread {
+                    if (!available) {
+                        inputUsernameLayout.apply {
+                            error = getString(R.string.username_already_taken)
+                            requestFocus()
+                        }
+                    }
+                }
+            }
         }
     }
 
