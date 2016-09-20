@@ -1,8 +1,10 @@
 package com.nibokapp.nibok.extension
 
 import android.content.Context
+import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
 import com.nibokapp.nibok.ui.activity.LoginActivity
+import com.nibokapp.nibok.ui.fragment.ChatFragment
 import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import org.jetbrains.anko.startActivity
 
@@ -24,3 +26,11 @@ fun Context.startDetailActivity(insertionId: String) =
  */
 fun Context.startLoginActivity() =
         this.startActivity<LoginActivity>()
+
+/**
+ * Start the ConversationActivity for the given conversation's id.
+ */
+fun Context.startConversation(conversationId: String) =
+        this.startActivity<ChatActivity>(
+                ChatFragment.CONVERSATION_ID to conversationId
+        )
