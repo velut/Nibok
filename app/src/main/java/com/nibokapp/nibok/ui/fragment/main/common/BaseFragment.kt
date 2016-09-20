@@ -10,14 +10,19 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.startLoginActivity
+import com.nibokapp.nibok.ui.presenter.AuthPresenter
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 /**
  * Base fragment implementing common features.
  *
  * It sets up the menu and creates stubs for handling menu actions.
  */
-abstract class BaseFragment : Fragment(), VisibleFragment {
+abstract class BaseFragment(
+        val authPresenter: AuthPresenter = AuthPresenter()
+) : Fragment(), VisibleFragment {
 
     companion object {
         val TAG: String = BaseFragment::class.java.simpleName
@@ -28,11 +33,19 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
 
     private var menu: Menu? = null
 
+    private var doLogin = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Add options menu
         setHasOptionsMenu(true)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateDoLogin()
+        updateAuthAction()
     }
 
     override fun onBecomeVisible() {
@@ -47,6 +60,8 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
         super.onCreateOptionsMenu(menu, inflater)
         this.menu = menu
         inflater?.inflate(R.menu.toolbar_menu, menu)
+
+        updateAuthAction()
 
         // Find the search action menu item and get the search view
         menuSearchAction = menu?.findItem(R.id.searchAction)
@@ -121,12 +136,33 @@ abstract class BaseFragment : Fragment(), VisibleFragment {
     }
 
     open fun handleAuthAction() {
-        Log.d(TAG, "Opening login")
-        context.startLoginActivity()
+        Log.d(TAG, "Handling auth action")
+        if (doLogin)
+            context.startLoginActivity()
+        else
+            doAsync {
+                doLogin = authPresenter.logout()
+                uiThread {
+                    updateAuthAction()
+                }
+            }
+    }
 
-        // TODO Change menu correctly
-        val authItem = menu?.findItem(R.id.authAction)
-        authItem?.title = "Logout"
+    private fun updateDoLogin() {
+        Log.d(TAG, "Updating doLogin")
+        doLogin = !authPresenter.loggedUserExists()
+    }
+
+    private fun updateAuthAction() {
+        val authItem = menu?.findItem(R.id.authAction) ?: return
+
+        if (doLogin) {
+            Log.d(TAG, "Offering login action")
+            authItem.title = getString(R.string.login_action)
+        } else {
+            Log.d(TAG, "Offering logout action")
+            authItem.title = "${getString(R.string.logout_action)} (${authPresenter.getLoggedUserId()})"
+        }
     }
 
 
