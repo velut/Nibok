@@ -10,17 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
-import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.extension.loadImg
-import com.nibokapp.nibok.extension.toCurrency
-import com.nibokapp.nibok.extension.toSimpleDateString
+import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.presenter.InsertionDetailPresenter
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.content_insertion_detail.*
 import kotlinx.android.synthetic.main.fragment_insertion_detail.*
 
-class InsertionDetailFragment(val presenter: InsertionDetailPresenter = InsertionDetailPresenter()) :
-        Fragment() {
+
+class InsertionDetailFragment(
+        val presenter: InsertionDetailPresenter = InsertionDetailPresenter()
+) : Fragment() {
 
     private var actionBar: ActionBar? = null
 
@@ -68,14 +67,23 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
         }
 
         fab.post { fab.visibility = View.VISIBLE }
-        addValidFabListener(data)
+        addFabListener(data)
     }
 
-    private fun addValidFabListener(data: BookInsertionModel) {
+    private fun addFabListener(data: BookInsertionModel) {
         fab.setOnClickListener {
             val sellerId = data.seller.username
-            Log.d(TAG, "Sending a message to user: $sellerId")
-            // TODO Open messaging for user
+
+            if (presenter.loggedUserExists()) {
+                val conversationId = presenter.startConversation(sellerId)
+                conversationId?.let {
+                    Log.d(TAG, "Starting conversation with user: $sellerId")
+                    context.startConversation(conversationId)
+                }
+            } else {
+                Log.d(TAG, "Guest needs to login before starting a conversation")
+                context.startLoginActivity()
+            }
         }
     }
 
