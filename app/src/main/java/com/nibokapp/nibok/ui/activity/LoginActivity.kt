@@ -150,6 +150,9 @@ class LoginActivity(
     private fun showCurrentView() {
         Log.d(TAG, "Showing " + if (showLogin) "login" else "sign up")
 
+        validateUsername()
+        validatePrimaryPassword()
+
         if (showLogin) {
             // Hide and clear secondary password
             inputPasswordSecondaryLayout.apply {
@@ -167,6 +170,7 @@ class LoginActivity(
                 isEnabled = true
                 visibility = View.VISIBLE
             }
+            validateSecondaryPassword()
 
             // Change button and link
             btnAuthenticate.text = getString(R.string.sign_up)
