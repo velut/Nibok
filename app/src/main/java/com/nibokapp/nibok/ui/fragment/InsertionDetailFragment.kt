@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
@@ -46,11 +45,11 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
 
         // Retrieve the insertion id and bind the data into the view
         arguments?.let {
-            val insertionId = it.getLong(INSERTION_ID)
-            if (!insertionId.equals(0L)) { // Exclude default case of getLong()
+            val insertionId = it.getString(INSERTION_ID)
+            insertionId?.let {
                 val data = presenter.getInsertionDetails(insertionId)
-                addFabListener(data)
                 data?.let {
+                    setupFab(it)
                     setupImages(it)
                     bindData(it)
                 }
@@ -58,20 +57,25 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
         }
     }
 
-    private fun addFabListener(data: BookInsertionModel?) {
-        if (data == null) {
-            fab.setOnClickListener {
-                Log.d(TAG, "Trying to send a message to an invalid user")
-                val snackBar = Snackbar.make(fragmentDetailRoot,
-                        R.string.error_invalid_seller_messaging, Snackbar.LENGTH_LONG)
-                snackBar.show()
+    private fun setupFab(data: BookInsertionModel) {
+
+        try {
+            if (data.seller.username == presenter.getUserId()) {
+                return
             }
-        } else {
-            fab.setOnClickListener {
-                val sellerId = data.seller.id
-                Log.d(TAG, "Sending a message to user: $sellerId")
-                // TODO Open messaging for user
-            }
+        } catch (e: IllegalStateException) {
+            Log.d(TAG, "Skipping user id check")
+        }
+
+        fab.post { fab.visibility = View.VISIBLE }
+        addValidFabListener(data)
+    }
+
+    private fun addValidFabListener(data: BookInsertionModel) {
+        fab.setOnClickListener {
+            val sellerId = data.seller.username
+            Log.d(TAG, "Sending a message to user: $sellerId")
+            // TODO Open messaging for user
         }
     }
 
@@ -102,7 +106,7 @@ class InsertionDetailFragment(val presenter: InsertionDetailPresenter = Insertio
         // Insertion details
         insertionBookPrice.text = bookPrice.toCurrency()
         insertionBookCondition.text = bookCondition
-        insertionSoldBy.text = seller.name
+        insertionSoldBy.text = seller.username
         insertionDateField.text = insertionDate.toSimpleDateString()
 
         // Book details
