@@ -8,7 +8,7 @@ import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
-import com.nibokapp.nibok.data.repository.server.ServerConstants
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.getConversations
 import com.nibokapp.nibok.extension.getPublishedInsertions
 import com.nibokapp.nibok.extension.getSavedInsertions

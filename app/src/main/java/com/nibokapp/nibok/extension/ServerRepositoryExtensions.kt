@@ -8,21 +8,21 @@ import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.repository.server.ServerConstants.AUTHORS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.AVATAR
-import com.nibokapp.nibok.data.repository.server.ServerConstants.COLLECTION_BOOKS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.COLLECTION_CONVERSATIONS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.COLLECTION_INSERTIONS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.CONDITION
-import com.nibokapp.nibok.data.repository.server.ServerConstants.CONVERSATIONS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.ISBN
-import com.nibokapp.nibok.data.repository.server.ServerConstants.PICTURES
-import com.nibokapp.nibok.data.repository.server.ServerConstants.PRICE
-import com.nibokapp.nibok.data.repository.server.ServerConstants.PUBLISHED_INSERTIONS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.PUBLISHER
-import com.nibokapp.nibok.data.repository.server.ServerConstants.SAVED_INSERTIONS
-import com.nibokapp.nibok.data.repository.server.ServerConstants.TITLE
-import com.nibokapp.nibok.data.repository.server.ServerConstants.YEAR
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.AUTHORS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.AVATAR
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_BOOKS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_CONVERSATIONS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_INSERTIONS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.CONDITION
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.CONVERSATIONS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.ISBN
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PICTURES
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PRICE
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PUBLISHED_INSERTIONS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PUBLISHER
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.SAVED_INSERTIONS
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.TITLE
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.YEAR
 
 /**
  * Extensions for the Server's repository.

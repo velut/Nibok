@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.data.repository.server
+package com.nibokapp.nibok.data.repository.server.common
 
 /**
  * Constants to interact with JSON objects coming from the server.
