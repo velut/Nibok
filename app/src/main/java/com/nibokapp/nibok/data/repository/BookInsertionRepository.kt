@@ -5,8 +5,9 @@ import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
+import com.nibokapp.nibok.data.repository.db.LocalBookInsertionRepository
+import com.nibokapp.nibok.data.repository.server.ServerBookInsertionRepository
 import com.nibokapp.nibok.extension.*
-import io.realm.Case
 import java.util.*
 
 /**
@@ -18,6 +19,13 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     private val userRepository : UserRepositoryInterface = UserRepository
 
+    /**
+     * Sources for this repository
+     */
+    private val localRepository = LocalBookInsertionRepository
+    private val serverRepository = ServerBookInsertionRepository
+    private val SOURCES = listOf(localRepository, serverRepository)
+
     private var feedCache : List<Insertion> = emptyList()
     private var savedCache : List<Insertion> = emptyList()
     private var publishedCache : List<Insertion> = emptyList()
@@ -26,17 +34,11 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneWithRealm {
-        it.where(Insertion::class.java)
-                .equalTo("id", insertionId)
-                .findFirst()
-    }
+    override fun getBookInsertionById(insertionId: String) : Insertion? =
+            SOURCES.firstResultOrNull { it.getBookInsertionById(insertionId) }
 
-    override fun getBookByISBN(isbn: String): Book? = queryOneWithRealm {
-        it.where(Book::class.java)
-                .equalTo("isbn", isbn)
-                .findFirst()
-    }
+    override fun getBookByISBN(isbn: String): Book? =
+            SOURCES.firstResultOrNull { it.getBookByISBN(isbn) }
 
     override fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
 
@@ -44,35 +46,24 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .contains("book.title", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
-                    .findAll()
-        }
+        val results = SOURCES.firstResultOrNull { it.getBookInsertionListFromQuery(query) }
+                ?: emptyList()
+
         Log.d(TAG, "Book insertions corresponding to query '$query' = ${results.size}")
+
         return results
     }
 
     override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .greaterThanOrEqualTo("date", date)
-                    .findAll()}
+        val results = SOURCES.firstResultOrNull { it.getBookInsertionListAfterDate(date) }
+                ?: emptyList()
         Log.d(TAG, "Found ${results.size} insertions after $date")
         return results
     }
 
     override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .lessThanOrEqualTo("date", date)
-                    .findAll()}
+        val results = SOURCES.firstResultOrNull { it.getBookInsertionListBeforeDate(date) }
+                ?: emptyList()
         Log.d(TAG, "Found ${results.size} insertions before $date")
         return results
     }
@@ -83,8 +74,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        feedCache = queryRealm { it.where(Insertion::class.java).findAll()}
-                .excludeUserOwnInsertions()
+        feedCache = SOURCES.firstResultOrNull { it.getFeedBookInsertionList(cached) }
+                ?: emptyList()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache
     }
@@ -104,7 +95,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
-        savedCache = userRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
+        savedCache = SOURCES.firstResultOrNull { it.getSavedBookInsertionList(cached) }
+                ?: emptyList()
         return savedCache
     }
 
@@ -123,8 +115,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
-        publishedCache =
-                userRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
+        publishedCache = SOURCES.firstResultOrNull { it.getPublishedBookInsertionList(cached) }
+                ?: emptyList()
         return publishedCache
     }
 
@@ -138,7 +130,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
             getBookInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
-     * BOOK INSERTION SAVE STATUS
+     * BOOK INSERTION SAVE STATUS TODO
      */
 
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
@@ -178,28 +170,4 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun publishBookInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
-
-
-    private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
-            return this
-        } else {
-            val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.username != userId }
-        }
-    }
-
-    private fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
-            return this
-        } else {
-            val userId = userRepository.getLocalUserId()
-            return this.filter { it.seller?.username == userId }
-        }
-    }
-
-    private fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
-        val savedInsertions = getSavedBookInsertionList()
-        return this.filter { it.id in savedInsertions.map { it.id } }
-    }
 }
