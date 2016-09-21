@@ -6,14 +6,18 @@ import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
+import com.nibokapp.nibok.data.repository.db.common.LocalStorage
 import com.nibokapp.nibok.extension.*
 import io.realm.Case
+import org.jetbrains.anko.doAsync
 import java.util.*
 
 /**
  * Local repository for book insertions.
  */
-object LocalBookInsertionRepository : BookInsertionRepositoryInterface {
+object LocalBookInsertionRepository :
+        BookInsertionRepositoryInterface,
+        LocalStorage<Insertion> {
 
     const private val TAG = "LocalBookInsertionRepository"
 
@@ -179,4 +183,23 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface {
     override fun publishBookInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
+
+    /*
+     * LOCAL STORAGE
+     */
+    override fun storeItems(items: List<Insertion>) {
+
+        if (items.isEmpty()) return
+        doAsync {
+            Log.d(TAG, "Storing insertions")
+            items.forEach { storeInsertion(it) }
+        }
+    }
+
+    private fun storeInsertion(insertion: Insertion) {
+        Log.d(TAG, "Storing insertion: ${insertion.id}")
+        executeRealmTransaction {
+            it.copyToRealmOrUpdate(insertion)
+        }
+    }
 }
