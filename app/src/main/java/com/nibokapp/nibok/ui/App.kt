@@ -2,9 +2,11 @@ package com.nibokapp.nibok.ui
 
 import android.app.Application
 import com.baasbox.android.BaasBox
+import com.baasbox.android.BaasUser
 import com.facebook.drawee.backends.pipeline.Fresco
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.jetbrains.anko.doAsync
 import kotlin.properties.Delegates
 
 class App : Application() {
@@ -25,6 +27,10 @@ class App : Application() {
                 .setPort(9000)
                 .setAppCode("1234567890")
                 .init()
+
+        doAsync {
+            BaasUser.current()?.logoutSync()
+        }
 
         // Initialize Fresco
         Fresco.initialize(this)
