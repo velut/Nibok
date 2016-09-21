@@ -1,13 +1,18 @@
 package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
+import com.baasbox.android.BaasDocument
+import com.baasbox.android.BaasQuery
+import com.baasbox.android.BaasUser
+import com.baasbox.android.BaasUser.Scope
+import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.*
-import io.realm.Case
 import java.util.*
 
 /**
@@ -15,7 +20,7 @@ import java.util.*
  */
 object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
-    const private val TAG = "BookInsertionRepository"
+    const private val TAG = "ServerBookInsertionRepository"
 
     private val userRepository : UserRepositoryInterface = UserRepository
 
@@ -27,16 +32,18 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneWithRealm {
-        it.where(Insertion::class.java)
-                .equalTo("id", insertionId)
-                .findFirst()
+    override fun getBookInsertionById(insertionId: String) : Insertion? {
+        val result = BaasDocument.fetchSync(ServerConstants.COLLECTION_INSERTIONS, insertionId)
+        if (result.isSuccess && result.value() != null) {
+            val insertion = buildInsertionFromDocument(result.value())
+            return insertion
+        } else {
+            return null
+        }
     }
 
-    override fun getBookByISBN(isbn: String): Book? = queryOneWithRealm {
-        it.where(Book::class.java)
-                .equalTo("isbn", isbn)
-                .findFirst()
+    override fun getBookByISBN(isbn: String): Book? {
+        return fetchBookFromISBN(isbn)
     }
 
     override fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
@@ -45,37 +52,61 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .contains("book.title", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.authors.value", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.publisher", trimmedQuery, Case.INSENSITIVE)
-                    .or()
-                    .contains("book.isbn", trimmedQuery, Case.INSENSITIVE)
-                    .findAll()
+        val whereString =
+                "${ServerConstants.TITLE} like $query or" +
+                "$query in ${ServerConstants.AUTHORS} or" +
+                "${ServerConstants.PUBLISHER} like $query or" +
+                "${ServerConstants.ISBN} like $query"
+
+        val serverQuery = BaasQuery.builder()
+                .where(whereString)
+                .criteria()
+
+        val result = BaasDocument.fetchAllSync(ServerConstants.COLLECTION_INSERTIONS, serverQuery)
+        if (result.isSuccess && result.value() != null) {
+            val insertions = result.value().map { buildInsertionFromDocument(it) }
+            Log.d(TAG, "Book insertions corresponding to query '$query' = ${insertions.size}")
+            return insertions
+        } else {
+            return emptyList()
         }
-        Log.d(TAG, "Book insertions corresponding to query '$query' = ${results.size}")
-        return results
     }
 
     override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .greaterThanOrEqualTo("date", date)
-                    .findAll()}
-        Log.d(TAG, "Found ${results.size} insertions after $date")
-        return results
+
+        val whereString =
+                "${ServerConstants.DATE} >= ${date.toStringDate()}"
+
+        val serverQuery = BaasQuery.builder()
+                .where(whereString)
+                .criteria()
+
+        val result = BaasDocument.fetchAllSync(ServerConstants.COLLECTION_INSERTIONS, serverQuery)
+        if (result.isSuccess && result.value() != null) {
+            val insertions = result.value().map { buildInsertionFromDocument(it) }
+            Log.d(TAG, "Found ${insertions.size} insertions after $date")
+            return insertions
+        } else {
+            return emptyList()
+        }
     }
 
     override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
-            it.where(Insertion::class.java)
-                    .lessThanOrEqualTo("date", date)
-                    .findAll()}
-        Log.d(TAG, "Found ${results.size} insertions before $date")
-        return results
+        val whereString =
+                "${ServerConstants.DATE} <= ${date.toStringDate()}"
+
+        val serverQuery = BaasQuery.builder()
+                .where(whereString)
+                .criteria()
+
+        val result = BaasDocument.fetchAllSync(ServerConstants.COLLECTION_INSERTIONS, serverQuery)
+        if (result.isSuccess && result.value() != null) {
+            val insertions = result.value().map { buildInsertionFromDocument(it) }
+            Log.d(TAG, "Found ${insertions.size} insertions before $date")
+            return insertions
+        } else {
+            return emptyList()
+        }
     }
 
     /*
@@ -84,10 +115,15 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        feedCache = queryRealm { it.where(Insertion::class.java).findAll()}
-                .excludeUserOwnInsertions()
-        Log.d(TAG, "Found ${feedCache.size} feed insertions")
-        return feedCache
+        val result = BaasDocument.fetchAllSync(ServerConstants.COLLECTION_INSERTIONS)
+        if (result.isSuccess && result.value() != null) {
+            feedCache = result.value().map { buildInsertionFromDocument(it) }
+                    .excludeUserOwnInsertions()
+            Log.d(TAG, "Found ${feedCache.size} feed insertions")
+            return feedCache
+        } else {
+            return emptyList()
+        }
     }
 
     override fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
@@ -105,7 +141,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
-        savedCache = userRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
+        savedCache = BaasUser.current()?.getSavedInsertions() ?: emptyList()
         return savedCache
     }
 
@@ -124,8 +160,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
-        publishedCache =
-                userRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
+        publishedCache = BaasUser.current()?.getPublishedInsertions() ?: emptyList()
         return publishedCache
     }
 
@@ -146,29 +181,16 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
             insertionId in getSavedBookInsertionList().map { it.id }
 
     override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
+        val user = BaasUser.current() ?:
+                throw IllegalStateException("No user logged in. Cannot save insertion")
 
-        if (!userRepository.localUserExists())
-            throw IllegalStateException("Local user does not exist. Cannot save insertion")
+        user.getScope(Scope.PRIVATE)
+                .getArray(ServerConstants.SAVED_INSERTIONS, JsonArray())
+                .add(insertionId)
 
-        var saved = false
-
-        withRealm {
-            val insertion = it.getBookInsertionById(insertionId)
-            val user = it.getLocalUser()
-            val savedInsertions = user!!.savedInsertions
-
-            saved = insertion in savedInsertions
-
-            it.executeTransaction {
-                if (!saved) {
-                    savedInsertions.add(0, insertion)
-                } else {
-                    savedInsertions.remove(insertion)
-                }
-            }
-            saved = insertion in savedInsertions
-            Log.d(TAG, "After toggle: Save status: $saved, saved size: ${savedInsertions.size}")
-        }
+        val result = user.saveSync()
+        val saved = result.isSuccess
+        Log.d(TAG, "After toggle: Save status: $saved")
         return saved
     }
 
@@ -182,19 +204,21 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
 
     private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
+        val user = BaasUser.current()
+        if (user == null) {
             return this
         } else {
-            val userId = userRepository.getLocalUserId()
+            val userId = user.name
             return this.filter { it.seller?.username != userId }
         }
     }
 
     private fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
-        if (!userRepository.localUserExists()) {
+        val user = BaasUser.current()
+        if (user == null) {
             return this
         } else {
-            val userId = userRepository.getLocalUserId()
+            val userId = user.name
             return this.filter { it.seller?.username == userId }
         }
     }
