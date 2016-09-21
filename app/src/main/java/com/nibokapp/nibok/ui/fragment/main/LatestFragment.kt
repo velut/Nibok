@@ -20,8 +20,7 @@ import org.jetbrains.anko.toast
  */
 class LatestFragment(
         val presenter: ViewTypePresenter = InsertionFeedPresenter()
-) :
-        ViewTypeFragment() {
+) : ViewTypeFragment() {
 
     companion object {
         private val TAG = LatestFragment::class.java.simpleName

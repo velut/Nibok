@@ -19,8 +19,7 @@ import org.jetbrains.anko.toast
  */
 class SavedFragment(
         val presenter: ViewTypePresenter = SavedInsertionPresenter()
-) :
-        ViewTypeFragment() {
+) : ViewTypeFragment() {
 
     companion object {
         private val TAG = SavedFragment::class.java.simpleName

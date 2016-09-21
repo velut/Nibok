@@ -23,8 +23,7 @@ import org.jetbrains.anko.startActivity
  */
 class SellingFragment(
         val presenter: ViewTypePresenter = UserInsertionPresenter()
-) :
-        ViewTypeFragment() {
+) : ViewTypeFragment() {
 
     companion object {
         private val TAG = SellingFragment::class.java.simpleName
