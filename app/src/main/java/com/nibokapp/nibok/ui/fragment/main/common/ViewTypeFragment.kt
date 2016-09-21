@@ -178,20 +178,23 @@ abstract class ViewTypeFragment : BaseFragment() {
             return
         }
 
-        val numAdded : Int
-
         val firstItem = getMainViewData().firstOrNull()
         if (firstItem == null) {
-            numAdded = mainViewAdapter.addItems(presenter.getData())
+            doAsync {
+                val items = presenter.getData()
+                uiThread {
+                    val numAdded = mainViewAdapter.addItems(items)
+                    onRefreshed(numAdded)
+                }
+            }
         } else {
-            val newerData = presenter.getDataNewerThanItem(firstItem)
-            numAdded = mainViewAdapter.addItems(newerData)
-        }
-
-        if (numAdded == 0) {
-            context.toast(getNoNewerItemsFromRefreshString())
-        } else {
-            handleBackToTopAction()
+            doAsync {
+                val newerData = presenter.getDataNewerThanItem(firstItem)
+                uiThread {
+                    val numAdded = mainViewAdapter.addItems(newerData)
+                    onRefreshed(numAdded)
+                }
+            }
         }
     }
 
@@ -203,17 +206,19 @@ abstract class ViewTypeFragment : BaseFragment() {
             return
         }
         oldQuery = query
+        doAsync {
+            val results = presenter.getQueryData(query)
+            Log.d(TAG, "Results size: ${results.size}")
 
-        val results = presenter.getQueryData(query)
-        Log.d(TAG, "Results size: ${results.size}")
-
-        if (results.equals(oldResults)) {
-            Log.d(TAG, "Same results as before, return")
-            return
+            if (results.equals(oldResults)) {
+                Log.d(TAG, "Same results as before, return")
+                return@doAsync
+            }
+            oldResults = results
+            uiThread {
+                getAdapterForView(searchResultsView)?.clearAndAddItems(results)
+            }
         }
-        oldResults = results
-
-        getAdapterForView(searchResultsView)?.clearAndAddItems(results)
     }
 
     override fun handleOnSearchOpen() {
@@ -265,6 +270,14 @@ abstract class ViewTypeFragment : BaseFragment() {
                 Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
                 if (toUpdate.size > 0) uiThread { viewAdapter.updateItems(toUpdate) }
             }
+        }
+    }
+
+    private fun onRefreshed(numAdded: Int) {
+        if (numAdded == 0) {
+            context.toast(getNoNewerItemsFromRefreshString())
+        } else {
+            handleBackToTopAction()
         }
     }
 
