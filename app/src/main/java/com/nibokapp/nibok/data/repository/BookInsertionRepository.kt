@@ -4,7 +4,6 @@ import android.util.Log
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.db.LocalBookInsertionRepository
 import com.nibokapp.nibok.data.repository.server.ServerBookInsertionRepository
 import com.nibokapp.nibok.extension.*
@@ -16,8 +15,6 @@ import java.util.*
 object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     const private val TAG = "BookInsertionRepository"
-
-    private val userRepository : UserRepositoryInterface = UserRepository
 
     /**
      * Sources for this repository
@@ -49,6 +46,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         val results = SOURCES.firstListResultOrNull { it.getBookInsertionListFromQuery(query) }
                 ?: emptyList()
 
+        if (results.isNotEmpty()) localRepository.storeItems(results)
+
         Log.d(TAG, "Book insertions corresponding to query '$query' = ${results.size}")
 
         return results
@@ -57,6 +56,9 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
         val results = SOURCES.firstListResultOrNull { it.getBookInsertionListAfterDate(date) }
                 ?: emptyList()
+
+        if (results.isNotEmpty()) localRepository.storeItems(results)
+
         Log.d(TAG, "Found ${results.size} insertions after $date")
         return results
     }
@@ -64,6 +66,9 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
         val results = SOURCES.firstListResultOrNull { it.getBookInsertionListBeforeDate(date) }
                 ?: emptyList()
+
+        if (results.isNotEmpty()) localRepository.storeItems(results)
+
         Log.d(TAG, "Found ${results.size} insertions before $date")
         return results
     }
@@ -74,8 +79,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
+
         feedCache = SOURCES.firstListResultOrNull { it.getFeedBookInsertionList(cached) }
                 ?: emptyList()
+
+        if (feedCache.isNotEmpty()) localRepository.storeItems(feedCache)
+
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache
     }
@@ -95,8 +104,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
+
         savedCache = SOURCES.firstListResultOrNull { it.getSavedBookInsertionList(cached) }
                 ?: emptyList()
+
+        if (savedCache.isNotEmpty()) localRepository.storeItems(savedCache)
+
         return savedCache
     }
 
@@ -115,8 +128,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
+
         publishedCache = SOURCES.firstListResultOrNull { it.getPublishedBookInsertionList(cached) }
                 ?: emptyList()
+
+        if (publishedCache.isNotEmpty()) localRepository.storeItems(publishedCache)
+
         return publishedCache
     }
 
@@ -130,37 +147,18 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
             getBookInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
-     * BOOK INSERTION SAVE STATUS TODO
+     * BOOK INSERTION SAVE STATUS
      */
 
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
             insertionId in getSavedBookInsertionList().map { it.id }
 
     override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
-
-        if (!userRepository.localUserExists())
-            throw IllegalStateException("Local user does not exist. Cannot save insertion")
-
-        var saved = false
-
-        withRealm {
-            val insertion = it.getBookInsertionById(insertionId)
-            val user = it.getLocalUser()
-            val savedInsertions = user!!.savedInsertions
-
-            saved = insertion in savedInsertions
-
-            it.executeTransaction {
-                if (!saved) {
-                    savedInsertions.add(0, insertion)
-                } else {
-                    savedInsertions.remove(insertion)
-                }
-            }
-            saved = insertion in savedInsertions
-            Log.d(TAG, "After toggle: Save status: $saved, saved size: ${savedInsertions.size}")
+        val savedOnServer = serverRepository.toggleBookInsertionSaveStatus(insertionId)
+        if (savedOnServer) {
+            localRepository.toggleBookInsertionSaveStatus(insertionId)
         }
-        return saved
+        return savedOnServer
     }
 
     /*
