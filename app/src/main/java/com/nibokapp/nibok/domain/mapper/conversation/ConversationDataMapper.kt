@@ -8,6 +8,7 @@ import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.domain.model.UserModel
+import com.nibokapp.nibok.extension.isWellFormed
 import com.nibokapp.nibok.extension.toNormalList
 import com.nibokapp.nibok.extension.toRealmList
 
@@ -64,8 +65,4 @@ class ConversationDataMapper(
 
     private fun  convertMessageListFromDomain(messages: List<ChatMessageModel>): List<Message> =
             messageMapper.convertMessageListFromDomain(messages)
-
-    private fun Conversation.isWellFormed(): Boolean = with(this) {
-            partner != null && date != null
-    }
 }

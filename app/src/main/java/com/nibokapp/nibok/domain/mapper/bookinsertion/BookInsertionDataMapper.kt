@@ -10,6 +10,7 @@ import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.BookInfoModel
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.domain.model.UserModel
+import com.nibokapp.nibok.extension.isWellFormed
 import com.nibokapp.nibok.extension.toRealmStringList
 import com.nibokapp.nibok.extension.toStringList
 
@@ -102,12 +103,4 @@ class BookInsertionDataMapper(
 
     private fun convertSellerFromDomain(seller: UserModel): ExternalUser =
             userMapper.convertUserFromDomain(seller)
-
-    /*
-     * EXTENSIONS
-     */
-
-    private fun Insertion.isWellFormed(): Boolean = with(this) {
-            seller != null && date != null && book != null
-    }
 }
