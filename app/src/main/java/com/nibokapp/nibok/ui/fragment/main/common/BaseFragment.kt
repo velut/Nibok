@@ -160,7 +160,7 @@ abstract class BaseFragment(
             Log.d(TAG, "Offering login action")
             authItem.title = getString(R.string.login_action)
         } else {
-            Log.d(TAG, "Offering logout action")
+            Log.d(TAG, "Offering logout action")                           // TODO check here V
             authItem.title = "${getString(R.string.logout_action)} (${authPresenter.getLoggedUserId()})"
         }
     }
