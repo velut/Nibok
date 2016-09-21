@@ -81,6 +81,18 @@ fun Date.toDeltaBasedSimpleDateString(yesterdayString: String, alwaysAddHour: Bo
 }
 
 /**
+ * Return a string with the date formatted with the given pattern-
+ *
+ * @param pattern the pattern to use in order to format the date. Default pattern is for RFC 1123
+ *
+ * @return the Date formatted into a String
+ */
+fun Date.toStringDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : String {
+    val dateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
+    return dateFormat.format(this)
+}
+
+/**
  * Ellipsize a string.
  *
  * @param maxLength the maximum length for the string
