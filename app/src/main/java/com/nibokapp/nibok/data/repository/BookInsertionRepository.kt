@@ -46,7 +46,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = SOURCES.firstResultOrNull { it.getBookInsertionListFromQuery(query) }
+        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListFromQuery(query) }
                 ?: emptyList()
 
         Log.d(TAG, "Book insertions corresponding to query '$query' = ${results.size}")
@@ -55,14 +55,14 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     }
 
     override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
-        val results = SOURCES.firstResultOrNull { it.getBookInsertionListAfterDate(date) }
+        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListAfterDate(date) }
                 ?: emptyList()
         Log.d(TAG, "Found ${results.size} insertions after $date")
         return results
     }
 
     override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
-        val results = SOURCES.firstResultOrNull { it.getBookInsertionListBeforeDate(date) }
+        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListBeforeDate(date) }
                 ?: emptyList()
         Log.d(TAG, "Found ${results.size} insertions before $date")
         return results
@@ -74,7 +74,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        feedCache = SOURCES.firstResultOrNull { it.getFeedBookInsertionList(cached) }
+        feedCache = SOURCES.firstListResultOrNull { it.getFeedBookInsertionList(cached) }
                 ?: emptyList()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache
@@ -95,7 +95,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
-        savedCache = SOURCES.firstResultOrNull { it.getSavedBookInsertionList(cached) }
+        savedCache = SOURCES.firstListResultOrNull { it.getSavedBookInsertionList(cached) }
                 ?: emptyList()
         return savedCache
     }
@@ -115,7 +115,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
-        publishedCache = SOURCES.firstResultOrNull { it.getPublishedBookInsertionList(cached) }
+        publishedCache = SOURCES.firstListResultOrNull { it.getPublishedBookInsertionList(cached) }
                 ?: emptyList()
         return publishedCache
     }

@@ -25,6 +25,22 @@ inline fun <T, R: Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?) : R? 
 }
 
 /**
+ * Given a list of sources return the result from the first source that provides it.
+ * Results that are empty lists are discarded.
+ *
+ * @param predicate the way in which to retrieve the result
+ *
+ * @return a result (non empty list) or null if no result was found
+ */
+inline fun <T, R: Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<R>?) : List<R>? {
+    for (element in this) {
+        val result = predicate(element)
+        if (result != null && result.isNotEmpty()) return result
+    }
+    return null
+}
+
+/**
  * When a local user exists exclude his insertions from this list.
  */
 fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
