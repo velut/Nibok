@@ -6,9 +6,10 @@ package com.nibokapp.nibok.data.repository.server.common
 object ServerConstants {
 
     /**
-     * Generic data.
+     * Common attributes.
      */
     const val DATA = "data"
+    const val DATE = "date"
 
     /**
      * Username.
@@ -33,11 +34,26 @@ object ServerConstants {
     const val ISBN = "isbn"
 
     /**
-     * Insertion attributes
+     * Insertion attributes.
      */
-    const val PRICE = "price"
-    const val CONDITION = "condition"
-    const val PICTURES = "pictures"
+    const val SELLER_ID = "sellerId"
+    const val BOOK_ID = "bookId"
+    const val BOOK_PRICE = "bookPrice"
+    const val BOOK_CONDITION = "bookCondition"
+    const val BOOK_PICTURES = "bookPictures"
+
+    /**
+     * Conversation attributes.
+     */
+    const val PARTICIPANTS = "participants"
+    const val MESSAGES = "messages"
+
+    /**
+     * Message attributes.
+     */
+    const val CONVERSATION_ID = "conversationId"
+    const val SENDER_ID = "senderId"
+    const val TEXT = "text"
 
 
     /**
@@ -46,4 +62,5 @@ object ServerConstants {
     const val COLLECTION_INSERTIONS = "INSERTIONS"
     const val COLLECTION_CONVERSATIONS = "CONVERSATIONS"
     const val COLLECTION_BOOKS = "BOOKS"
+    const val COLLECTION_MESSAGES = "MESSAGES"
 }
