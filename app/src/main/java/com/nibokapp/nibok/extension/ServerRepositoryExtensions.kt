@@ -10,14 +10,14 @@ import com.nibokapp.nibok.data.db.ExternalUser
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.AUTHORS
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.AVATAR
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.BOOK_CONDITION
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.BOOK_PICTURES
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants.BOOK_PRICE
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_BOOKS
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_CONVERSATIONS
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.COLLECTION_INSERTIONS
-import com.nibokapp.nibok.data.repository.server.common.ServerConstants.CONDITION
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.CONVERSATIONS
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.ISBN
-import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PICTURES
-import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PRICE
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PUBLISHED_INSERTIONS
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.PUBLISHER
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants.SAVED_INSERTIONS
@@ -65,9 +65,9 @@ fun buildInsertionFromDocument(document: BaasDocument): Insertion {
                 date = creationDate.parseDate(),
                 seller = fetchUserFromId(author),
                 book = fetchBookFromISBN(getString(ISBN)),
-                bookPrice = getFloat(PRICE),
-                bookCondition = getString(CONDITION),
-                bookImagesSources = getArray(PICTURES)
+                bookPrice = getFloat(BOOK_PRICE),
+                bookCondition = getString(BOOK_CONDITION),
+                bookImagesSources = getArray(BOOK_PICTURES)
                         .filterIsInstance<String>().toRealmStringList()
         )
     }
@@ -116,7 +116,7 @@ fun fetchBookFromISBN(isbn: String): Book? {
             .build()
 
     val result = query.querySync()
-    if (result.isSuccess) {
+    if (result.isSuccess && result.value() != null) {
         val bookData = result.value()
 
         if (bookData.isEmpty()) return null
