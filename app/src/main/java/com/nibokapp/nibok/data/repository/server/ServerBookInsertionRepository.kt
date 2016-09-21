@@ -8,9 +8,7 @@ import com.baasbox.android.BaasUser.Scope
 import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.*
 import java.util.*
@@ -21,8 +19,6 @@ import java.util.*
 object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     const private val TAG = "ServerBookInsertionRepository"
-
-    private val userRepository : UserRepositoryInterface = UserRepository
 
     private var feedCache : List<Insertion> = emptyList()
     private var savedCache : List<Insertion> = emptyList()
@@ -53,9 +49,9 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         if (trimmedQuery.isEmpty()) return emptyList()
 
         val whereString =
-                "${ServerConstants.TITLE} like $query or" +
-                "$query in ${ServerConstants.AUTHORS} or" +
-                "${ServerConstants.PUBLISHER} like $query or" +
+                "${ServerConstants.TITLE} like $query or " +
+                "$query in ${ServerConstants.AUTHORS} or " +
+                "${ServerConstants.PUBLISHER} like $query or " +
                 "${ServerConstants.ISBN} like $query"
 
         val serverQuery = BaasQuery.builder()
