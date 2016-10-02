@@ -19,7 +19,7 @@ object LocalBookInsertionRepository :
         BookInsertionRepositoryInterface,
         LocalStorage<Insertion> {
 
-    const private val TAG = "LocalBookInsertionRepository"
+    const private val TAG = "LocalBookInsertionRepo"
 
     private val userRepository : UserRepositoryInterface = UserRepository
 
@@ -31,13 +31,13 @@ object LocalBookInsertionRepository :
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneWithRealm {
+    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneRealm {
         it.where(Insertion::class.java)
                 .equalTo("id", insertionId)
                 .findFirst()
     }
 
-    override fun getBookByISBN(isbn: String): Book? = queryOneWithRealm {
+    override fun getBookByISBN(isbn: String): Book? = queryOneRealm {
         it.where(Book::class.java)
                 .equalTo("isbn", isbn)
                 .findFirst()
@@ -49,7 +49,7 @@ object LocalBookInsertionRepository :
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Insertion::class.java)
                     .contains("book.title", trimmedQuery, Case.INSENSITIVE)
                     .or()
@@ -65,7 +65,7 @@ object LocalBookInsertionRepository :
     }
 
     override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Insertion::class.java)
                     .greaterThanOrEqualTo("date", date)
                     .findAll()}
@@ -74,7 +74,7 @@ object LocalBookInsertionRepository :
     }
 
     override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Insertion::class.java)
                     .lessThanOrEqualTo("date", date)
                     .findAll()}
@@ -88,7 +88,7 @@ object LocalBookInsertionRepository :
 
     override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        feedCache = queryRealm { it.where(Insertion::class.java).findAll()}
+        feedCache = queryManyRealm { it.where(Insertion::class.java).findAll()}
                 .excludeUserOwnInsertions()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache

@@ -7,13 +7,10 @@ import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.RealmResults
 
-val QUERY_TAG = "DB Query"
-val CLOSE_REALM_MSG = "Closing realm after query"
-val VERBOSE = false
+val QUERY_TAG = "RealmDB_Query"
 
 /**
- * Extension functions related to the Realm db.
- *
+ * Extension functions related to the local Realm database.
  */
 
 /**
@@ -27,7 +24,7 @@ fun RealmList<RealmString>.toStringList() : List<String> =
 /**
  * Convert a String to a RealmString.
  */
-fun String.toRealmString() : RealmString = RealmString(value = this)
+fun String.toRealmString() : RealmString = RealmString(this)
 
 /**
  * Convert a List of String into a RealmList of RealmString.
@@ -76,47 +73,56 @@ inline fun withRealm(func: (realm: Realm) -> Unit) {
  * @param transaction the transaction to be executed with realm
  */
 inline fun executeRealmTransaction(crossinline transaction: (realm: Realm) -> Unit) {
-    val realm = Realm.getDefaultInstance()
-    realm.executeTransaction { transaction(realm) }
-    realm.close()
+    withRealm {
+        it.executeTransaction { transaction(it) }
+    }
 }
 
 /**
  * Perform a query with Realm and return the list of results.
  *
- * @return the list of RealmModel instances representing the found results or an empty list if no result was found
+ * @param query the function performing the query
+ *
+ * @return the list of RealmModel instances representing the found results
+ * or an empty list if no result was found
  */
-inline fun <T: RealmModel> queryRealm(query: (realm: Realm) -> RealmResults<T>) : List<T> {
-    val realm = Realm.getDefaultInstance()
-    val realmResult = query(realm)
+inline fun <T: RealmModel> queryManyRealm(query: (realm: Realm) -> RealmResults<T>) : List<T> {
     var results: List<T> = emptyList()
-    try {
-        results = realm.copyFromRealm(realmResult)
-    } catch (e: IllegalArgumentException) {
-        Log.d(QUERY_TAG, "No list of objects found in Realm")
-    } finally {
-        if (VERBOSE) Log.d(QUERY_TAG, CLOSE_REALM_MSG)
-        realm.close()
+
+    withRealm {
+        val realmResults = query(it)
+        results =
+                try {
+                    it.copyFromRealm(realmResults)
+                } catch (e: IllegalArgumentException) {
+                    Log.d(QUERY_TAG, "No list of objects found in Realm")
+                    emptyList()
+                }
     }
+
     return results
 }
 
 /**
  * Perform a query with Realm and return a single result.
  *
+ * @param query the function performing the query
+ *
  * @return the RealmModel instance resulting from the query or null if nothing was found
  */
-inline fun <T: RealmModel> queryOneWithRealm(query: (realm: Realm) -> T) : T? {
-    val realm = Realm.getDefaultInstance()
-    val realmResult = query(realm)
+inline fun <T: RealmModel> queryOneRealm(query: (realm: Realm) -> T) : T? {
     var result: T? = null
-    try {
-        result = realm.copyFromRealm(realmResult)
-    } catch (e: IllegalArgumentException) {
-        Log.d(QUERY_TAG, "No object found in Realm")
-    } finally {
-        if (VERBOSE) Log.d(QUERY_TAG, CLOSE_REALM_MSG)
-        realm.close()
+
+    withRealm {
+        val realmResult = query(it)
+        result =
+                try {
+                    it.copyFromRealm(realmResult)
+                } catch (e: IllegalArgumentException) {
+                    Log.d(QUERY_TAG, "No object found in Realm")
+                    null
+                }
     }
+
     return result
 }

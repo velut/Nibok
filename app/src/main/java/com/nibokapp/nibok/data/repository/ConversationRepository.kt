@@ -23,7 +23,7 @@ object ConversationRepository : ConversationRepositoryInterface {
 
     override fun getConversationById(conversationId: String) : Conversation? {
         if (userRepository.localUserExists()) {
-            return queryOneWithRealm {
+            return queryOneRealm {
                 it.where(Conversation::class.java)
                         .equalTo("id", conversationId)
                         .equalTo("userId", userRepository.getLocalUserId())
@@ -45,7 +45,7 @@ object ConversationRepository : ConversationRepositoryInterface {
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
                     .contains("partner.name", trimmedQuery, Case.INSENSITIVE)
@@ -69,7 +69,7 @@ object ConversationRepository : ConversationRepositoryInterface {
 
         if (!userRepository.localUserExists()) return emptyList()
 
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
                     .greaterThanOrEqualTo("date", date)
@@ -82,7 +82,7 @@ object ConversationRepository : ConversationRepositoryInterface {
 
         if (!userRepository.localUserExists()) return emptyList()
 
-        val results = queryRealm {
+        val results = queryManyRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
                     .lessThanOrEqualTo("date", date)

@@ -7,7 +7,7 @@ import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.extension.executeRealmTransaction
 import com.nibokapp.nibok.extension.getLocalUser
-import com.nibokapp.nibok.extension.queryOneWithRealm
+import com.nibokapp.nibok.extension.queryOneRealm
 
 /**
  * Repository singleton for the local user.
@@ -59,7 +59,7 @@ object UserRepository : UserRepositoryInterface {
                     "Local user does not exist. Call createLocalUser() before retrieving data")
 
     override fun getLocalUser() : User? =
-            queryOneWithRealm { it.where(User::class.java).findFirst() }
+            queryOneRealm { it.where(User::class.java).findFirst() }
 
     override fun localUserExists() : Boolean = getLocalUser() != null
 }
