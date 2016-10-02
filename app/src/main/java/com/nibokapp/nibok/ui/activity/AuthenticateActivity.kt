@@ -92,6 +92,14 @@ class AuthenticateActivity(
         alertDialog?.dismiss()
     }
 
+    private fun addAuthViewSwitchListener() {
+        alternativeLink.setOnClickListener {
+            showLogin = !showLogin
+            Log.d(TAG, "Switching to $logViewName")
+            showCurrentView()
+        }
+    }
+
     private fun addAuthButtonListener() {
         btnAuthenticate.setOnClickListener {
             authenticate()
@@ -129,6 +137,9 @@ class AuthenticateActivity(
         }
     }
 
+    /**
+     * Update the view accordingly to show either the login or the sign up option.
+     */
     private fun showCurrentView() {
         Log.d(TAG, "Showing $logViewName")
 
@@ -136,36 +147,38 @@ class AuthenticateActivity(
         validatePrimaryPassword()
 
         if (showLogin) {
-            // Hide and clear secondary password
-            inputPasswordSecondaryLayout.apply {
-                isEnabled = false
-                visibility = View.GONE
-                error = null
-            }
-            inputPasswordSecondary.text.clear()
+            hideConfirmationPasswordInput()
+        } else {
+            showConfirmationPasswordInput()
+        }
 
-            // Change button and link
+        updateButtons()
+    }
+
+    private fun hideConfirmationPasswordInput() {
+        inputPasswordSecondaryLayout.apply {
+            isEnabled = false
+            visibility = View.GONE
+            error = null
+        }
+        inputPasswordSecondary.text.clear()
+    }
+
+    private fun showConfirmationPasswordInput() {
+        inputPasswordSecondaryLayout.apply {
+            isEnabled = true
+            visibility = View.VISIBLE
+        }
+        validateSecondaryPassword()
+    }
+
+    private fun updateButtons() {
+        if (showLogin) {
             btnAuthenticate.text = getString(R.string.login)
             alternativeLink.text = getString(R.string.link_sign_up)
         } else {
-            // Show secondary password
-            inputPasswordSecondaryLayout.apply {
-                isEnabled = true
-                visibility = View.VISIBLE
-            }
-            validateSecondaryPassword()
-
-            // Change button and link
             btnAuthenticate.text = getString(R.string.sign_up)
             alternativeLink.text = getString(R.string.link_login)
-        }
-    }
-
-    private fun addAuthViewSwitchListener() {
-        alternativeLink.setOnClickListener {
-            showLogin = !showLogin
-            Log.d(TAG, "Switching to $logViewName")
-            showCurrentView()
         }
     }
 
@@ -192,6 +205,9 @@ class AuthenticateActivity(
                 android.text.InputFilter.LengthFilter(AuthInputValidator.MAX_USERNAME_LENGTH))
     }
 
+    /**
+     * Validate the current username and set errors if needed.
+     */
     private fun validateUsername() {
 
         if (username.isEmpty()) return
@@ -213,14 +229,22 @@ class AuthenticateActivity(
 
         // Username already taken error. Only in Sign Up
         if (!showLogin) {
-            doAsync {
-                val available = authPresenter.isUsernameAvailable(username)
-                uiThread {
-                    if (!available) {
-                        inputUsernameLayout.apply {
-                            error = getString(R.string.username_already_taken)
-                            requestFocus()
-                        }
+            checkUsernameAvailability()
+        }
+    }
+
+    /**
+     * Check if the current username is available
+     * and update the username input view accordingly.
+     */
+    private fun checkUsernameAvailability() {
+        doAsync {
+            val available = authPresenter.isUsernameAvailable(username)
+            uiThread {
+                if (!available) {
+                    inputUsernameLayout.apply {
+                        error = getString(R.string.username_already_taken)
+                        requestFocus()
                     }
                 }
             }
@@ -235,7 +259,9 @@ class AuthenticateActivity(
             validatePrimaryPassword()
         }
     }
-
+    /**
+     * Validate the current password and set errors if needed.
+     */
     private fun validatePrimaryPassword() {
 
         if (password.isEmpty()) return
@@ -261,6 +287,9 @@ class AuthenticateActivity(
         }
     }
 
+    /**
+     * Validate the current confirmation password and set errors if needed.
+     */
     private fun validateSecondaryPassword() {
 
         if (confirmationPassword.isEmpty()) return
