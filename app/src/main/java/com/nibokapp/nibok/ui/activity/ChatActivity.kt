@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.ChatFragment
 
+/**
+ * ChatActivity.
+ * This activity simply hosts the ChatFragment.
+ */
 class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

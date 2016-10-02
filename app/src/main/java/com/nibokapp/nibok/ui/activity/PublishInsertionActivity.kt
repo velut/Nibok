@@ -10,7 +10,9 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.PublishInsertionFragment
 
 /**
- * Activity hosting the publishing fragment
+ * PublishInsertionActivity.
+ * This activity hosts the PublishInsertionFragment
+ * and alerts the user with a dialog before quitting this activity.
  */
 class PublishInsertionActivity : AppCompatActivity() {
 
@@ -59,7 +61,7 @@ class PublishInsertionActivity : AppCompatActivity() {
     }
 
     /**
-     * Alert user with a dialog before quitting the insertion publishing activity.
+     * Alert the user with a dialog before quitting the insertion publishing activity.
      * If the user decides to quit call the onQuit function.
      *
      * @param onQuit the function to be called if the user decides to quit the activity

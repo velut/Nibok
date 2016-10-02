@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 
+/**
+ * InsertionDetailActivity.
+ * This activity simply hosts the InsertionDetailFragment.
+ */
 class InsertionDetailActivity : AppCompatActivity() {
 
     companion object {

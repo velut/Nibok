@@ -16,6 +16,8 @@ import com.nibokapp.nibok.ui.fragment.main.common.VisibleFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
+ * MainActivity.
+ *
  * The main activity of the application.
  *
  * It hosts the ViewPager with the four main fragments:
