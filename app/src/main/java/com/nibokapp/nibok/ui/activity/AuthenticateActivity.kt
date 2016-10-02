@@ -13,21 +13,22 @@ import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
 import com.nibokapp.nibok.ui.presenter.AuthPresenter
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_authenticate.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 /**
- * Login activity.
- * Used by a guest to either login into the application or sign up.
+ * AuthenticateActivity.
+ * It provides a way for a guest to authenticate to the platform.
+ * Authentication can be achieved either through logging in or by signing up to the platform.
  */
-class LoginActivity(
+class AuthenticateActivity(
         val authPresenter: AuthPresenter = AuthPresenter(),
         val authInputValidator: AuthInputValidator = AuthInputValidator()
 ) : AppCompatActivity() {
 
     companion object {
-        private val TAG = LoginActivity::class.java.simpleName
+        private val TAG = AuthenticateActivity::class.java.simpleName
 
         /**
          * Keys for bundle saving and restoring
@@ -35,15 +36,34 @@ class LoginActivity(
         private val KEY_AUTH_VIEW = "$TAG:showLogin"
     }
 
-    // Default view is the login one
-    private var showLogin = true
+    // Default view is the login one. True -> Login; False -> Sign Up
+    private var showLogin: Boolean = true
+
+    private val logViewName: String
+        get() = if (showLogin) "login view" else "sign up view"
 
     private var alertDialog: MaterialDialog? = null
+
+    /*
+     * INPUTS
+     */
+
+    // Username input
+    private val username: String
+        get() = inputUsername.text.toString()
+
+    // Password input
+    private val password: String
+        get() = inputPasswordPrimary.text.toString()
+
+    // Confirmation password, present only in sign up
+    private val confirmationPassword: String
+        get() = inputPasswordSecondary.text.toString()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_authenticate)
 
         // Remove focus from edit text forms
         authFormContainer.requestFocus()
@@ -60,78 +80,9 @@ class LoginActivity(
         setupUsernameInput()
         setupPrimaryPasswordInput()
         setupSecondaryPasswordInput()
-
-    }
-
-    private fun addAuthButtonListener() {
-        btnAuthenticate.setOnClickListener {
-            if (showLogin)
-                login()
-            else
-                signUp()
-        }
-    }
-
-    private fun login() {
-
-        if (hasInputErrors()) return
-
-        val username = inputUsername.text.toString()
-        val password = inputPasswordPrimary.text.toString()
-
-        if (username.isEmpty() || password. isEmpty()) return
-
-        val context = this
-
-        doAsync {
-            val loggedIn = authPresenter.login(username, password)
-            if (loggedIn) {
-                uiThread { finish() }
-            } else {
-                uiThread {
-                    alertDialog = MaterialDialog.Builder(context)
-                            .title(getString(R.string.title_login_fail))
-                            .content(getString(R.string.content_login_fail))
-                            .positiveText(getString(android.R.string.ok))
-                            .build()
-                    alertDialog?.show()
-                }
-            }
-        }
-    }
-
-    private fun signUp() {
-
-        if (hasInputErrors()) return
-
-        val username = inputUsername.text.toString()
-        val password = inputPasswordPrimary.text.toString()
-        val confirmPassword = inputPasswordSecondary.text.toString()
-
-        if (username.isEmpty() || password. isEmpty() || password != confirmPassword) return
-
-        val context = this
-
-        doAsync {
-            val signedUp = authPresenter.signUp(username, password)
-            if (signedUp) {
-                uiThread { finish() }
-            } else {
-                uiThread {
-                    alertDialog = MaterialDialog.Builder(context)
-                            .title(getString(R.string.title_sign_up_fail))
-                            .content(getString(R.string.content_sign_up_fail))
-                            .positiveText(getString(android.R.string.ok))
-                            .build()
-                    alertDialog?.show()
-                }
-            }
-        }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d(TAG, "Saving Login: $showLogin")
         outState.putBoolean(KEY_AUTH_VIEW, showLogin)
         super.onSaveInstanceState(outState)
     }
@@ -141,8 +92,45 @@ class LoginActivity(
         alertDialog?.dismiss()
     }
 
+    private fun addAuthButtonListener() {
+        btnAuthenticate.setOnClickListener {
+            authenticate()
+        }
+    }
+
+    /**
+     * Perform user authentication.
+     *
+     * Given a valid username and password use the to either login or sign up,
+     * depending on the current shown view.
+     *
+     * If authentication was successful terminate the activity.
+     * If authentication failed show a dialog stating so.
+     */
+    private fun authenticate() {
+
+        if (hasInputErrors() || hasInvalidInput()) return
+
+        doAsync {
+            val authenticated =
+                    if (showLogin) {
+                        authPresenter.login(username, password)
+                    } else {
+                        authPresenter.signUp(username, password)
+                    }
+            uiThread {
+                if (authenticated) {
+                    finish()
+                } else {
+                    alertDialog = getAuthFailedDialog()
+                    alertDialog?.show()
+                }
+            }
+        }
+    }
+
     private fun showCurrentView() {
-        Log.d(TAG, "Showing " + if (showLogin) "login" else "sign up")
+        Log.d(TAG, "Showing $logViewName")
 
         validateUsername()
         validatePrimaryPassword()
@@ -176,7 +164,7 @@ class LoginActivity(
     private fun addAuthViewSwitchListener() {
         alternativeLink.setOnClickListener {
             showLogin = !showLogin
-            Log.d(TAG, "Switching to " + if (showLogin) "login" else "sign up")
+            Log.d(TAG, "Switching to $logViewName")
             showCurrentView()
         }
     }
@@ -205,8 +193,6 @@ class LoginActivity(
     }
 
     private fun validateUsername() {
-
-        val username = inputUsername.text.toString()
 
         if (username.isEmpty()) return
 
@@ -252,8 +238,6 @@ class LoginActivity(
 
     private fun validatePrimaryPassword() {
 
-        val password = inputPasswordPrimary.text.toString()
-
         if (password.isEmpty()) return
 
         if (authInputValidator.isPasswordMinLengthValid(password)) {
@@ -279,12 +263,9 @@ class LoginActivity(
 
     private fun validateSecondaryPassword() {
 
-        val password = inputPasswordPrimary.text.toString()
-        val confirmPassword = inputPasswordSecondary.text.toString()
+        if (confirmationPassword.isEmpty()) return
 
-        if (confirmPassword.isEmpty()) return
-
-        if (confirmPassword == password) {
+        if (confirmationPassword == password) {
             inputPasswordSecondaryLayout.error = null
         } else {
             val differentPasswords = getString(R.string.error_password_do_not_match)
@@ -297,21 +278,62 @@ class LoginActivity(
 
     /**
      * Check if any of the inputs relevant to the current view (login or sign up)
-     * contains invalid input.
+     * contains input errors.
      * This is signaled by errors set on the input layout containers.
      *
      * @return true if the current view has any input errors, false if no errors were found
      */
     private fun hasInputErrors(): Boolean {
         val usernameError = inputUsernameLayout.error != null
-        val primaryPasswordError = inputPasswordPrimary.error != null
+        val primaryPasswordError = inputPasswordPrimaryLayout.error != null
         val hasError = usernameError || primaryPasswordError
 
         return if (showLogin) {
             hasError
         } else {
-            val hasSecondaryPasswordError = inputPasswordSecondary.error != null
+            val hasSecondaryPasswordError = inputPasswordSecondaryLayout.error != null
             hasError || hasSecondaryPasswordError
         }
+    }
+
+    /**
+     * Check if any of the inputs relevant to the current view (login or sign up)
+     * contains invalid input.
+     *
+     * @return true if the current view has any invalid input, false otherwise
+     */
+    private fun hasInvalidInput(): Boolean {
+        val isInvalid = username.isEmpty() || password.isEmpty()
+        return if (showLogin) {
+            isInvalid
+        } else {
+            isInvalid || password != confirmationPassword
+        }
+    }
+
+    /**
+     * Get a dialog signaling the login or sign up fail.
+     *
+     * @return a MaterialDialog
+     */
+    private fun getAuthFailedDialog(): MaterialDialog {
+
+        val dialogTitle = if (showLogin) {
+            getString(R.string.title_login_fail)
+        } else {
+            getString(R.string.title_sign_up_fail)
+        }
+
+        val dialogContent = if (showLogin) {
+            getString(R.string.content_login_fail)
+        } else {
+            getString(R.string.content_sign_up_fail)
+        }
+
+        return MaterialDialog.Builder(this)
+                .title(dialogTitle)
+                .content(dialogContent)
+                .positiveText(getString(android.R.string.ok))
+                .build()
     }
 }
