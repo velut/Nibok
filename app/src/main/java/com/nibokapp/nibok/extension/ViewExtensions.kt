@@ -1,7 +1,9 @@
 package com.nibokapp.nibok.extension
 
 import android.content.Context
+import android.support.v4.view.MotionEventCompat
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -103,4 +105,28 @@ fun View.hideSoftKeyboard(context: Context) {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE)
             as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+/**
+ * Listener for keyboard hiding on tap.
+ *
+ * @param motionEvent
+ * @param view the view that was tapped
+ * @param context
+ * @param eventHandled true if the motion event was completely handled,
+ * false if it should be handled further. Default is false
+ *
+ * @return a Boolean signaling if the event should be further handled
+ */
+fun hideKeyboardListener(motionEvent: MotionEvent?, view: View,
+                         context: Context,
+                         eventHandled: Boolean = false): Boolean {
+    val action = MotionEventCompat.getActionMasked(motionEvent)
+
+    // If the view was tapped
+    if (action == MotionEvent.ACTION_DOWN) {
+        view.hideSoftKeyboard(context)
+    }
+
+    return eventHandled
 }

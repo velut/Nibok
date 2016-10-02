@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
-import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -219,11 +217,7 @@ class PublishInsertionFragment(
         val pageViews = pages.values
         pageViews.forEach {
             it.setOnTouchListener { view, motionEvent ->
-                val action = MotionEventCompat.getActionMasked(motionEvent)
-                if (action == MotionEvent.ACTION_DOWN) { // If the view was tapped
-                    view.hideSoftKeyboard(context)
-                }
-                false // Let others consume the event
+                hideKeyboardListener(motionEvent, view, context)
             }
         }
     }

@@ -1,16 +1,14 @@
 package com.nibokapp.nibok.ui.activity
 
 import android.os.Bundle
-import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.rule.AuthInputValidator
 import com.nibokapp.nibok.extension.afterTextChanged
-import com.nibokapp.nibok.extension.hideSoftKeyboard
+import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
 import com.nibokapp.nibok.ui.presenter.AuthPresenter
 import kotlinx.android.synthetic.main.activity_authenticate.*
@@ -184,11 +182,7 @@ class AuthenticateActivity(
 
     private fun addHideKeyboardListener() {
         authFormContainer.setOnTouchListener { view, motionEvent ->
-            val action = MotionEventCompat.getActionMasked(motionEvent)
-            if (action == MotionEvent.ACTION_DOWN) { // If the view was tapped
-                view.hideSoftKeyboard(this)
-            }
-            false
+            hideKeyboardListener(motionEvent, view, this)
         }
     }
 
