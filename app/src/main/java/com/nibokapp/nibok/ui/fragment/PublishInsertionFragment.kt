@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -32,6 +30,8 @@ import kotlinx.android.synthetic.main.publish_input_book_details.*
 import kotlinx.android.synthetic.main.publish_input_insertion_details.*
 import kotlinx.android.synthetic.main.publish_input_isbn.*
 import kotlinx.android.synthetic.main.publish_take_picture.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class PublishInsertionFragment(
@@ -277,19 +277,9 @@ class PublishInsertionFragment(
      * Add a listener to the ISBN code input to validate the code being entered.
      */
     private fun addInputISBNListener() {
-        inputISBN.addTextChangedListener(
-                object : TextWatcher {
-                    override fun afterTextChanged(s: Editable?) {
-                        validateISBNInput()
-                    }
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    }
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    }
-                }
-        )
+        inputISBN.afterTextChanged {
+            validateISBNInput()
+        }
     }
 
     /**
@@ -426,12 +416,16 @@ class PublishInsertionFragment(
                 .onPositive { materialDialog, dialogAction ->
                     progressDialog?.show()
                     // TODO publish insertion
-                    val published = presenter.publishInsertion()
-                    progressDialog?.dismiss()
-                    if (published) {
-                        successDialog?.show()
-                    } else {
-                        errorDialog?.show()
+                    doAsync {
+                        val published = presenter.publishInsertion()
+                        uiThread {
+                            progressDialog?.dismiss()
+                            if (published) {
+                                successDialog?.show()
+                            } else {
+                                errorDialog?.show()
+                            }
+                        }
                     }
                 }
                 .build()
