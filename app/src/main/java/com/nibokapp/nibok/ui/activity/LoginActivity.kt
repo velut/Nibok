@@ -155,6 +155,7 @@ class LoginActivity(
             inputPasswordSecondaryLayout.apply {
                 isEnabled = false
                 visibility = View.GONE
+                error = null
             }
             inputPasswordSecondary.text.clear()
 
