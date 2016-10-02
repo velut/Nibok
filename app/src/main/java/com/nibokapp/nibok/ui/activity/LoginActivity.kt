@@ -3,14 +3,13 @@ package com.nibokapp.nibok.ui.activity
 import android.os.Bundle
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.rule.AuthenticationValidator
+import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
 import com.nibokapp.nibok.ui.presenter.AuthPresenter
@@ -201,17 +200,9 @@ class LoginActivity(
      */
     private fun setupUsernameInput() {
 
-        inputUsername.addTextChangedListener(
-                object : TextWatcher {
-                    override fun afterTextChanged(s: Editable?) {
-                        validateUsername()
-                    }
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                }
-        )
+        inputUsername.afterTextChanged {
+            validateUsername()
+        }
 
         inputUsername.filters = arrayOf(getAlphanumericFilter(),
                 android.text.InputFilter.LengthFilter(AuthenticationValidator.MAX_USERNAME_LENGTH))
@@ -258,17 +249,9 @@ class LoginActivity(
      * Setup input filters and validator for primary password.
      */
     private fun setupPrimaryPasswordInput() {
-        inputPasswordPrimary.addTextChangedListener(
-                object : TextWatcher {
-                    override fun afterTextChanged(s: Editable?) {
-                        validatePrimaryPassword()
-                    }
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                }
-        )
+        inputPasswordPrimary.afterTextChanged {
+            validatePrimaryPassword()
+        }
     }
 
     private fun validatePrimaryPassword() {
@@ -293,17 +276,9 @@ class LoginActivity(
      * Setup input filters and validator for secondary (confirmation) password.
      */
     private fun setupSecondaryPasswordInput() {
-        inputPasswordSecondary.addTextChangedListener(
-                object : TextWatcher {
-                    override fun afterTextChanged(s: Editable?) {
-                        validateSecondaryPassword()
-                    }
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                }
-        )
+        inputPasswordSecondary.afterTextChanged {
+            validateSecondaryPassword()
+        }
     }
 
     private fun validateSecondaryPassword() {
