@@ -1,9 +1,9 @@
 package com.nibokapp.nibok.extension
 
 import android.content.Context
+import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
-import com.nibokapp.nibok.ui.activity.LoginActivity
 import com.nibokapp.nibok.ui.fragment.ChatFragment
 import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
 import org.jetbrains.anko.startActivity
@@ -22,10 +22,10 @@ fun Context.startDetailActivity(insertionId: String) =
                 InsertionDetailFragment.INSERTION_ID to insertionId)
 
 /**
- * Start the LoginActivity.
+ * Start the AuthenticateActivity.
  */
 fun Context.startLoginActivity() =
-        this.startActivity<LoginActivity>()
+        this.startActivity<AuthenticateActivity>()
 
 /**
  * Start the ConversationActivity for the given conversation's id.
