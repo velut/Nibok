@@ -3,7 +3,7 @@ package com.nibokapp.nibok.domain.rule
 /**
  * Validator for username and password inputs.
  */
-class AuthenticationValidator {
+class AuthInputValidator {
 
     companion object {
         const val MIN_USERNAME_LENGTH = 3

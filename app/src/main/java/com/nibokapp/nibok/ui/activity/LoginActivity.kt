@@ -8,7 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.domain.rule.AuthenticationValidator
+import com.nibokapp.nibok.domain.rule.AuthInputValidator
 import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
@@ -22,7 +22,8 @@ import org.jetbrains.anko.uiThread
  * Used by a guest to either login into the application or sign up.
  */
 class LoginActivity(
-        val authPresenter: AuthPresenter = AuthPresenter()
+        val authPresenter: AuthPresenter = AuthPresenter(),
+        val authInputValidator: AuthInputValidator = AuthInputValidator()
 ) : AppCompatActivity() {
 
     companion object {
@@ -36,9 +37,6 @@ class LoginActivity(
 
     // Default view is the login one
     private var showLogin = true
-
-    // Authentication validator
-    private val authValidator = AuthenticationValidator()
 
     private var alertDialog: MaterialDialog? = null
 
@@ -205,7 +203,7 @@ class LoginActivity(
         }
 
         inputUsername.filters = arrayOf(getAlphanumericFilter(),
-                android.text.InputFilter.LengthFilter(AuthenticationValidator.MAX_USERNAME_LENGTH))
+                android.text.InputFilter.LengthFilter(AuthInputValidator.MAX_USERNAME_LENGTH))
     }
 
     private fun validateUsername() {
@@ -218,10 +216,10 @@ class LoginActivity(
         inputUsernameLayout.error = null
 
         // Min length not valid error
-        if (!authValidator.isUsernameMinLengthValid(username)) {
+        if (!authInputValidator.isUsernameMinLengthValid(username)) {
             val usernameTooShortError =
                     String.format(getString(R.string.error_username_too_short),
-                            AuthenticationValidator.MIN_USERNAME_LENGTH)
+                            AuthInputValidator.MIN_USERNAME_LENGTH)
             inputUsernameLayout.apply {
                 error = usernameTooShortError
                 requestFocus()
@@ -260,11 +258,11 @@ class LoginActivity(
 
         if (password.isEmpty()) return
 
-        if (authValidator.isPasswordMinLengthValid(password)) {
+        if (authInputValidator.isPasswordMinLengthValid(password)) {
             inputPasswordPrimaryLayout.error = null
         } else {
             val passwordTooShortError = String.format(getString(R.string.error_password_too_short),
-                    AuthenticationValidator.MIN_PASSWORD_LENGTH)
+                    AuthInputValidator.MIN_PASSWORD_LENGTH)
             inputPasswordPrimaryLayout.apply {
                 error = passwordTooShortError
                 requestFocus()
