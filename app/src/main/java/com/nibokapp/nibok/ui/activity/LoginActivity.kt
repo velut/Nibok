@@ -74,8 +74,7 @@ class LoginActivity(
 
     private fun login() {
 
-        if (inputUsernameLayout.error != null ||
-                inputPasswordPrimaryLayout.error != null) return
+        if (hasInputErrors()) return
 
         val username = inputUsername.text.toString()
         val password = inputPasswordPrimary.text.toString()
@@ -103,9 +102,7 @@ class LoginActivity(
 
     private fun signUp() {
 
-        if (inputUsernameLayout.error != null ||
-                inputPasswordPrimaryLayout.error != null ||
-                inputPasswordSecondaryLayout.error != null) return
+        if (hasInputErrors()) return
 
         val username = inputUsername.text.toString()
         val password = inputPasswordPrimary.text.toString()
@@ -295,6 +292,26 @@ class LoginActivity(
                 error = differentPasswords
                 requestFocus()
             }
+        }
+    }
+
+    /**
+     * Check if any of the inputs relevant to the current view (login or sign up)
+     * contains invalid input.
+     * This is signaled by errors set on the input layout containers.
+     *
+     * @return true if the current view has any input errors, false if no errors were found
+     */
+    private fun hasInputErrors(): Boolean {
+        val usernameError = inputUsernameLayout.error != null
+        val primaryPasswordError = inputPasswordPrimary.error != null
+        val hasError = usernameError || primaryPasswordError
+
+        return if (showLogin) {
+            hasError
+        } else {
+            val hasSecondaryPasswordError = inputPasswordSecondary.error != null
+            hasError || hasSecondaryPasswordError
         }
     }
 }
