@@ -25,7 +25,6 @@ val TAG = "FileExtensions"
  * null if no file could be created
  */
 fun createImageFile(context: Context) : File? {
-    var imageFile: File? = null
     @SuppressLint("SimpleDateFormat")
     val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
     val imageFileName = "JPEG_$timestamp"
@@ -34,11 +33,13 @@ fun createImageFile(context: Context) : File? {
     // Get the external public files directory
     val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
-    try {
-        imageFile = File.createTempFile(imageFileName, extension, storageDir)
-    } catch (ex: IOException) {
-        Log.d(TAG, "Could not create image file\nException: $ex")
-    }
+    val imageFile: File? =
+            try {
+                File.createTempFile(imageFileName, extension, storageDir)
+            } catch (e: IOException) {
+                Log.d(TAG, "Could not create image file\nException: $e")
+                null
+            }
 
     return imageFile
 }
