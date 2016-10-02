@@ -9,6 +9,12 @@ import io.realm.RealmConfiguration
 import org.jetbrains.anko.doAsync
 import kotlin.properties.Delegates
 
+/**
+ * App.
+ *
+ * This class initializes the required configurations on application's start.
+ *
+ */
 class App : Application() {
 
     companion object {
@@ -21,37 +27,49 @@ class App : Application() {
         // Save instance
         instance = this
 
-        // Initialize BaasBox
-        BaasBox.builder(this).setAuthentication(BaasBox.Config.AuthType.SESSION_TOKEN)
-                .setApiDomain("10.0.3.2") // 10.0.2.2 for AVD; 10.0.3.2 for Genymotion
-                .setPort(9000)
-                .setAppCode("1234567890")
-                .init()
+        initRealmDb()
+        initFresco()
+        initBaasBox()
 
+        // Test. logout user on start
         doAsync {
             BaasUser.current()?.logoutSync()
         }
+    }
 
-        // Initialize Fresco
-        Fresco.initialize(this)
+    /**
+     * Initialize the local database.
+     */
+    private fun initRealmDb() {
 
         // Get Realm configuration
         val realmConfig = RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded() // Delete the DB instead of migrating
                 .build()
 
-        Realm.deleteRealm(realmConfig) // Delete realm on restart
+        // Delete realm on restart
+        Realm.deleteRealm(realmConfig)
 
         // Set the Realm configuration
         Realm.setDefaultConfiguration(realmConfig)
+    }
 
-        // Create the local user
-        //UserRepository.createLocalUser()
+    /**
+     * Initialize Fresco.
+     * Used for the pictures gallery.
+     */
+    private fun initFresco() {
+        Fresco.initialize(this)
+    }
 
-        // Populate the DB with test data
-        //DbPopulator().populateDb()
-
-        // For testing
-        //BookInsertionRepository.toggleBookInsertionSaveStatus(2)
+    /**
+     * Initialize communications with the server.
+     */
+    private fun initBaasBox() {
+        BaasBox.builder(this).setAuthentication(BaasBox.Config.AuthType.SESSION_TOKEN)
+                .setApiDomain("10.0.3.2") // 10.0.2.2 for AVD; 10.0.3.2 for Genymotion
+                .setPort(9000)
+                .setAppCode("1234567890")
+                .init()
     }
 }
