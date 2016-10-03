@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.card_book.view.*
 /**
  * Delegate adapter managing the creation and binding of book view holders.
  */
-class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickManager) : ViewTypeDelegateAdapter {
+class BookInsertionDelegateAdapter(
+        val itemClickManager: ViewTypeAdapter.ItemClickManager
+) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = BookInsertionDelegateAdapter::class.java.simpleName
@@ -61,11 +63,16 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
          */
         fun bind(item: BookInsertionModel) {
             insertionId = item.insertionId
-            val hasThumbnail = item.bookPictureSources.isNotEmpty()
-            if (hasThumbnail) loadThumbnail(item.bookPictureSources[0])
+
+            val thumbnail = item.bookPictureSources.firstOrNull()
+            thumbnail?.let {
+                loadThumbnail(it)
+            }
+
             bindData(item)
             addThumbnailListener()
             addCardListener()
+
             if (itemClickManager.showButton()) {
                 updateSaveButton(itemView.saveButton, item.savedByUser)
                 addSaveButtonListener(item)
@@ -108,20 +115,25 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
          */
         private fun addCardListener() = with(itemView) {
             setOnClickListener {
-                insertionId?.let {
-                    itemClickManager.onItemClick(it, ViewTypes.BOOK_INSERTION)
-                }
+                clickItem()
             }
         }
 
         /**
          * Listen to clicks on the thumbnail.
          */
-        private fun addThumbnailListener() = with(itemView) {
-            bookThumbnail.setOnClickListener {
-                insertionId?.let {
-                    itemClickManager.onItemClick(it, ViewTypes.BOOK_INSERTION)
-                }
+        private fun addThumbnailListener() = with(itemView.bookThumbnail) {
+            setOnClickListener {
+                clickItem()
+            }
+        }
+
+        /**
+         * Trigger the item click of the item click manager.
+         */
+        private fun clickItem() {
+            insertionId?.let {
+                itemClickManager.onItemClick(it, ViewTypes.BOOK_INSERTION)
             }
         }
 
@@ -137,14 +149,14 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
         private fun addSaveButtonListener(item: BookInsertionModel) = with(itemView) {
             saveButton.setOnClickListener {
                 Log.d(TAG, "Save button clicked")
+
                 insertionId?.let {
                     itemClickManager.onButtonClick(it, ViewTypes.BOOK_INSERTION)
-                }
-                if (itemClickManager.updateItemOnButtonClick()) {
-                    item.savedByUser = !item.savedByUser
-                    updateSaveButton(saveButton, item.savedByUser)
-                    if (item.savedByUser) {
-                        saveButton.animateBounce()
+
+                    if (itemClickManager.updateItemOnButtonClick()) {
+                        item.savedByUser = !item.savedByUser
+                        updateSaveButton(saveButton, item.savedByUser)
+                        if (item.savedByUser) saveButton.animateBounce()
                     }
                 }
             }
@@ -158,13 +170,11 @@ class BookInsertionDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemCli
          */
         private fun updateSaveButton(saveButton: ImageView, saved: Boolean) {
 
-            if (saved) {
-                saveButton.apply {
+            saveButton.apply {
+                if (saved) {
                     setColorFilter(ContextCompat.getColor(context, R.color.primary))
                     setImageResource(R.drawable.ic_bookmark_black_24dp)
-                }
-            } else {
-                saveButton.apply {
+                } else {
                     setColorFilter(ContextCompat.getColor(context, R.color.secondary_text))
                     setImageResource(R.drawable.ic_bookmark_border_black_24dp)
                 }
