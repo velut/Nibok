@@ -69,9 +69,11 @@ fun View.animateScaling(xStart: Float, xEnd: Float, yStart: Float, yEnd: Float, 
             yStart, yEnd,
             Animation.RELATIVE_TO_SELF, 0.5f,
             Animation.RELATIVE_TO_SELF, 0.5f)
-    animation.fillAfter = true
-    animation.duration = duration
-    animation.interpolator = DecelerateInterpolator(0.5f)
+    animation.apply {
+        fillAfter = true
+        this.duration = duration
+        interpolator = DecelerateInterpolator(0.5f)
+    }
     this.startAnimation(animation)
 }
 
@@ -87,8 +89,10 @@ fun View.animateScaleDown() {
  * A scale up followed by a scale down animation to be called directly by a View.
  */
 fun View.animateBounce() {
-    this.animateScaleUp()
-    this.animateScaleDown()
+    this.apply {
+        animateScaleUp()
+        animateScaleDown()
+    }
 }
 
 /**
