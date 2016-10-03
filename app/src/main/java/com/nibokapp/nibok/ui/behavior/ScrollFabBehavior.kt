@@ -11,11 +11,14 @@ import android.view.View
 @Suppress("unused", "UNUSED_PARAMETER")
 class ScrollFabBehavior(context: Context, attrs: AttributeSet) : FloatingActionButton.Behavior() {
 
-    private var active = true
-
     companion object {
         private val TAG = ScrollFabBehavior::class.java.simpleName
     }
+
+    /**
+     * Signal if the fab behavior is active.
+     */
+    private var active = true
 
     override fun onDependentViewChanged(parent: CoordinatorLayout?, child: FloatingActionButton?, dependency: View?): Boolean {
         val recyclerView = dependency as? RecyclerView
