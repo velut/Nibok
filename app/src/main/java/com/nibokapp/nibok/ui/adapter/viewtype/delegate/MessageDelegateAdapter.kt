@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.item_message.view.*
 /**
  * Delegate adapter managing the creation and binding of message view holders.
  */
-class MessageDelegateAdapter(val itemClickManager: ViewTypeAdapter.ItemClickManager) : ViewTypeDelegateAdapter {
+class MessageDelegateAdapter(
+        val itemClickManager: ViewTypeAdapter.ItemClickManager
+) : ViewTypeDelegateAdapter {
 
     companion object {
         private val TAG = MessageDelegateAdapter::class.java.simpleName
