@@ -131,7 +131,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
         }
     }
 
-    override fun getItems(): List<ViewType> = items
+    override fun getItems(): List<ViewType> = items.toList()
 
     /**
      * Add given items to the list of items to display.
