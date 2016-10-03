@@ -123,16 +123,18 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     /**
-     * Return the first message available.
+     * Return the first message available in the list of messages.
      *
-     * @return the first message available if it exists, null otherwise
+     * @return the first message available in the list of messages if it exists,
+     * null otherwise
      */
     fun getFirstMessage() : ChatMessageModel? = messages.firstOrNull()
 
     /**
-     * Return the last message exchanged.
+     * Return the last message available in the list of messages.
      *
-     * @return the last message exchanged if it exists, null otherwise
+     * @return the last message available in the list of messages if it exists,
+     * null otherwise
      */
     fun getLastMessage() : ChatMessageModel? = messages.lastOrNull()
 
