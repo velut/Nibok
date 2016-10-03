@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter.viewtype.common
+package com.nibokapp.nibok.ui.behavior
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView

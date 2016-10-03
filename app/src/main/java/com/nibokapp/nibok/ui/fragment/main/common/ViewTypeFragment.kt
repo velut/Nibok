@@ -12,9 +12,9 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.adapter.viewtype.common.InfiniteScrollListener
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
+import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import org.jetbrains.anko.*
 
@@ -201,7 +201,7 @@ abstract class ViewTypeFragment : BaseFragment() {
     override fun handleOnQueryTextSubmit(query: String) = handleOnQueryTextChange(query)
 
     override fun handleOnQueryTextChange(query: String) {
-        if (query.equals(oldQuery)) {
+        if (query == oldQuery) {
             Log.d(TAG, "Same query as before, return")
             return
         }
@@ -210,7 +210,7 @@ abstract class ViewTypeFragment : BaseFragment() {
             val results = presenter.getQueryData(query)
             Log.d(TAG, "Results size: ${results.size}")
 
-            if (results.equals(oldResults)) {
+            if (results == oldResults) {
                 Log.d(TAG, "Same results as before, return")
                 return@doAsync
             }
