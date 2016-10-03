@@ -6,9 +6,16 @@ package com.nibokapp.nibok.domain.rule
 class AuthInputValidator {
 
     companion object {
+
+        /**
+         * Username min and max length.
+         */
         const val MIN_USERNAME_LENGTH = 3
         const val MAX_USERNAME_LENGTH = 15
 
+        /**
+         * Password min length.
+         */
         const val MIN_PASSWORD_LENGTH = 8
     }
 
