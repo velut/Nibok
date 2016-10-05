@@ -9,7 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.extension.startLoginActivity
+import com.nibokapp.nibok.extension.startAuthenticateActivity
 import com.nibokapp.nibok.ui.presenter.AuthPresenter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
@@ -138,7 +138,7 @@ abstract class BaseFragment(
     open fun handleAuthAction() {
         Log.d(TAG, "Handling auth action")
         if (doLogin)
-            context.startLoginActivity()
+            context.startAuthenticateActivity()
         else
             doAsync {
                 doLogin = authPresenter.logout()
