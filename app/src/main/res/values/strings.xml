@@ -71,6 +71,7 @@
     <string name="error_username_too_short">Username must contain at least %1d characters</string>
     <string name="error_password_too_short">Password must contain at least %1d characters</string>
     <string name="error_password_do_not_match">Passwords must be the same</string>
+    <string name="error_conversation_not_started">Cannot send a message to this user</string>
 
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>

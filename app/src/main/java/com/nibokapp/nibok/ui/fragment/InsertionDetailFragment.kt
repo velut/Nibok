@@ -15,18 +15,44 @@ import com.nibokapp.nibok.ui.presenter.InsertionDetailPresenter
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.content_insertion_detail.*
 import kotlinx.android.synthetic.main.fragment_insertion_detail.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
-
+/**
+ * InsertionDetailFragment hosts the insertion's detail view.
+ *
+ * From this view the user can:
+ *  - see details about the insertion
+ *  - open a gallery to see eventual pictures associated to the insertion
+ *  - contact the seller
+ */
 class InsertionDetailFragment(
         val presenter: InsertionDetailPresenter = InsertionDetailPresenter()
 ) : Fragment() {
 
-    private var actionBar: ActionBar? = null
-
     companion object {
         private val TAG = InsertionDetailFragment::class.java.simpleName
-        val INSERTION_ID = "InsertionDetailFragment:insertionId"
+
+        /**
+         * Key for arguments passing.
+         */
+        val INSERTION_ID = "$TAG:insertionId"
     }
+
+    private var actionBar: ActionBar? = null
+
+    /**
+     * Insertion's id.
+     */
+    private var insertionId: String? = null
+
+    /**
+     * Seller's id.
+     * Only set if insertion data is valid.
+     */
+    lateinit private var sellerId: String
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_insertion_detail)
@@ -37,54 +63,80 @@ class InsertionDetailFragment(
 
         // Set up the support action toolbar and the up button
         val hostingActivity = (activity as AppCompatActivity)
-        hostingActivity.setSupportActionBar(toolbar)
-        hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        hostingActivity.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        }
+
         actionBar = hostingActivity.supportActionBar
         actionBar?.title = getString(R.string.placeholder_book_detail)
 
-        // Retrieve the insertion id and bind the data into the view
-        arguments?.let {
-            val insertionId = it.getString(INSERTION_ID)
-            insertionId?.let {
-                val data = presenter.getInsertionDetails(insertionId)
+        // Retrieve insertionId
+        insertionId = arguments?.getString(InsertionDetailFragment.INSERTION_ID)
+
+        setupView()
+    }
+
+    private fun setupView() {
+
+        // If insertionId was not set return
+        val id = insertionId ?: return
+
+        doAsync {
+            val data = presenter.getInsertionDetails(id)
+            uiThread {
                 data?.let {
-                    setupFab(it)
-                    setupImages(it)
+                    setSellerId(it)
                     bindData(it)
+                    setupImages(it)
+                    setupFab()
                 }
             }
         }
     }
 
-    private fun setupFab(data: BookInsertionModel) {
-
-        try {
-            if (data.seller.username == presenter.getUserId()) {
-                return
-            }
-        } catch (e: IllegalStateException) {
-            Log.d(TAG, "Skipping user id check")
-        }
-
-        fab.post { fab.visibility = View.VISIBLE }
-        addFabListener(data)
+    private fun setSellerId(data: BookInsertionModel) {
+        sellerId = data.seller.username
     }
 
-    private fun addFabListener(data: BookInsertionModel) {
-        fab.setOnClickListener {
-            val sellerId = data.seller.username
-
-            if (presenter.loggedUserExists()) {
-                val conversationId = presenter.startConversation(sellerId)
-                conversationId?.let {
-                    Log.d(TAG, "Starting conversation with user: $sellerId")
-                    context.startConversation(conversationId)
-                }
-            } else {
-                Log.d(TAG, "Guest needs to login before starting a conversation")
-                context.startLoginActivity()
-            }
+    private fun setupFab() {
+        val userId = presenter.getUserId()
+        if (userId == null || userId != sellerId) {
+            Log.d(TAG, "Enabling fab")
+            enableFab()
+        } else {
+            Log.d(TAG, "Fab was not enabled")
         }
+    }
+
+    private fun enableFab() {
+        fab.apply {
+            setOnClickListener {
+                val localUserExists = presenter.loggedUserExists()
+                if (localUserExists) {
+                    startConversation()
+                } else {
+                    showAuthActivity()
+                }
+            }
+            post { fab.visibility = View.VISIBLE }
+        }
+    }
+
+    private fun startConversation() {
+        val conversationId = presenter.startConversation(sellerId)
+        if (conversationId != null) {
+            Log.d(TAG, "Starting conversation with user: $sellerId")
+            context.startConversation(conversationId)
+        } else {
+            Log.d(TAG, "Could not start a conversation with: $sellerId")
+            context.toast(R.string.error_conversation_not_started)
+        }
+    }
+
+    private fun showAuthActivity() {
+        Log.d(TAG, "Guest needs to login before starting a conversation")
+        context.startAuthenticateActivity()
     }
 
     private fun setupImages(data: BookInsertionModel) {
@@ -124,7 +176,6 @@ class InsertionDetailFragment(
             actionBar?.title = title
 
             // Bind book data
-
             detailBookTitle.text = title
             val numAuthors = authors.size
             val authorsString = authors.joinToString("\n")
