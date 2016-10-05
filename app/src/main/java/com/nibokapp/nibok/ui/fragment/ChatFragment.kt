@@ -19,10 +19,19 @@ import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
-class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() {
+/**
+ * ChatFragment hosts the chat view and is responsible for its operations.
+ */
+class ChatFragment(
+        val presenter: ChatPresenter = ChatPresenter()
+) : Fragment() {
 
     companion object {
         private val TAG = ChatFragment::class.java.simpleName
+
+        /**
+         * Key for arguments passing.
+         */
         val CONVERSATION_ID = "$TAG:conversationId"
 
         /**
@@ -64,25 +73,17 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
 
         // Set up the support action toolbar and the up button
         val hostingActivity = (activity as AppCompatActivity)
-        hostingActivity.setSupportActionBar(toolbar)
-        hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        hostingActivity.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        }
 
         actionBar = hostingActivity.supportActionBar
         actionBar?.title = getString(R.string.placeholder_chat)
 
-        // Retrieve the conversation's id and add messages
-        arguments?.let {
-
-            conversationId = it.getString(ChatFragment.CONVERSATION_ID)
-
-            conversationId?.let {
-                Log.d(TAG, "Got conversationId: $it")
-                partnerName = presenter.getConversationPartnerName(it) ?: partnerNamePlaceholder
-                actionBar?.title = partnerName
-                val messages = presenter.getConversationMessages(it)
-                chatAdapter.addMessages(messages)
-            }
-        }
+        // Retrieve conversationId
+        conversationId = arguments?.getString(ChatFragment.CONVERSATION_ID)
+        setupConversation()
     }
 
     override fun onStart() {
@@ -104,6 +105,16 @@ class ChatFragment(val presenter: ChatPresenter = ChatPresenter()) : Fragment() 
         super.onStop()
         Log.d(TAG, "Timer: Stopping, no more check for new messages ")
         checkNewMessagesTimer.cancel()
+    }
+
+    private fun setupConversation() {
+        conversationId?.let {
+            Log.d(TAG, "Got conversationId: $it")
+            partnerName = presenter.getConversationPartnerName(it) ?: partnerNamePlaceholder
+            actionBar?.title = partnerName
+            val messages = presenter.getConversationMessages(it)
+            chatAdapter.addMessages(messages)
+        }
     }
 
     private fun addNewMessages(newMessages: List<ChatMessageModel>) {
