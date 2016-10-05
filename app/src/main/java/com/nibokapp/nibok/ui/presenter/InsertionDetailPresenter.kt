@@ -20,13 +20,17 @@ class InsertionDetailPresenter(
     }
 
     /**
-     * Get the id of the local user.
+     * Get the id of the local user if it exists.
      *
-     * @return the id of the local user
+     * @return the id of the local user if it exists, null otherwise
      */
-    fun getUserId() : String {
+    fun getUserId() : String? {
         Log.d(TAG, "Requesting local user id")
-        return RequestLocalUserIdCommand().execute()
+        return try {
+            RequestLocalUserIdCommand().execute()
+        } catch (e: IllegalStateException) {
+            null
+        }
     }
 
     /**
