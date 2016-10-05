@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -32,8 +33,12 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
 
+/**
+ * PublishInsertionFragment hosts the views that constitute the insertion's publishing process.
+ */
 class PublishInsertionFragment(
-        val presenter : PublishInsertionPresenter = PublishInsertionPresenter()) : Fragment() {
+        val presenter : PublishInsertionPresenter = PublishInsertionPresenter()
+) : Fragment() {
 
     companion object {
         private val TAG = PublishInsertionFragment::class.java.simpleName
@@ -50,29 +55,30 @@ class PublishInsertionFragment(
         /**
          * Request code for picture taking.
          */
-        private val REQUEST_IMAGE_CAPTURE = 1
+        const private val REQUEST_IMAGE_CAPTURE = 1
 
         /**
          * File provider authority constant.
          */
-        private val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
+        const private val CAPTURE_PICTURES_FILE_PROVIDER = "com.nibokapp.nibok.fileprovider"
 
         /**
          * Constant for maximum number of pictures that the user can take.
          */
-        private val MAX_PICTURE_NUMBER = 5
+        const private val MAX_PICTURE_NUMBER = 5
 
         /**
          * List of pages making up the insertion publishing process.
          */
-        private val PAGE_ISBN = 0
-        private val PAGE_BOOK_DETAILS = 1
-        private val PAGE_INSERTION_DETAILS = 2
-        private val PAGE_INSERTION_PICTURES = 3
+        const private val PAGE_ISBN = 0
+        const private val PAGE_BOOK_DETAILS = 1
+        const private val PAGE_INSERTION_DETAILS = 2
+        const private val PAGE_INSERTION_PICTURES = 3
     }
 
     /**
-     * The mapping of pages to their views, initialized in onViewCreated.
+     * The mapping of pages to their views.
+     * Initialized in onViewCreated.
      */
     lateinit private var pages: Map<Int, View>
 
@@ -115,6 +121,13 @@ class PublishInsertionFragment(
     private var successDialog: MaterialDialog? = null
     private var errorDialog: MaterialDialog? = null
 
+    /**
+     * List of all dialogs.
+     */
+    private var dialogs: List<MaterialDialog?> = listOf(
+            confirmationDialog, progressDialog, successDialog, errorDialog
+    )
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_publish_insertion)
@@ -125,48 +138,47 @@ class PublishInsertionFragment(
 
         // Set up the support action toolbar and the up button
         val hostingActivity = (activity as AppCompatActivity)
-        hostingActivity.setSupportActionBar(toolbar)
-        hostingActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        hostingActivity.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     override fun onPause() {
         super.onPause()
         // Dismiss dialogs to prevent leaked windows
-        progressDialog?.dismiss()
-        confirmationDialog?.dismiss()
-        successDialog?.dismiss()
-        errorDialog?.dismiss()
+        dialogs.forEach { it?.dismiss() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         // If we have a valid URI revoke previously granted permissions on it
-        if (currentPictureUri != "") {
-            context.revokeUriPermission(Uri.parse(currentPictureUri),
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        revokeUriPermissions()
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            // Image capture was successful, bind the pictures
             if (resultCode == Activity.RESULT_OK) {
                 Log.d(TAG, "Picture taken, binding pictures")
                 picturesUriList.add(currentPictureUri)
                 bindPictures()
-            } else { // Image capture was unsuccessful, delete unused file and discard the last URI
-                context.contentResolver.delete(Uri.parse(currentPictureUri), null, null)
-                currentPictureUri = ""
+            } else {
+                Log.d(TAG, "Image capture was unsuccessful, resetting URI")
+                resetUri()
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(KEY_CURRENT_PAGE, currentPage)
-        outState.putBoolean(KEY_IS_ISBN_SET, isISBNSet)
-        outState.putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
-        outState.putString(KEY_CURRENT_PICTURE_URI, currentPictureUri)
-        outState.putStringArrayList(KEY_PICTURES_LIST,
-                picturesUriList.toCollection(ArrayList<String>()))
+        val picturesUri = picturesUriList.toCollection(ArrayList<String>())
+
+        outState.apply {
+            putInt(KEY_CURRENT_PAGE, currentPage)
+            putBoolean(KEY_IS_ISBN_SET, isISBNSet)
+            putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
+            putString(KEY_CURRENT_PICTURE_URI, currentPictureUri)
+            putStringArrayList(KEY_PICTURES_LIST, picturesUri)
+        }
+
         super.onSaveInstanceState(outState)
     }
 
@@ -241,29 +253,50 @@ class PublishInsertionFragment(
         )
     }
 
+    /**
+     * Display pictures taken by the user into the image views.
+     */
     private fun bindPictures() {
 
         val picturesSize = picturesUriList.size
 
         if (picturesSize == 0) return
 
-        // Bind at most MAX_PICTURE_NUMBER pictures in the corresponding image views
-        picturesUriList.take(MAX_PICTURE_NUMBER).forEachIndexed { index, pictureUri ->
+        Log.d(TAG, "Loading available pictures")
+        loadPictures()
+
+        if (picturesSize >= MAX_PICTURE_NUMBER) {
+            Log.d(TAG, "Maximum number of pictures was taken. Disabling take picture button")
+            disableTakePictureButton()
+        } else {
+            Log.d(TAG, "Scrolling to the last picture")
+            scrollToLastPicture()
+        }
+    }
+
+    private fun loadPictures() {
+        // Take at most MAX_PICTURE_NUMBER to prevent loading into an unavailable ImageView
+        val picturesToLoad = picturesUriList.take(MAX_PICTURE_NUMBER)
+        picturesToLoad.forEachIndexed { index, pictureUri ->
             val host = pictureImgHosts[index]
-            host.visibility = View.VISIBLE
-            host.loadImg(pictureUri)
+            host.apply {
+                visibility = View.VISIBLE
+                loadImg(pictureUri)
+            }
             Log.d(TAG, "ImgView: ${host.getName()} visible: ${host.visibility == View.VISIBLE}")
         }
+    }
 
-        // Hide button to take pictures after the maximum number of pictures was taken
-        if (picturesSize >= MAX_PICTURE_NUMBER) {
-            btnTakePicture.visibility = View.GONE
-        } else {
-            // After a delay scroll to the end of the horizontal scroll view to show the
-            // take picture button
-            pictureScrollView.postDelayed(
-                    {pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)},
-                    120L)
+    private fun scrollToLastPicture() {
+        pictureScrollView.postDelayed(
+                { pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
+                120L)
+    }
+
+    private fun disableTakePictureButton() {
+        btnTakePicture.apply {
+            isEnabled = false
+            visibility = View.GONE
         }
     }
 
@@ -289,14 +322,17 @@ class PublishInsertionFragment(
 
         if (validator.isIsbnLengthValid(isbnCode)) {
             if (validator.isIsbnValid(isbnCode)) {
+                Log.d(TAG, "Set valid ISBN")
                 inputISBNLayout.error = null
                 showBookDataForISBN(isbnCode)
                 isISBNSet = true
-            } else { // Isbn code is not valid
+            } else {
+                Log.d(TAG, "ISBN code is not valid")
                 inputISBNLayout.error = getString(R.string.error_invalid_isbn)
                 inputISBNLayout.requestFocus()
             }
-        } else { // Isbn code length is incorrect
+        } else {
+            Log.d(TAG, "ISBN code is too short")
             inputISBNLayout.error = getString(R.string.error_input_isbn)
             inputISBNLayout.requestFocus()
             if (isISBNSet) {
@@ -338,33 +374,19 @@ class PublishInsertionFragment(
         helperBookDetails.text = text
     }
 
+
+
     /**
      * Configure the views' button navigation.
      */
     private fun configureButtonNavigation() {
-        btnSkipISBN.setOnClickListener {
-            showPage(PAGE_BOOK_DETAILS)
-        }
 
-        btnChangeISBN.setOnClickListener {
-            showPage(PAGE_ISBN)
-        }
-
-        btnConfirmBookDetails.setOnClickListener {
-            showPage(PAGE_INSERTION_DETAILS)
-        }
-
-        btnChangeBookDetails.setOnClickListener {
-            showPage(PAGE_BOOK_DETAILS)
-        }
-
-        btnConfirmInsertionDetails.setOnClickListener {
-            showPage(PAGE_INSERTION_PICTURES)
-        }
-
-        btnChangeInsertionDetails.setOnClickListener {
-            showPage(PAGE_INSERTION_DETAILS)
-        }
+        btnSkipISBN.onClickShowPage(PAGE_BOOK_DETAILS)
+        btnChangeISBN.onClickShowPage(PAGE_ISBN)
+        btnConfirmBookDetails.onClickShowPage(PAGE_INSERTION_DETAILS)
+        btnChangeBookDetails.onClickShowPage(PAGE_BOOK_DETAILS)
+        btnConfirmInsertionDetails.onClickShowPage(PAGE_INSERTION_PICTURES)
+        btnChangeInsertionDetails.onClickShowPage(PAGE_INSERTION_DETAILS)
 
         btnTakePicture.setOnClickListener {
             dispatchTakePictureIntent()
@@ -532,5 +554,31 @@ class PublishInsertionFragment(
         val inputPrice = inputInsertionBookPrice
         inputInsertionBookPrice.filters =
                 arrayOf(getPriceLengthFilter(inputPrice), getPriceLeadingZerosFilter(inputPrice))
+    }
+
+    /**
+     * Revoke previously granted write permissions on the current URI.
+     */
+    private fun revokeUriPermissions() {
+        if (currentPictureUri != "") {
+            context.revokeUriPermission(Uri.parse(currentPictureUri),
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+    }
+
+    /**
+     * Delete the unused file associated to the last URI.
+     * Reset the current URI.
+     */
+    private fun resetUri() {
+        context.contentResolver.delete(Uri.parse(currentPictureUri), null, null)
+        currentPictureUri = ""
+    }
+
+    private fun Button.onClickShowPage(page: Int) {
+        this.setOnClickListener {
+            showPage(page)
+        }
     }
 }
