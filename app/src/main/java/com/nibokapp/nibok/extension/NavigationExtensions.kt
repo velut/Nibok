@@ -24,7 +24,7 @@ fun Context.startDetailActivity(insertionId: String) =
 /**
  * Start the AuthenticateActivity.
  */
-fun Context.startLoginActivity() =
+fun Context.startAuthenticateActivity() =
         this.startActivity<AuthenticateActivity>()
 
 /**
