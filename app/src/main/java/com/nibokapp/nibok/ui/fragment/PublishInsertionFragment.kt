@@ -78,9 +78,22 @@ class PublishInsertionFragment(
 
     /**
      * The mapping of pages to their views.
-     * Initialized in onViewCreated.
      */
-    lateinit private var pages: Map<Int, View>
+    private val pages: Map<Int, View> by lazy {
+        mapOf(
+                PAGE_ISBN to inputISBNContainer,
+                PAGE_BOOK_DETAILS to inputBookDetailsContainer,
+                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer,
+                PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
+        )
+    }
+
+    /**
+     * List of image views that hold the pictures taken by the user.
+     */
+    private val pictureImgHosts: List<ImageView> by lazy {
+        listOf(picView1, picView2, picView3, picView4, picView5)
+    }
 
     /**
      * The current page being displayed.
@@ -107,11 +120,6 @@ class PublishInsertionFragment(
      * Current Uri of the picture being taken.
      */
     private var currentPictureUri = ""
-
-    /**
-     * List of image views that hold the pictures taken by the user.
-     */
-    lateinit private var pictureImgHosts: List<ImageView>
 
     /**
      * Dialogs notifying the user.
@@ -185,9 +193,6 @@ class PublishInsertionFragment(
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initPublishPagesMap()
-        initImgHosts()
-
         setBookHelperText()
 
         // Retrieve eventually saved values
@@ -232,25 +237,6 @@ class PublishInsertionFragment(
                 hideKeyboardListener(motionEvent, view, context)
             }
         }
-    }
-
-    /**
-     * Initialize the list of image views hosting the pictures taken by the user.
-     */
-    private fun initImgHosts() {
-        pictureImgHosts = listOf(picView1, picView2, picView3, picView4, picView5)
-    }
-
-    /**
-     * Initialize the map (position -> view) for the pages making up the publishing process.
-     */
-    private fun initPublishPagesMap() {
-        pages = mapOf(
-                PAGE_ISBN to inputISBNContainer,
-                PAGE_BOOK_DETAILS to inputBookDetailsContainer,
-                PAGE_INSERTION_DETAILS to inputInsertionDetailsContainer,
-                PAGE_INSERTION_PICTURES to inputInsertionPicturesContainer
-        )
     }
 
     /**
