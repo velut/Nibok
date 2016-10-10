@@ -7,7 +7,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.jetbrains.anko.doAsync
-import kotlin.properties.Delegates
 
 /**
  * App.
@@ -18,7 +17,7 @@ import kotlin.properties.Delegates
 class App : Application() {
 
     companion object {
-        var instance: App by Delegates.notNull<App>()
+        lateinit var instance: App
     }
 
     override fun onCreate() {
