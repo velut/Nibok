@@ -47,7 +47,6 @@ class PublishInsertionFragment(
          * Keys for Bundle save and restore operations.
          */
         private val KEY_CURRENT_PAGE = "$TAG:currentPage"
-        private val KEY_BOOK_DETAILS_HELPER_TEXT = "$TAG:bookDetailsHelperString"
         private val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
         private val KEY_PICTURES_LIST = "$TAG:picturesUriList"
         private val KEY_CURRENT_PICTURE_URI = "$TAG:currentPictureUri"
@@ -102,16 +101,6 @@ class PublishInsertionFragment(
     private var currentPage = PAGE_ISBN
 
     /**
-     * Helper text for the book's details page.
-     */
-    private var bookDetailsHelperText = ""
-
-    /**
-     * Signal if a valid ISBN code was set in the ISBN input view or not.
-     */
-    private var isISBNSet = false
-
-    /**
      * List of URIs pointing to the images taken by the user.
      */
     private var picturesUriList = mutableListOf<String>()
@@ -135,6 +124,11 @@ class PublishInsertionFragment(
     private var dialogs: List<MaterialDialog?> = listOf(
             confirmationDialog, progressDialog, successDialog, errorDialog
     )
+
+    /**
+     * Signal if a valid ISBN code was set in the ISBN input view or not.
+     */
+    private var isISBNSet = false
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -182,7 +176,6 @@ class PublishInsertionFragment(
         outState.apply {
             putInt(KEY_CURRENT_PAGE, currentPage)
             putBoolean(KEY_IS_ISBN_SET, isISBNSet)
-            putString(KEY_BOOK_DETAILS_HELPER_TEXT, bookDetailsHelperText)
             putString(KEY_CURRENT_PICTURE_URI, currentPictureUri)
             putStringArrayList(KEY_PICTURES_LIST, picturesUri)
         }
@@ -193,14 +186,9 @@ class PublishInsertionFragment(
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setBookHelperText()
-
         // Retrieve eventually saved values
         savedInstanceState?.let {
             currentPage = it.getInt(KEY_CURRENT_PAGE)
-
-            bookDetailsHelperText = it.getString(KEY_BOOK_DETAILS_HELPER_TEXT,
-                    getString(R.string.add_book_details))
 
             isISBNSet = it.getBoolean(KEY_IS_ISBN_SET)
 
@@ -208,8 +196,6 @@ class PublishInsertionFragment(
 
             picturesUriList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
         }
-
-        setBookHelperText(bookDetailsHelperText)
 
         // Bind the available pictures in the image views
         bindPictures()
@@ -312,6 +298,7 @@ class PublishInsertionFragment(
                 inputISBNLayout.error = null
                 showBookDataForISBN(isbnCode)
                 isISBNSet = true
+                updateBookInputHelperText()
             } else {
                 Log.d(TAG, "ISBN code is not valid")
                 inputISBNLayout.error = getString(R.string.error_invalid_isbn)
@@ -324,9 +311,12 @@ class PublishInsertionFragment(
             if (isISBNSet) {
                 isISBNSet = false
                 clearBookDetails()
+                updateBookInputHelperText()
             }
         }
     }
+
+
 
     /**
      * Fetch book data for a given ISBN code, populate and show the book's details view
@@ -340,27 +330,14 @@ class PublishInsertionFragment(
 
         Log.d(TAG, "Valid Isbn: $isbn")
         showPage(PAGE_BOOK_DETAILS)
-        setBookHelperText(getString(R.string.review_book_details))
 
         // TODO get real data
-        presenter.getBookDataByISBN(isbn)
+//        presenter.getBookDataByISBN(isbn)
         inputBookTitle.setText("Book Title Here")
         inputBookAuthors.setText("John Doe, Bob Zu")
         inputBookYear.setText("2016")
         inputBookPublisher.setText("Mit Press")
     }
-
-    /**
-     * Update the book helper text and keep track of the change.
-     *
-     * @param text the text to show in the helper. Default = add_book_details text
-     */
-    private fun setBookHelperText(text: String = getString(R.string.add_book_details)) {
-        bookDetailsHelperText = text
-        helperBookDetails.text = text
-    }
-
-
 
     /**
      * Configure the views' button navigation.
@@ -497,7 +474,7 @@ class PublishInsertionFragment(
     /**
      * Show the page at the given position and update the current page value,
      * hide all other pages before doing so.
-     * Hide also the soft keyboard when the page is shown
+     * Hide also the soft keyboard when the page is shown.
      *
      * @param pagePosition the position of the page to show
      */
@@ -509,6 +486,7 @@ class PublishInsertionFragment(
             visibility = View.VISIBLE
             hideSoftKeyboard(context)
         }
+        if (currentPage == PAGE_BOOK_DETAILS) updateBookInputHelperText()
     }
 
     /**
@@ -525,7 +503,6 @@ class PublishInsertionFragment(
      * Reset the screen of the book's details and scroll to top.
      */
     private fun clearBookDetails() {
-        setBookHelperText(getString(R.string.add_book_details))
         inputBookTitle.setText("")
         inputBookAuthors.setText("")
         inputBookYear.setText("")
@@ -560,6 +537,16 @@ class PublishInsertionFragment(
     private fun resetUri() {
         context.contentResolver.delete(Uri.parse(currentPictureUri), null, null)
         currentPictureUri = ""
+    }
+
+    /**
+     * Update the helper text for book details input,
+     * suggesting the user either to insert or review book details.
+     */
+    private fun updateBookInputHelperText() {
+        helperBookDetails.text =
+                if (isISBNSet) getString(R.string.review_book_details)
+                else getString(R.string.add_book_details)
     }
 
     private fun Button.onClickShowPage(page: Int) {
