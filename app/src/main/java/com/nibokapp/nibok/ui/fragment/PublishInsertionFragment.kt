@@ -121,7 +121,7 @@ class PublishInsertionFragment(
     /**
      * List of all dialogs.
      */
-    private var dialogs: List<MaterialDialog?> = listOf(
+    private val dialogs: List<MaterialDialog?> = listOf(
             confirmationDialog, progressDialog, successDialog, errorDialog
     )
 
