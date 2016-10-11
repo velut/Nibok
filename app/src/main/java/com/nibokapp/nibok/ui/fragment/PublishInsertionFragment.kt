@@ -67,6 +67,12 @@ class PublishInsertionFragment(
         const private val MAX_PICTURE_NUMBER = 5
 
         /**
+         * Read and write permissions on a URI to be granted to the camera.
+         */
+        const private val URI_RW_PERMISSIONS =
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+        /**
          * List of pages making up the insertion publishing process.
          */
         const private val PAGE_ISBN = 0
@@ -451,38 +457,39 @@ class PublishInsertionFragment(
 
         val pictureFile = createImageFile(context)
 
-        pictureFile?.let {
-            val pictureURI = FileProvider.getUriForFile(context,
-                    CAPTURE_PICTURES_FILE_PROVIDER,
-                    it)
-
-            currentPictureUri = pictureURI.toString()
-
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-            // Default activities that can take a picture
-            val resolvedIntentActivities = context.packageManager
-                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY)
-
-            // Grant to each of these activities the permission to read
-            // and write to the picture URI.
-            // If this is not done SecurityException is raised and
-            // the camera apps crash.
-            resolvedIntentActivities.forEach {
-                val packageName = it.activityInfo.packageName
-                Log.d(TAG, "Granting permission to: $packageName")
-                context.grantUriPermission(packageName, pictureURI,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-            // Finally start the activity to take the picture
-            val takePictureActivity = takePictureIntent.resolveActivity(activity.packageManager)
-            takePictureActivity?.let {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureURI)
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
+        if (pictureFile == null) {
+            Log.d(TAG, "Could not create a picture file")
+            // TODO dialog?
+            return
         }
 
+        val pictureURI = FileProvider.getUriForFile(context,
+                CAPTURE_PICTURES_FILE_PROVIDER, pictureFile)
+
+        currentPictureUri = pictureURI.toString()
+
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        // Default activities that can take a picture
+        val resolvedIntentActivities = context.packageManager
+                .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY)
+
+        // Grant to each of these activities the permission to read
+        // and write to the picture URI.
+        // If this is not done SecurityException is raised and
+        // the camera apps crash.
+        resolvedIntentActivities.forEach {
+            val packageName = it.activityInfo.packageName
+            Log.d(TAG, "Granting URI permission to: $packageName")
+            context.grantUriPermission(packageName, pictureURI, URI_RW_PERMISSIONS)
+        }
+
+        // Finally start the activity to take the picture
+        val takePictureActivity = takePictureIntent.resolveActivity(activity.packageManager)
+        takePictureActivity?.let {
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureURI)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
     }
 
     /**
@@ -538,9 +545,7 @@ class PublishInsertionFragment(
      */
     private fun revokeUriPermissions() {
         if (currentPictureUri != "") {
-            context.revokeUriPermission(Uri.parse(currentPictureUri),
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                            or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            context.revokeUriPermission(Uri.parse(currentPictureUri), URI_RW_PERMISSIONS)
         }
     }
 
