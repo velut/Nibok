@@ -419,15 +419,29 @@ class PublishInsertionFragment(
      * @return a string summarising the data that the user submitted for the insertion
      */
     private fun getPublishAlertDialogContent(): String {
-        val confirmationQuestion = "${getString(R.string.alert_publish_content_question)}\n"
-        val title = "${getString(R.string.book_title)}: \n"
-        val authors = "${resources.getQuantityString(R.plurals.book_author, 2)}: \n"
-        val year = "${getString(R.string.book_year)}: \n"
-        val publisher = "${getString(R.string.book_publisher)}: \n"
-        val isbn = "${getString(R.string.book_isbn)}: \n"
-        val price = "${getString(R.string.insertion_book_price)}: \n"
-        val wearCondition = "${getString(R.string.book_wear_condition)}: \n"
-        return "$confirmationQuestion\n$title$authors$year$publisher$isbn$price$wearCondition"
+        val confirmationQuestion = getString(R.string.alert_publish_content_question)
+        val title = getString(R.string.book_title)
+        val authors = resources.getQuantityString(R.plurals.book_author, 2)
+        val year = getString(R.string.book_year)
+        val publisher = getString(R.string.book_publisher)
+        val isbn = getString(R.string.book_isbn)
+        val price = getString(R.string.insertion_book_price)
+        val wearCondition = getString(R.string.book_wear_condition)
+
+        // TODO Insert book data
+        val dialogContent = """
+        |$confirmationQuestion
+        |
+        |$title:
+        |$authors:
+        |$year:
+        |$publisher:
+        |$isbn:
+        |$price:
+        |$wearCondition:
+        """.trimMargin()
+
+        return dialogContent
     }
 
     /**
