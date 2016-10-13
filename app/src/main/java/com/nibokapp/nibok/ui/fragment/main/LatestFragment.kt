@@ -1,6 +1,5 @@
 package com.nibokapp.nibok.ui.fragment.main
 
-import android.support.v7.widget.RecyclerView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
@@ -10,7 +9,6 @@ import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
-import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.toast
 
 /**
@@ -38,8 +36,6 @@ class LatestFragment(
 
     // Main View
 
-    override fun getMainView() : RecyclerView = latestBooksList
-
     override fun getMainViewId() = R.id.latestBooksList
 
     override fun getMainViewLayoutManager() = context.getDpBasedLinearLayoutManager()
@@ -54,7 +50,7 @@ class LatestFragment(
 
     // Search View
 
-    override fun getSearchView(): RecyclerView = searchResultsListLatest
+    override fun getSearchViewId() = R.id.searchResultsListLatest
 
     override fun getSearchViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
@@ -64,7 +60,7 @@ class LatestFragment(
 
     // Refresh
 
-    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
+    override fun getRefreshUnsuccessfulString(): String = getString(R.string.no_newer_book_insertions)
 
 
     // Item click listener for the book cards

@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.RecyclerView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
@@ -25,6 +24,10 @@ class SavedFragment(
         private val TAG = SavedFragment::class.java.simpleName
     }
 
+    private val mainAdapter: ViewTypeAdapter by lazy {
+        ViewTypeAdapter(mainViewBookItemClickManager)
+    }
+
     // Fragment
 
     override fun getFragmentLayout() = R.layout.fragment_saved
@@ -37,13 +40,11 @@ class SavedFragment(
 
     // Main View
 
-    override fun getMainView() : RecyclerView = savedBooksList
-
     override fun getMainViewId() = R.id.savedBooksList
 
     override fun getMainViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
-    override fun getMainViewAdapter() = ViewTypeAdapter(mainViewBookItemClickManager)
+    override fun getMainViewAdapter() = mainAdapter
 
     // Main View Data
 
@@ -53,7 +54,7 @@ class SavedFragment(
 
     // Search View
 
-    override fun getSearchView(): RecyclerView = searchResultsListSaved
+    override fun getSearchViewId() = R.id.searchResultsListSaved
 
     override fun getSearchViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
@@ -63,7 +64,7 @@ class SavedFragment(
 
     // Refresh
 
-    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
+    override fun getRefreshUnsuccessfulString(): String = getString(R.string.no_newer_book_insertions)
 
     private val mainViewBookItemClickManager = object : ViewTypeAdapter.ItemClickManager {
         override fun onButtonClick(itemId: String, itemType: Int) {
@@ -116,14 +117,13 @@ class SavedFragment(
         if (presenter !is InsertionSaveStatusPresenter) return
 
         val saved = presenter.toggleInsertionSave(itemId)
-        val mainViewAdapter = getMainView().adapter as? ViewTypeAdapter
 
-        if (saved || mainViewAdapter == null) return
+        if (saved) return
 
         // Remove the book
 
         // Save old book position for possible reinsertion
-        val oldBookPosition = mainViewAdapter.removeItemById(itemId, itemType)
+        val oldBookPosition = mainAdapter.removeItemById(itemId, itemType)
 
         // Notify user of removal
         val snackBar = Snackbar.make(savedFragmentRoot,
@@ -134,7 +134,7 @@ class SavedFragment(
             // Reinsert book if necessary
             if (!presenter.isInsertionSaved(itemId)) {
                 presenter.toggleInsertionSave(itemId)
-                mainViewAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
+                mainAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
                 checkForUpdates() // Sync fragment data and view
                 // Notify the reinsertion
                 val childSnackBar = Snackbar.make(savedFragmentRoot,

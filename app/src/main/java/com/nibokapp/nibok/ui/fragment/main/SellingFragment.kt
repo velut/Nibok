@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.ui.fragment.main
 
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.nibokapp.nibok.R
@@ -41,8 +40,6 @@ class SellingFragment(
 
     // Main view
 
-    override fun getMainView(): RecyclerView = sellingBooksList
-
     override fun getMainViewId() = R.id.sellingBooksList
 
     override fun getMainViewLayoutManager() = context.getDpBasedLinearLayoutManager()
@@ -57,7 +54,7 @@ class SellingFragment(
 
     // Search view
 
-    override fun getSearchView(): RecyclerView = searchResultsListSelling
+    override fun getSearchViewId(): Int = R.id.searchResultsListSelling
 
     override fun getSearchViewLayoutManager() = context.getDpBasedLinearLayoutManager()
 
@@ -67,7 +64,7 @@ class SellingFragment(
 
     // Refresh
 
-    override fun getNoNewerItemsFromRefreshString(): String = getString(R.string.no_newer_book_insertions)
+    override fun getRefreshUnsuccessfulString(): String = getString(R.string.no_newer_book_insertions)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
