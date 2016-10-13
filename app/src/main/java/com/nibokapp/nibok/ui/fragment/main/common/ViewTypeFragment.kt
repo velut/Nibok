@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.getName
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.adapter.viewtype.common.ListAdapter
+import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
@@ -29,15 +29,42 @@ abstract class ViewTypeFragment : BaseFragment() {
         private val TAG = ViewTypeFragment::class.java.simpleName
     }
 
+    /**
+     * Properties tracking the old query input and the old result list
+     * in order to prevent unnecessary updates to the searchView.
+     */
     private var oldQuery: String? = null
     private var oldResults: List<ViewType> = emptyList()
 
+    /**
+     * The presenter used to retrieve and operate on data.
+     */
     private val presenter: ViewTypePresenter by lazy { getFragmentPresenter() }
 
-    private var mainView: RecyclerView? = null
-    private var searchResultsView: RecyclerView? = null
+    /**
+     * The main view, that is the default recycler view
+     * in which the fragment's items are displayed, and its adapter.
+     */
+    private lateinit var mainView: RecyclerView
+    private lateinit var mainViewAdapter: ViewTypeAdapter
+
+    /**
+     * The search view, that is the recycler view (hidden by default)
+     * in which the items returned from a search are displayed, and its adapter.
+     */
+    private lateinit var searchView: RecyclerView
+    private lateinit var searchViewAdapter: ViewTypeAdapter
+
+    /**
+     * Track the view that is currently displayed.
+     */
     private var currentView: RecyclerView? = null
+
+    /**
+     * Reference to the optional fab that a fragment may be displaying.
+     */
     private var fab: FloatingActionButton? = null
+
 
     /**
      * Get the layout used by the fragment.
@@ -52,13 +79,6 @@ abstract class ViewTypeFragment : BaseFragment() {
      * @return the fragment's presenter
      */
     abstract fun getFragmentPresenter() : ViewTypePresenter
-
-    /**
-     * Get the main view defined in the fragment's layout.
-     *
-     * @return the main view defined in the fragment's layout.
-     */
-    abstract fun getMainView() : RecyclerView
 
     /**
      * Get the id of the main view.
@@ -79,14 +99,14 @@ abstract class ViewTypeFragment : BaseFragment() {
      *
      * @return the adapter used by the main view
      */
-    abstract fun getMainViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
+    abstract fun getMainViewAdapter() : ViewTypeAdapter
 
     /**
-     * Get the search view defined in the fragment's layout.
+     * Get the id of the search view.
      *
-     * @return the search view defined in the fragment's layout.
+     * @return the id of the search view
      */
-    abstract fun getSearchView() : RecyclerView
+    abstract fun getSearchViewId() : Int
 
     /**
      * Get the layout manager used by the search view.
@@ -100,7 +120,7 @@ abstract class ViewTypeFragment : BaseFragment() {
      *
      * @return the adapter used by the search view
      */
-    abstract fun getSearchViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
+    abstract fun getSearchViewAdapter() : ViewTypeAdapter
 
     /**
      * Signal if items in the main view can be updated.
@@ -116,26 +136,25 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     abstract fun hasMainViewRemovableItems() : Boolean
 
-    abstract fun getNoNewerItemsFromRefreshString() : String
+    abstract fun getRefreshUnsuccessfulString() : String
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(getFragmentLayout())
         view?.let {
-            val mainView = it.find<RecyclerView>(getMainViewId())
-            setupMainView(mainView)
-            // Set cached items to restore scroll position
-            Log.d(TAG, "Setting up view with cached data")
-            getAdapterForView(mainView)?.clearAndAddItems(presenter.getCachedData())
-            currentView = mainView
+            // Find the views
+            mainView = it.find<RecyclerView>(getMainViewId())
+            searchView = it.find(getSearchViewId())
             fab = it.findOptional(R.id.sellingFab)
+
+            // Initially the current view is the main view
+            currentView = mainView
+
+            // Initialize the main and the search view
+            initMainView()
+            initSearchView()
         }
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mainView = getMainView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -161,29 +180,15 @@ abstract class ViewTypeFragment : BaseFragment() {
     }
 
     override fun handleRefreshAction() {
-
-        val mainViewAdapter = getAdapterForView(mainView)
-        if (mainViewAdapter == null) {
-            Log.d(TAG, "Main view adapter is null, cannot refresh")
-            return
-        }
-
         val firstItem = getMainViewData().firstOrNull()
-        if (firstItem == null) {
-            doAsync {
-                val items = presenter.getData()
-                uiThread {
-                    val numAdded = mainViewAdapter.addItems(items)
-                    onRefreshed(numAdded)
-                }
-            }
-        } else {
-            doAsync {
-                val newerData = presenter.getDataNewerThanItem(firstItem)
-                uiThread {
-                    val numAdded = mainViewAdapter.addItems(newerData)
-                    onRefreshed(numAdded)
-                }
+        doAsync {
+            val data = if (firstItem == null)
+                presenter.getData()
+            else
+                presenter.getDataNewerThanItem(firstItem)
+            uiThread {
+                val numAdded = mainViewAdapter.addItems(data)
+                onRefreshed(numAdded)
             }
         }
     }
@@ -206,20 +211,19 @@ abstract class ViewTypeFragment : BaseFragment() {
             }
             oldResults = results
             uiThread {
-                getAdapterForView(searchResultsView)?.clearAndAddItems(results)
+                searchViewAdapter.clearAndAddItems(results)
             }
         }
     }
 
     override fun handleOnSearchOpen() {
         Log.d(TAG, "Search opened. Hide MainView and show SearchView")
-        mainView?.visibility = View.GONE
+        mainView.visibility = View.GONE
         fab?.visibility = View.GONE
-        setupSearchView()
-        searchResultsView = getSearchView()
-        searchResultsView?.visibility = View.VISIBLE
+
+        searchView.visibility = View.VISIBLE
         // Update the current view to be the search results view
-        currentView = searchResultsView
+        currentView = searchView
     }
 
     override fun handleOnSearchClose() {
@@ -238,34 +242,29 @@ abstract class ViewTypeFragment : BaseFragment() {
      */
     fun checkForUpdates() {
 
-        val viewAdapter = getAdapterForView(mainView)
-        if (viewAdapter == null) {
-            Log.d(TAG, "No adapter for main view, cannot update")
-            return
-        }
         Log.d(TAG, "${getFragmentName()} is checking for updates")
 
         doAsync() {
-            val oldData = viewAdapter.getItems()
+            val oldData = mainViewAdapter.getItems()
             val (toUpdate, toRemove) = presenter.getDiffData(oldData)
 
             Log.d(TAG, "${getFragmentName()}: Update: ${toUpdate.size}; Remove: ${toRemove.size}")
 
             if (hasMainViewRemovableItems()) {
                 Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
-                if (toRemove.size > 0) uiThread { viewAdapter.removeItems(toRemove) }
+                if (toRemove.size > 0) uiThread { mainViewAdapter.removeItems(toRemove) }
             }
 
             if (hasMainViewUpdatableItems()) {
                 Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
-                if (toUpdate.size > 0) uiThread { viewAdapter.updateItems(toUpdate) }
+                if (toUpdate.size > 0) uiThread { mainViewAdapter.updateItems(toUpdate) }
             }
         }
     }
 
     private fun onRefreshed(numAdded: Int) {
         if (numAdded == 0) {
-            context.toast(getNoNewerItemsFromRefreshString())
+            context.toast(getRefreshUnsuccessfulString())
         } else {
             handleBackToTopAction()
         }
@@ -277,12 +276,17 @@ abstract class ViewTypeFragment : BaseFragment() {
      *
      * @return the data currently displayed in the main view
      */
-    open fun getMainViewData() : List<ViewType> =
-            getAdapterForView(mainView)?.getItems() ?: emptyList()
+    open fun getMainViewData() : List<ViewType> = mainViewAdapter.getItems()
 
-    private fun getAdapterForView(view: RecyclerView?) : ListAdapter<ViewType>? {
-        @Suppress("UNCHECKED_CAST")
-        return view?.adapter as? ListAdapter<ViewType>
+    private fun initMainView() {
+        setupMainView()
+        // Set cached items to restore scroll position
+        Log.d(TAG, "Setting up view with cached data")
+        mainViewAdapter.clearAndAddItems(presenter.getCachedData())
+    }
+
+    private fun initSearchView() {
+        setupSearchView()
     }
 
     /**
@@ -320,26 +324,18 @@ abstract class ViewTypeFragment : BaseFragment() {
     }
 
     private fun loadMoreItems() {
-        val mainViewAdapter = getAdapterForView(mainView)
-
-        if (mainViewAdapter == null) {
-            Log.d(TAG, "No adapter for main view, cannot load more items")
-            return
-        }
-
         Log.d(TAG, "Loading more items")
 
-        var numAdded : Int
         val handler = Handler()
 
         val lastItem = getMainViewData().lastOrNull()
 
         handler.post {
-            if (lastItem == null) {
-                numAdded = mainViewAdapter.addItems(presenter.getData())
+            val numAdded = if (lastItem == null) {
+                mainViewAdapter.addItems(presenter.getData())
             } else {
                 val olderData = presenter.getDataOlderThanItem(lastItem)
-                numAdded = mainViewAdapter.addItems(olderData, insertAtBottom = true)
+                mainViewAdapter.addItems(olderData, insertAtBottom = true)
             }
 
             if (numAdded == 0) {
@@ -348,19 +344,23 @@ abstract class ViewTypeFragment : BaseFragment() {
         }
     }
 
-    private fun setupMainView(view: RecyclerView) =
-            setupView(view, getMainViewLayoutManager(), getMainViewAdapter(), true)
+    private fun setupMainView() {
+        mainViewAdapter = getMainViewAdapter()
+        setupView(mainView, getMainViewLayoutManager(), mainViewAdapter, true)
+    }
 
-    private fun setupSearchView() =
-            setupView(getSearchView(), getSearchViewLayoutManager(), getSearchViewAdapter(), false)
+    private fun setupSearchView() {
+        searchViewAdapter = getSearchViewAdapter()
+        setupView(searchView, getSearchViewLayoutManager(), searchViewAdapter, false)
+    }
 
     /**
      * Hide search results view (if present) and show main view (if present).
      * Update currentView to be the mainView.
      */
     private fun showMainView() {
-        searchResultsView?.visibility = View.GONE
-        mainView?.visibility = View.VISIBLE
+        searchView.visibility = View.GONE
+        mainView.visibility = View.VISIBLE
         fab?.let {
             it.post { it.visibility = View.VISIBLE }
         }
