@@ -25,15 +25,15 @@ abstract class BaseFragment(
 ) : Fragment(), VisibleFragment {
 
     companion object {
-        val TAG: String = BaseFragment::class.java.simpleName
+        private val TAG: String = BaseFragment::class.java.simpleName
     }
 
-    protected var menuSearchAction: MenuItem? = null
-    protected var searchView: SearchView? = null
+    private lateinit var menuSearchAction: MenuItem
+    private lateinit var searchView: SearchView
 
     private var menu: Menu? = null
 
-    private var doLogin = true
+    private var doLogin: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,60 +56,19 @@ abstract class BaseFragment(
         Log.d(TAG, "${getFragmentName()} is no longer visible")
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         this.menu = menu
-        inflater?.inflate(R.menu.toolbar_menu, menu)
+        inflater.inflate(R.menu.toolbar_menu, menu)
 
         updateAuthAction()
 
         // Find the search action menu item and get the search view
-        menuSearchAction = menu?.findItem(R.id.searchAction)
-        searchView = menuSearchAction?.actionView as? SearchView
+        menuSearchAction = menu.findItem(R.id.searchAction)
+        searchView = menuSearchAction.actionView as SearchView
 
-        // Add search hint
-        searchView?.queryHint = getSearchHint()
-
-        // Add listener to search view input
-        searchView?.setOnQueryTextListener(
-                object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        Log.d(TAG, "Search submit: $query")
-                        query?.let {
-                            handleOnQueryTextSubmit(it)
-                        }
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        Log.d(TAG, "Search change to: $newText")
-                        newText?.let {
-                            handleOnQueryTextChange(it)
-                        }
-                        return false
-                    }
-                }
-        )
-
-        /* Add listeners for when the search view is opened and closed.
-         * This is a workaround because the setOnCloseListener method does not get invoked by Android.
-         * The short way should be:
-         *  searchView.setOnSearchClickListener { handleOnSearchOpen() }
-         *  searchView.setOnCloseListener { handleOnSearchClose(); false }
-         */
-        MenuItemCompat.setOnActionExpandListener(menuSearchAction,
-                object : MenuItemCompat.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                        handleOnSearchOpen()
-                        return true
-                    }
-
-                    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                        handleOnSearchClose()
-                        return true
-                    }
-                }
-        )
+        setupSearchView()
+        addSearchActionExpandListener()
     }
 
     /**
@@ -137,15 +96,16 @@ abstract class BaseFragment(
 
     open fun handleAuthAction() {
         Log.d(TAG, "Handling auth action")
-        if (doLogin)
+        if (doLogin) {
             context.startAuthenticateActivity()
-        else
+        } else {
             doAsync {
                 doLogin = authPresenter.logout()
                 uiThread {
                     updateAuthAction()
                 }
             }
+        }
     }
 
     private fun updateDoLogin() {
@@ -164,8 +124,6 @@ abstract class BaseFragment(
             authItem.title = "${getString(R.string.logout_action)} (${authPresenter.getLoggedUserId()})"
         }
     }
-
-
 
     /**
      * Handle the refresh action.
@@ -217,6 +175,48 @@ abstract class BaseFragment(
     private fun handleUnknownAction(item: MenuItem) {
         super.onOptionsItemSelected(item)
         context.toast("Unknown menu action")
+    }
+
+    private fun setupSearchView() {
+        // Add search hint
+        searchView.queryHint = getSearchHint()
+
+        // Add listener to search view input
+        searchView.setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        Log.d(TAG, "Search submit: $query")
+                        query?.let {
+                            handleOnQueryTextSubmit(it)
+                        }
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        Log.d(TAG, "Search change to: $newText")
+                        newText?.let {
+                            handleOnQueryTextChange(it)
+                        }
+                        return false
+                    }
+                }
+        )
+    }
+
+    private fun addSearchActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(menuSearchAction,
+                object : MenuItemCompat.OnActionExpandListener {
+                    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                        handleOnSearchOpen()
+                        return true
+                    }
+
+                    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                        handleOnSearchClose()
+                        return true
+                    }
+                }
+        )
     }
 
 }
