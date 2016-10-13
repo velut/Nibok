@@ -31,7 +31,7 @@ abstract class BaseFragment(
     private var isFragmentVisible: Boolean = false
 
     private lateinit var menuSearchAction: MenuItem
-    private lateinit var searchView: SearchView
+    private lateinit var menuSearchView: SearchView
 
     private var menu: Menu? = null
 
@@ -73,7 +73,7 @@ abstract class BaseFragment(
 
         // Find the search action menu item and get the search view
         menuSearchAction = menu.findItem(R.id.searchAction)
-        searchView = menuSearchAction.actionView as SearchView
+        menuSearchView = menuSearchAction.actionView as SearchView
 
         setupSearchView()
         addSearchActionExpandListener()
@@ -187,10 +187,10 @@ abstract class BaseFragment(
 
     private fun setupSearchView() {
         // Add search hint
-        searchView.queryHint = getSearchHint()
+        menuSearchView.queryHint = getSearchHint()
 
         // Add listener to search view input
-        searchView.setOnQueryTextListener(
+        menuSearchView.setOnQueryTextListener(
                 object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         Log.d(TAG, "Search submit: $query")
