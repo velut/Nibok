@@ -51,7 +51,7 @@ class InsertionDetailFragment(
      * Seller's id.
      * Only set if insertion data is valid.
      */
-    lateinit private var sellerId: String
+    private lateinit var sellerId: String
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

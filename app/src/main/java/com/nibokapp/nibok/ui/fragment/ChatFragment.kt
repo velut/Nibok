@@ -51,9 +51,9 @@ class ChatFragment(
     private val chatAdapter = ChatAdapter(userId)
     private val chatLayoutManager = LinearLayoutManager(context)
 
-    lateinit private var checkNewMessagesTimer: Timer
+    private lateinit var checkNewMessagesTimer: Timer
 
-    lateinit private var partnerName: String
+    private lateinit var partnerName: String
     private val partnerNamePlaceholder by lazy { getString(R.string.placeholder_chat_partner) }
 
 
