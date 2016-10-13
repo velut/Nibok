@@ -20,4 +20,11 @@ interface VisibleFragment {
      * What to do when the fragment becomes invisible.
      */
     fun onBecomeInvisible()
+
+    /**
+     * Check if the fragment is visible or not.
+     *
+     * @return true if the fragment is visible, false if it is not visible
+     */
+    fun isFragmentVisible() : Boolean
 }

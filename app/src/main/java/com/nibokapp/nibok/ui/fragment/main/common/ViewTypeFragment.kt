@@ -29,8 +29,6 @@ abstract class ViewTypeFragment : BaseFragment() {
         private val TAG = ViewTypeFragment::class.java.simpleName
     }
 
-    private var isFragmentVisible = false
-
     private var oldQuery: String? = null
     private var oldResults: List<ViewType> = emptyList()
 
@@ -148,16 +146,8 @@ abstract class ViewTypeFragment : BaseFragment() {
 
     override fun onBecomeVisible() {
         super.onBecomeVisible()
-        isFragmentVisible = true
         showMainView()
         checkForUpdates()
-    }
-
-    override fun onBecomeInvisible() {
-        if (isFragmentVisible) {
-            isFragmentVisible = false
-            super.onBecomeInvisible()
-        }
     }
 
     /**

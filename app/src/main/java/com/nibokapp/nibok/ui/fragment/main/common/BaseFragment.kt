@@ -28,6 +28,8 @@ abstract class BaseFragment(
         private val TAG: String = BaseFragment::class.java.simpleName
     }
 
+    private var isFragmentVisible: Boolean = false
+
     private lateinit var menuSearchAction: MenuItem
     private lateinit var searchView: SearchView
 
@@ -50,11 +52,17 @@ abstract class BaseFragment(
 
     override fun onBecomeVisible() {
         Log.d(TAG, "${getFragmentName()} became visible")
+        isFragmentVisible = true
     }
 
     override fun onBecomeInvisible() {
+        if (!isFragmentVisible) return
+
         Log.d(TAG, "${getFragmentName()} is no longer visible")
+        isFragmentVisible = false
     }
+
+    override fun isFragmentVisible(): Boolean = isFragmentVisible
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
