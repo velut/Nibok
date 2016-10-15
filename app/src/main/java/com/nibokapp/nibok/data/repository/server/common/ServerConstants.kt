@@ -54,13 +54,14 @@ object ServerConstants {
     const val CONVERSATION_ID = "conversationId"
     const val SENDER_ID = "senderId"
     const val TEXT = "text"
+}
 
-
-    /**
-     * Server collections
-     */
-    const val COLLECTION_INSERTIONS = "INSERTIONS"
-    const val COLLECTION_CONVERSATIONS = "CONVERSATIONS"
-    const val COLLECTION_BOOKS = "BOOKS"
-    const val COLLECTION_MESSAGES = "MESSAGES"
+/**
+ * Collections of documents present on the server.
+ */
+enum class ServerCollection(val id: String) {
+    INSERTIONS("INSERTIONS"),
+    CONVERSATIONS("CONVERSATIONS"),
+    BOOKS("BOOKS"),
+    MESSAGES("MESSAGES")
 }
