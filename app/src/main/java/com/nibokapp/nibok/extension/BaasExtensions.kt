@@ -22,3 +22,19 @@ inline fun <reified T> BaasResult<T>.onSuccess(func: (T) -> Unit) : Boolean {
     }
     return false
 }
+
+/**
+ * Given a BaasResult on a type T if the result is successful execute the given
+ * function on T and return the result R.
+ *
+ * @param func a function that operates on the data of type T contained in the result and returns R
+ *
+ * @return the result of executing 'func' if the result was successful and 'func' was called,
+ * null if the result was not successful and 'func' was not called
+ */
+inline fun <reified T, reified R> BaasResult<T>.onSuccessReturn(func: (T) -> R) : R? {
+    if (this.isSuccess && this.value() != null) {
+        return func(this.value())
+    }
+    return null
+}
