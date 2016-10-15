@@ -8,7 +8,9 @@ import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.extension.init
+import com.nibokapp.nibok.extension.onSuccess
+import com.nibokapp.nibok.extension.onSuccessReturn
 
 /**
  * Authenticator.
@@ -80,10 +82,9 @@ object Authenticator : AuthenticatorInterface {
          * we don't make the strong assumption that the username
          * is already taken.
          */
-        var available = true
-        result.onSuccess {
-            available = it.getString(ServerConstants.DATA) == ServerConstants.USERNAME_AVAILABLE
+        val available = result.onSuccessReturn {
+            it.getString(ServerConstants.DATA) == ServerConstants.USERNAME_AVAILABLE
         }
-        return available
+        return available ?: true
     }
 }
