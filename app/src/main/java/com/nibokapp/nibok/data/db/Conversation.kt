@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.data.db
 
+import com.nibokapp.nibok.data.db.common.WellFormedItem
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -27,4 +28,9 @@ open class Conversation(
 
         open var messages: RealmList<Message> = RealmList()
 
-) : RealmObject() {}
+) : RealmObject(), WellFormedItem {
+
+    override fun isWellFormed(): Boolean = with(this) {
+        return@with partner != null && date != null && userId != ""
+    }
+}

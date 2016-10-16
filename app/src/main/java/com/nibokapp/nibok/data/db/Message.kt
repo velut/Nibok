@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.data.db
 
+import com.nibokapp.nibok.data.db.common.WellFormedItem
 import io.realm.RealmObject
 import java.util.*
 
@@ -22,4 +23,9 @@ open class Message(
 
         open var date: Date? = null
 
-) : RealmObject() {}
+) : RealmObject(), WellFormedItem {
+
+    override fun isWellFormed(): Boolean = with(this) {
+        return@with date != null
+    }
+}

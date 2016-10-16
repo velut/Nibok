@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.data.db
 
 import com.nibokapp.nibok.data.db.common.RealmString
+import com.nibokapp.nibok.data.db.common.WellFormedItem
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -34,4 +35,9 @@ open class Insertion(
 
         open var bookImagesSources: RealmList<RealmString> = RealmList()
 
-) : RealmObject() {}
+) : RealmObject(), WellFormedItem {
+
+    override fun isWellFormed(): Boolean = with(this) {
+        return@with date != null && seller != null && book != null
+    }
+}
