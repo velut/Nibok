@@ -8,9 +8,7 @@ import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.init
-import com.nibokapp.nibok.extension.onSuccess
-import com.nibokapp.nibok.extension.onSuccessReturn
+import com.nibokapp.nibok.extension.*
 
 /**
  * Authenticator.
