@@ -3,7 +3,11 @@ package com.nibokapp.nibok.extension
 import com.baasbox.android.BaasUser
 import com.baasbox.android.json.JsonArray
 import com.baasbox.android.json.JsonObject
+import com.nibokapp.nibok.data.db.Conversation
+import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
+import com.nibokapp.nibok.server.provider.ServerDataProvider
+import com.nibokapp.nibok.server.provider.common.ServerDataProviderInterface
 
 /**
  * Extensions handling BaasUser related operations.
@@ -36,14 +40,14 @@ fun BaasUser.init() {
  *
  * @return the private scope if the current user has access to it, null otherwise
  */
-fun BaasUser.getPrivateScope(): JsonObject? = this.getScope(BaasUser.Scope.PRIVATE)
+fun BaasUser.getPrivateScope() : JsonObject? = this.getScope(BaasUser.Scope.PRIVATE)
 
 /**
  * Get the public scope of this BaasUser.
  *
  * @return the private scope if the current user has access to it, null otherwise
  */
-fun BaasUser.getPublicScope(): JsonObject? = this.getScope(BaasUser.Scope.PUBLIC)
+fun BaasUser.getPublicScope() : JsonObject? = this.getScope(BaasUser.Scope.PUBLIC)
 
 /**
  * Get the JsonArray containing the ids of the insertions saved by this user.
@@ -83,4 +87,58 @@ fun BaasUser.getConversationsArray() : JsonArray {
 fun BaasUser.getAvatar() : String {
     val scope = this.getPublicScope() ?: return ""
     return scope.getString(ServerConstants.AVATAR, "")
+}
+
+/**
+ * Get the list of insertions saved by the user.
+ *
+ * @return a list of Insertion
+ */
+fun BaasUser.getSavedInsertions() : List<Insertion> =
+        getInsertionsFromArray(getSavedInsertionsArray())
+
+/**
+ * Get the list of insertions published by the user.
+ *
+ * @return a list of Insertion
+ */
+fun BaasUser.getPublishedInsertions() : List<Insertion> =
+        getInsertionsFromArray(getPublishedInsertionsArray())
+
+/**
+ * Get the list of conversations in which the user is participating.
+ *
+ * @return a list of Conversation
+ */
+fun BaasUser.getConversations() : List<Conversation> =
+        getConversationsFromArray(getConversationsArray())
+
+/**
+ * Get the list of insertions corresponding to the ids stored in the given JsonArray.
+ *
+ * @param array the array that contains the ids of the insertions
+ * @param provider the provider used to fetch data from the server.
+ * ServerDataProvider is used by default.
+ *
+ * @return a list of Insertion
+ */
+private fun getInsertionsFromArray(array: JsonArray,
+                                   provider: ServerDataProviderInterface = ServerDataProvider())
+        : List<Insertion> {
+    return provider.getInsertionListFromIds(array)
+}
+
+/**
+ * Get the list of conversations corresponding to the ids stored in the given JsonArray.
+ *
+ * @param array the array that contains the ids of the conversations
+ * @param provider the provider used to fetch data from the server.
+ * ServerDataProvider is used by default.
+ *
+ * @return a list of Conversation
+ */
+private fun getConversationsFromArray(array: JsonArray,
+                                      provider: ServerDataProviderInterface = ServerDataProvider())
+        : List<Conversation> {
+    return provider.getConversationListFromIds(array)
 }
