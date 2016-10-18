@@ -72,7 +72,7 @@ fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
  * Include only saved insertions from this list.
  */
 fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
-    val savedInsertions = BookInsertionRepository.getSavedBookInsertionList()
+    val savedInsertions = BookInsertionRepository.getSavedInsertionList()
     return this.filter { it.id in savedInsertions.map { it.id } }
 }
 

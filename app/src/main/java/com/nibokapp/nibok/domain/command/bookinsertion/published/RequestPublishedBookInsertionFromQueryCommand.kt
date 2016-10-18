@@ -19,6 +19,6 @@ class RequestPublishedBookInsertionFromQueryCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getPublishedBookInsertionListFromQuery(query)
+                    bookRepository.getPublishedInsertionListFromQuery(query)
             )
 }

@@ -17,6 +17,6 @@ class RequestBookInsertionFeedCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getFeedBookInsertionList()
+                    bookRepository.getFeedInsertionList()
             )
 }

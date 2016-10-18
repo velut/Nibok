@@ -20,7 +20,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return the insertion with the given id or null if no such insertion was found
      */
-    fun getBookInsertionById(insertionId: String) : Insertion?
+    fun getInsertionById(insertionId: String) : Insertion?
 
     /**
      * Get the book data for the book with the given ISBN code.
@@ -40,7 +40,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getBookInsertionListFromQuery(query: String) : List<Insertion>
+    fun getInsertionListFromQuery(query: String) : List<Insertion>
 
     /**
      * Get the list of insertions with a date greater or equal to the given date.
@@ -49,7 +49,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getBookInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getInsertionListAfterDate(date: Date) : List<Insertion>
 
     /**
      * Get the list of insertions with a date smaller or equal to the given date.
@@ -58,7 +58,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getBookInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getInsertionListBeforeDate(date: Date) : List<Insertion>
 
     /*
      * FEED BOOK INSERTIONS
@@ -73,7 +73,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return the list of currently available book insertions published by external users
      */
-    fun getFeedBookInsertionList(cached: Boolean = false): List<Insertion>
+    fun getFeedInsertionList(cached: Boolean = false): List<Insertion>
 
     /**
      * Get the list of insertions not published by the user matching the given query.
@@ -84,7 +84,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>
+    fun getFeedInsertionListFromQuery(query: String) : List<Insertion>
 
     /**
      * Get the list of insertions not published by the user with a date
@@ -94,7 +94,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getFeedBookInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getFeedInsertionListAfterDate(date: Date) : List<Insertion>
 
     /**
      * Get the list of insertions not published by the user with a date
@@ -104,7 +104,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getFeedBookInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getFeedInsertionListBeforeDate(date: Date) : List<Insertion>
 
     /*
      * SAVED BOOK INSERTIONS
@@ -118,7 +118,7 @@ interface BookInsertionRepositoryInterface {
      * @return the list of insertions saved by the user
      * or an empty list if no saved insertions could be found
      */
-    fun getSavedBookInsertionList(cached: Boolean = false) : List<Insertion>
+    fun getSavedInsertionList(cached: Boolean = false) : List<Insertion>
 
     /**
      * Get the list of insertions saved by the user matching the given query.
@@ -129,7 +129,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion>
+    fun getSavedInsertionListFromQuery(query: String) : List<Insertion>
 
     /**
      * Get the list of insertions saved by the user with a date
@@ -139,7 +139,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getSavedBookInsertionLisAfterDate(date: Date) : List<Insertion>
+    fun getSavedInsertionLisAfterDate(date: Date) : List<Insertion>
 
     /**
      * Get the list of insertions saved by the user with a date
@@ -149,7 +149,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getSavedBookInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getSavedInsertionListBeforeDate(date: Date) : List<Insertion>
 
     /*
      * PUBLISHED BOOK INSERTIONS
@@ -163,7 +163,7 @@ interface BookInsertionRepositoryInterface {
      * @return the list of insertions published by the user
      * or an empty list if no published insertions could be found
      */
-    fun getPublishedBookInsertionList(cached: Boolean = false) : List<Insertion>
+    fun getPublishedInsertionList(cached: Boolean = false) : List<Insertion>
 
     /**
      * Get the list of insertions published by the user matching the given query.
@@ -174,7 +174,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion>
+    fun getPublishedInsertionListFromQuery(query: String) : List<Insertion>
 
     /**
      * Get the list of insertions published by the user with a date
@@ -184,7 +184,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getPublishedBookInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getPublishedInsertionListAfterDate(date: Date) : List<Insertion>
 
     /**
      * Get the list of insertions published by the user with a date
@@ -194,7 +194,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getPublishedBookInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getPublishedInsertionListBeforeDate(date: Date) : List<Insertion>
 
     /*
      * BOOK INSERTION SAVE STATUS

@@ -23,6 +23,6 @@ class RequestBookInsertionByIdCommand(
 
     override fun execute(): BookInsertionModel? =
             dataMapper.convertInsertionToDomain(
-                    bookRepository.getBookInsertionById(insertionId)
+                    bookRepository.getInsertionById(insertionId)
             )
 }

@@ -22,7 +22,7 @@ class RequestNewerPublishedBookInsertionCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getPublishedBookInsertionListAfterDate(
+                    bookRepository.getPublishedInsertionListAfterDate(
                             firstBookInsertion.insertionDate
                     )
             )

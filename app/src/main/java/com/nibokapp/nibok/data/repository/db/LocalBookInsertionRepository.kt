@@ -31,7 +31,7 @@ object LocalBookInsertionRepository :
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: String) : Insertion? = queryOneRealm {
+    override fun getInsertionById(insertionId: String) : Insertion? = queryOneRealm {
         it.where(Insertion::class.java)
                 .equalTo("id", insertionId)
                 .findFirst()
@@ -43,7 +43,7 @@ object LocalBookInsertionRepository :
                 .findFirst()
     }
 
-    override fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
+    override fun getInsertionListFromQuery(query: String) : List<Insertion> {
 
         val trimmedQuery = query.trim()
 
@@ -64,7 +64,7 @@ object LocalBookInsertionRepository :
         return results
     }
 
-    override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
+    override fun getInsertionListAfterDate(date: Date) : List<Insertion> {
         val results = queryManyRealm {
             it.where(Insertion::class.java)
                     .greaterThanOrEqualTo("date", date)
@@ -73,7 +73,7 @@ object LocalBookInsertionRepository :
         return results
     }
 
-    override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
+    override fun getInsertionListBeforeDate(date: Date) : List<Insertion> {
         val results = queryManyRealm {
             it.where(Insertion::class.java)
                     .lessThanOrEqualTo("date", date)
@@ -86,7 +86,7 @@ object LocalBookInsertionRepository :
      * FEED BOOK INSERTIONS
      */
 
-    override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
+    override fun getFeedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
         feedCache = queryManyRealm { it.where(Insertion::class.java).findAll()}
                 .excludeUserOwnInsertions()
@@ -94,60 +94,60 @@ object LocalBookInsertionRepository :
         return feedCache
     }
 
-    override fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
-            getBookInsertionListFromQuery(query).excludeUserOwnInsertions()
+    override fun getFeedInsertionListFromQuery(query: String) : List<Insertion>  =
+            getInsertionListFromQuery(query).excludeUserOwnInsertions()
 
-    override fun getFeedBookInsertionListAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).excludeUserOwnInsertions()
 
-    override fun getFeedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).excludeUserOwnInsertions()
 
     /*
      * SAVED BOOK INSERTIONS
      */
 
-    override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getSavedInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
         savedCache = userRepository.getLocalUser()?.savedInsertions?.toNormalList() ?: emptyList()
         return savedCache
     }
 
-    override fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion> =
-            getBookInsertionListFromQuery(query).includeOnlySavedInsertions()
+    override fun getSavedInsertionListFromQuery(query: String) : List<Insertion> =
+            getInsertionListFromQuery(query).includeOnlySavedInsertions()
 
-    override fun getSavedBookInsertionLisAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionLisAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).includeOnlySavedInsertions()
 
-    override fun getSavedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).includeOnlySavedInsertions()
 
     /*
      * PUBLISHED BOOK INSERTIONS
      */
 
-    override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getPublishedInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
         publishedCache =
                 userRepository.getLocalUser()?.publishedInsertions?.toNormalList() ?: emptyList()
         return publishedCache
     }
 
-    override fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion> =
-            getBookInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListFromQuery(query: String) : List<Insertion> =
+            getInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedBookInsertionListAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
-            insertionId in getSavedBookInsertionList().map { it.id }
+            insertionId in getSavedInsertionList().map { it.id }
 
     override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
 

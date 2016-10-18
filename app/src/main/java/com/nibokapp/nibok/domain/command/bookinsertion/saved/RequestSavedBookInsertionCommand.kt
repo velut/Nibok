@@ -17,6 +17,6 @@ class RequestSavedBookInsertionCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getSavedBookInsertionList()
+                    bookRepository.getSavedInsertionList()
             )
 }

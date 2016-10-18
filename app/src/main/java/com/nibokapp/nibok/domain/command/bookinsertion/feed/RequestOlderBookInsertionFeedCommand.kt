@@ -21,7 +21,7 @@ class RequestOlderBookInsertionFeedCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getFeedBookInsertionListBeforeDate(
+                    bookRepository.getFeedInsertionListBeforeDate(
                             lastBookInsertion.insertionDate
                     )
             )

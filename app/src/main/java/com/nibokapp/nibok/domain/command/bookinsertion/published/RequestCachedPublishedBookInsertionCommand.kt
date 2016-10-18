@@ -18,6 +18,6 @@ class RequestCachedPublishedBookInsertionCommand(
 
     override fun execute(): List<BookInsertionModel> =
             dataMapper.convertInsertionListToDomain(
-                    bookRepository.getPublishedBookInsertionList(cached = true)
+                    bookRepository.getPublishedInsertionList(cached = true)
             )
 }

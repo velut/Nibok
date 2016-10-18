@@ -31,19 +31,19 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * COMMON FUNCTIONS
      */
 
-    override fun getBookInsertionById(insertionId: String) : Insertion? =
-            SOURCES.firstResultOrNull { it.getBookInsertionById(insertionId) }
+    override fun getInsertionById(insertionId: String) : Insertion? =
+            SOURCES.firstResultOrNull { it.getInsertionById(insertionId) }
 
     override fun getBookByISBN(isbn: String): Book? =
             SOURCES.firstResultOrNull { it.getBookByISBN(isbn) }
 
-    override fun getBookInsertionListFromQuery(query: String) : List<Insertion> {
+    override fun getInsertionListFromQuery(query: String) : List<Insertion> {
 
         val trimmedQuery = query.trim()
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListFromQuery(query) }
+        val results = SOURCES.firstListResultOrNull { it.getInsertionListFromQuery(query) }
                 ?: emptyList()
 
         if (results.isNotEmpty()) localRepository.storeItems(results)
@@ -53,8 +53,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return results
     }
 
-    override fun getBookInsertionListAfterDate(date: Date) : List<Insertion> {
-        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListAfterDate(date) }
+    override fun getInsertionListAfterDate(date: Date) : List<Insertion> {
+        val results = SOURCES.firstListResultOrNull { it.getInsertionListAfterDate(date) }
                 ?: emptyList()
 
         if (results.isNotEmpty()) localRepository.storeItems(results)
@@ -63,8 +63,8 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return results
     }
 
-    override fun getBookInsertionListBeforeDate(date: Date) : List<Insertion> {
-        val results = SOURCES.firstListResultOrNull { it.getBookInsertionListBeforeDate(date) }
+    override fun getInsertionListBeforeDate(date: Date) : List<Insertion> {
+        val results = SOURCES.firstListResultOrNull { it.getInsertionListBeforeDate(date) }
                 ?: emptyList()
 
         if (results.isNotEmpty()) localRepository.storeItems(results)
@@ -77,10 +77,10 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * FEED BOOK INSERTIONS
      */
 
-    override fun getFeedBookInsertionList(cached: Boolean): List<Insertion> {
+    override fun getFeedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
 
-        feedCache = SOURCES.firstListResultOrNull { it.getFeedBookInsertionList(cached) }
+        feedCache = SOURCES.firstListResultOrNull { it.getFeedInsertionList(cached) }
                 ?: emptyList()
 
         if (feedCache.isNotEmpty()) localRepository.storeItems(feedCache)
@@ -89,23 +89,23 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return feedCache
     }
 
-    override fun getFeedBookInsertionListFromQuery(query: String) : List<Insertion>  =
-            getBookInsertionListFromQuery(query).excludeUserOwnInsertions()
+    override fun getFeedInsertionListFromQuery(query: String) : List<Insertion>  =
+            getInsertionListFromQuery(query).excludeUserOwnInsertions()
 
-    override fun getFeedBookInsertionListAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).excludeUserOwnInsertions()
 
-    override fun getFeedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).excludeUserOwnInsertions()
 
     /*
      * SAVED BOOK INSERTIONS
      */
 
-    override fun getSavedBookInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getSavedInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return savedCache
 
-        savedCache = SOURCES.firstListResultOrNull { it.getSavedBookInsertionList(cached) }
+        savedCache = SOURCES.firstListResultOrNull { it.getSavedInsertionList(cached) }
                 ?: emptyList()
 
         if (savedCache.isNotEmpty()) localRepository.storeItems(savedCache)
@@ -113,23 +113,23 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return savedCache
     }
 
-    override fun getSavedBookInsertionListFromQuery(query: String) : List<Insertion> =
-            getBookInsertionListFromQuery(query).includeOnlySavedInsertions()
+    override fun getSavedInsertionListFromQuery(query: String) : List<Insertion> =
+            getInsertionListFromQuery(query).includeOnlySavedInsertions()
 
-    override fun getSavedBookInsertionLisAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionLisAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).includeOnlySavedInsertions()
 
-    override fun getSavedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).includeOnlySavedInsertions()
 
     /*
      * PUBLISHED BOOK INSERTIONS
      */
 
-    override fun getPublishedBookInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getPublishedInsertionList(cached: Boolean) : List<Insertion> {
         if (cached) return publishedCache
 
-        publishedCache = SOURCES.firstListResultOrNull { it.getPublishedBookInsertionList(cached) }
+        publishedCache = SOURCES.firstListResultOrNull { it.getPublishedInsertionList(cached) }
                 ?: emptyList()
 
         if (publishedCache.isNotEmpty()) localRepository.storeItems(publishedCache)
@@ -137,21 +137,21 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return publishedCache
     }
 
-    override fun getPublishedBookInsertionListFromQuery(query: String) : List<Insertion> =
-            getBookInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListFromQuery(query: String) : List<Insertion> =
+            getInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedBookInsertionListAfterDate(date: Date) : List<Insertion> =
-            getBookInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListAfterDate(date: Date) : List<Insertion> =
+            getInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedBookInsertionListBeforeDate(date: Date) : List<Insertion> =
-            getBookInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListBeforeDate(date: Date) : List<Insertion> =
+            getInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
-            insertionId in getSavedBookInsertionList().map { it.id }
+            insertionId in getSavedInsertionList().map { it.id }
 
     override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
         val savedOnServer = serverRepository.toggleBookInsertionSaveStatus(insertionId)
@@ -165,7 +165,11 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishBookInsertion(insertion: Insertion) : Boolean =
-            // TODO
-            throw UnsupportedOperationException()
+    override fun publishBookInsertion(insertion: Insertion) : Boolean {
+        val publishedOnServer = serverRepository.publishBookInsertion(insertion)
+        if (publishedOnServer) {
+            localRepository.publishBookInsertion(insertion)
+        }
+        return publishedOnServer
+    }
 }
