@@ -41,8 +41,10 @@ class App : Application() {
      */
     private fun initRealmDb() {
 
+        Realm.init(this)
+
         // Get Realm configuration
-        val realmConfig = RealmConfiguration.Builder(this)
+        val realmConfig = RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded() // Delete the DB instead of migrating
                 .build()
 
