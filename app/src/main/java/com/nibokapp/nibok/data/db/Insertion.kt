@@ -38,6 +38,6 @@ open class Insertion(
 ) : RealmObject(), WellFormedItem {
 
     override fun isWellFormed(): Boolean = with(this) {
-        return@with date != null && seller != null && book != null
+        date != null && seller != null && book != null
     }
 }

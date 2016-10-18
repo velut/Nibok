@@ -98,11 +98,11 @@ class ServerDataMapper(
 
     private fun BaasDocument.getMessages() : List<Message> {
         val messageIds = getArray(ServerConstants.MESSAGES)
-        return convertDocumentListToMessages(fetcher.fetchMessageDocuments(messageIds))
+        return convertDocumentListToMessages(fetcher.fetchMessageDocumentList(messageIds))
     }
 
     private fun BaasUser.toExternalUser() : ExternalUser = with(this) {
-        return@with ExternalUser(name, getAvatar())
+        ExternalUser(name, getAvatar())
     }
 
     private fun BaasDocument.toBook() : Book = with(this) {
@@ -111,7 +111,7 @@ class ServerDataMapper(
         val year = getInt(ServerConstants.YEAR)
         val publisher = getString(ServerConstants.PUBLISHER)
         val isbn = getString(ServerConstants.ISBN)
-        return@with Book(title, authors, year, publisher, isbn)
+        Book(title, authors, year, publisher, isbn)
     }
 
     private fun BaasDocument.toInsertion() : Insertion = with(this) {
@@ -122,7 +122,7 @@ class ServerDataMapper(
         val bookCondition = getString(ServerConstants.BOOK_CONDITION)
         val bookPictures = getArray(ServerConstants.BOOK_PICTURES)
                 .filterIsInstance<String>().toRealmStringList()
-        return@with Insertion(id, date, seller, book, bookPrice, bookCondition, bookPictures)
+        Insertion(id, date, seller, book, bookPrice, bookCondition, bookPictures)
     }
 
     private fun BaasDocument.toConversation() : Conversation = with(this) {
@@ -130,7 +130,7 @@ class ServerDataMapper(
         val partner = getPartner()
         val date = getDate()
         val messages = getMessages().toRealmList()
-        return@with Conversation(id, userId, partner, date, messages)
+        Conversation(id, userId, partner, date, messages)
     }
 
     private fun BaasDocument.toMessage(): Message = with(this) {
@@ -138,7 +138,7 @@ class ServerDataMapper(
         val senderId = getString(ServerConstants.SENDER_ID)
         val text = getString(ServerConstants.TEXT)
         val date = getDate()
-        return@with Message(conversationId, senderId, text, date)
+        Message(conversationId, senderId, text, date)
     }
 
     private fun getCurrentUserId() : String = BaasUser.current()?.name ?: ""

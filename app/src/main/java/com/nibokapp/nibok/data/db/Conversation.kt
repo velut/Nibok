@@ -31,6 +31,6 @@ open class Conversation(
 ) : RealmObject(), WellFormedItem {
 
     override fun isWellFormed(): Boolean = with(this) {
-        return@with partner != null && date != null && userId != ""
+        partner != null && date != null && userId != ""
     }
 }

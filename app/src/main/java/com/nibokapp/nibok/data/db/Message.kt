@@ -25,7 +25,5 @@ open class Message(
 
 ) : RealmObject(), WellFormedItem {
 
-    override fun isWellFormed(): Boolean = with(this) {
-        return@with date != null
-    }
+    override fun isWellFormed(): Boolean = with(this) { date != null }
 }
