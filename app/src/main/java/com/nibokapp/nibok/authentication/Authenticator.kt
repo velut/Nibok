@@ -59,10 +59,16 @@ object Authenticator : AuthenticatorInterface {
 
         val username = currentUser.name
 
-        return currentUser.logoutSync().onSuccess {
+        val loggedOut = currentUser.logoutSync().isSuccess
+
+        if (loggedOut) {
             localUserRepository.removeLocalUser()
             Log.d(TAG, "Logged out user: $username")
+        } else {
+            Log.d(TAG, "Could not logout user: $username")
         }
+
+        return loggedOut
     }
 
     override fun currentUserExists(): Boolean = BaasUser.current() != null
