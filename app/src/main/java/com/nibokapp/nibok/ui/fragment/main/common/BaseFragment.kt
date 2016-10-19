@@ -35,7 +35,9 @@ abstract class BaseFragment(
 
     private var menu: Menu? = null
 
-    private var doLogin: Boolean = true
+    // Track if the login or logout option has to be shown (true -> login; false -> logout)
+    private val doLogin: Boolean
+        get() = !authPresenter.loggedUserExists()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +48,6 @@ abstract class BaseFragment(
 
     override fun onStart() {
         super.onStart()
-        updateDoLogin()
         updateAuthAction()
     }
 
@@ -108,17 +109,12 @@ abstract class BaseFragment(
             context.startAuthenticateActivity()
         } else {
             doAsync {
-                doLogin = authPresenter.logout()
+                authPresenter.logout()
                 uiThread {
                     updateAuthAction()
                 }
             }
         }
-    }
-
-    private fun updateDoLogin() {
-        Log.d(TAG, "Updating doLogin")
-        doLogin = !authPresenter.loggedUserExists()
     }
 
     private fun updateAuthAction() {
@@ -128,7 +124,7 @@ abstract class BaseFragment(
             Log.d(TAG, "Offering login action")
             authItem.title = getString(R.string.login_action)
         } else {
-            Log.d(TAG, "Offering logout action")                           // TODO check here V
+            Log.d(TAG, "Offering logout action")
             authItem.title = "${getString(R.string.logout_action)} (${authPresenter.getLoggedUserId()})"
         }
     }
