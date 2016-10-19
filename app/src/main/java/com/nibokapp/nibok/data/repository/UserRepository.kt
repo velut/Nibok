@@ -24,13 +24,13 @@ object UserRepository : UserRepositoryInterface {
             Log.d(TAG, "Local user does not exist, trying to create one")
             executeRealmTransaction {
                 // Insert user in the db
-                val newUser = it.createObject(User::class.java)
+                val newUser = it.createObject(User::class.java, userId)
                 newUser.apply {
-                    username = userId
                     this.savedInsertions.addAll(savedInsertions)
                     this.publishedInsertions.addAll(publishedInsertions)
                     this.conversations.addAll(conversations)
                 }
+                Log.d(TAG, "Created new user: ${newUser.username}")
             }
         }
         Log.d(TAG, "Local user created")
