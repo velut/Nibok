@@ -217,7 +217,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the insertion was saved false if it was removed
      */
-    fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean
+    fun toggleInsertionSaveStatus(insertionId: String) : Boolean
 
     /*
      * BOOK INSERTION PUBLISHING
@@ -230,6 +230,6 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the book insertion was published successfully, false otherwise
      */
-    fun publishBookInsertion(insertion: Insertion) : Boolean
+    fun publishInsertion(insertion: Insertion) : Boolean
 
 }

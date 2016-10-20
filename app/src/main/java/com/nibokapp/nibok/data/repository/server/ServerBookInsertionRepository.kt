@@ -2,15 +2,13 @@ package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
 import com.baasbox.android.BaasUser
-import com.baasbox.android.BaasUser.Scope
 import com.baasbox.android.BaasUser.current
-import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.getPublishedInsertions
 import com.nibokapp.nibok.extension.getSavedInsertions
+import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
@@ -139,16 +137,11 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
             insertionId in getSavedInsertionList().map { it.id }
 
-    override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
-        val user = BaasUser.current() ?:
-                throw IllegalStateException("No user logged in. Cannot save insertion")
+    override fun toggleInsertionSaveStatus(insertionId: String) : Boolean {
+        val user = currentUser ?:
+                throw IllegalStateException("No user logged in. Cannot toggle insertion save status")
 
-        user.getScope(Scope.PRIVATE)
-                .getArray(ServerConstants.SAVED_INSERTIONS, JsonArray())
-                .add(insertionId)
-
-        val result = user.saveSync()
-        val saved = result.isSuccess
+        val saved = user.toggleInsertionSaveStatus(insertionId)
         Log.d(TAG, "After toggle: Save status: $saved")
         return saved
     }
@@ -157,7 +150,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishBookInsertion(insertion: Insertion) : Boolean =
+    override fun publishInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
 

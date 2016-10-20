@@ -17,5 +17,5 @@ class ToggleBookInsertionSaveStatusCommand(
 ) : Command<Boolean> {
 
     override fun execute(): Boolean =
-            bookRepository.toggleBookInsertionSaveStatus(insertionId)
+            bookRepository.toggleInsertionSaveStatus(insertionId)
 }

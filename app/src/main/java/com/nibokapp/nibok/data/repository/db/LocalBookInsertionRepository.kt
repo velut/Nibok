@@ -149,7 +149,7 @@ object LocalBookInsertionRepository :
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
             insertionId in getSavedInsertionList().map { it.id }
 
-    override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
+    override fun toggleInsertionSaveStatus(insertionId: String) : Boolean {
 
         if (!userRepository.localUserExists())
             throw IllegalStateException("Local user does not exist. Cannot save insertion")
@@ -180,7 +180,7 @@ object LocalBookInsertionRepository :
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishBookInsertion(insertion: Insertion) : Boolean =
+    override fun publishInsertion(insertion: Insertion) : Boolean =
             // TODO
             throw UnsupportedOperationException()
 

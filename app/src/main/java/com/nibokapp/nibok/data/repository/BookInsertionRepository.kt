@@ -153,10 +153,10 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun isBookInsertionSaved(insertionId: String) : Boolean =
             insertionId in getSavedInsertionList().map { it.id }
 
-    override fun toggleBookInsertionSaveStatus(insertionId: String) : Boolean {
-        val savedOnServer = serverRepository.toggleBookInsertionSaveStatus(insertionId)
+    override fun toggleInsertionSaveStatus(insertionId: String) : Boolean {
+        val savedOnServer = serverRepository.toggleInsertionSaveStatus(insertionId)
         if (savedOnServer) {
-            localRepository.toggleBookInsertionSaveStatus(insertionId)
+            localRepository.toggleInsertionSaveStatus(insertionId)
         }
         return savedOnServer
     }
@@ -165,10 +165,10 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishBookInsertion(insertion: Insertion) : Boolean {
-        val publishedOnServer = serverRepository.publishBookInsertion(insertion)
+    override fun publishInsertion(insertion: Insertion) : Boolean {
+        val publishedOnServer = serverRepository.publishInsertion(insertion)
         if (publishedOnServer) {
-            localRepository.publishBookInsertion(insertion)
+            localRepository.publishInsertion(insertion)
         }
         return publishedOnServer
     }
