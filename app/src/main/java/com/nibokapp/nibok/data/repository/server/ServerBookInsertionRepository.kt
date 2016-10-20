@@ -156,23 +156,19 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
 
     private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
-        val user = BaasUser.current()
-        if (user == null) {
-            return this
-        } else {
-            val userId = user.name
-            return this.filter { it.seller?.username != userId }
+        val externalInsertions = currentUser?.let {
+            val userId = it.name
+            this.filter { it.seller?.username != userId }
         }
+        return externalInsertions ?: this
     }
 
     private fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
-        val user = BaasUser.current()
-        if (user == null) {
-            return this
-        } else {
-            val userId = user.name
-            return this.filter { it.seller?.username == userId }
+        val ownInsertions = currentUser?.let {
+            val userId = it.name
+            this.filter { it.seller?.username == userId }
         }
+        return ownInsertions ?: this
     }
 
     private fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
