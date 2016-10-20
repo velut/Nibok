@@ -114,6 +114,28 @@ fun BaasUser.getConversations() : List<Conversation> =
         getConversationsFromArray(getConversationsArray())
 
 /**
+ * Toggle the save status of the insertion with the given id.
+ *
+ * @param insertionId the id of the insertion to save or remove
+ *
+ * @return true if the insertion is currently saved, false otherwise
+ */
+fun BaasUser.toggleInsertionSaveStatus(insertionId: String): Boolean {
+    val savedInsertionIds = getSavedInsertionsArray()
+    val insertionIndex = savedInsertionIds.indexOf(insertionId)
+
+    if (insertionIndex == -1) { // Not currently saved, add it
+        savedInsertionIds.add(insertionId)
+    } else { // Already saved, remove it
+        savedInsertionIds.remove(insertionIndex)
+    }
+
+    // Synchronize with the server
+    val saved = saveSync().onSuccessReturn { insertionId in it.getSavedInsertionsArray() }
+    return saved ?: false
+}
+
+/**
  * Get the list of insertions corresponding to the ids stored in the given JsonArray.
  *
  * @param array the array that contains the ids of the insertions
