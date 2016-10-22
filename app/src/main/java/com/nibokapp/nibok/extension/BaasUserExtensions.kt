@@ -120,19 +120,30 @@ fun BaasUser.getConversations() : List<Conversation> =
  *
  * @return true if the insertion is currently saved, false otherwise
  */
-fun BaasUser.toggleInsertionSaveStatus(insertionId: String): Boolean {
+fun BaasUser.toggleInsertionSaveStatus(insertionId: String) : Boolean {
     val savedInsertionIds = getSavedInsertionsArray()
-    val insertionIndex = savedInsertionIds.indexOf(insertionId)
+    val copy = savedInsertionIds.copy()
 
-    if (insertionIndex == -1) { // Not currently saved, add it
-        savedInsertionIds.add(insertionId)
-    } else { // Already saved, remove it
+    val insertionIndex = savedInsertionIds.indexOf(insertionId)
+    val previouslySaved = if (insertionIndex == -1) false else true
+
+    if (previouslySaved) {
         savedInsertionIds.remove(insertionIndex)
+    } else {
+        savedInsertionIds.add(insertionId)
     }
 
     // Synchronize with the server
     val saved = saveSync().onSuccessReturn { insertionId in it.getSavedInsertionsArray() }
-    return saved ?: false
+
+    if (saved == null) { // Request failed, restore previous save status
+        savedInsertionIds.apply {
+            clear()
+            append(copy)
+        }
+    }
+
+    return saved ?: previouslySaved // If the request fails return the previous save status
 }
 
 /**
