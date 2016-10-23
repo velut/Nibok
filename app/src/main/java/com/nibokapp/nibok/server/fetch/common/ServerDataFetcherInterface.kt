@@ -20,6 +20,15 @@ interface ServerDataFetcherInterface {
     fun fetchUserById(userId: String) : BaasUser?
 
     /**
+     * Fetch the avatar of the user with the given username.
+     *
+     * @param username the username of the user
+     *
+     * @return a String representing the avatar source if the request was successful, null otherwise
+     */
+    fun fetchUserAvatar(username: String) : String?
+
+    /**
      * Fetch a book's BaasDocument given its ISBN code.
      *
      * @param isbn the isbn code of the book

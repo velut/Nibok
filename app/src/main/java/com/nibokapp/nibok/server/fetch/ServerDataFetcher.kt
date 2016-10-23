@@ -1,8 +1,6 @@
 package com.nibokapp.nibok.server.fetch
 
-import com.baasbox.android.BaasDocument
-import com.baasbox.android.BaasQuery
-import com.baasbox.android.BaasUser
+import com.baasbox.android.*
 import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
@@ -32,6 +30,14 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     override fun fetchUserById(userId: String) : BaasUser? {
         val user = BaasUser.fetchSync(userId).onSuccessReturn { it }
         return user
+    }
+
+    override fun fetchUserAvatar(username: String) : String? {
+        val result = BaasBox.rest().sync(
+                Rest.Method.GET,
+                "plugin/users.getUserAvatar?username=$username"
+        )
+        return result.onSuccessReturn { it.getString(ServerConstants.DATA) }
     }
 
     /*
