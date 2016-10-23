@@ -29,7 +29,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * USER
      */
 
-    override fun fetchUserFromId(userId: String) : BaasUser? {
+    override fun fetchUserById(userId: String) : BaasUser? {
         val user = BaasUser.fetchSync(userId).onSuccessReturn { it }
         return user
     }
@@ -38,7 +38,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * BOOK DATA
      */
 
-    override fun fetchBookDocumentFromISBN(isbn: String) : BaasDocument? {
+    override fun fetchBookDocumentByISBN(isbn: String) : BaasDocument? {
         val whereString = "${ServerConstants.ISBN}=$isbn"
         val bookDocList = queryDocumentListFromCollection(COLL_BOOKS, whereString)
         return bookDocList.getOrNull(0) // Get the first book in the list

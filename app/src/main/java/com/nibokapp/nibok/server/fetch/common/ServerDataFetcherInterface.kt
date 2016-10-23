@@ -17,7 +17,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasUser if the user was found, null otherwise
      */
-    fun fetchUserFromId(userId: String) : BaasUser?
+    fun fetchUserById(userId: String) : BaasUser?
 
     /**
      * Fetch a book's BaasDocument given its ISBN code.
@@ -26,7 +26,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasDocument if the book was found, null otherwise
      */
-    fun fetchBookDocumentFromISBN(isbn: String) : BaasDocument?
+    fun fetchBookDocumentByISBN(isbn: String) : BaasDocument?
 
     /**
      * Fetch recent insertion documents.
