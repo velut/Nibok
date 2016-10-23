@@ -2,12 +2,11 @@ package com.nibokapp.nibok.server.mapper
 
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
+import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.*
+import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.getAvatar
-import com.nibokapp.nibok.extension.parseDate
-import com.nibokapp.nibok.extension.toRealmList
-import com.nibokapp.nibok.extension.toRealmStringList
+import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
@@ -35,6 +34,8 @@ class ServerDataMapper(
 
     override fun convertDocumentToBook(document: BaasDocument?) : Book? = document?.toBook()
 
+    override fun convertBookToDocument(book: Book): BaasDocument = book.toDocument()
+
     /*
      * INSERTIONS
      */
@@ -47,6 +48,12 @@ class ServerDataMapper(
         val insertion = document.toInsertion()
         return if (insertion.isWellFormed()) insertion else null
     }
+
+    override fun convertInsertionListToDocuments(insertions: List<Insertion>): List<BaasDocument> {
+        return insertions.map { convertInsertionToDocument(it) }
+    }
+
+    override fun convertInsertionToDocument(insertion: Insertion): BaasDocument = insertion.toDocument()
 
     /*
      * CONVERSATIONS
@@ -82,18 +89,18 @@ class ServerDataMapper(
 
     private fun BaasDocument.getSeller() : ExternalUser? {
         val sellerId = author // The author of the insertion is the seller
-        return convertUserFromServer(fetcher.fetchUserFromId(sellerId))
+        return convertUserFromServer(fetcher.fetchUserById(sellerId))
     }
 
     private fun BaasDocument.getBook() : Book? {
         val isbn = getString(ServerConstants.ISBN)
-        return convertDocumentToBook(fetcher.fetchBookDocumentFromISBN(isbn))
+        return convertDocumentToBook(fetcher.fetchBookDocumentByISBN(isbn))
     }
 
     private fun BaasDocument.getPartner() : ExternalUser? {
         val participantsIds = getArray(ServerConstants.PARTICIPANTS).filterIsInstance<String>()
         val partnerId = participantsIds.find { it != getCurrentUserId() }
-        return partnerId?.let { convertUserFromServer(fetcher.fetchUserFromId(it)) }
+        return partnerId?.let { convertUserFromServer(fetcher.fetchUserById(it)) }
     }
 
     private fun BaasDocument.getMessages() : List<Message> {
@@ -142,5 +149,28 @@ class ServerDataMapper(
     }
 
     private fun getCurrentUserId() : String = BaasUser.current()?.name ?: ""
+
+    private fun Book.toDocument() : BaasDocument {
+        val document = BaasDocument(ServerCollection.BOOKS.id)
+        with(ServerConstants) {
+            document.put(TITLE, title)
+                    .put(AUTHORS, JsonArray.of(authors.toStringList()))
+                    .put(YEAR, year.toLong())
+                    .put(PUBLISHER, publisher)
+                    .put(ISBN, isbn)
+        }
+        return document
+    }
+
+    private fun Insertion.toDocument() : BaasDocument {
+        val document = BaasDocument(ServerCollection.INSERTIONS.id)
+        with(ServerConstants) {
+            document.put(BOOK_ISBN, book!!.isbn)
+                    .put(BOOK_PRICE, bookPrice.toDouble())
+                    .put(BOOK_CONDITION, bookCondition)
+                    .put(BOOK_PICTURES, JsonArray.of(bookImagesSources.toStringList()))
+        } // TODO Real picture urls
+        return document
+    }
 
 }

@@ -29,6 +29,15 @@ interface ServerDataMapperInterface {
     fun convertDocumentToBook(document: BaasDocument?) : Book?
 
     /**
+     * Convert a Book into a BaasDocument containing book data.
+     *
+     * @param book the Book from the local db
+     *
+     * @return a BaasDocument
+     */
+    fun convertBookToDocument(book: Book) : BaasDocument
+
+    /**
      * Convert a list of BaasDocument containing insertion data into a list of Insertion.
      *
      * @param documents the list of documents from the server
@@ -45,6 +54,24 @@ interface ServerDataMapperInterface {
      * @return an Insertion if the conversion was successful, null otherwise
      */
     fun convertDocumentToInsertion(document: BaasDocument) : Insertion?
+
+    /**
+     * Convert a list of Insertion into a list of BaasDocument containing insertion data.
+     *
+     * @param insertions the list of insertions from the local db
+     *
+     * @return a list of BaasDocument
+     */
+    fun convertInsertionListToDocuments(insertions: List<Insertion>) : List<BaasDocument>
+
+    /**
+     * Convert an Insertion into a BaasDocument containing insertion data.
+     *
+     * @param insertion the Insertion from the local db
+     *
+     * @return an Insertion
+     */
+    fun convertInsertionToDocument(insertion: Insertion) : BaasDocument
 
     /**
      * Convert a list of BaasDocument containing conversation data into a list of Conversation.
