@@ -22,6 +22,10 @@ class ServerDataMapper(
         private val fetcher: ServerDataFetcherInterface = ServerDataFetcher()
 ) : ServerDataMapperInterface {
 
+    companion object {
+        private val TAG = ServerDataMapper::class.java.simpleName
+    }
+
     /*
      * USER
      */
@@ -88,12 +92,13 @@ class ServerDataMapper(
     private fun BaasDocument.getDate() : Date = creationDate.parseDate()
 
     private fun BaasDocument.getSeller() : ExternalUser? {
-        val sellerId = author // The author of the insertion is the seller
-        return convertUserFromServer(fetcher.fetchUserById(sellerId))
+        val sellerName = author // The author of the insertion is the seller
+        val sellerAvatar = fetcher.fetchUserAvatar(sellerName)
+        return ExternalUser(sellerName, sellerAvatar ?: "")
     }
 
     private fun BaasDocument.getBook() : Book? {
-        val isbn = getString(ServerConstants.ISBN)
+        val isbn = getString(ServerConstants.BOOK_ISBN)
         return convertDocumentToBook(fetcher.fetchBookDocumentByISBN(isbn))
     }
 
@@ -154,7 +159,7 @@ class ServerDataMapper(
         val document = BaasDocument(ServerCollection.BOOKS.id)
         with(ServerConstants) {
             document.put(TITLE, title)
-                    .put(AUTHORS, JsonArray.of(authors.toStringList()))
+                    .put(AUTHORS, authors.toStringList().toJsonArray())
                     .put(YEAR, year.toLong())
                     .put(PUBLISHER, publisher)
                     .put(ISBN, isbn)
@@ -168,9 +173,15 @@ class ServerDataMapper(
             document.put(BOOK_ISBN, book!!.isbn)
                     .put(BOOK_PRICE, bookPrice.toDouble())
                     .put(BOOK_CONDITION, bookCondition)
-                    .put(BOOK_PICTURES, JsonArray.of(bookImagesSources.toStringList()))
+                    .put(BOOK_PICTURES, bookImagesSources.toStringList().toJsonArray())
         } // TODO Real picture urls
         return document
+    }
+
+    private fun List<String>.toJsonArray() : JsonArray {
+        val array = JsonArray()
+        this.forEach { array.add(it) }
+        return array
     }
 
 }
