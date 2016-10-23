@@ -37,7 +37,7 @@ object ServerConstants {
      * Insertion attributes.
      */
     const val SELLER_ID = "sellerId"
-    const val BOOK_ID = "bookId"
+    const val BOOK_ISBN = "bookISBN"
     const val BOOK_PRICE = "bookPrice"
     const val BOOK_CONDITION = "bookCondition"
     const val BOOK_PICTURES = "bookPictures"
