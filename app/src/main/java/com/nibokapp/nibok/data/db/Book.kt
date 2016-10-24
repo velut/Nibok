@@ -3,11 +3,13 @@ package com.nibokapp.nibok.data.db
 import com.nibokapp.nibok.data.db.common.RealmString
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 /**
  * Model class for the books.
  * Used by the local database.
  *
+ * @param id the id of the book
  * @param title the title of the book
  * @param authors the list of authors of the book
  * @param year the year in which the book was published
@@ -15,6 +17,8 @@ import io.realm.RealmObject
  * @param isbn the isbn of the book
  */
 open class Book(
+
+        @PrimaryKey open var id: String = "",
 
         open var title: String = "",
 
