@@ -6,6 +6,7 @@ import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
+import com.nibokapp.nibok.extension.addPublishedInsertion
 import com.nibokapp.nibok.extension.getPublishedInsertions
 import com.nibokapp.nibok.extension.getSavedInsertions
 import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
@@ -13,6 +14,8 @@ import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
+import com.nibokapp.nibok.server.send.ServerDataSender
+import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
 import java.util.*
 
 /**
@@ -25,6 +28,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
     // Fetcher and mapper used to retrieve data from the server
     // and map it into data for the local db
     private val fetcher: ServerDataFetcherInterface = ServerDataFetcher()
+    private val sender: ServerDataSenderInterface = ServerDataSender()
     private val mapper: ServerDataMapperInterface = ServerDataMapper()
 
     // Current logged in user
@@ -41,12 +45,14 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      */
 
     override fun getInsertionById(insertionId: String) : Insertion? {
+        Log.d(TAG, "Getting insertion: $insertionId")
         val result = fetcher.fetchInsertionDocumentById(insertionId)
         return result?.let { mapper.convertDocumentToInsertion(it) }
     }
 
     override fun getBookByISBN(isbn: String): Book? {
-        val result = fetcher.fetchBookDocumentFromISBN(isbn)
+        Log.d(TAG, "Getting book with ISBN: $isbn")
+        val result = fetcher.fetchBookDocumentByISBN(isbn)
         return result?.let { mapper.convertDocumentToBook(it) }
     }
 
@@ -150,10 +156,35 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishInsertion(insertion: Insertion) : Boolean =
-            // TODO
-            throw UnsupportedOperationException()
+    override fun publishInsertion(insertion: Insertion) : Boolean {
+        val user = currentUser ?: return false
 
+        val book = insertion.book ?: return false
+        var bookExistsOnServer = fetcher.fetchBookDocumentByISBN(book.isbn) != null
+
+        if (!bookExistsOnServer) {
+            Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
+            val bookDoc = mapper.convertBookToDocument(book)
+            bookExistsOnServer = sender.sendBookDocument(bookDoc)
+        }
+
+        if (!bookExistsOnServer) return false
+
+        Log.d(TAG, "Publishing insertion")
+
+        val insertionDoc = mapper.convertInsertionToDocument(insertion)
+        val published = sender.sendInsertionDocument(insertionDoc)
+
+        if (published) {
+            user.addPublishedInsertion(insertionDoc.id)
+        }
+
+        return published
+    }
+
+    /*
+     * EXTENSIONS
+     */
 
     private fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
         val externalInsertions = currentUser?.let {
