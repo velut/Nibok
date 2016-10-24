@@ -44,6 +44,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * BOOK DATA
      */
 
+    override fun fetchBookDocumentById(bookId: String): BaasDocument? {
+        val book = BaasDocument.fetchSync(COLL_BOOKS.id, bookId).onSuccessReturn { it }
+        return book
+    }
+
     override fun fetchBookDocumentByISBN(isbn: String) : BaasDocument? {
         val whereString = "${ServerConstants.ISBN}=$isbn"
         val bookDocList = queryDocumentListFromCollection(COLL_BOOKS, whereString)

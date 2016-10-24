@@ -29,6 +29,16 @@ interface ServerDataFetcherInterface {
     fun fetchUserAvatar(username: String) : String?
 
     /**
+     * Fetch a book's BaasDocument given its id.
+     * The id is not the book's ISBN code.
+     *
+     * @param bookId the id of the book
+     *
+     * @return a BaasDocument if the book was found, null otherwise
+     */
+    fun fetchBookDocumentById(bookId: String) : BaasDocument?
+
+    /**
      * Fetch a book's BaasDocument given its ISBN code.
      *
      * @param isbn the isbn code of the book
