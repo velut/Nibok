@@ -147,6 +147,33 @@ fun BaasUser.toggleInsertionSaveStatus(insertionId: String) : Boolean {
 }
 
 /**
+ * Add the given insertion id to the list of the insertions published by the user.
+ *
+ * @param insertionId the id of the insertion that the user has published
+ *
+ * @return true if the insertion id was successfully added, false otherwise
+ */
+fun BaasUser.addPublishedInsertion(insertionId: String) : Boolean {
+    val publishedInsertionsIds = getPublishedInsertionsArray()
+
+    val insertionIndex = publishedInsertionsIds.indexOf(insertionId)
+    val previouslyPublished = if (insertionIndex == -1) false else true
+
+    if (previouslyPublished) return true
+
+    publishedInsertionsIds.add(insertionId)
+
+    val published = saveSync().onSuccessReturn { insertionId in it.getPublishedInsertionsArray() }
+
+    if (published == null) { // Request failed, restore previous status
+        val insPos = publishedInsertionsIds.indexOf(insertionId)
+        publishedInsertionsIds.remove(insPos)
+    }
+
+    return published ?: false
+}
+
+/**
  * Get the list of insertions corresponding to the ids stored in the given JsonArray.
  *
  * @param array the array that contains the ids of the insertions
