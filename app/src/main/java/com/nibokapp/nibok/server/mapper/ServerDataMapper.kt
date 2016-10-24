@@ -54,10 +54,11 @@ class ServerDataMapper(
     }
 
     override fun convertInsertionListToDocuments(insertions: List<Insertion>): List<BaasDocument> {
-        return insertions.map { convertInsertionToDocument(it) }
+        return insertions.map { convertInsertionToDocument(it, it.book?.id ?: "") }
     }
 
-    override fun convertInsertionToDocument(insertion: Insertion): BaasDocument = insertion.toDocument()
+    override fun convertInsertionToDocument(insertion: Insertion, bookId: String): BaasDocument =
+            insertion.toDocument(bookId)
 
     /*
      * CONVERSATIONS
@@ -98,8 +99,8 @@ class ServerDataMapper(
     }
 
     private fun BaasDocument.getBook() : Book? {
-        val isbn = getString(ServerConstants.BOOK_ISBN)
-        return convertDocumentToBook(fetcher.fetchBookDocumentByISBN(isbn))
+        val bookId = getString(ServerConstants.BOOK_ID)
+        return convertDocumentToBook(fetcher.fetchBookDocumentById(bookId))
     }
 
     private fun BaasDocument.getPartner() : ExternalUser? {
@@ -123,7 +124,7 @@ class ServerDataMapper(
         val year = getInt(ServerConstants.YEAR)
         val publisher = getString(ServerConstants.PUBLISHER)
         val isbn = getString(ServerConstants.ISBN)
-        Book(title, authors, year, publisher, isbn)
+        Book(id, title, authors, year, publisher, isbn)
     }
 
     private fun BaasDocument.toInsertion() : Insertion = with(this) {
@@ -167,10 +168,10 @@ class ServerDataMapper(
         return document
     }
 
-    private fun Insertion.toDocument() : BaasDocument {
+    private fun Insertion.toDocument(bookId: String) : BaasDocument {
         val document = BaasDocument(ServerCollection.INSERTIONS.id)
         with(ServerConstants) {
-            document.put(BOOK_ISBN, book!!.isbn)
+            document.put(BOOK_ID, bookId)
                     .put(BOOK_PRICE, bookPrice.toDouble())
                     .put(BOOK_CONDITION, bookCondition)
                     .put(BOOK_PICTURES, bookImagesSources.toStringList().toJsonArray())
