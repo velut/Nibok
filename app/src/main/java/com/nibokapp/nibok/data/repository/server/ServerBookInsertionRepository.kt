@@ -160,19 +160,11 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         val user = currentUser ?: return false
 
         val book = insertion.book ?: return false
-        var bookExistsOnServer = fetcher.fetchBookDocumentByISBN(book.isbn) != null
-
-        if (!bookExistsOnServer) {
-            Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
-            val bookDoc = mapper.convertBookToDocument(book)
-            bookExistsOnServer = sender.sendBookDocument(bookDoc)
-        }
-
-        if (!bookExistsOnServer) return false
+        val bookId = publishBook(book) ?: return false
 
         Log.d(TAG, "Publishing insertion")
 
-        val insertionDoc = mapper.convertInsertionToDocument(insertion)
+        val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId)
         val published = sender.sendInsertionDocument(insertionDoc)
 
         if (published) {
@@ -180,6 +172,31 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         }
 
         return published
+    }
+
+    /**
+     * Eventually publish a Book on the server.
+     *
+     * @param book the book to publish
+     *
+     * @return a String representing the id of the book on the server
+     * if the book was already previously published or correctly published now,
+     * null if the book could not be published
+     */
+    private fun publishBook(book: Book) : String? {
+        val bookId = book.id
+
+        // If the bookId is not "" then it was already assigned by the server
+        val bookExistsOnServer = bookId != ""
+
+        if (bookExistsOnServer) return bookId
+
+        Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
+
+        val bookDoc = mapper.convertBookToDocument(book)
+        val published = sender.sendBookDocument(bookDoc)
+
+        return if (published) bookDoc.id else null
     }
 
     /*
