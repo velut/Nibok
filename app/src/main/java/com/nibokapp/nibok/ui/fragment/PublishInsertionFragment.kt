@@ -19,6 +19,8 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.publish.BookData
+import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.domain.rule.IsbnValidator
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
@@ -50,6 +52,7 @@ class PublishInsertionFragment(
         private val KEY_IS_ISBN_SET = "$TAG:isISBNSet"
         private val KEY_PICTURES_LIST = "$TAG:picturesUriList"
         private val KEY_CURRENT_PICTURE_URI = "$TAG:currentPictureUri"
+        private val KEY_INSERTION_DATA = "$TAG:insertionData"
 
         /**
          * Request code for picture taking.
@@ -136,6 +139,10 @@ class PublishInsertionFragment(
      */
     private var isISBNSet = false
 
+    private val isbnValidator = IsbnValidator()
+
+    private var insertionData = InsertionData()
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_publish_insertion)
@@ -184,6 +191,7 @@ class PublishInsertionFragment(
             putBoolean(KEY_IS_ISBN_SET, isISBNSet)
             putString(KEY_CURRENT_PICTURE_URI, currentPictureUri)
             putStringArrayList(KEY_PICTURES_LIST, picturesUri)
+            putParcelable(KEY_INSERTION_DATA, insertionData)
         }
 
         super.onSaveInstanceState(outState)
@@ -201,6 +209,8 @@ class PublishInsertionFragment(
             currentPictureUri = it.getString(KEY_CURRENT_PICTURE_URI, "")
 
             picturesUriList = it.getStringArrayList(KEY_PICTURES_LIST).toMutableList()
+
+            insertionData = it.getParcelable(KEY_INSERTION_DATA) ?: InsertionData()
         }
 
         // Bind the available pictures in the image views
@@ -283,7 +293,7 @@ class PublishInsertionFragment(
      */
     private fun addInputISBNListener() {
         inputISBN.afterTextChanged {
-            validateISBNInput()
+            validateIsbnInput()
         }
     }
 
@@ -294,55 +304,80 @@ class PublishInsertionFragment(
      * set isISBNSet value.
      * If the isbn code is valid try to fetch corresponding book data.
      */
-    private fun validateISBNInput() {
+    private fun validateIsbnInput() {
         val isbnCode = inputISBN.text.toString().trim()
-        val validator = IsbnValidator()
 
-        if (validator.isIsbnLengthValid(isbnCode)) {
-            if (validator.isIsbnValid(isbnCode)) {
-                Log.d(TAG, "Set valid ISBN")
-                inputISBNLayout.error = null
-                showBookDataForISBN(isbnCode)
-                isISBNSet = true
-                updateBookInputHelperText()
-            } else {
-                Log.d(TAG, "ISBN code is not valid")
-                inputISBNLayout.error = getString(R.string.error_invalid_isbn)
-                inputISBNLayout.requestFocus()
-            }
+        if (isbnValidator.isIsbnLengthValid(isbnCode)) {
+            handleValidLengthIsbn(isbnCode)
         } else {
-            Log.d(TAG, "ISBN code is too short")
-            inputISBNLayout.error = getString(R.string.error_input_isbn)
-            inputISBNLayout.requestFocus()
-            if (isISBNSet) {
-                isISBNSet = false
-                clearBookDetails()
-                updateBookInputHelperText()
-            }
+            handleInvalidLengthIsbn()
         }
     }
 
+    private fun handleValidLengthIsbn(isbnCode: String) {
+        if (isbnValidator.isIsbnValid(isbnCode)) {
+            Log.d(TAG, "Valid ISBN: $isbnCode set")
+            inputISBNLayout.error = null
+            showBookDataForIsbn(isbnCode)
+        } else {
+            Log.d(TAG, "ISBN code: $isbnCode is not valid")
+            inputISBNLayout.error = getString(R.string.error_invalid_isbn)
+            inputISBNLayout.requestFocus()
+        }
+    }
 
+    private fun handleInvalidLengthIsbn() {
+        inputISBNLayout.error = getString(R.string.error_input_isbn)
+        inputISBNLayout.requestFocus()
+        resetIsbnSetStatus()
+    }
+
+    private fun resetIsbnSetStatus() {
+        if (isISBNSet) {
+            isISBNSet = false
+            resetBookData()
+            resetBookDetailsPage()
+        }
+    }
 
     /**
      * Fetch book data for a given ISBN code, populate and show the book's details view
      * with the found data.
      */
-    private fun showBookDataForISBN(isbn: String) {
+    private fun showBookDataForIsbn(isbn: String) {
 
         // If we set the isbn previously and the text listener was triggered
         // (e.g. after rotation) ignore the request
         if (isISBNSet) return
 
-        Log.d(TAG, "Valid Isbn: $isbn")
-        showPage(PAGE_BOOK_DETAILS)
+        isISBNSet = true
 
-        // TODO get real data
-//        presenter.getBookDataByISBN(isbn)
-        inputBookTitle.setText("Book Title Here")
-        inputBookAuthors.setText("John Doe, Bob Zu")
-        inputBookYear.setText("2016")
-        inputBookPublisher.setText("Mit Press")
+        doAsync {
+            Log.d(TAG, "Retrieving book data for ISBN: $isbn")
+            insertionData.bookData = presenter.getBookDataByISBN(isbn) ?: BookData(isbn = isbn)
+            uiThread {
+                Log.d(TAG, "Showing book details page")
+                updateBookDetailsPage()
+                showPage(PAGE_BOOK_DETAILS)
+            }
+        }
+    }
+
+    private fun updateBookDetailsPage() {
+        val bookData = insertionData.bookData
+        val toReview = bookData.id != ""
+
+        if (toReview) {
+            helperBookDetails.text = getString(R.string.review_book_details)
+            with(bookData) {
+                inputBookTitle.setText(title)
+                inputBookAuthors.setText(authors.joinToString())
+                inputBookYear.setText(year.toString())
+                inputBookPublisher.setText(publisher)
+            }
+        } else {
+            helperBookDetails.text = getString(R.string.add_book_details)
+        }
     }
 
     /**
@@ -402,7 +437,7 @@ class PublishInsertionFragment(
                     progressDialog?.show()
                     // TODO publish insertion
                     doAsync {
-                        val published = presenter.publishInsertion()
+                        val published = presenter.publishInsertion(insertionData)
                         uiThread {
                             progressDialog?.dismiss()
                             if (published) {
@@ -507,7 +542,6 @@ class PublishInsertionFragment(
             visibility = View.VISIBLE
             hideSoftKeyboard(context)
         }
-        if (currentPage == PAGE_BOOK_DETAILS) updateBookInputHelperText()
     }
 
     /**
@@ -521,14 +555,24 @@ class PublishInsertionFragment(
     }
 
     /**
+     * Reset the book data held by insertionData.
+     */
+    private fun resetBookData() {
+        Log.d(TAG, "Resetting book data")
+        insertionData.bookData = BookData()
+    }
+
+    /**
      * Reset the screen of the book's details and scroll to top.
      */
-    private fun clearBookDetails() {
+    private fun resetBookDetailsPage() {
+        Log.d(TAG, "Resetting book details page")
+        helperBookDetails.text = getString(R.string.add_book_details)
         inputBookTitle.setText("")
         inputBookAuthors.setText("")
         inputBookYear.setText("")
         inputBookPublisher.setText("")
-        inputBookDetailsContainer.scrollTo(0,0)
+        inputBookDetailsContainer.scrollTo(0, 0)
     }
 
     /**
@@ -556,16 +600,6 @@ class PublishInsertionFragment(
     private fun resetUri() {
         context.contentResolver.delete(Uri.parse(currentPictureUri), null, null)
         currentPictureUri = ""
-    }
-
-    /**
-     * Update the helper text for book details input,
-     * suggesting the user either to insert or review book details.
-     */
-    private fun updateBookInputHelperText() {
-        helperBookDetails.text =
-                if (isISBNSet) getString(R.string.review_book_details)
-                else getString(R.string.add_book_details)
     }
 
     private fun Button.onClickShowPage(page: Int) {
