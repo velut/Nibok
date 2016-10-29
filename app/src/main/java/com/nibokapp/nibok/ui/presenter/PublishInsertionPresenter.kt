@@ -2,7 +2,8 @@ package com.nibokapp.nibok.ui.presenter
 
 import android.util.Log
 import com.nibokapp.nibok.domain.command.bookinsertion.publishing.RequestBookInfoByIsbnCommand
-import com.nibokapp.nibok.domain.model.BookInfoModel
+import com.nibokapp.nibok.domain.model.publish.BookData
+import com.nibokapp.nibok.domain.model.publish.InsertionData
 
 /**
  * Presenter for the insertion's publishing view.
@@ -20,7 +21,7 @@ class PublishInsertionPresenter {
      *
      * @return data about the book with the given isbn code or null if not data was found
      */
-    fun getBookDataByISBN(isbn: String) : BookInfoModel? {
+    fun getBookDataByISBN(isbn: String) : BookData? {
         Log.d(TAG, "Requesting book data for ISBN: $isbn")
         return RequestBookInfoByIsbnCommand(isbn).execute()
     }
@@ -28,11 +29,11 @@ class PublishInsertionPresenter {
     /**
      * Publish the given insertion.
      *
-     * @param insertion the insertion to publish TODO
+     * @param insertionData the data about the insertion to publish
      *
      * @return true if the insertion was successfully published, false otherwise
      */
-    fun publishInsertion() : Boolean {
+    fun publishInsertion(insertionData: InsertionData) : Boolean {
         // TODO
         return false
     }
