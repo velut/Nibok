@@ -8,6 +8,11 @@ import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_isbn.*
 
+/**
+ * Publishing fragment manging ISBN codes input.
+ *
+ * @param isbnValidator the [IsbnValidator] used to validate ISBN codes
+ */
 class InputIsbn(
         private val isbnValidator: IsbnValidator = IsbnValidator()
 ) : BasePublishFragment() {
@@ -27,11 +32,18 @@ class InputIsbn(
     override fun hasValidData() : Boolean = true
 
     override fun setupInput() {
+        setupIsbnInput()
+    }
+
+    private fun setupIsbnInput() {
         inputISBN.afterTextChanged {
             validateInputIsbn()
         }
     }
 
+    /**
+     * Validate the current ISBN code with the validator.
+     */
     private fun validateInputIsbn() {
         if (isbnValidator.isIsbnLengthValid(currentIsbn)) {
             handleValidLengthIsbn()
@@ -40,6 +52,9 @@ class InputIsbn(
         }
     }
 
+    /**
+     * Handle a valid length ISBN code.
+     */
     private fun handleValidLengthIsbn() {
         if (isbnValidator.isIsbnValid(currentIsbn)) {
             Log.d(TAG, "Valid ISBN set: $currentIsbn")
