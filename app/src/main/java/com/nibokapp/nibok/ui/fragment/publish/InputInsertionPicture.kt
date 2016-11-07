@@ -69,24 +69,24 @@ class InputInsertionPicture(
         savedInstanceState?.let {
             val pics = it.getParcelableArrayList<Uri>(KEY_LIST_PICTURE)
             pictures.addAll(pics)
-        }
-        displayPictures()
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupPictureTaker(savedInstanceState)
+            val uri = it.getParcelable<Uri>(KEY_CURRENT_PICTURE)
+            uri?.let { setCurrentPictureUri(it) }
+        }
+        updateTakePictureButton()
+        displayPictures()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val picture = onPictureTakingActivityResult(requestCode, resultCode, data)
-        picture?.let { pictures.add(it) }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        clearActivityContext()
+        Log.d(TAG, "onActivityResult")
+        val picture = onPictureTakingActivityResult(context, requestCode, resultCode, data)
+        Log.d(TAG, "Result picture: $picture")
+        picture?.let {
+            pictures.add(it)
+            updateTakePictureButton()
+            displayPictures()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -97,29 +97,30 @@ class InputInsertionPicture(
         }
     }
 
-    private fun setupPictureTaker(savedInstanceState: Bundle?) {
-        setActivityContext(activity)
-        savedInstanceState?.let {
-            val uri = it.getParcelable<Uri>(KEY_CURRENT_PICTURE)
-            uri?.let { setCurrentPictureUri(it) }
-        }
-    }
-
     private fun setupPictureTakingInput() {
-
-        if (pictures.size == MAX_PICTURES) {
-            disableTakePictureButton()
-            return
-        }
-
         btnTakePicture.setOnClickListener {
             try {
-                startPictureTakingActivity()
+                val (intent, reqCode) = getStartPictureTakingActivityArgs(context)
+                startActivityForResult(intent, reqCode)
             } catch (e: IllegalStateException) {
                 Log.e(TAG, e.toString())
                 showErrorDialog()
             }
         }
+    }
+
+    /**
+     * Update the picture taking button.
+     * If the user has taken the maximum number of pictures then disable the button.
+     *
+     * @return true if the button is enabled, false otherwise
+     */
+    private fun updateTakePictureButton(): Boolean {
+        if (pictures.size == MAX_PICTURES) {
+            disableTakePictureButton()
+            return false
+        }
+        return true
     }
 
     private fun disableTakePictureButton() {
