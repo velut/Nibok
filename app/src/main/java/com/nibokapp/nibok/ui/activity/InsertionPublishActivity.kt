@@ -10,37 +10,31 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.ui.fragment.publish.*
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
 
+/**
+ * InsertionPublishActivity manages insertion publishing.
+ */
 class InsertionPublishActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
-
-
     }
 
-    private val fragments: Map<String, Fragment> by lazy {
-        mapOf(
-                "getString" to Fragment()
+    private val fragments: List<Fragment> by lazy {
+        listOf(
+                InputIsbn(),
+                InputBookData(),
+                InputInsertionData(),
+                InputInsertionPicture(),
+                FinalizeInsertion()
         )
     }
 
-    /**
-     * Dialogs notifying the user.
-     */
-    private var confirmationDialog: MaterialDialog? = null
-    private var progressDialog: MaterialDialog? = null
-    private var successDialog: MaterialDialog? = null
-    private var errorDialog: MaterialDialog? = null
     private var alertQuitDialog: MaterialDialog? = null
 
-    /**
-     * List of all dialogs.
-     */
-    private val dialogs: List<MaterialDialog?> = listOf(
-            confirmationDialog, progressDialog, successDialog, errorDialog, alertQuitDialog
-    )
+    private val dialogs: List<MaterialDialog?> = listOf(alertQuitDialog)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,32 +90,29 @@ class InsertionPublishActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
-        viewPager.adapter = adapter
+        publishViewPager.adapter = adapter
     }
 
-    class  ViewPagerAdapter(val fm: FragmentManager, val fragments: Map<String, Fragment>) : FragmentPagerAdapter(fm) {
+    class  ViewPagerAdapter(val fm: FragmentManager,
+                            val fragments: List<Fragment>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             // If the fragment manager already has a fragment with the given tag
             // then return the stored fragment instead of a new instance
             // This solves the problems of duplicate fragments and blank views after rotation
             // caused by the viewpager
             val foundFragment = fm.findFragmentByTag(getFragmentTagForPosition(position))
-            return foundFragment ?: fragments.values.elementAt(position)
+            return foundFragment ?: fragments[position]
         }
 
         override fun getCount(): Int = fragments.size
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            val fragmentsNames = fragments.keys
-            return fragmentsNames.elementAt(position)
-        }
 
         /**
          * Return the tag given by the adapter to the fragment.
          *
          * @return the string representing the tag of the fragment at the given position
          */
-        fun getFragmentTagForPosition(position: Int) = "android:switcher:${R.id.viewPager}:$position"
+        fun getFragmentTagForPosition(position: Int) =
+                "android:switcher:${R.id.publishViewPager}:$position"
     }
 }
