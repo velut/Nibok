@@ -7,7 +7,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
-import com.nibokapp.nibok.ui.activity.PublishInsertionActivity
+import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
@@ -75,7 +75,7 @@ class SellingFragment(
         sellingFab.setOnClickListener {
             // TODO Check that user is logged in
             Log.d(TAG, "Open publishing activity")
-            context.startActivity<PublishInsertionActivity>()
+            context.startActivity<InsertionPublishActivity>()
         }
     }
 
