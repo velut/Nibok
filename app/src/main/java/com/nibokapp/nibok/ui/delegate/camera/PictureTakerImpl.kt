@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.ui.delegate.camera
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
@@ -14,9 +15,6 @@ import java.io.File
 
 /**
  * Implementation of PictureTaker.
- *
- * To take pictures PictureTakerImpl dispatches a ACTION_IMAGE_CAPTURE intent
- * and uses default camera apps already present on the phone.
  */
 class PictureTakerImpl() : PictureTaker {
 
@@ -40,49 +38,40 @@ class PictureTakerImpl() : PictureTaker {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
 
-    private var context: Activity? = null
-
     private var currentPictureUri: Uri = Uri.EMPTY
 
 
-    override fun setActivityContext(activity: Activity) {
-        context = activity
-    }
-
-    override fun clearActivityContext() {
-        context = null
-    }
-
-    override fun startPictureTakingActivity() {
-
-        val context = getNonNullContext()
+    override fun getStartPictureTakingActivityArgs(context: Context): Pair<Intent, Int> {
 
         val pictureFile: File = createImageFile(context)
-                ?: throw IllegalStateException("Cannot create an image file to store the picture")
+                ?: throw IllegalStateException("Cannot create a file to store the picture")
 
         currentPictureUri = FileProvider.getUriForFile(context, FILE_PROVIDER, pictureFile)
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-        val pictureActivities = getDefaultPictureTakingActivities(takePictureIntent)
+        val pictureActivities = getDefaultPictureTakingActivities(context, takePictureIntent)
         if (pictureActivities.isEmpty()) {
-            resetUri()
+            resetUri(context)
             throw IllegalStateException("No activities that can take a picture found")
         }
 
-        grantUriReadWritePermissions(pictureActivities)
+        grantUriReadWritePermissions(context, pictureActivities)
 
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPictureUri)
-        Log.d(TAG, "Starting picture taking activity")
-        context.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        Log.d(TAG, "Ready to start picture taking activity")
+        return Pair(takePictureIntent, REQUEST_IMAGE_CAPTURE)
     }
 
-    override fun onPictureTakingActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Uri? {
-        revokeUriPermissions()
-        return handleResult(requestCode, resultCode)
+    override fun onPictureTakingActivityResult(context: Context,
+                                               requestCode: Int,
+                                               resultCode: Int, data: Intent?): Uri? {
+        revokeUriPermissions(context)
+        return handleResult(context, requestCode, resultCode)
     }
 
     override fun setCurrentPictureUri(uri: Uri) {
+        Log.d(TAG, "Setting picture Uri")
         currentPictureUri = uri
     }
 
@@ -91,7 +80,7 @@ class PictureTakerImpl() : PictureTaker {
     /**
      * Handle the result from the picture activity.
      */
-    private fun handleResult(requestCode: Int, resultCode: Int): Uri? {
+    private fun handleResult(context: Context, requestCode: Int, resultCode: Int): Uri? {
 
         if (requestCode != REQUEST_IMAGE_CAPTURE) return null
 
@@ -100,7 +89,7 @@ class PictureTakerImpl() : PictureTaker {
             return currentPictureUri
         } else {
             Log.d(TAG, "Image capture was unsuccessful, resetting Uri")
-            resetUri()
+            resetUri(context)
             return null
         }
     }
@@ -110,20 +99,21 @@ class PictureTakerImpl() : PictureTaker {
      * to read and write to the current picture Uri.
      * If this is not done SecurityException is raised and the camera apps crash.
      */
-    private fun grantUriReadWritePermissions(pictureActivities: List<ResolveInfo>) {
+    private fun grantUriReadWritePermissions(context: Context,
+                                             pictureActivities: List<ResolveInfo>) {
         pictureActivities.forEach {
             val packageName = it.activityInfo.packageName
             Log.d(TAG, "Granting Uri permission to: $packageName")
-            getNonNullContext().grantUriPermission(packageName, currentPictureUri, URI_RW_PERMISSIONS)
+            context.grantUriPermission(packageName, currentPictureUri, URI_RW_PERMISSIONS)
         }
     }
 
     /**
      * Revoke previously given permissions on the current Uri.
      */
-    private fun revokeUriPermissions() {
+    private fun revokeUriPermissions(context: Context) {
         if (currentPictureUri != Uri.EMPTY) {
-            getNonNullContext().revokeUriPermission(currentPictureUri, URI_RW_PERMISSIONS)
+            context.revokeUriPermission(currentPictureUri, URI_RW_PERMISSIONS)
         }
     }
 
@@ -131,8 +121,8 @@ class PictureTakerImpl() : PictureTaker {
      * Delete the unused file associated to the last Uri.
      * Reset the current Uri.
      */
-    private fun resetUri() {
-        getNonNullContext().contentResolver.delete(currentPictureUri, null, null)
+    private fun resetUri(context: Context) {
+        context.contentResolver.delete(currentPictureUri, null, null)
         currentPictureUri = Uri.EMPTY
     }
 
@@ -143,11 +133,9 @@ class PictureTakerImpl() : PictureTaker {
      *
      * @return a list of resolved activities that might be empty if no suitable activity was found
      */
-    private fun getDefaultPictureTakingActivities(takePictureIntent: Intent) : List<ResolveInfo> {
-        return getNonNullContext().packageManager
+    private fun getDefaultPictureTakingActivities(context: Context,
+                                                  takePictureIntent: Intent) : List<ResolveInfo> {
+        return context.packageManager
                 .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY)
     }
-
-    private fun getNonNullContext() = context ?: throw IllegalStateException("No activity context set")
-
 }
