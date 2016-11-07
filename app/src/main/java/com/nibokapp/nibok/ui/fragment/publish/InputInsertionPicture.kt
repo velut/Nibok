@@ -155,10 +155,14 @@ class InputInsertionPicture(
     }
 
     private fun scrollToLastPicture() {
-        pictureScrollView.postDelayed(
-                { pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
-                120L
-        )
+        try {
+            pictureScrollView.postDelayed(
+                    { pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
+                    120L
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
+        }
     }
 
     private fun showErrorDialog() {
