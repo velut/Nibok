@@ -7,12 +7,19 @@ import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_book_data.*
 
+/**
+ * Publishing fragment managing input relative to data about the book,
+ * such as title, authors, year, publisher.
+ */
 class InputBookData : BasePublishFragment() {
 
     companion object {
         private val TAG = InputBookData::class.java.simpleName
     }
 
+    /**
+     * Properties related to input data.
+     */
     private val titleText: String
         get() = inputBookTitle.getStringText()
 
@@ -25,6 +32,9 @@ class InputBookData : BasePublishFragment() {
     private val publisherText: String
         get() = inputBookPublisher.getStringText()
 
+    /**
+     * List of TextInputLayout associated to input data.
+     */
     private val inputLayouts: List<TextInputLayout> by lazy {
         listOf(inputBookTitleLayout, inputBookAuthorsLayout,
                 inputBookYearLayout, inputBookPublisherLayout)
@@ -36,6 +46,7 @@ class InputBookData : BasePublishFragment() {
     override fun getInputContainer() : View = inputBookDataContainer
 
     override fun hasValidData() : Boolean {
+        // Data is valid if no TextInputLayout has errors
         return inputLayouts.all { !it.hasError() }
     }
 
@@ -49,7 +60,7 @@ class InputBookData : BasePublishFragment() {
     private fun handleTitleChange() {
         with(inputBookTitleLayout) {
             if (titleText.isBlank()) {
-                setInputError("Title is required")
+                setInputError(R.string.error_required_title)
             } else {
                 removeInputError()
             }
@@ -59,7 +70,7 @@ class InputBookData : BasePublishFragment() {
     private fun handleAuthorsChange() {
         with(inputBookAuthorsLayout) {
             if (authorsText.isBlank()) {
-                setInputError("Authors are required")
+                setInputError(R.string.error_required_authors)
             } else {
                 removeInputError()
             }
@@ -69,7 +80,7 @@ class InputBookData : BasePublishFragment() {
     private fun handleYearChange() {
         with(inputBookYearLayout) {
             if (yearText.isBlank()) {
-                setInputError("Year is required")
+                setInputError(R.string.error_required_year)
             } else {
                 removeInputError()
             }
@@ -79,7 +90,7 @@ class InputBookData : BasePublishFragment() {
     private fun handlePublisherChange() {
         with(inputBookPublisherLayout) {
             if (publisherText.isBlank()) {
-                setInputError("Publisher is required")
+                setInputError(R.string.error_required_publisher)
             } else {
                 removeInputError()
             }
