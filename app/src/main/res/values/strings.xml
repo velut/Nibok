@@ -84,7 +84,7 @@
     <string name="placeholder_no_info">Information not available</string>
     <string name="placeholder_author_plural">Author</string>
     <string name="placeholder_book_detail">Book details</string>
-    <string name="title_activity_publish">Sell</string>
+    <string name="title_activity_publish">Publish Insertion</string>
     <string name="placeholder_chat_partner">Unknown user</string>
     <string name="placeholder_chat">Chat</string>
 
