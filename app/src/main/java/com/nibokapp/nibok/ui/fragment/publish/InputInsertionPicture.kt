@@ -16,6 +16,12 @@ import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_insertion_picture.*
 import java.util.*
 
+/**
+ * Publishing fragment managing the pictures that the user can take.
+ *
+ * @param pictureTaker the [PictureTaker] implementation that manages camera operations.
+ * By default this duty is delegated to [PictureTakerImpl]
+ */
 class InputInsertionPicture(
         private val pictureTaker: PictureTaker = PictureTakerImpl()
 ) : BasePublishFragment(), PictureTaker by pictureTaker {
@@ -31,27 +37,25 @@ class InputInsertionPicture(
 
 
     /**
-     * List of image views that hold the pictures taken by the user.
+     * List of [ImageView] that hold the pictures taken by the user.
      */
     private val pictureHosts: List<ImageView> by lazy {
         listOf(picView1, picView2, picView3, picView4, picView5)
     }
 
     /**
-     * List of Uri of taken pictures.
+     * [MutableList] of [Uri] of taken pictures.
      */
     private val pictures: MutableList<Uri> = mutableListOf()
 
     private var errorDialog: MaterialDialog? = null
 
-    private val dialogs: List<MaterialDialog?> = listOf(
-            errorDialog
-    )
-
 
     override fun getFragmentLayout(): Int = R.layout.fragment_publish_input_insertion_picture
 
     override fun getInputContainer(): View = inputInsertionPicturesContainer
+
+    override fun getDialogs(): List<MaterialDialog?> = listOf(errorDialog)
 
     override fun hasValidData(): Boolean = true
 
@@ -78,11 +82,6 @@ class InputInsertionPicture(
         super.onActivityResult(requestCode, resultCode, data)
         val picture = onPictureTakingActivityResult(requestCode, resultCode, data)
         picture?.let { pictures.add(it) }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        dialogs.forEach { it?.dismiss() }
     }
 
     override fun onStop() {
@@ -118,7 +117,7 @@ class InputInsertionPicture(
                 startPictureTakingActivity()
             } catch (e: IllegalStateException) {
                 Log.e(TAG, e.toString())
-                showPictureErrorDialog()
+                showErrorDialog()
             }
         }
     }
@@ -152,13 +151,19 @@ class InputInsertionPicture(
         )
     }
 
-    private fun showPictureErrorDialog() {
-        errorDialog = MaterialDialog.Builder(context)
+    private fun showErrorDialog() {
+        if (errorDialog == null) {
+            errorDialog = getErrorDialog()
+        }
+        errorDialog?.show()
+    }
+
+    private fun getErrorDialog(): MaterialDialog {
+        return MaterialDialog.Builder(context)
                 .title(R.string.error_generic)
                 .content(R.string.error_take_picture)
                 .positiveText(android.R.string.ok)
                 .build()
-        errorDialog?.show()
     }
 }
 
