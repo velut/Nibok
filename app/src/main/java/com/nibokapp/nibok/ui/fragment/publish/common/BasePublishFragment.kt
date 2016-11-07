@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.extension.inflate
 
@@ -42,6 +43,14 @@ abstract class BasePublishFragment : Fragment() {
      */
     abstract fun setupInput(): Unit
 
+    /**
+     * Get the list of dialogs used by a fragment.
+     * This is done in order to automatically dismiss them at onPause().
+     *
+     * @return a list of dialogs
+     */
+    open fun getDialogs(): List<MaterialDialog?> = emptyList()
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(getFragmentLayout())
@@ -51,6 +60,11 @@ abstract class BasePublishFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         addOnTouchKeyboardHidingForInputContainer()
         setupInput()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        getDialogs().forEach { it?.dismiss() }
     }
 
     /**
