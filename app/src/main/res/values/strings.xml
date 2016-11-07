@@ -103,7 +103,9 @@
     <string name="publish_insertion">Sell</string>
     <string name="change_insertion_details">Change price</string>
     <string name="take_picture">Take picture</string>
-
+    <string name="helper_review_insertion_data">Review your insertion before publishing</string>
+    <string name="btn_go_back">Go back</string>
+    <string name="btn_publish">Publish</string>
 
     <!-- Book wear conditions -->
     <string-array name="book_wear_condition_array">

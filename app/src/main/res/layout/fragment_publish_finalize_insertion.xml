@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nibokapp.nibok.ui.fragment.publish.FinalizeInsertion">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/infoRecapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/publish_header_distance" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/helper_review_insertion_data"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical">
+
+                <!-- Start of insertion details -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent"
+                    android:textSize="16sp"
+                    android:text="@string/insertion_details"
+                    tools:text="Insertion details"/>
+
+                <!-- Insertion details -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/insertion_book_price"
+                        tools:text="Price"/>
+
+                    <TextView
+                        android:id="@+id/insertionBookPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="€ 14,00"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/insertion_book_condition"
+                        tools:text="Book condition"/>
+
+                    <TextView
+                        android:id="@+id/insertionBookCondition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="Light wear"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <!-- Start of book details -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent"
+                    android:textSize="16sp"
+                    android:text="@string/book_details"
+                    tools:text="Book details"/>
+
+                <!-- Book details -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/book_title"
+                        tools:text="Title"/>
+
+                    <TextView
+                        android:id="@+id/detailBookTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="Introduction to Algorithms"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/detailBookAuthorPlural"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/placeholder_author_plural"
+                        tools:text="Author"/>
+
+                    <TextView
+                        android:id="@+id/detailBookAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="Thomas H. Cormen"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/book_year"
+                        tools:text="Year"/>
+
+                    <TextView
+                        android:id="@+id/detailBookYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="2009"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/book_publisher"
+                        tools:text="Publisher"
+                        android:id="@+id/textView" />
+
+                    <TextView
+                        android:id="@+id/detailBookPublisher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="Mit Press"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="18sp"
+                        android:text="@string/book_isbn"
+                        tools:text="ISBN"/>
+
+                    <TextView
+                        android:id="@+id/detailBookISBN"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="21sp"
+                        android:text="@string/placeholder_no_info"
+                        tools:text="978-0262533058"/>
+
+                </LinearLayout>
+
+                <View style="@style/horizontal_detail_divider"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="end">
+
+                <Button
+                    android:id="@+id/btnGoBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_go_back" />
+
+
+                <Button
+                    android:id="@+id/btnPublishInsertion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:theme="@style/positiveButton"
+                    android:text="@string/btn_publish" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/publish_footer_distance" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
