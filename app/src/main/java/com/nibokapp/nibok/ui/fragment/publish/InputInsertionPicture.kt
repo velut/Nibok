@@ -13,6 +13,7 @@ import com.nibokapp.nibok.extension.loadImg
 import com.nibokapp.nibok.ui.delegate.camera.PictureTakerImpl
 import com.nibokapp.nibok.ui.delegate.camera.common.PictureTaker
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
+import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.fragment_publish_input_insertion_picture.*
 import java.util.*
 
@@ -47,6 +48,9 @@ class InputInsertionPicture(
      * [MutableList] of [Uri] of taken pictures.
      */
     private val pictures: MutableList<Uri> = mutableListOf()
+
+    private val canTakePictures: Boolean
+        get() = pictures.size < MAX_PICTURES
 
     private var errorDialog: MaterialDialog? = null
 
@@ -116,7 +120,7 @@ class InputInsertionPicture(
      * @return true if the button is enabled, false otherwise
      */
     private fun updateTakePictureButton(): Boolean {
-        if (pictures.size == MAX_PICTURES) {
+        if (!canTakePictures) {
             disableTakePictureButton()
             return false
         }
@@ -131,16 +135,21 @@ class InputInsertionPicture(
     }
 
     private fun displayPictures() {
-        loadPictures()
+        bindPicturesToHosts()
         scrollToLastPicture()
     }
 
-    private fun loadPictures() {
+    private fun bindPicturesToHosts() {
         pictures.take(MAX_PICTURES).forEachIndexed { i, uri ->
             val host = pictureHosts[i]
             host.apply {
                 visibility = View.VISIBLE
                 loadImg(uri.toString())
+                setOnClickListener { // Open pic gallery on click
+                    ImageViewer.Builder(context, pictures.map(Uri::toString).toTypedArray())
+                            .setStartPosition(i)
+                            .show()
+                }
             }
         }
     }
