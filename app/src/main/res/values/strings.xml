@@ -78,6 +78,7 @@
     <string name="error_required_authors">At lease one author is required</string>
     <string name="error_required_year">Publishing year is required</string>
     <string name="error_required_publisher">Publisher is required</string>
+    <string name="error_required_price">Price is required</string>
 
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>

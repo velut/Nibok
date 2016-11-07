@@ -9,17 +9,29 @@ import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_insertion_data.*
 
+/**
+ * Publishing fragment managing input data about the insertion,
+ * such as price and book wear condition.
+ */
 class InputInsertionData : BasePublishFragment() {
     
     companion object {
         private val TAG = InputInsertionData::class.java.simpleName
     }
 
+    /**
+     * String Array of possible book's wear conditions.
+     */
     private val bookWearArray: Array<String> by lazy {
         resources.getStringArray(R.array.book_wear_condition_array)
     }
 
-    private val defaultWear: String = bookWearArray.first()
+    /**
+     * The default wear condition is the first item of the wear array.
+     */
+    private val defaultWear: String by lazy {
+        bookWearArray.first()
+    }
     
     private val priceText: String
         get() = inputInsertionBookPrice.getStringText()
@@ -56,7 +68,7 @@ class InputInsertionData : BasePublishFragment() {
     private fun handlePriceChange() {
         with(inputInsertionBookPriceLayout) {
             if (priceText.isBlank()) {
-                setInputError("Price is required")
+                setInputError(R.string.error_required_price)
             } else {
                 removeInputError()
             }
