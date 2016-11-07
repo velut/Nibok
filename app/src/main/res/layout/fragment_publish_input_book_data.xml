@@ -106,7 +106,7 @@ tools:context="com.nibokapp.nibok.ui.fragment.publish.InputBookData">
                 android:id="@+id/btnChangeISBN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/change_isbn" />
+                android:text="@string/btn_go_back" />
 
 
             <Button

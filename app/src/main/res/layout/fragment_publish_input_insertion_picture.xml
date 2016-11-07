@@ -143,7 +143,7 @@
                     android:id="@+id/btnChangeInsertionDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/change_insertion_details" />
+                    android:text="@string/btn_go_back" />
 
 
                 <Button
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:theme="@style/positiveButton"
-                    android:text="@string/publish_insertion" />
+                    android:text="@string/next" />
 
             </LinearLayout>
 
