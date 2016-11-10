@@ -160,7 +160,7 @@ class InputInsertionPicture(
                     { pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
                     120L
             )
-        } catch (e: Exception) {
+        } catch (e: NullPointerException) {
             Log.e(TAG, e.toString())
         }
     }
