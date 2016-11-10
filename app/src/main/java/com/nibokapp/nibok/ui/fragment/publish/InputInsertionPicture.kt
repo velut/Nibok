@@ -53,13 +53,14 @@ class InputInsertionPicture(
         get() = pictures.size < MAX_PICTURES
 
     private var errorDialog: MaterialDialog? = null
+    private var deleteDialog: MaterialDialog? = null
 
 
     override fun getFragmentLayout(): Int = R.layout.fragment_publish_input_insertion_picture
 
     override fun getInputContainer(): View = inputInsertionPicturesContainer
 
-    override fun getDialogs(): List<MaterialDialog?> = listOf(errorDialog)
+    override fun getDialogs(): List<MaterialDialog?> = listOf(errorDialog, deleteDialog)
 
     override fun hasValidData(): Boolean = true
 
@@ -77,8 +78,8 @@ class InputInsertionPicture(
             val uri = it.getParcelable<Uri>(KEY_CURRENT_PICTURE)
             uri?.let { setCurrentPictureUri(it) }
         }
-        updateTakePictureButton()
-        displayPictures()
+        updatePicView()
+        scrollToLastPicture()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -88,8 +89,8 @@ class InputInsertionPicture(
         Log.d(TAG, "Result picture: $picture")
         picture?.let {
             pictures.add(it)
-            updateTakePictureButton()
-            displayPictures()
+            updatePicView()
+            scrollToLastPicture()
         }
     }
 
@@ -114,17 +115,24 @@ class InputInsertionPicture(
     }
 
     /**
-     * Update the picture taking button.
-     * If the user has taken the maximum number of pictures then disable the button.
-     *
-     * @return true if the button is enabled, false otherwise
+     * Update the view that hosts the pictures and the button used to take pictures.
      */
-    private fun updateTakePictureButton(): Boolean {
+    private fun updatePicView() {
+        updateTakePictureButton()
+        bindPicturesToHosts()
+    }
+
+    /**
+     * Update the picture taking button.
+     * If the user has taken the maximum number of pictures then disable and hide the button.
+     * If the user can still take pictures then enable and show the button.
+     */
+    private fun updateTakePictureButton() {
         if (!canTakePictures) {
             disableTakePictureButton()
-            return false
+        } else {
+            enableTakePictureButton()
         }
-        return true
     }
 
     private fun disableTakePictureButton() {
@@ -134,23 +142,55 @@ class InputInsertionPicture(
         }
     }
 
-    private fun displayPictures() {
-        bindPicturesToHosts()
-        scrollToLastPicture()
+    private fun enableTakePictureButton() {
+        btnTakePicture.apply {
+            isEnabled = true
+            visibility = View.VISIBLE
+        }
     }
 
+    /**
+     * Reset the hosts and then bind MAX_PICTURES from the current list of pictures
+     * to the ImageView hosts.
+     */
     private fun bindPicturesToHosts() {
+        resetHosts()
         pictures.take(MAX_PICTURES).forEachIndexed { i, uri ->
             val host = pictureHosts[i]
             host.apply {
                 visibility = View.VISIBLE
                 loadImg(uri.toString())
-                setOnClickListener { // Open pic gallery on click
-                    ImageViewer.Builder(context, pictures.map(Uri::toString).toTypedArray())
-                            .setStartPosition(i)
-                            .show()
-                }
+                addListeners(i)
             }
+        }
+    }
+
+    private fun resetHosts() {
+        pictureHosts.forEach {
+            it.apply {
+                visibility = View.GONE
+                loadImg("")
+            }
+        }
+    }
+
+    /**
+     * Add two listeners to this ImageView.
+     * On click open the gallery centered at the picture hosted by this ImageView,
+     * on click and hold show a dialog asking to delete the picture.
+     */
+    private fun ImageView.addListeners(picPos: Int) {
+        // Open pic gallery on click
+        setOnClickListener {
+            ImageViewer.Builder(context, pictures.map(Uri::toString).toTypedArray())
+                    .setStartPosition(picPos)
+                    .show()
+        }
+
+        // Offer option to delete picture on holding down
+        setOnLongClickListener {
+            showDeleteDialog(picPos)
+            true // Long click has been handled
         }
     }
 
@@ -179,5 +219,27 @@ class InputInsertionPicture(
                 .positiveText(android.R.string.ok)
                 .build()
     }
-}
 
+    private fun showDeleteDialog(picPos: Int) {
+        deleteDialog = MaterialDialog.Builder(context)
+                .title(R.string.dialog_delete_pic_title)
+                .content(R.string.dialog_delete_pic_content)
+                .negativeText(R.string.text_cancel)
+                .positiveText(R.string.dialog_delete_pic_positive)
+                .onPositive { materialDialog, dialogAction -> deletePicAtPos(picPos) }
+                .build()
+        deleteDialog?.show()
+    }
+
+    /**
+     * Delete the picture at the given position in the pictures list.
+     * Update the picture view after deletion.
+     *
+     * @param pos the position of the picture to delete
+     */
+    private fun deletePicAtPos(pos: Int) {
+        val picUri = pictures.removeAt(pos)
+        context.contentResolver.delete(picUri, null, null)
+        updatePicView()
+    }
+}
