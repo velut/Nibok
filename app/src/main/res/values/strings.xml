@@ -104,7 +104,7 @@
     <string name="change_insertion_details">Change price</string>
     <string name="take_picture">Take picture</string>
     <string name="helper_review_insertion_data">Review your insertion before publishing</string>
-    <string name="btn_go_back">Go back</string>
+    <string name="go_back">Go back</string>
     <string name="btn_publish">Publish</string>
     <string name="dialog_delete_pic_title">Delete this picture?</string>
     <string name="dialog_delete_pic_content">Are you sure you want to delete this picture?</string>
