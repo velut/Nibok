@@ -11,12 +11,13 @@ import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.ui.fragment.publish.*
+import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
 
 /**
  * InsertionPublishActivity manages insertion publishing.
  */
-class InsertionPublishActivity : AppCompatActivity() {
+class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.PublishScreenManager {
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
@@ -35,6 +36,15 @@ class InsertionPublishActivity : AppCompatActivity() {
     private var alertQuitDialog: MaterialDialog? = null
 
     private val dialogs: List<MaterialDialog?> = listOf(alertQuitDialog)
+
+
+    override fun prevScreen() = with(publishViewPager) {
+        currentItem -= 1
+    }
+
+    override fun nextScreen() = with(publishViewPager) {
+        currentItem += 1
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

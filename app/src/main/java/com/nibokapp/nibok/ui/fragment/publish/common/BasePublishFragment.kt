@@ -6,16 +6,36 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
+import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.extension.inflate
+import org.jetbrains.anko.findOptional
 
 /**
  * BasePublishFragment collects common features of the fragments
  * that constitute the insertion publishing process.
  */
 abstract class BasePublishFragment : Fragment() {
+
+    /**
+     * A PublishScreenManager should know how to handle page navigation
+     * for the publishing process.
+     */
+    interface PublishScreenManager {
+
+        /**
+         * Go to the next screen in the publishing process.
+         */
+        fun nextScreen()
+
+        /**
+         * Go to the previous screen in the publishing process.
+         */
+        fun prevScreen()
+    }
 
     /**
      * Get the layout of the fragment.
@@ -59,6 +79,7 @@ abstract class BasePublishFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addOnTouchKeyboardHidingForInputContainer()
+        setupNavigation(view)
         setupInput()
     }
 
@@ -109,5 +130,28 @@ abstract class BasePublishFragment : Fragment() {
             view, motionEvent ->
             hideKeyboardListener(motionEvent, view, context)
         }
+    }
+
+    private fun setupNavigation(view: View?) {
+        val btnPrev = view?.findOptional<Button>(R.id.btnPrev)
+        val btnNext = view?.findOptional<Button>(R.id.btnNext)
+        btnPrev?.setOnClickListener { prevScreen() }
+        btnNext?.setOnClickListener { nextScreen() }
+    }
+
+    private fun nextScreen() {
+        if (!hasValidData()) return
+        // TODO save input data
+        getScreenManager().nextScreen()
+    }
+
+    private fun prevScreen() {
+        getScreenManager().prevScreen()
+    }
+
+    private fun getScreenManager(): PublishScreenManager {
+        return activity as? PublishScreenManager ?:
+                throw IllegalStateException("Host activity must implement PublishScreenManager " +
+                        "to handle publishing process screens")
     }
 }
