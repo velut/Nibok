@@ -103,14 +103,14 @@ tools:context="com.nibokapp.nibok.ui.fragment.publish.InputBookData">
             android:layout_gravity="end">
 
             <Button
-                android:id="@+id/btnChangeISBN"
+                android:id="@+id/btnPrev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_go_back" />
+                android:text="@string/go_back" />
 
 
             <Button
-                android:id="@+id/btnConfirmBookDetails"
+                android:id="@+id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
