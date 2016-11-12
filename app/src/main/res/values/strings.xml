@@ -75,7 +75,7 @@
     <string name="error_conversation_not_started">Cannot send a message to this user</string>
     <string name="error_take_picture">Cannot take picture</string>
     <string name="error_required_title">Title is required</string>
-    <string name="error_required_authors">At lease one author is required</string>
+    <string name="error_required_authors">At least one author is required</string>
     <string name="error_required_year">Publishing year is required</string>
     <string name="error_required_publisher">Publisher is required</string>
     <string name="error_required_price">Price is required</string>
