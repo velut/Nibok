@@ -51,6 +51,10 @@ class InputBookData : BasePublishFragment() {
     }
 
     override fun setupInput() {
+        setupTextInput()
+    }
+
+    private fun setupTextInput() {
         inputBookTitle.afterTextChanged { handleTitleChange() }
         inputBookAuthors.afterTextChanged { handleAuthorsChange() }
         inputBookYear.afterTextChanged { handleYearChange() }
