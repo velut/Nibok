@@ -31,7 +31,6 @@ class FinalizeInsertion : BasePublishFragment() {
 
     override fun setupInput() {
         setupPublishButton()
-        setupGoBackButton()
     }
 
     private fun setupPublishButton() {
@@ -103,12 +102,6 @@ class FinalizeInsertion : BasePublishFragment() {
                 .content(R.string.publish_insertion_error_content)
                 .positiveText(android.R.string.ok)
                 .build()
-    }
-
-    private fun setupGoBackButton() {
-        btnGoBack.setOnClickListener {
-            TODO()
-        }
     }
 
 }
