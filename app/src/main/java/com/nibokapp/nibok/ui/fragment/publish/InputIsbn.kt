@@ -31,6 +31,11 @@ class InputIsbn(
 
     override fun hasValidData() : Boolean = true
 
+    override fun triggerInputsUpdate() {
+        // The user decided to skip isbn input -> clear eventual errors
+        inputISBNLayout.error = null
+    }
+
     override fun setupInput() {
         setupIsbnInput()
     }

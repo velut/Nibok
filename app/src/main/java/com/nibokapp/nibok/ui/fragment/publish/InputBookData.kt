@@ -45,6 +45,13 @@ class InputBookData : BasePublishFragment() {
 
     override fun getInputContainer() : View = inputBookDataContainer
 
+    override fun triggerInputsUpdate() {
+        handleTitleChange()
+        handleAuthorsChange()
+        handleYearChange()
+        handlePublisherChange()
+    }
+
     override fun hasValidData() : Boolean {
         // Data is valid if no TextInputLayout has errors
         return inputLayouts.all { !it.hasError() }

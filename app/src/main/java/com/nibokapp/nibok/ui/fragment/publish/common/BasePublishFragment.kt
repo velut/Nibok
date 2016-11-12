@@ -52,6 +52,12 @@ abstract class BasePublishFragment : Fragment() {
     abstract fun getInputContainer(): View
 
     /**
+     * Trigger an update that checks inputs.
+     * This is done to refresh input layouts before checking if data is valid.
+     */
+    open fun triggerInputsUpdate(): Unit = Unit
+
+    /**
      * Check if the inputs in the fragment all contain valid data.
      *
      * @return true if all the data from the inputs is valid, false otherwise
@@ -81,6 +87,7 @@ abstract class BasePublishFragment : Fragment() {
         addOnTouchKeyboardHidingForInputContainer()
         setupNavigation(view)
         setupInput()
+        getInputContainer().requestFocus()
     }
 
     override fun onPause() {
@@ -140,6 +147,7 @@ abstract class BasePublishFragment : Fragment() {
     }
 
     private fun nextScreen() {
+        triggerInputsUpdate()
         if (!hasValidData()) return
         // TODO save input data
         getScreenManager().nextScreen()

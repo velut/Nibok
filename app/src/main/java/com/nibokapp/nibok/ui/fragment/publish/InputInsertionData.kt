@@ -44,6 +44,10 @@ class InputInsertionData : BasePublishFragment() {
 
     override fun getInputContainer() : View = inputInsertionDetailsContainer
 
+    override fun triggerInputsUpdate() {
+        handlePriceChange()
+    }
+
     override fun hasValidData() : Boolean {
         return !inputInsertionBookPriceLayout.hasError()
     }
