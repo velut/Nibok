@@ -104,7 +104,7 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         publishViewPager.adapter = adapter
     }
 
-    class  ViewPagerAdapter(val fm: FragmentManager,
+    class ViewPagerAdapter(val fm: FragmentManager,
                             val fragments: List<Fragment>) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
