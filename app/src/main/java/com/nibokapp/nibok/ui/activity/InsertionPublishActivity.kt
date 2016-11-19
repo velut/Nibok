@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.NavUtils
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
@@ -62,6 +63,8 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         insertionData.bookData.isbn = isbn
     }
 
+    override fun isIsbnSet(): Boolean = insertionData.bookData.isbn != ""
+
     override fun setBookData(data: BookData) = with(insertionData) {
         val isbn = bookData.isbn
 
@@ -93,6 +96,7 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         savedInstanceState?.let {
             insertionData = it.getParcelable(KEY_INSERTION_DATA) ?: InsertionData()
         }
+        Log.d(TAG, "InsData isbn: ${insertionData.bookData.isbn}")
 
         setupViewPager()
     }

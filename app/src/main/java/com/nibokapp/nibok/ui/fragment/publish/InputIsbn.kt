@@ -68,7 +68,9 @@ class InputIsbn(
         if (isbnValidator.isIsbnValid(currentIsbn)) {
             Log.d(TAG, "Valid ISBN set: $currentIsbn")
             inputISBNLayout.removeInputError()
-            nextScreen()
+            if (!getPublishManager().isIsbnSet()) {
+                nextScreen()
+            }
         } else {
             Log.d(TAG, "Invalid ISBN set: $currentIsbn")
             inputISBNLayout.setInputError(R.string.error_invalid_isbn)

@@ -63,6 +63,13 @@ abstract class BasePublishFragment : Fragment() {
         fun setIsbn(isbn: String)
 
         /**
+         * Check if a correct ISBN code is already set.
+         *
+         * @return true if a code is set, false otherwise
+         */
+        fun isIsbnSet(): Boolean
+
+        /**
          * Set the data about the book.
          */
         fun setBookData(data: BookData)
