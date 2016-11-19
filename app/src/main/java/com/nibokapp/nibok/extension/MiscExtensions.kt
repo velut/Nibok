@@ -118,3 +118,16 @@ fun String.parseDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : Date {
     val dateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
     return dateFormat.parse(this)
 }
+
+/**
+ * Safely convert a [String] to an [Int].
+ *
+ * @param default the value to be used if the conversion fails. Default value is 0
+ *
+ * @return the [Int] parsed from the [String] or the default value if NumberFormatException was raised
+ */
+fun String.toSafeInt(default: Int = 0) = try {
+    this.toInt()
+} catch (e: NumberFormatException) {
+    default
+}
