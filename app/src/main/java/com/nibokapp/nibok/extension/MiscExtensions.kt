@@ -126,8 +126,21 @@ fun String.parseDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : Date {
  *
  * @return the [Int] parsed from the [String] or the default value if NumberFormatException was raised
  */
-fun String.toSafeInt(default: Int = 0) = try {
+fun String.toSafeInt(default: Int = 0): Int = try {
     this.toInt()
+} catch (e: NumberFormatException) {
+    default
+}
+
+/**
+ * Safely convert a [String] to a [Float].
+ *
+ * @param default the value to be used if the conversion fails. Default value is 0f
+ *
+ * @return the [Float] parsed from the [String] or the default value if NumberFormatException was raised
+ */
+fun String.toSafeFloat(default: Float = 0f): Float = try {
+    this.toFloat()
 } catch (e: NumberFormatException) {
     default
 }
