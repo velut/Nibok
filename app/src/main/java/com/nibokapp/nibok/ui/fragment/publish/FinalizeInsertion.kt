@@ -29,6 +29,8 @@ class FinalizeInsertion : BasePublishFragment() {
 
     override fun hasValidData(): Boolean = true
 
+    override fun saveData() = Unit
+
     override fun setupInput() {
         setupPublishButton()
     }
