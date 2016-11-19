@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.afterTextChanged
+import com.nibokapp.nibok.extension.toSafeFloat
 import com.nibokapp.nibok.ui.filter.getPriceLeadingZerosFilter
 import com.nibokapp.nibok.ui.filter.getPriceLengthFilter
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
@@ -19,25 +20,11 @@ class InputInsertionData : BasePublishFragment() {
         private val TAG = InputInsertionData::class.java.simpleName
     }
 
-    /**
-     * String Array of possible book's wear conditions.
-     */
-    private val bookWearArray: Array<String> by lazy {
-        resources.getStringArray(R.array.book_wear_condition_array)
-    }
-
-    /**
-     * The default wear condition is the first item of the wear array.
-     */
-    private val defaultWear: String by lazy {
-        bookWearArray.first()
-    }
-    
     private val priceText: String
         get() = inputInsertionBookPrice.getStringText()
 
-    private val bookWear: String
-        get() = inputInsertionBookCondition.selectedItem?.toString() ?: defaultWear
+    private val bookWearId: Int
+        get() = inputInsertionBookCondition.selectedItemPosition
 
 
     override fun getFragmentLayout() : Int = R.layout.fragment_publish_input_insertion_data
@@ -50,6 +37,13 @@ class InputInsertionData : BasePublishFragment() {
 
     override fun hasValidData() : Boolean {
         return !inputInsertionBookPriceLayout.hasError()
+    }
+
+    override fun saveData() {
+        getPublishManager().apply {
+            setPrice(priceText.toSafeFloat())
+            setWearCondition(bookWearId)
+        }
     }
 
     override fun setupInput() {
