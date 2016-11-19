@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.publish.BookData
+import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.ui.fragment.publish.*
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
@@ -17,10 +19,12 @@ import kotlinx.android.synthetic.main.activity_insertion_publish.*
 /**
  * InsertionPublishActivity manages insertion publishing.
  */
-class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.PublishScreenManager {
+class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.PublishProcessManager {
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
+
+        private val KEY_INSERTION_DATA = "$TAG:insertionData"
     }
 
     private val fragments: List<Fragment> by lazy {
@@ -37,6 +41,8 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
 
     private val dialogs: List<MaterialDialog?> = listOf(alertQuitDialog)
 
+    private var insertionData: InsertionData = InsertionData()
+
 
     override fun prevScreen() = with(publishViewPager) {
         currentItem -= 1
@@ -46,13 +52,54 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         currentItem += 1
     }
 
+    override fun getInsertionData(): InsertionData = insertionData.copy()
+
+    override fun resetData() {
+        insertionData = InsertionData()
+    }
+
+    override fun setIsbn(isbn: String) {
+        insertionData.bookData.isbn = isbn
+    }
+
+    override fun setBookData(data: BookData) = with(insertionData) {
+        val isbn = bookData.isbn
+
+        if (bookData.id == "" || bookData.differsFrom(data)) {
+            bookData = data
+            bookData.isbn = isbn
+        }
+    }
+
+    override fun setPrice(price: Float) {
+        insertionData.bookPrice = price
+    }
+
+    override fun setWearCondition(conditionId: Int) {
+        insertionData.bookConditionId = conditionId
+    }
+
+    override fun setPictures(pictures: List<String>) {
+        insertionData.bookPictures = pictures
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insertion_publish)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        savedInstanceState?.let {
+            insertionData = it.getParcelable(KEY_INSERTION_DATA) ?: InsertionData()
+        }
+
         setupViewPager()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_INSERTION_DATA, insertionData)
     }
 
     override fun onPause() {
@@ -74,6 +121,19 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         }
         return super.onOptionsItemSelected(item)
     }
+
+    /**
+     * Check if data about the book contained in this BookData differs from data passed in the other object.
+     *
+     * @param other the other BookData object
+     *
+     * @return true if book data differs, false otherwise
+     */
+    private fun BookData.differsFrom(other: BookData): Boolean =
+            this.title.toLowerCase() != other.title.toLowerCase() ||
+                    this.authors.map(String::toLowerCase).toSet() != other.authors.map(String::toLowerCase).toSet() ||
+                    this.year != other.year ||
+                    this.publisher.toLowerCase() != other.publisher.toLowerCase()
 
     /**
      * Alert the user with a dialog before quitting the insertion publishing activity.
