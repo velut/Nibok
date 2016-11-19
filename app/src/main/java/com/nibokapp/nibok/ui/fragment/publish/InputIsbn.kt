@@ -31,6 +31,10 @@ class InputIsbn(
 
     override fun hasValidData() : Boolean = true
 
+    override fun saveData() {
+        getPublishManager().setIsbn(currentIsbn)
+    }
+
     override fun triggerInputsUpdate() {
         // The user decided to skip isbn input -> clear eventual errors
         inputISBNLayout.error = null
@@ -64,7 +68,7 @@ class InputIsbn(
         if (isbnValidator.isIsbnValid(currentIsbn)) {
             Log.d(TAG, "Valid ISBN set: $currentIsbn")
             inputISBNLayout.removeInputError()
-            // showBookDataForIsbn()
+            nextScreen()
         } else {
             Log.d(TAG, "Invalid ISBN set: $currentIsbn")
             inputISBNLayout.setInputError(R.string.error_invalid_isbn)
@@ -73,6 +77,6 @@ class InputIsbn(
 
     private fun handleInvalidLengthIsbn() {
         inputISBNLayout.setInputError(R.string.error_input_isbn)
-        //reset isIsbnSet
+        getPublishManager().resetData()
     }
 }
