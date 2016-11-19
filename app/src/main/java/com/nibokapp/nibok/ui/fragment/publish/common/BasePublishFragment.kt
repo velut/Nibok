@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.publish.BookData
+import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.extension.inflate
 import org.jetbrains.anko.findOptional
@@ -20,11 +22,16 @@ import org.jetbrains.anko.findOptional
  */
 abstract class BasePublishFragment : Fragment() {
 
+    companion object {
+        private val TAG = BasePublishFragment::class.java.simpleName
+    }
+
     /**
-     * A PublishScreenManager should know how to handle page navigation
+     * A PublishProcessManager should know how to handle page navigation
      * for the publishing process.
+     * It should also know how to save data collected from inputs.
      */
-    interface PublishScreenManager {
+    interface PublishProcessManager {
 
         /**
          * Go to the next screen in the publishing process.
@@ -35,6 +42,50 @@ abstract class BasePublishFragment : Fragment() {
          * Go to the previous screen in the publishing process.
          */
         fun prevScreen()
+
+        /**
+         * Get a copy of the current insertion data.
+         *
+         * @return the current InsertionData
+         */
+        fun getInsertionData(): InsertionData
+
+        /**
+         * Reset data eventually set for this insertion.
+         */
+        fun resetData()
+
+        /**
+         * Set the ISBN code for the book in the insertion to be published
+         *
+         * @param isbn the isbn code
+         */
+        fun setIsbn(isbn: String)
+
+        /**
+         * Set the data about the book.
+         */
+        fun setBookData(data: BookData)
+
+        /**
+         * Set the price for the book.
+         * @param price the price for the book
+         */
+        fun setPrice(price: Float)
+
+        /**
+         * Set the wear condition for the book.
+         *
+         * @param conditionId the id of the wear condition of the book
+         */
+        fun setWearCondition(conditionId: Int)
+
+        /**
+         * Set the list of pictures used in the insertion.
+         *
+         * @param pictures the list of pictures sources
+         */
+        fun setPictures(pictures: List<String>)
     }
 
     /**
@@ -65,6 +116,11 @@ abstract class BasePublishFragment : Fragment() {
     abstract fun hasValidData(): Boolean
 
     /**
+     * Save insertion data held by the fragment.
+     */
+    abstract fun saveData(): Unit
+
+    /**
      * Setup the inputs.
      */
     abstract fun setupInput(): Unit
@@ -93,6 +149,23 @@ abstract class BasePublishFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         getDialogs().forEach { it?.dismiss() }
+    }
+
+
+    protected fun nextScreen() {
+        triggerInputsUpdate()
+        if (!hasValidData()) return
+        saveData()
+        getPublishManager().nextScreen()
+    }
+
+    protected fun prevScreen() {
+        getPublishManager().prevScreen()
+    }
+
+    protected fun getPublishManager(): PublishProcessManager {
+        return activity as? PublishProcessManager ?:
+                throw IllegalStateException("Host activity must implement PublishProcessManager")
     }
 
     /**
@@ -144,22 +217,5 @@ abstract class BasePublishFragment : Fragment() {
         val btnNext = view?.findOptional<Button>(R.id.btnNext)
         btnPrev?.setOnClickListener { prevScreen() }
         btnNext?.setOnClickListener { nextScreen() }
-    }
-
-    private fun nextScreen() {
-        triggerInputsUpdate()
-        if (!hasValidData()) return
-        // TODO save input data
-        getScreenManager().nextScreen()
-    }
-
-    private fun prevScreen() {
-        getScreenManager().prevScreen()
-    }
-
-    private fun getScreenManager(): PublishScreenManager {
-        return activity as? PublishScreenManager ?:
-                throw IllegalStateException("Host activity must implement PublishScreenManager " +
-                        "to handle publishing process screens")
     }
 }
