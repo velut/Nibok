@@ -8,13 +8,13 @@ import android.os.Parcelable
  *
  * @param bookData the parcelable data about the book
  * @param bookPrice the price of the book
- * @param bookCondition the condition of the book
+ * @param bookConditionId the id of the wear condition of the book
  * @param bookPictures the list of URIs pointing to pictures of the book taken by the user
  */
 data class InsertionData(
         var bookData: BookData = BookData(),
         var bookPrice: Float = 0f,
-        var bookCondition: String = "",
+        var bookConditionId: Int = 0,
         var bookPictures: List<String> = emptyList()
 ) : Parcelable {
     companion object {
@@ -24,14 +24,14 @@ data class InsertionData(
         }
     }
 
-    constructor(source: Parcel) : this(source.readParcelable<BookData>(BookData::class.java.classLoader), source.readFloat(), source.readString(), source.createStringArrayList())
+    constructor(source: Parcel) : this(source.readParcelable<BookData>(BookData::class.java.classLoader), source.readFloat(), source.readInt(), source.createStringArrayList())
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeParcelable(bookData, 0)
         dest?.writeFloat(bookPrice)
-        dest?.writeString(bookCondition)
+        dest?.writeInt(bookConditionId)
         dest?.writeStringList(bookPictures)
     }
 }
