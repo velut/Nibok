@@ -31,9 +31,7 @@ class InputIsbn(
 
     override fun hasValidData() : Boolean = true
 
-    override fun saveData() {
-        getPublishManager().setIsbn(currentIsbn)
-    }
+    override fun saveData() = Unit
 
     override fun triggerInputsUpdate() {
         // The user decided to skip isbn input -> clear eventual errors
@@ -69,6 +67,7 @@ class InputIsbn(
             Log.d(TAG, "Valid ISBN set: $currentIsbn")
             inputISBNLayout.removeInputError()
             if (!getPublishManager().isIsbnSet()) {
+                getPublishManager().setIsbn(currentIsbn)
                 nextScreen()
             }
         } else {
