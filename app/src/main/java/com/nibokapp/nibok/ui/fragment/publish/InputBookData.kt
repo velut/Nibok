@@ -3,7 +3,9 @@ package com.nibokapp.nibok.ui.fragment.publish
 import android.support.design.widget.TextInputLayout
 import android.view.View
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.publish.BookData
 import com.nibokapp.nibok.extension.afterTextChanged
+import com.nibokapp.nibok.extension.toSafeInt
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_book_data.*
 
@@ -57,9 +59,17 @@ class InputBookData : BasePublishFragment() {
         return inputLayouts.all { !it.hasError() }
     }
 
+    override fun saveData() {
+        val inputData = BookData("", titleText, getAuthorsList(), yearText.toSafeInt(), publisherText)
+        getPublishManager().setBookData(inputData)
+    }
+
     override fun setupInput() {
         setupTextInput()
     }
+
+    private fun getAuthorsList(): List<String> =
+            authorsText.split(Regex("\\s*,\\s*")).map(String::trim)
 
     private fun setupTextInput() {
         inputBookTitle.afterTextChanged { handleTitleChange() }
