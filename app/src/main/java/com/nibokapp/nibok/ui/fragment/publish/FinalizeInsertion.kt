@@ -1,8 +1,11 @@
 package com.nibokapp.nibok.ui.fragment.publish
 
+import android.os.Bundle
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
+import com.nibokapp.nibok.domain.model.publish.InsertionData
+import com.nibokapp.nibok.extension.toCurrency
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_finalize_insertion.*
 import org.jetbrains.anko.doAsync
@@ -35,6 +38,42 @@ class FinalizeInsertion : BasePublishFragment() {
         setupPublishButton()
     }
 
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindInsertionData()
+    }
+
+    private fun bindInsertionData() {
+        val insertionData = getPublishManager().getInsertionData()
+
+        if (!insertionData.isPublishable()) return
+
+        with(insertionData) {
+            // Insertion details (Price, Book wear condition)
+            insertionBookPrice.text = bookPrice.toCurrency()
+            val wearConditions = resources.getStringArray(R.array.book_wear_condition_array)
+            val bookWearCondition = wearConditions.getOrNull(bookConditionId)
+            bookWearCondition?.let { insertionBookCondition.text = it }
+
+            // Book details (Title, Authors, Publishing Year, Publisher, ISBN)
+            with(bookData) {
+                detailBookTitle.text = title
+                detailBookAuthorsHint.text = resources.getQuantityString(R.plurals.book_author, authors.size)
+                detailBookAuthors.text = authors.joinToString() // Comma separated authors
+                detailBookYear.text = year.toString()
+                detailBookPublisher.text = publisher
+                if (isbn.isNotBlank()) {
+                    detailBookISBN.text = isbn
+                }
+            }
+        }
+    }
+
+    private fun InsertionData.isPublishable(): Boolean = with(bookData) {
+            title.isNotBlank() && authors.isNotEmpty() && publisher.isNotBlank()
+    }
+
     private fun setupPublishButton() {
         btnPublishInsertion.setOnClickListener {
             publishInsertion()
@@ -42,6 +81,13 @@ class FinalizeInsertion : BasePublishFragment() {
     }
 
     private fun publishInsertion() {
+        val insertionData = getPublishManager().getInsertionData()
+
+        if (!insertionData.isPublishable()) {
+            showErrorDialog(contentRes = R.string.publish_insertion_incomplete_error_content)
+            return
+        }
+
         showProgressDialog()
         doAsync {
             val published = true // TODO Use presenter to publish
@@ -74,10 +120,9 @@ class FinalizeInsertion : BasePublishFragment() {
         successDialog?.show()
     }
 
-    private fun showErrorDialog() {
-        if (errorDialog == null) {
-            errorDialog = getErrorDialog()
-        }
+    private fun showErrorDialog(titleRes: Int = R.string.publish_insertion_error_title,
+                                contentRes: Int = R.string.publish_insertion_error_content) {
+        errorDialog = getErrorDialog(titleRes, contentRes)
         errorDialog?.show()
     }
 
@@ -98,10 +143,10 @@ class FinalizeInsertion : BasePublishFragment() {
                 .build()
     }
 
-    private fun getErrorDialog(): MaterialDialog {
+    private fun getErrorDialog(titleRes: Int, contentRes: Int): MaterialDialog {
         return MaterialDialog.Builder(context)
-                .title(R.string.publish_insertion_error_title)
-                .content(R.string.publish_insertion_error_content)
+                .title(titleRes)
+                .content(contentRes)
                 .positiveText(android.R.string.ok)
                 .build()
     }
