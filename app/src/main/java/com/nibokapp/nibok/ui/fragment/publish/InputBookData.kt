@@ -69,7 +69,7 @@ class InputBookData : BasePublishFragment() {
     }
 
     private fun getAuthorsList(): List<String> =
-            authorsText.split(Regex("\\s*,\\s*")).map(String::trim)
+            authorsText.split(Regex("\\s*,\\s*")).map(String::trim).filter(String::isNotBlank)
 
     private fun setupTextInput() {
         inputBookTitle.afterTextChanged { handleTitleChange() }
@@ -100,7 +100,7 @@ class InputBookData : BasePublishFragment() {
 
     private fun handleYearChange() {
         with(inputBookYearLayout) {
-            if (yearText.isBlank()) {
+            if (yearText.isBlank() || yearText.length < 4) {
                 setInputError(R.string.error_required_year)
             } else {
                 removeInputError()
