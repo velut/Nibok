@@ -8,6 +8,7 @@ import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.extension.toSafeInt
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_book_data.*
+import java.util.*
 
 /**
  * Publishing fragment managing input relative to data about the book,
@@ -102,6 +103,8 @@ class InputBookData : BasePublishFragment() {
         with(inputBookYearLayout) {
             if (yearText.isBlank() || yearText.length < 4) {
                 setInputError(R.string.error_required_year)
+            } else if (yearText.toSafeInt() > Calendar.getInstance().get(Calendar.YEAR)) {
+                setInputError(R.string.error_future_year)
             } else {
                 removeInputError()
             }
