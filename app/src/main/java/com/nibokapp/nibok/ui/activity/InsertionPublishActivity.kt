@@ -46,10 +46,12 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
 
 
     override fun prevScreen() = with(publishViewPager) {
+        Log.d(TAG, "Prev; Insertion data: $insertionData")
         currentItem -= 1
     }
 
     override fun nextScreen() = with(publishViewPager) {
+        Log.d(TAG, "Next; Insertion data: $insertionData")
         currentItem += 1
     }
 
