@@ -135,6 +135,7 @@
     <string name="publish_insertion_error_title">Insertion Publishing Failed</string>
     <string name="publish_insertion_error_content">The insertion could not be published.\nTry again later</string>
     <string name="publish_insertion_incomplete_error_content">Insertion data is incomplete and cannot be published</string>
+    <string name="publish_insertion_already_published_error_content">Your insertion was already published</string>
 
     <!-- Chat -->
     <string name="partner_reply">%1s has replied</string>

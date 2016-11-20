@@ -17,9 +17,17 @@ import org.jetbrains.anko.uiThread
  */
 class FinalizeInsertion : BasePublishFragment() {
 
+    companion object {
+        private val TAG = FinalizeInsertion::class.java.simpleName
+
+        private val KEY_INSERTION_PUBLISHED = "$TAG:insertionPublished"
+    }
+
     private var progressDialog: MaterialDialog? = null
     private var successDialog: MaterialDialog? = null
     private var errorDialog: MaterialDialog? = null
+
+    private var published: Boolean = false
 
 
     override fun getFragmentLayout(): Int = R.layout.fragment_publish_finalize_insertion
@@ -41,7 +49,13 @@ class FinalizeInsertion : BasePublishFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        savedInstanceState?.let { published = it.getBoolean(KEY_INSERTION_PUBLISHED, false) }
         bindInsertionData()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_INSERTION_PUBLISHED, published)
     }
 
     private fun bindInsertionData() {
@@ -88,9 +102,14 @@ class FinalizeInsertion : BasePublishFragment() {
             return
         }
 
+        if (published) {
+            showErrorDialog(contentRes = R.string.publish_insertion_already_published_error_content)
+            return
+        }
+
         showProgressDialog()
         doAsync {
-            val published = true // TODO Use presenter to publish
+            published = true // TODO Use presenter to publish
             uiThread {
                 dismissProgressDialog()
                 if (published) {
