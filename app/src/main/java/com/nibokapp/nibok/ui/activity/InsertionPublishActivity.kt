@@ -61,6 +61,10 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         insertionData = InsertionData()
     }
 
+    override fun resetBookData() {
+        insertionData.bookData = BookData()
+    }
+
     override fun setIsbn(isbn: String) {
         insertionData.bookData.isbn = isbn
     }

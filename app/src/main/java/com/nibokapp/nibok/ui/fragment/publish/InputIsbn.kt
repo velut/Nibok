@@ -78,6 +78,6 @@ class InputIsbn(
 
     private fun handleInvalidLengthIsbn() {
         inputISBNLayout.setInputError(R.string.error_input_isbn)
-        getPublishManager().resetData()
+        getPublishManager().resetBookData()
     }
 }

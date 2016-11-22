@@ -56,6 +56,11 @@ abstract class BasePublishFragment : Fragment() {
         fun resetData()
 
         /**
+         * Reset bok data eventually set for this insertion.
+         */
+        fun resetBookData()
+
+        /**
          * Set the ISBN code for the book in the insertion to be published
          *
          * @param isbn the isbn code
