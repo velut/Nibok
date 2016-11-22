@@ -60,52 +60,7 @@
                         android:layout_marginStart="60dp"
                         android:visibility="visible"/>
 
-                    <!-- List of 5 image views to hold the taken pictures -->
-
-                    <ImageView
-                        android:id="@+id/picView1"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
-                        android:layout_marginEnd="24dp"
-                        android:background="@color/secondary_text"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:contentDescription="@string/picture_button_description"/>
-
-                    <ImageView
-                        android:id="@+id/picView2"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
-                        android:layout_marginEnd="24dp"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:contentDescription="@string/picture_button_description"/>
-
-                    <ImageView
-                        android:id="@+id/picView3"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
-                        android:layout_marginEnd="24dp"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:contentDescription="@string/picture_button_description"/>
-
-                    <ImageView
-                        android:id="@+id/picView4"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
-                        android:layout_marginEnd="24dp"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:contentDescription="@string/picture_button_description"/>
-
-                    <ImageView
-                        android:id="@+id/picView5"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:contentDescription="@string/picture_button_description"/>
+                    <!-- Picture hosts will be added here, before the button, at runtime -->
 
                     <!-- Image button used to take photos -->
 

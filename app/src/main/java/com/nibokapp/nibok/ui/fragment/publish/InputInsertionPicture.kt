@@ -4,9 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.loadImg
@@ -38,11 +40,9 @@ class InputInsertionPicture(
 
 
     /**
-     * List of [ImageView] that hold the pictures taken by the user.
+     * List of [ImageView] holding the pictures taken by the user.
      */
-    private val pictureHosts: List<ImageView> by lazy {
-        listOf(picView1, picView2, picView3, picView4, picView5)
-    }
+    private val pictureHosts: MutableList<ImageView> = mutableListOf()
 
     /**
      * [MutableList] of [Uri] of taken pictures.
@@ -122,6 +122,7 @@ class InputInsertionPicture(
      * Update the view that hosts the pictures and the button used to take pictures.
      */
     private fun updatePicView() {
+        Log.d(TAG, "Updating pictures view")
         updateTakePictureButton()
         bindPicturesToHosts()
     }
@@ -158,25 +159,62 @@ class InputInsertionPicture(
      * to the ImageView hosts.
      */
     private fun bindPicturesToHosts() {
+        Log.d(TAG, "Binding pictures to hosts")
         resetHosts()
+        Log.d(TAG, "Hosts reset, binding pictures")
         pictures.take(MAX_PICTURES).forEachIndexed { i, uri ->
-            val host = pictureHosts[i]
+            val host = getPictureHost()
             host.apply {
-                visibility = View.VISIBLE
                 loadImg(uri.toString())
                 addListeners(i)
             }
+            // Insert as last picture before the picture taking button
+            val secondToLastPos = Math.max(0, picturesContainer.childCount - 2)
+            picturesContainer.addView(host, secondToLastPos)
+            pictureHosts.add(host)
+            Log.d(TAG, "Host $i bound")
         }
     }
 
+    /**
+     * Remove old hosts from the LinearLayout hosting the pictures.
+     */
     private fun resetHosts() {
         pictureHosts.forEach {
-            it.apply {
-                visibility = View.GONE
-                loadImg("")
-            }
+            picturesContainer.removeView(it)
         }
     }
+
+    /**
+     * Get an [ImageView] host to display a picture taken with the camera.
+     *
+     * @return an [ImageView]
+     */
+    private fun getPictureHost(): ImageView {
+        // LayoutParams
+        val dp170 = getPixelsForDp(170f)
+        val dp24 = getPixelsForDp(24f)
+        // Square dimensions for ImageView
+        val lParams = LinearLayout.LayoutParams(dp170, dp170)
+        lParams.marginEnd = dp24
+
+        // ImageView
+        return ImageView(context).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            layoutParams = lParams
+            contentDescription = getString(R.string.picture_button_description)
+        }
+    }
+
+    /**
+     * Get the value in pixels for a given value in DP.
+     *
+     * @param dpValue the float value in DP
+     *
+     * @return the number of pixels corresponding to the given value in DP
+     */
+    private fun getPixelsForDp(dpValue: Float): Int =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, resources.displayMetrics).toInt()
 
     /**
      * Add two listeners to this ImageView.
