@@ -13,6 +13,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.publish.BookData
 import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.extension.hideKeyboardListener
+import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.extension.inflate
 import org.jetbrains.anko.findOptional
 
@@ -168,6 +169,7 @@ abstract class BasePublishFragment : Fragment() {
         triggerInputsUpdate()
         if (!hasValidData()) return
         saveData()
+        hideSoftKeyboard()
         getPublishManager().nextScreen()
     }
 
@@ -222,6 +224,10 @@ abstract class BasePublishFragment : Fragment() {
             view, motionEvent ->
             hideKeyboardListener(motionEvent, view, context)
         }
+    }
+
+    private fun hideSoftKeyboard() {
+        view?.hideSoftKeyboard(context)
     }
 
     private fun setupNavigation(view: View?) {
