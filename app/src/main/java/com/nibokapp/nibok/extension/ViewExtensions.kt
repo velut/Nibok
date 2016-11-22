@@ -2,6 +2,7 @@ package com.nibokapp.nibok.extension
 
 import android.content.Context
 import android.support.v4.view.MotionEventCompat
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -133,4 +134,25 @@ fun hideKeyboardListener(motionEvent: MotionEvent?, view: View,
     }
 
     return eventHandled
+}
+
+/**
+ * Set a ViewPager.OnPageChangeListener on this ViewPager that listens to page selection.
+ *
+ * @param func the function (pagePosition) -> Unit to be executed on page selection
+ *
+ */
+inline fun ViewPager.onPageSelected(crossinline func: (Int) -> Unit) = with(this) {
+    addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+        override fun onPageSelected(position: Int) {
+            func(position)
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        }
+    })
 }
