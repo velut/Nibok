@@ -156,8 +156,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
 
         if (excludeDuplicates) {
             itemsToAdd = emptyList()
-            supportedViewTypes.forEach {
-                val currentType = it
+            supportedViewTypes.forEach { currentType ->
                 val candidateItems = items.filter { it.getViewType() == currentType }
                 if (candidateItems.isNotEmpty()) {
                     val currentIds = getCurrentIdsForViewType(currentType)
@@ -202,8 +201,7 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
      * @param items the list of items to add or update in the current list of displayed items
      */
     private fun updateViewTypeItems(items: List<ViewType>) {
-        supportedViewTypes.forEach {
-            val currentType = it
+        supportedViewTypes.forEach { currentType ->
             val newItems = items.filter { it.getViewType() == currentType }
             if (newItems.isNotEmpty()) {
                 val currentIds = getCurrentIdsForViewType(currentType)
