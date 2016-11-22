@@ -3,6 +3,7 @@ package com.nibokapp.nibok.ui.fragment.publish
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -17,6 +18,7 @@ import com.nibokapp.nibok.ui.delegate.camera.common.PictureTaker
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.fragment_publish_input_insertion_picture.*
+import org.jetbrains.anko.findOptional
 import java.util.*
 
 /**
@@ -237,14 +239,10 @@ class InputInsertionPicture(
     }
 
     private fun scrollToLastPicture() {
-        try {
-            pictureScrollView.postDelayed(
-                    { pictureScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
-                    120L
-            )
-        } catch (e: NullPointerException) {
-            Log.e(TAG, e.toString())
-        }
+        Handler().postDelayed({
+            val picScrollView = view?.findOptional<HorizontalScrollView>(R.id.pictureScrollView)
+            picScrollView?.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+        }, 120L)
     }
 
     private fun showErrorDialog() {
