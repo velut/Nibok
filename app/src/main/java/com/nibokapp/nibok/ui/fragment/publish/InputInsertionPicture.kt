@@ -246,7 +246,7 @@ class InputInsertionPicture(
         Handler().postDelayed({
             val picScrollView = view?.findOptional<HorizontalScrollView>(R.id.pictureScrollView)
             picScrollView?.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
-        }, 120L)
+        }, 500L)
     }
 
     private fun showErrorDialog() {
