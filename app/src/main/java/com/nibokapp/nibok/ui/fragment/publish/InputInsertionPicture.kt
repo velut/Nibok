@@ -165,7 +165,9 @@ class InputInsertionPicture(
         resetHosts()
         Log.d(TAG, "Hosts reset, binding pictures")
         pictures.take(MAX_PICTURES).forEachIndexed { i, uri ->
-            val host = getPictureHost()
+            // All hosts have a margin at the end except the last one
+            val hasEndMargin = i != MAX_PICTURES -1
+            val host = getPictureHost(hasEndMargin)
             host.apply {
                 loadImg(uri.toString())
                 addListeners(i)
@@ -190,15 +192,17 @@ class InputInsertionPicture(
     /**
      * Get an [ImageView] host to display a picture taken with the camera.
      *
+     * @param hasEndMargin true if this ImageView must have an end margin, false otherwise
+     *
      * @return an [ImageView]
      */
-    private fun getPictureHost(): ImageView {
+    private fun getPictureHost(hasEndMargin: Boolean): ImageView {
         // LayoutParams
         val dp170 = getPixelsForDp(170f)
         val dp24 = getPixelsForDp(24f)
         // Square dimensions for ImageView
         val lParams = LinearLayout.LayoutParams(dp170, dp170)
-        lParams.marginEnd = dp24
+        if (hasEndMargin) lParams.marginEnd = dp24
 
         // ImageView
         return ImageView(context).apply {
