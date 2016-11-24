@@ -121,6 +121,7 @@
 
     <!-- Publish Dialogs -->
     <string name="progress_publishing">Publishing…</string>
+    <string name="progress_get_book_info">Retrieving book info…</string>
     <string name="alert_publish_title">Publish insertion</string>
     <string name="alert_publish_content_question">Publish the following book insertion?</string>
     <string name="alert_publish_positive_text">Publish</string>
@@ -136,6 +137,9 @@
     <string name="publish_insertion_error_content">The insertion could not be published.\nTry again later</string>
     <string name="publish_insertion_incomplete_error_content">Insertion data is incomplete and cannot be published</string>
     <string name="publish_insertion_already_published_error_content">Your insertion was already published</string>
+    <string name="dialog_title_book_info_not_found">No info on this book</string>
+    <string name="dialog_content_book_info_not_found">No book data associated with this ISBN was found.\nYou can still input data manually</string>
+    <string name="str_continue">Continue</string>
 
     <!-- Chat -->
     <string name="partner_reply">%1s has replied</string>
