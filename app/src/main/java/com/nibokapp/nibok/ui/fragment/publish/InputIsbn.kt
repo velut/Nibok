@@ -5,6 +5,7 @@ import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.rule.IsbnValidator
 import com.nibokapp.nibok.extension.afterTextChanged
+import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_input_isbn.*
 
@@ -66,10 +67,8 @@ class InputIsbn(
         if (isbnValidator.isIsbnValid(currentIsbn)) {
             Log.d(TAG, "Valid ISBN set: $currentIsbn")
             inputISBNLayout.removeInputError()
-            if (!getPublishManager().isIsbnSet()) {
-                getPublishManager().setIsbn(currentIsbn)
-                nextScreen()
-            }
+            view?.hideSoftKeyboard(context)
+            getPublishManager().setIsbn(currentIsbn)
         } else {
             Log.d(TAG, "Invalid ISBN set: $currentIsbn")
             inputISBNLayout.setInputError(R.string.error_invalid_isbn)
