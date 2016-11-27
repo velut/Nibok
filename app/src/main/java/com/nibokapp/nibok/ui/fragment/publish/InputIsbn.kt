@@ -130,7 +130,8 @@ class InputIsbn(
 
     private fun handleInvalidLengthIsbn() {
         inputISBNLayout.setInputError(R.string.error_input_isbn)
-        publishProcessManager.resetBookData()
+        val wasIsbnSet = publishProcessManager.isIsbnSet()
+        if (wasIsbnSet) publishProcessManager.resetBookData()
     }
 
     /**

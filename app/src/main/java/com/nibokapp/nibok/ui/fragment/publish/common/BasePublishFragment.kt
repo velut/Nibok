@@ -193,6 +193,7 @@ abstract class BasePublishFragment(
     }
 
     protected fun prevScreen() {
+        saveData()
         publishProcessManager.prevScreen()
     }
 
