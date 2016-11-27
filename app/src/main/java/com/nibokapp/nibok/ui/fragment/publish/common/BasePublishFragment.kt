@@ -15,13 +15,18 @@ import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.extension.inflate
+import com.nibokapp.nibok.ui.presenter.PublishInsertionPresenter
 import org.jetbrains.anko.findOptional
 
 /**
  * BasePublishFragment collects common features of the fragments
  * that constitute the insertion publishing process.
+ *
+ * @param presenter the [PublishInsertionPresenter] used by fragments of the publishing process
  */
-abstract class BasePublishFragment : Fragment() {
+abstract class BasePublishFragment(
+        protected val presenter: PublishInsertionPresenter = PublishInsertionPresenter()
+) : Fragment() {
 
     companion object {
         private val TAG = BasePublishFragment::class.java.simpleName
@@ -102,6 +107,14 @@ abstract class BasePublishFragment : Fragment() {
     }
 
     /**
+     * Get the host activity as a [PublishProcessManager].
+     * The publishProcessManager knows how to navigate screens and get/set insertion data.
+     */
+    protected val publishProcessManager: PublishProcessManager
+        get() = activity as? PublishProcessManager ?:
+                throw IllegalStateException("Host activity must implement PublishProcessManager")
+
+    /**
      * Get the layout of the fragment.
      *
      * @return an Int referring to the layout's resource
@@ -170,16 +183,11 @@ abstract class BasePublishFragment : Fragment() {
         if (!hasValidData()) return
         saveData()
         hideSoftKeyboard()
-        getPublishManager().nextScreen()
+        publishProcessManager.nextScreen()
     }
 
     protected fun prevScreen() {
-        getPublishManager().prevScreen()
-    }
-
-    protected fun getPublishManager(): PublishProcessManager {
-        return activity as? PublishProcessManager ?:
-                throw IllegalStateException("Host activity must implement PublishProcessManager")
+        publishProcessManager.prevScreen()
     }
 
     /**
