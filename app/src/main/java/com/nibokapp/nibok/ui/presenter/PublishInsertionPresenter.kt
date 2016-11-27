@@ -21,7 +21,7 @@ class PublishInsertionPresenter {
      *
      * @return data about the book with the given isbn code or null if not data was found
      */
-    fun getBookDataByISBN(isbn: String) : BookData? {
+    fun getBookDataByIsbn(isbn: String) : BookData? {
         Log.d(TAG, "Requesting book data for ISBN: $isbn")
         return RequestBookInfoByIsbnCommand(isbn).execute()
     }
