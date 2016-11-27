@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.publish.BookData
 import com.nibokapp.nibok.domain.model.publish.InsertionData
+import com.nibokapp.nibok.extension.onPageSelected
 import com.nibokapp.nibok.ui.fragment.publish.*
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
@@ -31,7 +32,7 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
         private val KEY_INSERTION_DATA = "$TAG:insertionData"
     }
 
-    private val fragments: List<Fragment> by lazy {
+    private val fragments: List<BasePublishFragment> by lazy {
         listOf(
                 InputIsbn(),
                 InputBookData(),
@@ -47,12 +48,12 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
 
 
     override fun prevScreen() = with(publishViewPager) {
-        Log.d(TAG, "Prev;\n>Insertion data: $insertionData")
+        Log.d(TAG, "Prev;\n$insertionData")
         currentItem -= 1
     }
 
     override fun nextScreen() = with(publishViewPager) {
-        Log.d(TAG, "Next;\n>Insertion data: $insertionData")
+        Log.d(TAG, "Next;\n$insertionData")
         currentItem += 1
     }
 
@@ -175,6 +176,10 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
     private fun setupViewPager() {
         val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         publishViewPager.adapter = adapter
+        publishViewPager.onPageSelected {
+            val selectedFragment = fragments.getOrNull(it)
+            selectedFragment?.onBecomeVisible()
+        }
     }
 
     class ViewPagerAdapter(val fm: FragmentManager,

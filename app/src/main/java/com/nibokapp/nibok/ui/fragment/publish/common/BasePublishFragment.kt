@@ -159,6 +159,12 @@ abstract class BasePublishFragment(
      */
     open fun getDialogs(): List<MaterialDialog?> = emptyList()
 
+    /**
+     * Trigger for when a fragment becomes visible in the viewpager hosting it.
+     */
+    open fun onBecomeVisible() {
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(getFragmentLayout())
