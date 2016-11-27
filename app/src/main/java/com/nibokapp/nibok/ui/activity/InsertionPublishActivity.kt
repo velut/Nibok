@@ -15,17 +15,15 @@ import com.nibokapp.nibok.domain.model.publish.BookData
 import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.ui.fragment.publish.*
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
-import com.nibokapp.nibok.ui.presenter.PublishInsertionPresenter
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+
 
 /**
- * InsertionPublishActivity manages insertion publishing.
+ * InsertionPublishActivity hosts the insertion publishing process.
+ * It also implements the PublishProcessManager interface to enable screen navigation
+ * between fragments of the publishing process and also to keep track of submitted data.
  */
-class InsertionPublishActivity(
-        private val presenter: PublishInsertionPresenter = PublishInsertionPresenter()
-) : AppCompatActivity(), BasePublishFragment.PublishProcessManager {
+class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.PublishProcessManager {
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
@@ -44,8 +42,6 @@ class InsertionPublishActivity(
     }
 
     private var alertQuitDialog: MaterialDialog? = null
-    private var progressDialog: MaterialDialog? = null
-    private var errorDialog: MaterialDialog? = null
 
     private var insertionData: InsertionData = InsertionData()
 
@@ -71,24 +67,7 @@ class InsertionPublishActivity(
     }
 
     override fun setIsbn(isbn: String) {
-        if (insertionData.bookData.isbn != "") return
-
         insertionData.bookData.isbn = isbn
-
-        showProgressDialog()
-        doAsync {
-            val bData = presenter.getBookDataByIsbn(isbn)
-            uiThread {
-                progressDialog?.dismiss()
-                if (bData != null) {
-                    insertionData.bookData = bData
-                    Log.d(TAG, "Book data found and set")
-                    nextScreen()
-                } else {
-                    showErrorDialog()
-                }
-            }
-        }
     }
 
     override fun isIsbnSet(): Boolean = insertionData.bookData.isbn != ""
@@ -184,35 +163,12 @@ class InsertionPublishActivity(
         alertQuitDialog?.show()
     }
 
-    private fun showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = MaterialDialog.Builder(this)
-                    .content(R.string.progress_get_book_info)
-                    .progress(true, 0) // Indeterminate progress dialog
-                    .cancelable(false) // Clicking outside the dialog does not close it
-                    .build()
-        }
-        progressDialog?.show()
-    }
-
-    private fun showErrorDialog() {
-        if (errorDialog == null) {
-            errorDialog = MaterialDialog.Builder(this)
-                    .title(R.string.dialog_title_book_info_not_found)
-                    .content(R.string.dialog_content_book_info_not_found)
-                    .positiveText(R.string.str_continue)
-                    .onPositive { materialDialog, dialogAction ->  nextScreen() }
-                    .build()
-        }
-        errorDialog?.show()
-    }
-
     /**
      * Dismiss eventual open dialogs to prevent leaked windows.
      */
     private fun dismissDialogs() {
         Log.d(TAG, "Dismissing dialogs")
-        val dialogs = listOf(alertQuitDialog, progressDialog, errorDialog)
+        val dialogs = listOf(alertQuitDialog)
         dialogs.forEach { it?.dismiss() }
     }
 
