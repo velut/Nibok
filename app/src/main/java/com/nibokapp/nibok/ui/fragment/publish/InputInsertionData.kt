@@ -40,7 +40,7 @@ class InputInsertionData : BasePublishFragment() {
     }
 
     override fun saveData() {
-        getPublishManager().apply {
+        publishProcessManager.apply {
             setPrice(priceText.toSafeFloat())
             setWearCondition(bookWearId)
         }

@@ -67,7 +67,7 @@ class InputInsertionPicture(
     override fun hasValidData(): Boolean = true
 
     override fun saveData() {
-        getPublishManager().setPictures(pictures.map(Uri::toString))
+        publishProcessManager.setPictures(pictures.map(Uri::toString))
     }
 
     override fun setupInput() {

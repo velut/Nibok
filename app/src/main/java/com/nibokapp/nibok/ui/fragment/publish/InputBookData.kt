@@ -62,7 +62,7 @@ class InputBookData : BasePublishFragment() {
 
     override fun saveData() {
         val inputData = BookData("", titleText, getAuthorsList(), yearText.toSafeInt(), publisherText)
-        getPublishManager().setBookData(inputData)
+        publishProcessManager.setBookData(inputData)
     }
 
     override fun setupInput() {

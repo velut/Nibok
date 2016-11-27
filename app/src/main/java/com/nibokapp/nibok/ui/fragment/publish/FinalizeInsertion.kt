@@ -59,7 +59,7 @@ class FinalizeInsertion : BasePublishFragment() {
     }
 
     private fun bindInsertionData() {
-        val insertionData = getPublishManager().getInsertionData()
+        val insertionData = publishProcessManager.getInsertionData()
 
         if (!insertionData.isPublishable()) return
 
@@ -95,7 +95,7 @@ class FinalizeInsertion : BasePublishFragment() {
     }
 
     private fun publishInsertion() {
-        val insertionData = getPublishManager().getInsertionData()
+        val insertionData = publishProcessManager.getInsertionData()
 
         if (!insertionData.isPublishable()) {
             showErrorDialog(contentRes = R.string.publish_insertion_incomplete_error_content)
