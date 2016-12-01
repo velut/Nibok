@@ -30,16 +30,24 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
         private val TAG = InsertionPublishActivity::class.java.simpleName
 
         private val KEY_INSERTION_DATA = "$TAG:insertionData"
-    }
 
-    private val fragments: List<BasePublishFragment> by lazy {
-        listOf(
-                InputIsbn(),
-                InputBookData(),
-                InputInsertionData(),
-                InputInsertionPicture(),
-                FinalizeInsertion()
-        )
+
+        /**
+         * The number of fragments used for the publishing process.
+         */
+        val NUM_PUBLISH_FRAGMENTS = 5
+
+        /**
+         * Get a publishing fragment instance based on the position in the publishing process.
+         */
+        val PUBLISH_FRAGMENT = fun (position: Int): Fragment = when (position) {
+            0 -> InputIsbn()
+            1 -> InputBookData()
+            2 -> InputInsertionData()
+            3 -> InputInsertionPicture()
+            4 -> FinalizeInsertion()
+            else -> throw IndexOutOfBoundsException("No publishing fragment available for this position")
+        }
     }
 
     private var alertQuitDialog: MaterialDialog? = null
@@ -135,19 +143,6 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
     }
 
     /**
-     * Check if data about the book contained in this BookData differs from data passed in the other object.
-     *
-     * @param other the other BookData object
-     *
-     * @return true if book data differs, false otherwise
-     */
-    private fun BookData.differsFrom(other: BookData): Boolean =
-            this.title.toLowerCase() != other.title.toLowerCase() ||
-                    this.authors.map(String::toLowerCase).toSet() != other.authors.map(String::toLowerCase).toSet() ||
-                    this.year != other.year ||
-                    this.publisher.toLowerCase() != other.publisher.toLowerCase()
-
-    /**
      * Alert the user with a dialog before quitting the insertion publishing activity.
      * If the user decides to quit call the onQuit function.
      *
@@ -174,34 +169,41 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
     }
 
     private fun setupViewPager() {
-        val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
+        val adapter = ViewPagerAdapter(supportFragmentManager)
         publishViewPager.adapter = adapter
-        publishViewPager.onPageSelected {
-            val selectedFragment = fragments.getOrNull(it)
+        publishViewPager.onPageSelected { position ->
+            Log.d(TAG, "Selected Publish Page: $position")
+            val selectedFragment = adapter.getItem(position) as? BasePublishFragment
             selectedFragment?.onBecomeVisible()
         }
     }
 
-    class ViewPagerAdapter(val fm: FragmentManager,
-                            val fragments: List<Fragment>) : FragmentPagerAdapter(fm) {
+
+    class ViewPagerAdapter(val fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-            // If the fragment manager already has a fragment with the given tag
-            // then return the stored fragment instead of a new instance
-            // This solves the problems of duplicate fragments and blank views after rotation
-            // caused by the viewpager
-            val foundFragment = fm.findFragmentByTag(getFragmentTagForPosition(position))
-            return foundFragment ?: fragments[position]
+            Log.d(TAG, "Get item called for position: $position")
+            val fragmentTag = getFragmentTagForPosition(position)
+            val foundFragment = fm.findFragmentByTag(fragmentTag)
+
+            if (foundFragment != null) {
+                Log.d(TAG, "Found publish fragment: $foundFragment for tag: $fragmentTag")
+                return foundFragment
+            }
+
+            val newFragment = PUBLISH_FRAGMENT(position)
+            Log.d(TAG, "No fragment found, returning a new one: $newFragment")
+            return newFragment
         }
 
-        override fun getCount(): Int = fragments.size
+        override fun getCount(): Int = NUM_PUBLISH_FRAGMENTS
 
         /**
          * Return the tag given by the adapter to the fragment.
          *
          * @return the string representing the tag of the fragment at the given position
          */
-        fun getFragmentTagForPosition(position: Int) =
+        private fun getFragmentTagForPosition(position: Int) =
                 "android:switcher:${R.id.publishViewPager}:$position"
     }
 }
