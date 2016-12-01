@@ -184,6 +184,7 @@ abstract class BasePublishFragment(
     override fun onPause() {
         super.onPause()
         getDialogs().forEach { it?.dismiss() }
+        if (isAdded) saveData()
     }
 
 
