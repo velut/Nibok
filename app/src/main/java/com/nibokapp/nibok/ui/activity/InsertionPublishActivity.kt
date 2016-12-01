@@ -112,7 +112,7 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
         savedInstanceState?.let {
             insertionData = it.getParcelable(KEY_INSERTION_DATA) ?: InsertionData()
         }
-        Log.d(TAG, "InsData isbn: ${insertionData.bookData.isbn}")
+        Log.d(TAG, "Saved insertion data:\n$insertionData")
 
         setupViewPager()
     }
