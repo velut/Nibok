@@ -40,4 +40,17 @@ data class BookData(
         dest?.writeString(publisher)
         dest?.writeString(isbn)
     }
+
+    /**
+     * Check if data about the book contained in this BookData differs from another instance of BookData.
+     *
+     * @param other the other BookData object
+     *
+     * @return true if book data differs, false otherwise
+     */
+    fun differsFrom(other: BookData): Boolean =
+            this.title.toLowerCase() != other.title.toLowerCase() ||
+                    this.authors.map(String::toLowerCase).toSet() != other.authors.map(String::toLowerCase).toSet() ||
+                    this.year != other.year ||
+                    this.publisher.toLowerCase() != other.publisher.toLowerCase()
 }
