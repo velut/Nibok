@@ -111,8 +111,11 @@ abstract class BasePublishFragment(
      * The publishProcessManager knows how to navigate screens and get/set insertion data.
      */
     protected val publishProcessManager: PublishProcessManager
-        get() = activity as? PublishProcessManager ?:
-                throw IllegalStateException("Host activity must implement PublishProcessManager")
+        get() {
+            if (!isAdded) throw IllegalStateException("Fragment must be added to its activity")
+            return activity as? PublishProcessManager ?:
+                    throw IllegalStateException("Host activity must implement PublishProcessManager")
+        }
 
     /**
      * Get the layout of the fragment.
