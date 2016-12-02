@@ -74,7 +74,7 @@ class InputIsbn(
 
     override fun triggerInputsUpdate() {
         // The user decided to skip isbn input -> clear eventual errors
-        inputISBNLayout.error = null
+        inputISBNLayout.removeInputError()
     }
 
     override fun setupInput() {
@@ -129,7 +129,9 @@ class InputIsbn(
     }
 
     private fun handleInvalidLengthIsbn() {
-        inputISBNLayout.setInputError(R.string.error_input_isbn)
+        if (currentIsbn.isNotBlank()) {
+            inputISBNLayout.setInputError(R.string.error_input_isbn)
+        }
         val wasIsbnSet = publishProcessManager.isIsbnSet()
         if (wasIsbnSet) publishProcessManager.resetBookData()
     }
