@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.ui.fragment.publish
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
@@ -10,6 +11,7 @@ import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.fragment_publish_finalize_insertion.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import kotlin.properties.Delegates
 
 /**
  * Publishing fragment that provides a summary of previously inserted data
@@ -19,8 +21,6 @@ class FinalizeInsertion : BasePublishFragment() {
 
     companion object {
         private val TAG = FinalizeInsertion::class.java.simpleName
-
-        private val KEY_INSERTION_PUBLISHED = "$TAG:insertionPublished"
     }
 
     private var progressDialog: MaterialDialog? = null
@@ -28,6 +28,17 @@ class FinalizeInsertion : BasePublishFragment() {
     private var errorDialog: MaterialDialog? = null
 
     private var published: Boolean = false
+
+    private var publishingInProgress: Boolean by Delegates.observable(false) {
+        prop, wasPublishing, isPublishing ->
+        if (!wasPublishing && isPublishing) {
+            Log.d(TAG, "Publishing request is in progress")
+            showProgressDialog()
+        } else if (wasPublishing && !isPublishing) {
+            Log.d(TAG, "Publishing request was completed")
+            progressDialog?.dismiss()
+        }
+    }
 
 
     override fun getFragmentLayout(): Int = R.layout.fragment_publish_finalize_insertion
@@ -47,15 +58,16 @@ class FinalizeInsertion : BasePublishFragment() {
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        savedInstanceState?.let { published = it.getBoolean(KEY_INSERTION_PUBLISHED, false) }
-        bindInsertionData()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Retain instance to perform publishing request correctly
+        retainInstance = true
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(KEY_INSERTION_PUBLISHED, published)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindInsertionData()
+        if (publishingInProgress) showProgressDialog()
     }
 
     private fun bindInsertionData() {
@@ -107,11 +119,11 @@ class FinalizeInsertion : BasePublishFragment() {
             return
         }
 
-        showProgressDialog()
+        publishingInProgress = true
         doAsync {
-            published = true // TODO Use presenter to publish
+            published = presenter.publishInsertion(insertionData)
             uiThread {
-                dismissProgressDialog()
+                publishingInProgress = false
                 if (published) {
                     showSuccessDialog()
                 } else {
@@ -119,10 +131,6 @@ class FinalizeInsertion : BasePublishFragment() {
                 }
             }
         }
-    }
-
-    private fun dismissProgressDialog() {
-        progressDialog?.dismiss()
     }
 
     private fun showProgressDialog() {
