@@ -15,7 +15,7 @@ class InsertionFeedPresenter(
 ) : ViewTypePresenter, InsertionSaveStatusPresenter {
 
     companion object {
-        private val TAG : String = InsertionSaveStatusPresenter::class.java.simpleName
+        private val TAG: String = InsertionSaveStatusPresenter::class.java.simpleName
     }
 
     override fun getData(): List<ViewType> {

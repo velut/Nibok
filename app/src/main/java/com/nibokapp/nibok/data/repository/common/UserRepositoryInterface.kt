@@ -19,7 +19,7 @@ interface UserRepositoryInterface {
      *
      * @return true if the local user instance was removed successfully, false otherwise
      */
-    fun removeLocalUser() : Boolean
+    fun removeLocalUser(): Boolean
 
     /**
      * Get the id of the local user if the user exists.
@@ -33,12 +33,12 @@ interface UserRepositoryInterface {
      *
      * @return the user if it exists, null otherwise
      */
-    fun getLocalUser() : User?
+    fun getLocalUser(): User?
 
     /**
      * Check if the local user exists in the DB
      *
      * @return true if the user exists, false otherwise
      */
-    fun localUserExists() : Boolean
+    fun localUserExists(): Boolean
 }

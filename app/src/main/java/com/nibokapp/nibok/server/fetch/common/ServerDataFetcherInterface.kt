@@ -17,7 +17,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasUser if the user was found, null otherwise
      */
-    fun fetchUserById(userId: String) : BaasUser?
+    fun fetchUserById(userId: String): BaasUser?
 
     /**
      * Fetch the avatar of the user with the given username.
@@ -26,7 +26,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a String representing the avatar source if the request was successful, null otherwise
      */
-    fun fetchUserAvatar(username: String) : String?
+    fun fetchUserAvatar(username: String): String?
 
     /**
      * Fetch a book's BaasDocument given its id.
@@ -36,7 +36,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasDocument if the book was found, null otherwise
      */
-    fun fetchBookDocumentById(bookId: String) : BaasDocument?
+    fun fetchBookDocumentById(bookId: String): BaasDocument?
 
     /**
      * Fetch a book's BaasDocument given its ISBN code.
@@ -45,14 +45,14 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasDocument if the book was found, null otherwise
      */
-    fun fetchBookDocumentByISBN(isbn: String) : BaasDocument?
+    fun fetchBookDocumentByISBN(isbn: String): BaasDocument?
 
     /**
      * Fetch recent insertion documents.
      *
      * @return a list of BaasDocument
      */
-    fun fetchRecentInsertionDocumentList() : List<BaasDocument>
+    fun fetchRecentInsertionDocumentList(): List<BaasDocument>
 
     /**
      * Fetch a list of BaasDocument for the insertions' ids present in the given array.
@@ -61,7 +61,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument for the found insertions
      */
-    fun fetchInsertionDocumentListById(idsArray: JsonArray) : List<BaasDocument>
+    fun fetchInsertionDocumentListById(idsArray: JsonArray): List<BaasDocument>
 
     /**
      * Fetch an insertion document by its id.
@@ -70,7 +70,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasDocument if the document with the given id was found, null otherwise
      */
-    fun fetchInsertionDocumentById(id: String) : BaasDocument?
+    fun fetchInsertionDocumentById(id: String): BaasDocument?
 
     /**
      * Fetch the list of insertion documents corresponding to the given query.
@@ -79,7 +79,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument
      */
-    fun fetchInsertionDocumentListByQuery(query: String) : List<BaasDocument>
+    fun fetchInsertionDocumentListByQuery(query: String): List<BaasDocument>
 
     /**
      * Fetch the list of insertion documents dated after the given date.
@@ -88,7 +88,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument
      */
-    fun fetchInsertionDocumentListAfterDate(date: Date) : List<BaasDocument>
+    fun fetchInsertionDocumentListAfterDate(date: Date): List<BaasDocument>
 
     /**
      * Fetch the list of insertion documents dated before the given date.
@@ -97,7 +97,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument
      */
-    fun fetchInsertionDocumentListBeforeDate(date: Date) : List<BaasDocument>
+    fun fetchInsertionDocumentListBeforeDate(date: Date): List<BaasDocument>
 
     /**
      * Fetch a list of BaasDocument for the conversations' ids present in the given array.
@@ -106,7 +106,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument for the found conversations
      */
-    fun fetchConversationDocumentListById(idsArray: JsonArray) : List<BaasDocument>
+    fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument>
 
     /**
      * Fetch a list of BaasDocument for the messages' ids present in the given array.
@@ -115,5 +115,5 @@ interface ServerDataFetcherInterface {
      *
      * @return a list of BaasDocument for the found messages
      */
-    fun fetchMessageDocumentList(idsArray: JsonArray) : List<BaasDocument>
+    fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument>
 }

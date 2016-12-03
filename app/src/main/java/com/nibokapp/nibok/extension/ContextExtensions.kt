@@ -36,7 +36,7 @@ fun Context.isOrientationLandscape(): Boolean =
  *
  * @return a LinearLayoutManager or a GridLayoutManager
  */
-fun Context.getDpBasedLinearLayoutManager(gridColumns: Int = 2) : LinearLayoutManager {
+fun Context.getDpBasedLinearLayoutManager(gridColumns: Int = 2): LinearLayoutManager {
     val isTablet = resources.getBoolean(R.bool.isTablet)
     if (isTablet) {
         return GridLayoutManager(this, gridColumns)

@@ -16,7 +16,7 @@ interface ConversationDataMapperInterface {
      *
      * @return a list of ConversationModel instances
      */
-    fun convertConversationListToDomain(conversations: List<Conversation>) : List<ConversationModel>
+    fun convertConversationListToDomain(conversations: List<Conversation>): List<ConversationModel>
 
     /**
      * Build a ConversationModel from a DB conversation.
@@ -25,7 +25,7 @@ interface ConversationDataMapperInterface {
      *
      * @return a ConversationModel instance if conversation data is complete, null otherwise
      */
-    fun convertConversationToDomain(conversation: Conversation?) : ConversationModel?
+    fun convertConversationToDomain(conversation: Conversation?): ConversationModel?
 
     /**
      * Build a list of Conversation given a list of domain conversations.
@@ -34,7 +34,7 @@ interface ConversationDataMapperInterface {
      *
      * @return a list of Conversation
      */
-    fun convertConversationListFromDomain(conversations: List<ConversationModel>) : List<Conversation>
+    fun convertConversationListFromDomain(conversations: List<ConversationModel>): List<Conversation>
 
     /**
      * Build a Conversation given a domain conversation.
@@ -43,6 +43,6 @@ interface ConversationDataMapperInterface {
      *
      * @return a Conversation
      */
-    fun convertConversationFromDomain(conversation: ConversationModel) : Conversation
+    fun convertConversationFromDomain(conversation: ConversationModel): Conversation
 
 }

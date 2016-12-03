@@ -40,21 +40,21 @@ fun BaasUser.init() {
  *
  * @return the private scope if the current user has access to it, null otherwise
  */
-fun BaasUser.getPrivateScope() : JsonObject? = this.getScope(BaasUser.Scope.PRIVATE)
+fun BaasUser.getPrivateScope(): JsonObject? = this.getScope(BaasUser.Scope.PRIVATE)
 
 /**
  * Get the public scope of this BaasUser.
  *
  * @return the private scope if the current user has access to it, null otherwise
  */
-fun BaasUser.getPublicScope() : JsonObject? = this.getScope(BaasUser.Scope.PUBLIC)
+fun BaasUser.getPublicScope(): JsonObject? = this.getScope(BaasUser.Scope.PUBLIC)
 
 /**
  * Get the JsonArray containing the ids of the insertions saved by this user.
  * 
  * @return a JsonArray that might be empty if the user did not save any insertion
  */
-fun BaasUser.getSavedInsertionsArray() : JsonArray {
+fun BaasUser.getSavedInsertionsArray(): JsonArray {
     val scope = this.getPrivateScope() ?: return JsonArray()
     return scope.getArray(ServerConstants.SAVED_INSERTIONS, JsonArray())
 }
@@ -64,7 +64,7 @@ fun BaasUser.getSavedInsertionsArray() : JsonArray {
  *
  * @return a JsonArray that might be empty if the user did not publish any insertion
  */
-fun BaasUser.getPublishedInsertionsArray() : JsonArray {
+fun BaasUser.getPublishedInsertionsArray(): JsonArray {
     val scope = this.getPublicScope() ?: return JsonArray()
     return scope.getArray(ServerConstants.PUBLISHED_INSERTIONS, JsonArray())
 }
@@ -74,7 +74,7 @@ fun BaasUser.getPublishedInsertionsArray() : JsonArray {
  *
  * @return a JsonArray that might be empty if the user did not save any insertion
  */
-fun BaasUser.getConversationsArray() : JsonArray {
+fun BaasUser.getConversationsArray(): JsonArray {
     val scope = this.getPrivateScope() ?: return JsonArray()
     return scope.getArray(ServerConstants.CONVERSATIONS, JsonArray())
 }
@@ -84,7 +84,7 @@ fun BaasUser.getConversationsArray() : JsonArray {
  *
  * @return a String that might be the empty string if the user has no avatar.
  */
-fun BaasUser.getAvatar() : String {
+fun BaasUser.getAvatar(): String {
     val scope = this.getPublicScope() ?: return ""
     return scope.getString(ServerConstants.AVATAR, "")
 }
@@ -94,7 +94,7 @@ fun BaasUser.getAvatar() : String {
  *
  * @return a list of Insertion
  */
-fun BaasUser.getSavedInsertions() : List<Insertion> =
+fun BaasUser.getSavedInsertions(): List<Insertion> =
         getInsertionsFromArray(getSavedInsertionsArray())
 
 /**
@@ -102,7 +102,7 @@ fun BaasUser.getSavedInsertions() : List<Insertion> =
  *
  * @return a list of Insertion
  */
-fun BaasUser.getPublishedInsertions() : List<Insertion> =
+fun BaasUser.getPublishedInsertions(): List<Insertion> =
         getInsertionsFromArray(getPublishedInsertionsArray())
 
 /**
@@ -110,7 +110,7 @@ fun BaasUser.getPublishedInsertions() : List<Insertion> =
  *
  * @return a list of Conversation
  */
-fun BaasUser.getConversations() : List<Conversation> =
+fun BaasUser.getConversations(): List<Conversation> =
         getConversationsFromArray(getConversationsArray())
 
 /**
@@ -120,7 +120,7 @@ fun BaasUser.getConversations() : List<Conversation> =
  *
  * @return true if the insertion is currently saved, false otherwise
  */
-fun BaasUser.toggleInsertionSaveStatus(insertionId: String) : Boolean {
+fun BaasUser.toggleInsertionSaveStatus(insertionId: String): Boolean {
     val savedInsertionIds = getSavedInsertionsArray()
     val copy = savedInsertionIds.copy()
 
@@ -153,7 +153,7 @@ fun BaasUser.toggleInsertionSaveStatus(insertionId: String) : Boolean {
  *
  * @return true if the insertion id was successfully added, false otherwise
  */
-fun BaasUser.addPublishedInsertion(insertionId: String) : Boolean {
+fun BaasUser.addPublishedInsertion(insertionId: String): Boolean {
     val publishedInsertionsIds = getPublishedInsertionsArray()
 
     val insertionIndex = publishedInsertionsIds.indexOf(insertionId)
@@ -183,8 +183,7 @@ fun BaasUser.addPublishedInsertion(insertionId: String) : Boolean {
  * @return a list of Insertion
  */
 private fun getInsertionsFromArray(array: JsonArray,
-                                   provider: ServerDataProviderInterface = ServerDataProvider())
-        : List<Insertion> {
+                                   provider: ServerDataProviderInterface = ServerDataProvider()): List<Insertion> {
     return provider.getInsertionListFromIds(array)
 }
 
@@ -198,7 +197,6 @@ private fun getInsertionsFromArray(array: JsonArray,
  * @return a list of Conversation
  */
 private fun getConversationsFromArray(array: JsonArray,
-                                      provider: ServerDataProviderInterface = ServerDataProvider())
-        : List<Conversation> {
+                                      provider: ServerDataProviderInterface = ServerDataProvider()): List<Conversation> {
     return provider.getConversationListFromIds(array)
 }

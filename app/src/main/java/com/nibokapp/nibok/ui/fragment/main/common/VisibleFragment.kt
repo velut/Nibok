@@ -26,5 +26,5 @@ interface VisibleFragment {
      *
      * @return true if the fragment is visible, false if it is not visible
      */
-    fun isFragmentVisible() : Boolean
+    fun isFragmentVisible(): Boolean
 }

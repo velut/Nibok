@@ -42,14 +42,14 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
          *
          * @return true to show the button, false to hide it
          */
-        fun showButton() : Boolean
+        fun showButton(): Boolean
 
         /**
          * Tell the adapter if the item has to be updated after a button click.
          *
          * @return true if the item has to be updated, false otherwise
          */
-        fun updateItemOnButtonClick() : Boolean
+        fun updateItemOnButtonClick(): Boolean
 
         /**
          * Listen to a click on the item itself.
@@ -147,8 +147,8 @@ class ViewTypeAdapter(itemClickManager: ItemClickManager)
      * @return the number of items that were added
      */
     private fun addViewTypeItems(items: List<ViewType>, insertPosition: Int = 0,
-                                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true)
-            : Int {
+                                 insertAtBottom: Boolean = false,
+                                 excludeDuplicates: Boolean = true): Int {
 
         if (items.isEmpty()) return 0
 

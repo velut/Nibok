@@ -13,7 +13,7 @@ interface AuthenticatorInterface {
      *
      * @return true if the sign up was successful, false otherwise
      */
-    fun signUp(username: String, password: String) : Boolean
+    fun signUp(username: String, password: String): Boolean
 
     /**
      * Login as a returning user with the given username and password.
@@ -23,21 +23,21 @@ interface AuthenticatorInterface {
      *
      * @return true if the login was successful, false otherwise
      */
-    fun login(username: String, password: String) : Boolean
+    fun login(username: String, password: String): Boolean
 
     /**
      * Logout the currently logged in user if it exists.
      *
      * @return true if the user was correctly logged out, false otherwise
      */
-    fun logout() : Boolean
+    fun logout(): Boolean
 
     /**
      * Check if there is a currently logged in user or not.
      *
      * @return true if there is a currently logged in user, false otherwise
      */
-    fun currentUserExists() : Boolean
+    fun currentUserExists(): Boolean
 
     /**
      * Check if the given username is available on the platform.
@@ -46,7 +46,7 @@ interface AuthenticatorInterface {
      *
      * @return true if the username is available, false otherwise
      */
-    fun isUsernameAvailable(username: String) : Boolean
+    fun isUsernameAvailable(username: String): Boolean
 
 }
 

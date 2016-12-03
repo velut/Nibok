@@ -30,13 +30,13 @@ class ServerDataMapper(
      * USER
      */
 
-    override fun convertUserFromServer(user: BaasUser?) : ExternalUser? = user?.toExternalUser()
+    override fun convertUserFromServer(user: BaasUser?): ExternalUser? = user?.toExternalUser()
 
     /*
      * BOOK DATA
      */
 
-    override fun convertDocumentToBook(document: BaasDocument?) : Book? = document?.toBook()
+    override fun convertDocumentToBook(document: BaasDocument?): Book? = document?.toBook()
 
     override fun convertBookToDocument(book: Book): BaasDocument = book.toDocument()
 
@@ -44,11 +44,11 @@ class ServerDataMapper(
      * INSERTIONS
      */
 
-    override fun convertDocumentListToInsertions(documents: List<BaasDocument>) : List<Insertion> {
+    override fun convertDocumentListToInsertions(documents: List<BaasDocument>): List<Insertion> {
         return documents.map { convertDocumentToInsertion(it) }.filterNotNull()
     }
 
-    override fun convertDocumentToInsertion(document: BaasDocument) : Insertion? {
+    override fun convertDocumentToInsertion(document: BaasDocument): Insertion? {
         val insertion = document.toInsertion()
         return if (insertion.isWellFormed()) insertion else null
     }
@@ -64,11 +64,11 @@ class ServerDataMapper(
      * CONVERSATIONS
      */
 
-    override fun convertDocumentListToConversations(documents: List<BaasDocument>) : List<Conversation> {
+    override fun convertDocumentListToConversations(documents: List<BaasDocument>): List<Conversation> {
         return documents.map { convertDocumentToConversation(it) }.filterNotNull()
     }
 
-    override fun convertDocumentToConversation(document: BaasDocument) : Conversation? {
+    override fun convertDocumentToConversation(document: BaasDocument): Conversation? {
         val conversation = document.toConversation()
         return if (conversation.isWellFormed()) conversation else null
     }
@@ -90,35 +90,35 @@ class ServerDataMapper(
      * EXTENSIONS
      */
 
-    private fun BaasDocument.getDate() : Date = creationDate.parseDate()
+    private fun BaasDocument.getDate(): Date = creationDate.parseDate()
 
-    private fun BaasDocument.getSeller() : ExternalUser? {
+    private fun BaasDocument.getSeller(): ExternalUser? {
         val sellerName = author // The author of the insertion is the seller
         val sellerAvatar = fetcher.fetchUserAvatar(sellerName)
         return ExternalUser(sellerName, sellerAvatar ?: "")
     }
 
-    private fun BaasDocument.getBook() : Book? {
+    private fun BaasDocument.getBook(): Book? {
         val bookId = getString(ServerConstants.BOOK_ID)
         return convertDocumentToBook(fetcher.fetchBookDocumentById(bookId))
     }
 
-    private fun BaasDocument.getPartner() : ExternalUser? {
+    private fun BaasDocument.getPartner(): ExternalUser? {
         val participantsIds = getArray(ServerConstants.PARTICIPANTS).filterIsInstance<String>()
         val partnerId = participantsIds.find { it != getCurrentUserId() }
         return partnerId?.let { convertUserFromServer(fetcher.fetchUserById(it)) }
     }
 
-    private fun BaasDocument.getMessages() : List<Message> {
+    private fun BaasDocument.getMessages(): List<Message> {
         val messageIds = getArray(ServerConstants.MESSAGES)
         return convertDocumentListToMessages(fetcher.fetchMessageDocumentList(messageIds))
     }
 
-    private fun BaasUser.toExternalUser() : ExternalUser = with(this) {
+    private fun BaasUser.toExternalUser(): ExternalUser = with(this) {
         ExternalUser(name, getAvatar())
     }
 
-    private fun BaasDocument.toBook() : Book = with(this) {
+    private fun BaasDocument.toBook(): Book = with(this) {
         val title = getString(ServerConstants.TITLE)
         val authors = getArray(ServerConstants.AUTHORS).filterIsInstance<String>().toRealmStringList()
         val year = getInt(ServerConstants.YEAR)
@@ -127,7 +127,7 @@ class ServerDataMapper(
         Book(id, title, authors, year, publisher, isbn)
     }
 
-    private fun BaasDocument.toInsertion() : Insertion = with(this) {
+    private fun BaasDocument.toInsertion(): Insertion = with(this) {
         val date = getDate()
         val seller = getSeller()
         val book = getBook()
@@ -138,7 +138,7 @@ class ServerDataMapper(
         Insertion(id, date, seller, book, bookPrice, bookCondition, bookPictures)
     }
 
-    private fun BaasDocument.toConversation() : Conversation = with(this) {
+    private fun BaasDocument.toConversation(): Conversation = with(this) {
         val userId = getCurrentUserId()
         val partner = getPartner()
         val date = getDate()
@@ -154,9 +154,9 @@ class ServerDataMapper(
         Message(conversationId, senderId, text, date)
     }
 
-    private fun getCurrentUserId() : String = BaasUser.current()?.name ?: ""
+    private fun getCurrentUserId(): String = BaasUser.current()?.name ?: ""
 
-    private fun Book.toDocument() : BaasDocument {
+    private fun Book.toDocument(): BaasDocument {
         val document = BaasDocument(ServerCollection.BOOKS.id)
         with(ServerConstants) {
             document.put(TITLE, title)
@@ -168,7 +168,7 @@ class ServerDataMapper(
         return document
     }
 
-    private fun Insertion.toDocument(bookId: String) : BaasDocument {
+    private fun Insertion.toDocument(bookId: String): BaasDocument {
         val document = BaasDocument(ServerCollection.INSERTIONS.id)
         with(ServerConstants) {
             document.put(BOOK_ID, bookId)
@@ -179,7 +179,7 @@ class ServerDataMapper(
         return document
     }
 
-    private fun List<String>.toJsonArray() : JsonArray {
+    private fun List<String>.toJsonArray(): JsonArray {
         val array = JsonArray()
         this.forEach { array.add(it) }
         return array

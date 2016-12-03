@@ -44,9 +44,9 @@ class InputBookData : BasePublishFragment() {
     }
 
 
-    override fun getFragmentLayout() : Int = R.layout.fragment_publish_input_book_data
+    override fun getFragmentLayout(): Int = R.layout.fragment_publish_input_book_data
 
-    override fun getInputContainer() : View = inputBookDataContainer
+    override fun getInputContainer(): View = inputBookDataContainer
 
     override fun triggerInputsUpdate() {
         // Trigger in reverse order to highlight the first wrong form
@@ -56,7 +56,7 @@ class InputBookData : BasePublishFragment() {
         handleTitleChange()
     }
 
-    override fun hasValidData() : Boolean {
+    override fun hasValidData(): Boolean {
         // Data is valid if no TextInputLayout has errors
         return inputLayouts.all { !it.hasError() }
     }

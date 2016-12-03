@@ -134,7 +134,7 @@ class PictureTakerImpl() : PictureTaker {
      * @return a list of resolved activities that might be empty if no suitable activity was found
      */
     private fun getDefaultPictureTakingActivities(context: Context,
-                                                  takePictureIntent: Intent) : List<ResolveInfo> {
+                                                  takePictureIntent: Intent): List<ResolveInfo> {
         return context.packageManager
                 .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY)
     }

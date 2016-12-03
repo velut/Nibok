@@ -18,7 +18,7 @@ import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
  *
  * @return a result or null if no result was found
  */
-inline fun <T, R: Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?) : R? {
+inline fun <T, R : Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?): R? {
     for (element in this) {
         val result = predicate(element)
         if (result != null) return result
@@ -34,7 +34,7 @@ inline fun <T, R: Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?) : R? 
  *
  * @return a result (non empty list) or null if no result was found
  */
-inline fun <T, R: Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<R>?) : List<R>? {
+inline fun <T, R : Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<R>?): List<R>? {
     for (element in this) {
         val result = predicate(element)
         if (result != null && result.isNotEmpty()) return result
@@ -45,7 +45,7 @@ inline fun <T, R: Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<
 /**
  * When a local user exists exclude his insertions from this list.
  */
-fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
+fun List<Insertion>.excludeUserOwnInsertions(): List<Insertion> {
     val userRepository: UserRepositoryInterface = UserRepository
     if (!userRepository.localUserExists()) {
         return this
@@ -58,7 +58,7 @@ fun List<Insertion>.excludeUserOwnInsertions() : List<Insertion> {
 /**
  * When a local user exists include only his insertions from this list.
  */
-fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
+fun List<Insertion>.includeOnlyUserOwnInsertions(): List<Insertion> {
     val userRepository: UserRepositoryInterface = UserRepository
     if (!userRepository.localUserExists()) {
         return this
@@ -71,7 +71,7 @@ fun List<Insertion>.includeOnlyUserOwnInsertions() : List<Insertion> {
 /**
  * Include only saved insertions from this list.
  */
-fun List<Insertion>.includeOnlySavedInsertions() : List<Insertion> {
+fun List<Insertion>.includeOnlySavedInsertions(): List<Insertion> {
     val savedInsertions = BookInsertionRepository.getSavedInsertionList()
     return this.filter { it.id in savedInsertions.map { it.id } }
 }

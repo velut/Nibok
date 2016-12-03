@@ -67,7 +67,7 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
      *
      * @return the position in which the last message was added or null if it was not added
      */
-    fun addMessages(messageList: List<ChatMessageModel>) : Int? {
+    fun addMessages(messageList: List<ChatMessageModel>): Int? {
         var position: Int? = null
         messageList.forEach { position = addMessage(it) }
         return position
@@ -81,7 +81,7 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
      *
      * @return the position in which the message was added or null if it was not added
      */
-    fun addMessage(message: ChatMessageModel) : Int? {
+    fun addMessage(message: ChatMessageModel): Int? {
 
         if (message in messages) return null
 
@@ -97,7 +97,7 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
      * @return the first message available in the list of messages if it exists,
      * null otherwise
      */
-    fun getFirstMessage() : ChatMessageModel? = messages.firstOrNull()
+    fun getFirstMessage(): ChatMessageModel? = messages.firstOrNull()
 
     /**
      * Return the last message available in the list of messages.
@@ -105,7 +105,7 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
      * @return the last message available in the list of messages if it exists,
      * null otherwise
      */
-    fun getLastMessage() : ChatMessageModel? = messages.lastOrNull()
+    fun getLastMessage(): ChatMessageModel? = messages.lastOrNull()
 
     /**
      * ViewHolder for chat messages.

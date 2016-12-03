@@ -36,7 +36,7 @@ object UserRepository : UserRepositoryInterface {
         Log.d(TAG, "Local user created")
     }
 
-    override fun removeLocalUser() : Boolean {
+    override fun removeLocalUser(): Boolean {
 
         if (!localUserExists()) {
             Log.d(TAG, "Local user does not exist. Cannot remove it.")
@@ -58,8 +58,8 @@ object UserRepository : UserRepositoryInterface {
             throw IllegalStateException(
                     "Local user does not exist. Call createLocalUser() before retrieving data")
 
-    override fun getLocalUser() : User? =
+    override fun getLocalUser(): User? =
             queryOneRealm { it.where(User::class.java).findFirst() }
 
-    override fun localUserExists() : Boolean = getLocalUser() != null
+    override fun localUserExists(): Boolean = getLocalUser() != null
 }

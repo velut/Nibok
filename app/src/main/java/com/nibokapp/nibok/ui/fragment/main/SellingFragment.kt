@@ -32,7 +32,7 @@ class SellingFragment(
 
     override fun getFragmentLayout() = R.layout.fragment_selling
 
-    override fun getFragmentName() : String = TAG
+    override fun getFragmentName(): String = TAG
 
     // Presenter
 
@@ -60,7 +60,7 @@ class SellingFragment(
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
-    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+    override fun getSearchHint(): String = getString(R.string.search_hint_book)
 
     // Refresh
 
@@ -79,7 +79,7 @@ class SellingFragment(
         }
     }
 
-    override fun getMainViewData() : List<ViewType> {
+    override fun getMainViewData(): List<ViewType> {
         val data = super.getMainViewData()
         return data.filterIsInstance<BookInsertionModel>().sortedBy { it.insertionDate }
     }

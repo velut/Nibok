@@ -20,7 +20,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return the insertion with the given id or null if no such insertion was found
      */
-    fun getInsertionById(insertionId: String) : Insertion?
+    fun getInsertionById(insertionId: String): Insertion?
 
     /**
      * Get the book data for the book with the given ISBN code.
@@ -29,7 +29,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return book data about the book with the given ISBN code if the book was found, null otherwise
      */
-    fun getBookByISBN(isbn: String) : Book?
+    fun getBookByISBN(isbn: String): Book?
 
     /**
      * Get the list of insertions matching the given query.
@@ -40,7 +40,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getInsertionListFromQuery(query: String) : List<Insertion>
+    fun getInsertionListFromQuery(query: String): List<Insertion>
 
     /**
      * Get the list of insertions with a date greater or equal to the given date.
@@ -49,7 +49,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getInsertionListAfterDate(date: Date): List<Insertion>
 
     /**
      * Get the list of insertions with a date smaller or equal to the given date.
@@ -58,7 +58,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getInsertionListBeforeDate(date: Date): List<Insertion>
 
     /*
      * FEED BOOK INSERTIONS
@@ -84,7 +84,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getFeedInsertionListFromQuery(query: String) : List<Insertion>
+    fun getFeedInsertionListFromQuery(query: String): List<Insertion>
 
     /**
      * Get the list of insertions not published by the user with a date
@@ -94,7 +94,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getFeedInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getFeedInsertionListAfterDate(date: Date): List<Insertion>
 
     /**
      * Get the list of insertions not published by the user with a date
@@ -104,7 +104,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getFeedInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getFeedInsertionListBeforeDate(date: Date): List<Insertion>
 
     /*
      * SAVED BOOK INSERTIONS
@@ -118,7 +118,7 @@ interface BookInsertionRepositoryInterface {
      * @return the list of insertions saved by the user
      * or an empty list if no saved insertions could be found
      */
-    fun getSavedInsertionList(cached: Boolean = false) : List<Insertion>
+    fun getSavedInsertionList(cached: Boolean = false): List<Insertion>
 
     /**
      * Get the list of insertions saved by the user matching the given query.
@@ -129,7 +129,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getSavedInsertionListFromQuery(query: String) : List<Insertion>
+    fun getSavedInsertionListFromQuery(query: String): List<Insertion>
 
     /**
      * Get the list of insertions saved by the user with a date
@@ -139,7 +139,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getSavedInsertionLisAfterDate(date: Date) : List<Insertion>
+    fun getSavedInsertionLisAfterDate(date: Date): List<Insertion>
 
     /**
      * Get the list of insertions saved by the user with a date
@@ -149,7 +149,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getSavedInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getSavedInsertionListBeforeDate(date: Date): List<Insertion>
 
     /*
      * PUBLISHED BOOK INSERTIONS
@@ -163,7 +163,7 @@ interface BookInsertionRepositoryInterface {
      * @return the list of insertions published by the user
      * or an empty list if no published insertions could be found
      */
-    fun getPublishedInsertionList(cached: Boolean = false) : List<Insertion>
+    fun getPublishedInsertionList(cached: Boolean = false): List<Insertion>
 
     /**
      * Get the list of insertions published by the user matching the given query.
@@ -174,7 +174,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions matching the query
      */
-    fun getPublishedInsertionListFromQuery(query: String) : List<Insertion>
+    fun getPublishedInsertionListFromQuery(query: String): List<Insertion>
 
     /**
      * Get the list of insertions published by the user with a date
@@ -184,7 +184,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date greater or equal to the given date
      */
-    fun getPublishedInsertionListAfterDate(date: Date) : List<Insertion>
+    fun getPublishedInsertionListAfterDate(date: Date): List<Insertion>
 
     /**
      * Get the list of insertions published by the user with a date
@@ -194,7 +194,7 @@ interface BookInsertionRepositoryInterface {
      *
      *  @return the list of book insertions with a date smaller or equal to the given date
      */
-    fun getPublishedInsertionListBeforeDate(date: Date) : List<Insertion>
+    fun getPublishedInsertionListBeforeDate(date: Date): List<Insertion>
 
     /*
      * BOOK INSERTION SAVE STATUS
@@ -207,7 +207,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the book insertion belongs to the user's saved insertions, false otherwise
      */
-    fun isBookInsertionSaved(insertionId: String) : Boolean
+    fun isBookInsertionSaved(insertionId: String): Boolean
 
     /**
      * Toggle the save status for an insertion either by adding it to the user saved insertions
@@ -217,7 +217,7 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the insertion was saved false if it was removed
      */
-    fun toggleInsertionSaveStatus(insertionId: String) : Boolean
+    fun toggleInsertionSaveStatus(insertionId: String): Boolean
 
     /*
      * BOOK INSERTION PUBLISHING
@@ -230,6 +230,6 @@ interface BookInsertionRepositoryInterface {
      *
      * @return true if the book insertion was published successfully, false otherwise
      */
-    fun publishInsertion(insertion: Insertion) : Boolean
+    fun publishInsertion(insertion: Insertion): Boolean
 
 }

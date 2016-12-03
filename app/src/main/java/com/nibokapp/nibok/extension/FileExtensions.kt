@@ -24,7 +24,7 @@ val TAG = "FileExtensions"
  * @return a File if the file was created successfully,
  * null if no file could be created
  */
-fun createImageFile(context: Context) : File? {
+fun createImageFile(context: Context): File? {
     @SuppressLint("SimpleDateFormat")
     val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
     val imageFileName = "JPEG_$timestamp"

@@ -13,28 +13,28 @@ interface ViewTypePresenter {
      *
      * @return the current list of items making up the data to represent in a view
      */
-    fun getData() : List<ViewType>
+    fun getData(): List<ViewType>
 
     /**
      * Get a cached version of the ViewType items to present in a view.
      *
      * @return a cached list of items making up the data to represent in a view
      */
-    fun getCachedData() : List<ViewType>
+    fun getCachedData(): List<ViewType>
 
     /**
      * Get the list of ViewType items newer than the given item to present in a view.
      *
      * @return the list of items newer than the given item
      */
-    fun getDataNewerThanItem(item: ViewType) : List<ViewType>
+    fun getDataNewerThanItem(item: ViewType): List<ViewType>
 
     /**
      * Get the list of ViewType items older than the given item to present in a view.
      *
      * @return the list of items older than the given item
      */
-    fun getDataOlderThanItem(item: ViewType) : List<ViewType>
+    fun getDataOlderThanItem(item: ViewType): List<ViewType>
 
     /**
      * Get the difference between the new available data and the given old data.
@@ -46,7 +46,7 @@ interface ViewTypePresenter {
      * with respect to the old data and the third element represents the new data used to calculate
      * the diff with respect to the old data
      */
-    fun getDiffData(oldData: List<ViewType>) :
+    fun getDiffData(oldData: List<ViewType>):
             Triple<List<ViewType>, List<ViewType>, List<ViewType>> {
 
         val newData = getData()
@@ -67,5 +67,5 @@ interface ViewTypePresenter {
      * @return the list of ViewType items matching the given query
      * or an empty list if no match was possible
      */
-    fun getQueryData(query: String) : List<ViewType>
+    fun getQueryData(query: String): List<ViewType>
 }

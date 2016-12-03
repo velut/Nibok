@@ -17,7 +17,7 @@ interface ServerDataMapperInterface {
      *
      * @return an ExternalUser if the conversion was successful, null otherwise
      */
-    fun convertUserFromServer(user: BaasUser?) : ExternalUser?
+    fun convertUserFromServer(user: BaasUser?): ExternalUser?
 
     /**
      * Convert a BaasDocument containing book data into a Book.
@@ -26,7 +26,7 @@ interface ServerDataMapperInterface {
      *
      * @return a Book if the conversion was successful, null otherwise
      */
-    fun convertDocumentToBook(document: BaasDocument?) : Book?
+    fun convertDocumentToBook(document: BaasDocument?): Book?
 
     /**
      * Convert a Book into a BaasDocument containing book data.
@@ -35,7 +35,7 @@ interface ServerDataMapperInterface {
      *
      * @return a BaasDocument
      */
-    fun convertBookToDocument(book: Book) : BaasDocument
+    fun convertBookToDocument(book: Book): BaasDocument
 
     /**
      * Convert a list of BaasDocument containing insertion data into a list of Insertion.
@@ -44,7 +44,7 @@ interface ServerDataMapperInterface {
      *
      * @return a list of Insertion
      */
-    fun convertDocumentListToInsertions(documents: List<BaasDocument>) : List<Insertion>
+    fun convertDocumentListToInsertions(documents: List<BaasDocument>): List<Insertion>
 
     /**
      * Convert a BaasDocument containing insertion data into an Insertion.
@@ -53,7 +53,7 @@ interface ServerDataMapperInterface {
      *
      * @return an Insertion if the conversion was successful, null otherwise
      */
-    fun convertDocumentToInsertion(document: BaasDocument) : Insertion?
+    fun convertDocumentToInsertion(document: BaasDocument): Insertion?
 
     /**
      * Convert a list of Insertion into a list of BaasDocument containing insertion data.
@@ -62,7 +62,7 @@ interface ServerDataMapperInterface {
      *
      * @return a list of BaasDocument
      */
-    fun convertInsertionListToDocuments(insertions: List<Insertion>) : List<BaasDocument>
+    fun convertInsertionListToDocuments(insertions: List<Insertion>): List<BaasDocument>
 
     /**
      * Convert an Insertion into a BaasDocument containing insertion data.
@@ -71,7 +71,7 @@ interface ServerDataMapperInterface {
      *
      * @return an Insertion
      */
-    fun convertInsertionToDocument(insertion: Insertion, bookId: String) : BaasDocument
+    fun convertInsertionToDocument(insertion: Insertion, bookId: String): BaasDocument
 
     /**
      * Convert a list of BaasDocument containing conversation data into a list of Conversation.
@@ -80,7 +80,7 @@ interface ServerDataMapperInterface {
      *
      * @return a list of Conversation
      */
-    fun convertDocumentListToConversations(documents: List<BaasDocument>) : List<Conversation>
+    fun convertDocumentListToConversations(documents: List<BaasDocument>): List<Conversation>
 
     /**
      * Convert a BaasDocument containing insertion data into a Conversation.
@@ -89,7 +89,7 @@ interface ServerDataMapperInterface {
      *
      * @return a Conversation if the conversion was successful, null otherwise
      */
-    fun convertDocumentToConversation(document: BaasDocument) : Conversation?
+    fun convertDocumentToConversation(document: BaasDocument): Conversation?
 
     /**
      * Convert a list of BaasDocument containing message data into a list of Message.

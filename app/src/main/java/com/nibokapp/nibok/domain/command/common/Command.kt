@@ -12,5 +12,5 @@ interface Command<out T> {
      *
      * @return the result of the command's execution
      */
-    fun execute() : T
+    fun execute(): T
 }

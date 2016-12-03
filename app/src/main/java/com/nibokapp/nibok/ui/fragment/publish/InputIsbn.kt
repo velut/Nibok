@@ -62,13 +62,13 @@ class InputIsbn(
     }
 
 
-    override fun getFragmentLayout() : Int = R.layout.fragment_publish_input_isbn
+    override fun getFragmentLayout(): Int = R.layout.fragment_publish_input_isbn
 
-    override fun getInputContainer() : View = inputISBNContainer
+    override fun getInputContainer(): View = inputISBNContainer
 
     override fun getDialogs(): List<MaterialDialog?> = listOf(progressDialog, errorDialog)
 
-    override fun hasValidData() : Boolean = true
+    override fun hasValidData(): Boolean = true
 
     override fun saveData() = Unit
 

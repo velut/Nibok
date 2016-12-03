@@ -16,7 +16,7 @@ interface MessageDataMapperInterface {
      *
      * @return a list of ChatMessageModel instances
      */
-    fun convertMessageListToDomain(messages: List<Message>) : List<ChatMessageModel>
+    fun convertMessageListToDomain(messages: List<Message>): List<ChatMessageModel>
 
     /**
      * Build a ChatMessageModel from a DB message.
@@ -25,7 +25,7 @@ interface MessageDataMapperInterface {
      *
      * @return a ChatMessageModel instance if message data is complete, null otherwise
      */
-    fun convertMessageToDomain(message: Message?) : ChatMessageModel?
+    fun convertMessageToDomain(message: Message?): ChatMessageModel?
 
     /**
      * Build a list of Message given a list of domain messages.
@@ -34,7 +34,7 @@ interface MessageDataMapperInterface {
      *
      * @return a list of Message
      */
-    fun convertMessageListFromDomain(messages: List<ChatMessageModel>) : List<Message>
+    fun convertMessageListFromDomain(messages: List<ChatMessageModel>): List<Message>
 
     /**
      * Build a Message given a domain message.
@@ -43,6 +43,6 @@ interface MessageDataMapperInterface {
      *
      * @return a Message
      */
-    fun convertMessageFromDomain(message: ChatMessageModel) : Message
+    fun convertMessageFromDomain(message: ChatMessageModel): Message
 
 }

@@ -15,7 +15,7 @@ import java.util.*
  *
  * @return a string formatted in the current locale with the selected currency
  */
-fun Float.toCurrency(currencyCode: String = "EUR") : String {
+fun Float.toCurrency(currencyCode: String = "EUR"): String {
     val format = NumberFormat.getCurrencyInstance()
     format.currency = Currency.getInstance(currencyCode)
     return format.format(this)
@@ -28,7 +28,7 @@ fun Float.toCurrency(currencyCode: String = "EUR") : String {
  *
  * @return a string representing the date formatted with the pattern
  */
-fun Date.toSimpleDateString(pattern: String = "dd/MM/yy") : String {
+fun Date.toSimpleDateString(pattern: String = "dd/MM/yy"): String {
     val formatter = SimpleDateFormat(pattern, Locale.getDefault())
     return formatter.format(this)
 }
@@ -87,7 +87,7 @@ fun Date.toDeltaBasedSimpleDateString(yesterdayString: String, alwaysAddHour: Bo
  *
  * @return the Date formatted into a String
  */
-fun Date.toStringDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : String {
+fun Date.toStringDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
     return dateFormat.format(this)
 }
@@ -114,7 +114,7 @@ fun String.ellipsize(maxLength: Int, ellipsis: String = "…"): String =
  *
  * @return the parsed Date
  */
-fun String.parseDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") : Date {
+fun String.parseDate(pattern: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"): Date {
     val dateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
     return dateFormat.parse(this)
 }

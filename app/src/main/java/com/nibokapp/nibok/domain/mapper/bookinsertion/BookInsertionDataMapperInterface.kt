@@ -18,7 +18,7 @@ interface BookInsertionDataMapperInterface {
      *
      * @return a list of BookInsertionModel instances
      */
-    fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel>
+    fun convertInsertionListToDomain(insertions: List<Insertion>): List<BookInsertionModel>
 
     /**
      * Build a BookInsertionModel from a DB insertion.
@@ -28,7 +28,7 @@ interface BookInsertionDataMapperInterface {
      * @return a BookInsertionModel instance containing detail data about the book's insertion
      * if insertion data is complete, null otherwise
      */
-    fun convertInsertionToDomain(insertion: Insertion?) : BookInsertionModel?
+    fun convertInsertionToDomain(insertion: Insertion?): BookInsertionModel?
 
     /**
      * Build a list of Insertion given a list of domain insertions.
@@ -37,7 +37,7 @@ interface BookInsertionDataMapperInterface {
      *
      * @return a list of Insertion
      */
-    fun convertInsertionListFromDomain(insertions: List<BookInsertionModel>) : List<Insertion>
+    fun convertInsertionListFromDomain(insertions: List<BookInsertionModel>): List<Insertion>
 
     /**
      * Build an Insertion given a domain insertion.
@@ -46,7 +46,7 @@ interface BookInsertionDataMapperInterface {
      *
      * @return an Insertion
      */
-    fun convertInsertionFromDomain(insertion: BookInsertionModel) : Insertion
+    fun convertInsertionFromDomain(insertion: BookInsertionModel): Insertion
 
     /**
      * Build a BookInfoModel given the DB Book.
@@ -55,7 +55,7 @@ interface BookInsertionDataMapperInterface {
      *
      * @return a BookInfoModel if book data was found, null otherwise
      */
-    fun convertBookToDomain(book: Book?) : BookInfoModel?
+    fun convertBookToDomain(book: Book?): BookInfoModel?
 
     /**
      * Build a Book given a domain BookInfoModel.
@@ -64,5 +64,5 @@ interface BookInsertionDataMapperInterface {
      *
      * @return a Book
      */
-    fun convertBookFromDomain(bookInfo: BookInfoModel) : Book
+    fun convertBookFromDomain(bookInfo: BookInfoModel): Book
 }

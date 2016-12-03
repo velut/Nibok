@@ -23,21 +23,21 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     private val serverRepository = ServerBookInsertionRepository
     private val SOURCES = listOf(localRepository, serverRepository)
 
-    private var feedCache : List<Insertion> = emptyList()
-    private var savedCache : List<Insertion> = emptyList()
-    private var publishedCache : List<Insertion> = emptyList()
+    private var feedCache: List<Insertion> = emptyList()
+    private var savedCache: List<Insertion> = emptyList()
+    private var publishedCache: List<Insertion> = emptyList()
 
     /*
      * COMMON FUNCTIONS
      */
 
-    override fun getInsertionById(insertionId: String) : Insertion? =
+    override fun getInsertionById(insertionId: String): Insertion? =
             SOURCES.firstResultOrNull { it.getInsertionById(insertionId) }
 
     override fun getBookByISBN(isbn: String): Book? =
             SOURCES.firstResultOrNull { it.getBookByISBN(isbn) }
 
-    override fun getInsertionListFromQuery(query: String) : List<Insertion> {
+    override fun getInsertionListFromQuery(query: String): List<Insertion> {
 
         val trimmedQuery = query.trim()
 
@@ -53,7 +53,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return results
     }
 
-    override fun getInsertionListAfterDate(date: Date) : List<Insertion> {
+    override fun getInsertionListAfterDate(date: Date): List<Insertion> {
         val results = SOURCES.firstListResultOrNull { it.getInsertionListAfterDate(date) }
                 ?: emptyList()
 
@@ -63,7 +63,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return results
     }
 
-    override fun getInsertionListBeforeDate(date: Date) : List<Insertion> {
+    override fun getInsertionListBeforeDate(date: Date): List<Insertion> {
         val results = SOURCES.firstListResultOrNull { it.getInsertionListBeforeDate(date) }
                 ?: emptyList()
 
@@ -89,20 +89,20 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return feedCache
     }
 
-    override fun getFeedInsertionListFromQuery(query: String) : List<Insertion>  =
+    override fun getFeedInsertionListFromQuery(query: String): List<Insertion>  =
             getInsertionListFromQuery(query).excludeUserOwnInsertions()
 
-    override fun getFeedInsertionListAfterDate(date: Date) : List<Insertion> =
+    override fun getFeedInsertionListAfterDate(date: Date): List<Insertion> =
             getInsertionListAfterDate(date).excludeUserOwnInsertions()
 
-    override fun getFeedInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getFeedInsertionListBeforeDate(date: Date): List<Insertion> =
             getInsertionListBeforeDate(date).excludeUserOwnInsertions()
 
     /*
      * SAVED BOOK INSERTIONS
      */
 
-    override fun getSavedInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getSavedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return savedCache
 
         savedCache = SOURCES.firstListResultOrNull { it.getSavedInsertionList(cached) }
@@ -113,20 +113,20 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return savedCache
     }
 
-    override fun getSavedInsertionListFromQuery(query: String) : List<Insertion> =
+    override fun getSavedInsertionListFromQuery(query: String): List<Insertion> =
             getInsertionListFromQuery(query).includeOnlySavedInsertions()
 
-    override fun getSavedInsertionLisAfterDate(date: Date) : List<Insertion> =
+    override fun getSavedInsertionLisAfterDate(date: Date): List<Insertion> =
             getInsertionListAfterDate(date).includeOnlySavedInsertions()
 
-    override fun getSavedInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getSavedInsertionListBeforeDate(date: Date): List<Insertion> =
             getInsertionListBeforeDate(date).includeOnlySavedInsertions()
 
     /*
      * PUBLISHED BOOK INSERTIONS
      */
 
-    override fun getPublishedInsertionList(cached: Boolean) : List<Insertion> {
+    override fun getPublishedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return publishedCache
 
         publishedCache = SOURCES.firstListResultOrNull { it.getPublishedInsertionList(cached) }
@@ -137,23 +137,23 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
         return publishedCache
     }
 
-    override fun getPublishedInsertionListFromQuery(query: String) : List<Insertion> =
+    override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> =
             getInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedInsertionListAfterDate(date: Date) : List<Insertion> =
+    override fun getPublishedInsertionListAfterDate(date: Date): List<Insertion> =
             getInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
 
-    override fun getPublishedInsertionListBeforeDate(date: Date) : List<Insertion> =
+    override fun getPublishedInsertionListBeforeDate(date: Date): List<Insertion> =
             getInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
-    override fun isBookInsertionSaved(insertionId: String) : Boolean =
+    override fun isBookInsertionSaved(insertionId: String): Boolean =
             insertionId in getSavedInsertionList().map { it.id }
 
-    override fun toggleInsertionSaveStatus(insertionId: String) : Boolean {
+    override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
         val savedOnServer = serverRepository.toggleInsertionSaveStatus(insertionId)
         if (savedOnServer) {
             localRepository.toggleInsertionSaveStatus(insertionId)
@@ -165,7 +165,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishInsertion(insertion: Insertion) : Boolean {
+    override fun publishInsertion(insertion: Insertion): Boolean {
         return serverRepository.publishInsertion(insertion)
     }
 }

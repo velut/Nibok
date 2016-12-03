@@ -15,7 +15,7 @@ import com.baasbox.android.BaasResult
  * @return true if the result was successful and 'func' was called,
  * false if the result was not successful and 'func' was not called
  */
-inline fun <reified T> BaasResult<T>.onSuccess(func: (T) -> Unit) : Boolean {
+inline fun <reified T> BaasResult<T>.onSuccess(func: (T) -> Unit): Boolean {
     if (this.isSuccess && this.value() != null) {
         func(this.value())
         return true
@@ -32,7 +32,7 @@ inline fun <reified T> BaasResult<T>.onSuccess(func: (T) -> Unit) : Boolean {
  * @return the result of executing 'func' if the result was successful and 'func' was called,
  * null if the result was not successful and 'func' was not called
  */
-inline fun <reified T, reified R> BaasResult<T>.onSuccessReturn(func: (T) -> R) : R? {
+inline fun <reified T, reified R> BaasResult<T>.onSuccessReturn(func: (T) -> R): R? {
     if (this.isSuccess && this.value() != null) {
         return func(this.value())
     }

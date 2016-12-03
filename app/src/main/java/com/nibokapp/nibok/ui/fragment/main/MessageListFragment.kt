@@ -26,7 +26,7 @@ class MessageListFragment(
 
     override fun getFragmentLayout() = R.layout.fragment_message_list
 
-    override fun getFragmentName() : String = TAG
+    override fun getFragmentName(): String = TAG
 
     // Presenter
 
@@ -54,7 +54,7 @@ class MessageListFragment(
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(messageItemClickManager)
 
-    override fun getSearchHint() : String = getString(R.string.search_hint_message)
+    override fun getSearchHint(): String = getString(R.string.search_hint_message)
 
     // Refresh
 

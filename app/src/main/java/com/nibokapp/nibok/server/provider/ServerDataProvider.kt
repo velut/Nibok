@@ -20,7 +20,7 @@ class ServerDataProvider(
         private val mapper: ServerDataMapper = ServerDataMapper()
 ) : ServerDataProviderInterface {
 
-    override fun getInsertionListFromIds(idsArray: JsonArray) : List<Insertion> {
+    override fun getInsertionListFromIds(idsArray: JsonArray): List<Insertion> {
         val insertionDocuments = fetcher.fetchInsertionDocumentListById(idsArray)
         val insertions = mapper.convertDocumentListToInsertions(insertionDocuments)
         return insertions

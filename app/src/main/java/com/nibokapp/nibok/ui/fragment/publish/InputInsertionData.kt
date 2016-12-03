@@ -27,15 +27,15 @@ class InputInsertionData : BasePublishFragment() {
         get() = inputInsertionBookCondition.selectedItemPosition
 
 
-    override fun getFragmentLayout() : Int = R.layout.fragment_publish_input_insertion_data
+    override fun getFragmentLayout(): Int = R.layout.fragment_publish_input_insertion_data
 
-    override fun getInputContainer() : View = inputInsertionDetailsContainer
+    override fun getInputContainer(): View = inputInsertionDetailsContainer
 
     override fun triggerInputsUpdate() {
         handlePriceChange()
     }
 
-    override fun hasValidData() : Boolean {
+    override fun hasValidData(): Boolean {
         return !inputInsertionBookPriceLayout.hasError()
     }
 
@@ -73,7 +73,7 @@ class InputInsertionData : BasePublishFragment() {
         }
     }
 
-    private fun getSpinnerAdapter() : ArrayAdapter<CharSequence> {
+    private fun getSpinnerAdapter(): ArrayAdapter<CharSequence> {
         val spinnerAdapter = ArrayAdapter.createFromResource(context,
                 R.array.book_wear_condition_array, android.R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

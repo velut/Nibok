@@ -12,5 +12,5 @@ interface WellFormedItem {
      *
      * @return true if the item is well formed, false otherwise
      */
-    fun isWellFormed() : Boolean
+    fun isWellFormed(): Boolean
 }

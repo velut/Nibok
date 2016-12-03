@@ -19,7 +19,7 @@ class AuthPresenter(
      *
      * @return true if the login was successful, false otherwise
      */
-    fun login(username: String, password: String) : Boolean =
+    fun login(username: String, password: String): Boolean =
             authenticator.login(username, password)
 
     /**
@@ -27,7 +27,7 @@ class AuthPresenter(
      *
      * @return true if the user was correctly logged out, false otherwise
      */
-    fun logout() : Boolean =
+    fun logout(): Boolean =
             authenticator.logout()
 
     /**
@@ -38,7 +38,7 @@ class AuthPresenter(
      *
      * @return true if the sign up was successful, false otherwise
      */
-    fun signUp(username: String, password: String) : Boolean =
+    fun signUp(username: String, password: String): Boolean =
             authenticator.signUp(username, password)
 
     /**
@@ -46,7 +46,7 @@ class AuthPresenter(
      *
      * @return true if there is a currently logged in user, false otherwise
      */
-    fun loggedUserExists() : Boolean =
+    fun loggedUserExists(): Boolean =
             authenticator.currentUserExists()
 
     /**
@@ -64,6 +64,6 @@ class AuthPresenter(
      *
      * @return true if the username is available, false otherwise
      */
-    fun isUsernameAvailable(username: String) : Boolean =
+    fun isUsernameAvailable(username: String): Boolean =
             authenticator.isUsernameAvailable(username)
 }

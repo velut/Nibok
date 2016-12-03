@@ -11,7 +11,7 @@ interface ServerDataSenderInterface {
      *
      * @return true if the document was sent successfully, false otherwise
      */
-    fun sendBookDocument(document: BaasDocument) : Boolean
+    fun sendBookDocument(document: BaasDocument): Boolean
 
     /**
      * Send a BaasDocument representing insertion data to the server.
@@ -20,5 +20,5 @@ interface ServerDataSenderInterface {
      *
      * @return true if the document was sent successfully, false otherwise
      */
-    fun sendInsertionDocument(document: BaasDocument) : Boolean
+    fun sendInsertionDocument(document: BaasDocument): Boolean
 }

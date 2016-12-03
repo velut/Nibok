@@ -24,7 +24,7 @@ class InsertionDetailPresenter(
      *
      * @return the id of the local user if it exists, null otherwise
      */
-    fun getUserId() : String? {
+    fun getUserId(): String? {
         Log.d(TAG, "Requesting local user id")
         return try {
             RequestLocalUserIdCommand().execute()
@@ -38,7 +38,7 @@ class InsertionDetailPresenter(
      *
      * @return true if there is a currently logged in user, false otherwise
      */
-    fun loggedUserExists() : Boolean =
+    fun loggedUserExists(): Boolean =
             authenticator.currentUserExists()
 
     /**
@@ -48,7 +48,7 @@ class InsertionDetailPresenter(
      *
      * @return detail data about the insertion if the insertion was found, null otherwise
      */
-    fun getInsertionDetails(insertionId: String) : BookInsertionModel? {
+    fun getInsertionDetails(insertionId: String): BookInsertionModel? {
         Log.d(TAG, "Getting book insertion $insertionId details")
         return RequestBookInsertionByIdCommand(insertionId).execute()
     }
@@ -61,7 +61,7 @@ class InsertionDetailPresenter(
      * @return the id of the started conversation
      * or null if the conversation could not be started
      */
-    fun startConversation(partnerId: String) : String? {
+    fun startConversation(partnerId: String): String? {
         Log.d(TAG, "Starting conversation with: $partnerId")
         return StartConversationCommand(partnerId).execute()
     }

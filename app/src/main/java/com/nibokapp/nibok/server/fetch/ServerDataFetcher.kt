@@ -27,12 +27,12 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * USER
      */
 
-    override fun fetchUserById(userId: String) : BaasUser? {
+    override fun fetchUserById(userId: String): BaasUser? {
         val user = BaasUser.fetchSync(userId).onSuccessReturn { it }
         return user
     }
 
-    override fun fetchUserAvatar(username: String) : String? {
+    override fun fetchUserAvatar(username: String): String? {
         val result = BaasBox.rest().sync(
                 Rest.Method.GET,
                 "plugin/users.getUserAvatar?username=$username"
@@ -49,7 +49,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return book
     }
 
-    override fun fetchBookDocumentByISBN(isbn: String) : BaasDocument? {
+    override fun fetchBookDocumentByISBN(isbn: String): BaasDocument? {
         val whereString = "${ServerConstants.ISBN}=$isbn"
         val bookDocList = queryDocumentListFromCollection(COLL_BOOKS, whereString)
         return bookDocList.getOrNull(0) // Get the first book in the list
@@ -63,7 +63,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
     }
 
-    override fun fetchInsertionDocumentListById(idsArray: JsonArray) : List<BaasDocument> {
+    override fun fetchInsertionDocumentListById(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_INSERTIONS)
     }
 
@@ -99,7 +99,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * CONVERSATIONS
      */
 
-    override fun fetchConversationDocumentListById(idsArray: JsonArray) : List<BaasDocument> {
+    override fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_CONVERSATIONS)
     }
 
@@ -107,7 +107,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * MESSAGES
      */
 
-    override fun fetchMessageDocumentList(idsArray: JsonArray) : List<BaasDocument> {
+    override fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_MESSAGES)
     }
 
@@ -120,7 +120,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * @return a list of BaasDocument
      */
     private fun fetchRecentDocumentListFromCollection(collection: ServerCollection)
-            : List<BaasDocument>{
+           : List<BaasDocument>{
         val criteria = BaasQuery.builder()
                 .pagination(0, RECORDS_PER_PAGE)
                 .orderBy(ServerConstants.DATE)
@@ -139,7 +139,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      */
     private fun fetchDocumentListFromCollectionById(idsArray: JsonArray,
                                                     collection: ServerCollection)
-            : List<BaasDocument> {
+           : List<BaasDocument> {
         return idsArray.filterIsInstance<String>() // Get the strings representing documents ids
                 .map { BaasDocument.fetchSync(collection.id, it) } // Fetch docs from the collection
                 .filter { it.isSuccess } // Keep only successful requests
@@ -156,7 +156,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * @return a list of BaasDocument
      */
     private fun queryDocumentListFromCollection(collection: ServerCollection,
-                                                whereConditions: String) : List<BaasDocument> {
+                                                whereConditions: String): List<BaasDocument> {
         val criteria = BaasQuery.builder().where(whereConditions).criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()

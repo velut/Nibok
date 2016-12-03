@@ -28,7 +28,7 @@ class LatestFragment(
 
     override fun getFragmentLayout() = R.layout.fragment_latest
 
-    override fun getFragmentName() : String = TAG
+    override fun getFragmentName(): String = TAG
 
     // Presenter
 
@@ -56,7 +56,7 @@ class LatestFragment(
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(bookItemClickManager)
 
-    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+    override fun getSearchHint(): String = getString(R.string.search_hint_book)
 
     // Refresh
 

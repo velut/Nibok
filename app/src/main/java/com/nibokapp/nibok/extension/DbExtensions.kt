@@ -18,20 +18,20 @@ val QUERY_TAG = "RealmDB_Query"
  *
  * @return a list of strings
  */
-fun RealmList<RealmString>.toStringList() : List<String> =
+fun RealmList<RealmString>.toStringList(): List<String> =
         this.map { it.value }
 
 /**
  * Convert a String to a RealmString.
  */
-fun String.toRealmString() : RealmString = RealmString(this)
+fun String.toRealmString(): RealmString = RealmString(this)
 
 /**
  * Convert a List of String into a RealmList of RealmString.
  *
  * @return a a RealmList of RealmString
  */
-fun List<String>.toRealmStringList() : RealmList<RealmString> {
+fun List<String>.toRealmStringList(): RealmList<RealmString> {
     val realmList = RealmList<RealmString>()
     this.forEach { realmList.add(it.toRealmString()) }
     return realmList
@@ -42,7 +42,7 @@ fun List<String>.toRealmStringList() : RealmList<RealmString> {
  *
  * @return a a RealmList of RealmModel
  */
-fun <T : RealmModel> List<T>.toRealmList() : RealmList<T> {
+fun <T : RealmModel> List<T>.toRealmList(): RealmList<T> {
     val realmList = RealmList<T>()
     this.forEach { realmList.add(it) }
     return realmList
@@ -53,7 +53,7 @@ fun <T : RealmModel> List<T>.toRealmList() : RealmList<T> {
  *
  * @return a list of RealmModel
  */
-fun <T: RealmModel> RealmList<T>.toNormalList() : List<T> =
+fun <T : RealmModel> RealmList<T>.toNormalList(): List<T> =
         this.map { it }
 
 /**
@@ -86,7 +86,7 @@ inline fun executeRealmTransaction(crossinline transaction: (realm: Realm) -> Un
  * @return the list of RealmModel instances representing the found results
  * or an empty list if no result was found
  */
-inline fun <T: RealmModel> queryManyRealm(query: (realm: Realm) -> RealmResults<T>) : List<T> {
+inline fun <T : RealmModel> queryManyRealm(query: (realm: Realm) -> RealmResults<T>): List<T> {
     var results: List<T> = emptyList()
 
     withRealm {
@@ -110,7 +110,7 @@ inline fun <T: RealmModel> queryManyRealm(query: (realm: Realm) -> RealmResults<
  *
  * @return the RealmModel instance resulting from the query or null if nothing was found
  */
-inline fun <T: RealmModel> queryOneRealm(query: (realm: Realm) -> T) : T? {
+inline fun <T : RealmModel> queryOneRealm(query: (realm: Realm) -> T): T? {
     var result: T? = null
 
     withRealm {

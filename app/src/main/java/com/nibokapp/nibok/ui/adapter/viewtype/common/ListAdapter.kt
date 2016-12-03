@@ -17,7 +17,7 @@ interface ListAdapter<T> {
      * @return the number of items that were added
      */
     fun addItems(items: List<T>, insertPosition: Int = 0,
-                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true) : Int
+                 insertAtBottom: Boolean = false, excludeDuplicates: Boolean = true): Int
 
     /**
      * Clear the list and add the given items.
@@ -48,7 +48,7 @@ interface ListAdapter<T> {
      * @return the index of the item if the item was remove successfully
      * or -1 if the item couldn't be found
      */
-    fun removeItem(item: T) : Int
+    fun removeItem(item: T): Int
 
     /**
      * Remove the item with the given id from the list and return its index.
@@ -59,7 +59,7 @@ interface ListAdapter<T> {
      * @return the index of the item if the item was remove successfully
      * or -1 if the item couldn't be found
      */
-    fun removeItemById(itemId: String, itemType: Int) : Int
+    fun removeItemById(itemId: String, itemType: Int): Int
 
     /**
      * Restore an item into the current list of items given its id.
@@ -75,6 +75,6 @@ interface ListAdapter<T> {
      *
      * @return the items currently managed by the adapter
      */
-    fun getItems() : List<T>
+    fun getItems(): List<T>
 
 }

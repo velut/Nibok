@@ -47,5 +47,5 @@ interface PictureTaker {
      *
      * @return the current picture [Uri]
      */
-    fun getCurrentPictureUri() : Uri
+    fun getCurrentPictureUri(): Uri
 }

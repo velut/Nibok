@@ -97,5 +97,5 @@ object Authenticator : AuthenticatorInterface {
         return available ?: true
     }
 
-    private fun localUserExists() : Boolean = localUserRepository.localUserExists()
+    private fun localUserExists(): Boolean = localUserRepository.localUserExists()
 }

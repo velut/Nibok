@@ -50,7 +50,7 @@ class ServerDataSender : ServerDataSenderInterface {
      * EXTENSIONS
      */
 
-    private fun BaasDocument.sendAndGrantAccess(accessLevel: Grant, accessedBy: String) : Boolean {
+    private fun BaasDocument.sendAndGrantAccess(accessLevel: Grant, accessedBy: String): Boolean {
         var sent = false
         this.saveSync().onSuccess {
             Log.d(TAG, "Document saved on server, granting access")
@@ -59,7 +59,7 @@ class ServerDataSender : ServerDataSenderInterface {
         return sent
     }
 
-    private fun BaasDocument.sendForPublicReading() : Boolean {
+    private fun BaasDocument.sendForPublicReading(): Boolean {
         return this.sendAndGrantAccess(Grant.READ, Role.ANONYMOUS)
     }
 }

@@ -26,5 +26,5 @@ data class ConversationModel(
 
     override fun getItemId(): String = conversationId
 
-    override fun getViewType() : Int = ViewTypes.MESSAGE
+    override fun getViewType(): Int = ViewTypes.MESSAGE
 }

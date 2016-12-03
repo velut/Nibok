@@ -164,14 +164,14 @@ abstract class BaseFragment(
      *
      * @return the string with the search hint
      */
-    abstract fun getSearchHint() : String
+    abstract fun getSearchHint(): String
 
     /**
      * Get the name of the actual child fragment instance of BaseFragment.
      *
      * @return the name of the fragment instance
      */
-    abstract fun getFragmentName() : String
+    abstract fun getFragmentName(): String
 
     /**
      * Handle every other action not directly handled.

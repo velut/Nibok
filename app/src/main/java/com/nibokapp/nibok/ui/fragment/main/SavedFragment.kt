@@ -32,7 +32,7 @@ class SavedFragment(
 
     override fun getFragmentLayout() = R.layout.fragment_saved
 
-    override fun getFragmentName() : String = TAG
+    override fun getFragmentName(): String = TAG
 
     // Presenter
 
@@ -60,7 +60,7 @@ class SavedFragment(
 
     override fun getSearchViewAdapter() = ViewTypeAdapter(searchViewBookItemClickManager)
 
-    override fun getSearchHint() : String = getString(R.string.search_hint_book)
+    override fun getSearchHint(): String = getString(R.string.search_hint_book)
 
     // Refresh
 

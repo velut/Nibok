@@ -20,5 +20,5 @@ interface ViewType {
      *
      * @return the view type of the item
      */
-    fun getViewType() : Int
+    fun getViewType(): Int
 }

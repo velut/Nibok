@@ -17,7 +17,7 @@ interface ServerDataProviderInterface {
      *
      * @return a list of Insertion
      */
-    fun getInsertionListFromIds(idsArray: JsonArray) : List<Insertion>
+    fun getInsertionListFromIds(idsArray: JsonArray): List<Insertion>
 
     /**
      * Get the list of Conversation corresponding to the ids contained in the given array

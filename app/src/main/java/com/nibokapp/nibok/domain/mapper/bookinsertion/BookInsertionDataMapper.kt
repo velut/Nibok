@@ -10,7 +10,6 @@ import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.BookInfoModel
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.domain.model.UserModel
-import com.nibokapp.nibok.extension.isWellFormed
 import com.nibokapp.nibok.extension.toRealmStringList
 import com.nibokapp.nibok.extension.toStringList
 
@@ -26,10 +25,10 @@ class BookInsertionDataMapper(
      * BOOK INSERTION
      */
 
-    override fun convertInsertionListToDomain(insertions: List<Insertion>) : List<BookInsertionModel> =
+    override fun convertInsertionListToDomain(insertions: List<Insertion>): List<BookInsertionModel> =
             insertions.map { convertInsertionToDomain(it) }.filterNotNull()
 
-    override fun convertInsertionToDomain(insertion: Insertion?) : BookInsertionModel? {
+    override fun convertInsertionToDomain(insertion: Insertion?): BookInsertionModel? {
 
         if (insertion == null || !insertion.isWellFormed()) {
             return null

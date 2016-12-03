@@ -71,72 +71,72 @@ abstract class ViewTypeFragment : BaseFragment() {
      *
      * @return the fragment's layout id
      */
-    abstract fun getFragmentLayout() : Int
+    abstract fun getFragmentLayout(): Int
 
     /**
      * Get the presenter used by the fragment.
      *
      * @return the fragment's presenter
      */
-    abstract fun getFragmentPresenter() : ViewTypePresenter
+    abstract fun getFragmentPresenter(): ViewTypePresenter
 
     /**
      * Get the id of the main view.
      *
      * @return the id of the main view
      */
-    abstract fun getMainViewId() : Int
+    abstract fun getMainViewId(): Int
 
     /**
      * Get the layout manager used by the main view.
      *
      * @return the layout manager used by the main view
      */
-    abstract fun getMainViewLayoutManager() : LinearLayoutManager
+    abstract fun getMainViewLayoutManager(): LinearLayoutManager
 
     /**
      * Get the adapter used by the main view.
      *
      * @return the adapter used by the main view
      */
-    abstract fun getMainViewAdapter() : ViewTypeAdapter
+    abstract fun getMainViewAdapter(): ViewTypeAdapter
 
     /**
      * Get the id of the search view.
      *
      * @return the id of the search view
      */
-    abstract fun getSearchViewId() : Int
+    abstract fun getSearchViewId(): Int
 
     /**
      * Get the layout manager used by the search view.
      *
      * @return the layout manager used by the search view
      */
-    abstract fun getSearchViewLayoutManager() : LinearLayoutManager
+    abstract fun getSearchViewLayoutManager(): LinearLayoutManager
 
     /**
      * Get the adapter used by the search view.
      *
      * @return the adapter used by the search view
      */
-    abstract fun getSearchViewAdapter() : ViewTypeAdapter
+    abstract fun getSearchViewAdapter(): ViewTypeAdapter
 
     /**
      * Signal if items in the main view can be updated.
      *
      * @return true if the items can be updated, false otherwise
      */
-    abstract fun hasMainViewUpdatableItems() : Boolean
+    abstract fun hasMainViewUpdatableItems(): Boolean
 
     /**
      * Signal if items in the main view can be deleted.
      *
      * @return true if the items can be deleted, false otherwise
      */
-    abstract fun hasMainViewRemovableItems() : Boolean
+    abstract fun hasMainViewRemovableItems(): Boolean
 
-    abstract fun getRefreshUnsuccessfulString() : String
+    abstract fun getRefreshUnsuccessfulString(): String
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -276,7 +276,7 @@ abstract class ViewTypeFragment : BaseFragment() {
      *
      * @return the data currently displayed in the main view
      */
-    open fun getMainViewData() : List<ViewType> = mainViewAdapter.getItems()
+    open fun getMainViewData(): List<ViewType> = mainViewAdapter.getItems()
 
     private fun initMainView() {
         setupMainView()

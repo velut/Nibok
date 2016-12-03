@@ -16,12 +16,12 @@ object ConversationRepository : ConversationRepositoryInterface {
     
     const private val TAG = "ConversationRepository"
 
-    private val userRepository : UserRepositoryInterface = UserRepository
+    private val userRepository: UserRepositoryInterface = UserRepository
 
-    private var conversationCache : List<Conversation> = emptyList()
+    private var conversationCache: List<Conversation> = emptyList()
 
 
-    override fun getConversationById(conversationId: String) : Conversation? {
+    override fun getConversationById(conversationId: String): Conversation? {
         if (userRepository.localUserExists()) {
             return queryOneRealm {
                 it.where(Conversation::class.java)
@@ -37,7 +37,7 @@ object ConversationRepository : ConversationRepositoryInterface {
     override fun getConversationPartnerName(conversationId: String): String? =
             getConversationById(conversationId)?.partner?.username
 
-    override fun getConversationListFromQuery(query: String) : List<Conversation> {
+    override fun getConversationListFromQuery(query: String): List<Conversation> {
 
         if (!userRepository.localUserExists()) return emptyList()
 
@@ -65,7 +65,7 @@ object ConversationRepository : ConversationRepositoryInterface {
         return conversationCache
     }
 
-    override fun getConversationListAfterDate(date: Date) : List<Conversation> {
+    override fun getConversationListAfterDate(date: Date): List<Conversation> {
 
         if (!userRepository.localUserExists()) return emptyList()
 
@@ -78,7 +78,7 @@ object ConversationRepository : ConversationRepositoryInterface {
         return results
     }
 
-    override fun getConversationListBeforeDate(date: Date) : List<Conversation> {
+    override fun getConversationListBeforeDate(date: Date): List<Conversation> {
 
         if (!userRepository.localUserExists()) return emptyList()
 

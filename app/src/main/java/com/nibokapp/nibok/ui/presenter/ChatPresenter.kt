@@ -19,7 +19,7 @@ class ChatPresenter {
      *
      * @return the id of the local user
      */
-    fun getUserId() : String {
+    fun getUserId(): String {
         Log.d(TAG, "Requesting local user id")
         return RequestLocalUserIdCommand().execute()
     }
@@ -43,7 +43,7 @@ class ChatPresenter {
      *
      * @return the messages in the conversation
      */
-    fun getConversationMessages(conversationId: String) : List<ChatMessageModel> {
+    fun getConversationMessages(conversationId: String): List<ChatMessageModel> {
         Log.d(TAG, "Requesting messages for conversation: $conversationId")
         return RequestMessagesFromConversationCommand(conversationId).execute()
     }
@@ -55,7 +55,7 @@ class ChatPresenter {
      *
      * @return true if the message was sent successfully, false otherwise
      */
-    fun sendMessage(chatMessage: ChatMessageModel) : Boolean {
+    fun sendMessage(chatMessage: ChatMessageModel): Boolean {
         Log.d(TAG, "Sending message")
         return SendMessageCommand(chatMessage).execute()
     }
@@ -67,7 +67,7 @@ class ChatPresenter {
      *
      * @return the messages that come after the given one in the conversation
      */
-    fun getNewerMessages(lastMessage: ChatMessageModel) : List<ChatMessageModel> {
+    fun getNewerMessages(lastMessage: ChatMessageModel): List<ChatMessageModel> {
         Log.d(TAG, "Requesting newer messages")
         return RequestNewerMessagesFromConversationCommand(lastMessage).execute()
     }
@@ -79,7 +79,7 @@ class ChatPresenter {
      *
      * @return the messages that come before the given one in the conversation
      */
-    fun getOlderMessages(firstMessage: ChatMessageModel) : List<ChatMessageModel> {
+    fun getOlderMessages(firstMessage: ChatMessageModel): List<ChatMessageModel> {
         Log.d(TAG, "Requesting older messages")
         return RequestOlderMessagesFromConversationCommand(firstMessage).execute()
     }

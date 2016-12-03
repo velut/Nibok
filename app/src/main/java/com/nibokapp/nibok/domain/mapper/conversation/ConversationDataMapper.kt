@@ -8,7 +8,6 @@ import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.domain.model.UserModel
-import com.nibokapp.nibok.extension.isWellFormed
 import com.nibokapp.nibok.extension.toNormalList
 import com.nibokapp.nibok.extension.toRealmList
 
@@ -20,10 +19,10 @@ class ConversationDataMapper(
         val messageMapper: MessageDataMapperInterface = MessageDataMapper()
 ) : ConversationDataMapperInterface {
     
-    override fun convertConversationListToDomain(conversations: List<Conversation>) : List<ConversationModel> =
+    override fun convertConversationListToDomain(conversations: List<Conversation>): List<ConversationModel> =
             conversations.map { convertConversationToDomain(it) }.filterNotNull()
 
-    override fun convertConversationToDomain(conversation: Conversation?) : ConversationModel? {
+    override fun convertConversationToDomain(conversation: Conversation?): ConversationModel? {
 
         if (conversation == null || !conversation.isWellFormed()) {
             return null
@@ -54,10 +53,10 @@ class ConversationDataMapper(
         )
     }
 
-    private fun convertPartnerToDomain(partner: ExternalUser) : UserModel =
+    private fun convertPartnerToDomain(partner: ExternalUser): UserModel =
             userMapper.convertUserToDomain(partner)
 
-    private fun convertPartnerFromDomain(partner: UserModel) : ExternalUser =
+    private fun convertPartnerFromDomain(partner: UserModel): ExternalUser =
             userMapper.convertUserFromDomain(partner)
 
     private fun  convertMessageListToDomain(messages: List<Message>): List<ChatMessageModel> =
