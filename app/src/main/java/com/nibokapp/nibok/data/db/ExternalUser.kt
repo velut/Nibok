@@ -16,4 +16,4 @@ open class ExternalUser(
 
         open var avatar: String = ""
 
-) : RealmObject() {}
+) : RealmObject()

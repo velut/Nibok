@@ -1,8 +1,6 @@
 package com.nibokapp.nibok.extension
 
-import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.BookInsertionRepository
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
@@ -75,13 +73,3 @@ fun List<Insertion>.includeOnlySavedInsertions(): List<Insertion> {
     val savedInsertions = BookInsertionRepository.getSavedInsertionList()
     return this.filter { it.id in savedInsertions.map { it.id } }
 }
-
-fun Insertion.isWellFormed(): Boolean = with(this) {
-    seller != null && date != null && book != null
-}
-
-fun Conversation.isWellFormed(): Boolean = with(this) {
-    partner != null && date != null
-}
-
-fun Message.isWellFormed() = this.date != null

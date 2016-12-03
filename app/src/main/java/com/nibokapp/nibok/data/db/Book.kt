@@ -30,4 +30,4 @@ open class Book(
 
         open var isbn: String = ""
 
-) : RealmObject() {}
+) : RealmObject()

@@ -244,7 +244,7 @@ abstract class ViewTypeFragment : BaseFragment() {
 
         Log.d(TAG, "${getFragmentName()} is checking for updates")
 
-        doAsync() {
+        doAsync {
             val oldData = mainViewAdapter.getItems()
             val (toUpdate, toRemove) = presenter.getDiffData(oldData)
 
@@ -252,12 +252,12 @@ abstract class ViewTypeFragment : BaseFragment() {
 
             if (hasMainViewRemovableItems()) {
                 Log.d(TAG, "Items to remove from ${getFragmentName()}: ${toRemove.size}")
-                if (toRemove.size > 0) uiThread { mainViewAdapter.removeItems(toRemove) }
+                if (toRemove.isNotEmpty()) uiThread { mainViewAdapter.removeItems(toRemove) }
             }
 
             if (hasMainViewUpdatableItems()) {
                 Log.d(TAG, "Items to update in ${getFragmentName()}: ${toUpdate.size}")
-                if (toUpdate.size > 0) uiThread { mainViewAdapter.updateItems(toUpdate) }
+                if (toUpdate.isNotEmpty()) uiThread { mainViewAdapter.updateItems(toUpdate) }
             }
         }
     }

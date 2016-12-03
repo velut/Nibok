@@ -23,4 +23,4 @@ open class User(
 
         open var conversations: RealmList<Conversation> = RealmList()
 
-) : RealmObject() {}
+) : RealmObject()

@@ -2,7 +2,6 @@ package com.nibokapp.nibok.domain.mapper.conversation
 
 import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.domain.model.ChatMessageModel
-import com.nibokapp.nibok.extension.isWellFormed
 
 /**
  * Message data mapper implementation.

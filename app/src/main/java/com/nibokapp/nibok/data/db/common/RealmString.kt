@@ -9,4 +9,4 @@ import io.realm.RealmObject
  */
 open class RealmString(
         open var value: String = ""
-) : RealmObject() {}
+) : RealmObject()
