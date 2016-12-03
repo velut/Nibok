@@ -157,7 +157,7 @@ fun BaasUser.addPublishedInsertion(insertionId: String) : Boolean {
     val publishedInsertionsIds = getPublishedInsertionsArray()
 
     val insertionIndex = publishedInsertionsIds.indexOf(insertionId)
-    val previouslyPublished = if (insertionIndex == -1) false else true
+    val previouslyPublished = insertionIndex != -1
 
     if (previouslyPublished) return true
 
