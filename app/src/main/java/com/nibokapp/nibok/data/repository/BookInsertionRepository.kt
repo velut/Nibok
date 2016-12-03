@@ -166,10 +166,6 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      */
 
     override fun publishInsertion(insertion: Insertion) : Boolean {
-        val publishedOnServer = serverRepository.publishInsertion(insertion)
-        if (publishedOnServer) {
-            localRepository.publishInsertion(insertion)
-        }
-        return publishedOnServer
+        return serverRepository.publishInsertion(insertion)
     }
 }
