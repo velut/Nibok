@@ -43,12 +43,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val results = SOURCES.firstListResultOrNull { it.getInsertionListFromQuery(query) }
+        val results = SOURCES.firstListResultOrNull { it.getInsertionListFromQuery(trimmedQuery) }
                 ?: emptyList()
 
         if (results.isNotEmpty()) localRepository.storeItems(results)
 
-        Log.d(TAG, "Book insertions corresponding to query '$query' = ${results.size}")
+        Log.d(TAG, "Book insertions corresponding to query '$trimmedQuery' = ${results.size}")
 
         return results
     }
