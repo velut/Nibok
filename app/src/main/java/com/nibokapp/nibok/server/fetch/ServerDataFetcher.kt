@@ -87,20 +87,48 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     override fun fetchInsertionDocumentListAfterDate(date: Date): List<BaasDocument> {
-        val whereString = "${ServerConstants.DATE} >= ${date.toStringDate()}"
-        return queryDocumentListFromCollection(COLL_INSERTIONS, whereString)
+        return queryDocumentListFromCollection(COLL_INSERTIONS, getAfterDateQueryCondition(date))
     }
 
     override fun fetchInsertionDocumentListBeforeDate(date: Date): List<BaasDocument> {
-        val whereString = "${ServerConstants.DATE} <= ${date.toStringDate()}"
-        return queryDocumentListFromCollection(COLL_INSERTIONS, whereString)
+        return queryDocumentListFromCollection(COLL_INSERTIONS, getBeforeDateQueryCondition(date))
     }
-/*
+
+    /*
      * CONVERSATIONS
      */
 
     override fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_CONVERSATIONS)
+    }
+
+    override fun fetchConversationDocumentById(id: String?): BaasDocument? {
+        val result = BaasDocument.fetchSync(COLL_CONVERSATIONS.id, id)
+        return result.onSuccessReturn { it }
+    }
+
+    override fun fetchConversationDocumentListByQuery(query: String): List<BaasDocument> {
+        val trimmedQuery = query.trim()
+
+        if (trimmedQuery.isEmpty()) return emptyList()
+
+        val whereString = with(ServerConstants) {
+            "" // TODO?
+        }
+
+        return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString)
+    }
+
+    override fun fetchRecentConversationDocumentList(): List<BaasDocument> {
+        return fetchRecentDocumentListFromCollection(COLL_CONVERSATIONS)
+    }
+
+    override fun fetchConversationDocumentListAfterDate(date: Date): List<BaasDocument> {
+        return queryDocumentListFromCollection(COLL_INSERTIONS, getAfterDateQueryCondition(date))
+    }
+
+    override fun fetchConversationDocumentListBeforeDate(date: Date): List<BaasDocument> {
+        return queryDocumentListFromCollection(COLL_INSERTIONS, getBeforeDateQueryCondition(date))
     }
 
     /*
@@ -110,6 +138,30 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     override fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_MESSAGES)
     }
+
+    override fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument> {
+        val conversation = fetchConversationDocumentById(conversationId)
+        val messageIds = conversation?.getArray(ServerConstants.MESSAGES, JsonArray()) ?: JsonArray()
+        return fetchMessageDocumentList(messageIds)
+    }
+
+    override fun fetchMessageDocumentListAfterDateByConversation(conversationId: String, date: Date): List<BaasDocument> {
+        val whereString = with(ServerConstants) {
+            "$CONVERSATION_ID=$conversationId and ${getAfterDateQueryCondition(date)}"
+        }
+        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
+    }
+
+    override fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument> {
+        val whereString = with(ServerConstants) {
+            "$CONVERSATION_ID=$conversationId and ${getBeforeDateQueryCondition(date)}"
+        }
+        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
+    }
+
+    /*
+     * OTHER
+     */
 
     /**
      * Fetch recent documents from the server belonging to the specified collection.
@@ -160,5 +212,21 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         val criteria = BaasQuery.builder().where(whereConditions).criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
+    }
+
+    /**
+     * Get the String that describes the where condition
+     * for the date field to be after the given date.
+     */
+    private fun getAfterDateQueryCondition(date: Date): String {
+        return "${ServerConstants.DATE} >= ${date.toStringDate()}"
+    }
+
+    /**
+     * Get the String that describes the where condition
+     * for the date field to be before the given date.
+     */
+    private fun getBeforeDateQueryCondition(date: Date): String {
+        return "${ServerConstants.DATE} <= ${date.toStringDate()}"
     }
 }

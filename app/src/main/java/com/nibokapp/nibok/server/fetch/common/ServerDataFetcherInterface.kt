@@ -109,6 +109,49 @@ interface ServerDataFetcherInterface {
     fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument>
 
     /**
+     * Fetch a conversation document by its id.
+     *
+     * @param id the id of the document
+     *
+     * @return a BaasDocument if the document with the given id was found, null otherwise
+     */
+    fun fetchConversationDocumentById(id: String?): BaasDocument?
+
+    /**
+     * Fetch the list of conversation documents corresponding to the given query.
+     *
+     * @param query the query text
+     *
+     * @return a list of BaasDocument
+     */
+    fun fetchConversationDocumentListByQuery(query: String): List<BaasDocument>
+
+    /**
+     * Fetch recent conversation documents.
+     *
+     * @return a list of BaasDocument
+     */
+    fun fetchRecentConversationDocumentList(): List<BaasDocument>
+
+    /**
+     * Fetch the list of conversation documents dated after the given date.
+     *
+     * @param date the date used as in comparisons
+     *
+     * @return a list of BaasDocument
+     */
+    fun fetchConversationDocumentListAfterDate(date: Date): List<BaasDocument>
+
+    /**
+     * Fetch the list of conversation documents dated before the given date.
+     *
+     * @param date the date used as in comparisons
+     *
+     * @return a list of BaasDocument
+     */
+    fun fetchConversationDocumentListBeforeDate(date: Date): List<BaasDocument>
+
+    /**
      * Fetch a list of BaasDocument for the messages' ids present in the given array.
      *
      * @param idsArray a JsonArray of messages' ids
@@ -116,4 +159,36 @@ interface ServerDataFetcherInterface {
      * @return a list of BaasDocument for the found messages
      */
     fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument>
+
+    /**
+     * Fetch the list of message documents associated to the given conversation.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return a list of BaasDocument for the found messages
+     */
+    fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument>
+
+    /**
+     * Fetch the list of message documents associated to the given conversation
+     * dated after the given date.
+     *
+     * @param conversationId the id of the conversation
+     * @param date the date used for comparisons
+     *
+     * @return a list of BaasDocument for the found messages
+     */
+    fun fetchMessageDocumentListAfterDateByConversation(conversationId: String, date: Date): List<BaasDocument>
+
+    /**
+     * Fetch the list of message documents associated to the given conversation
+     * dated before the given date.
+     *
+     * @param conversationId the id of the conversation
+     * @param date the date used for comparisons
+     *
+     * @return a list of BaasDocument for the found messages
+     */
+    fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument>
+
 }
