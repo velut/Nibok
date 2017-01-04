@@ -30,7 +30,7 @@ fun Realm.getLocalUser(): User? =
  * @return the ExternalUser if it exits, null otherwise
  */
 fun Realm.getExternalUserById(userId: String): ExternalUser? =
-        this.where(ExternalUser::class.java).equalTo("id", userId).findFirst()
+        this.where(ExternalUser::class.java).equalTo("username", userId).findFirst()
 
 /*
  * BOOK INSERTION
@@ -71,5 +71,5 @@ fun Realm.getConversationById(conversationId: String): Conversation? =
 fun Realm.getConversationBetweenUsers(localUserId: String, partnerId: String): Conversation? =
         this.where(Conversation::class.java)
                 .equalTo("userId", localUserId)
-                .equalTo("partner.id", partnerId)
+                .equalTo("partner.username", partnerId)
                 .findFirst()
