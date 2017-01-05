@@ -118,6 +118,16 @@ interface ServerDataFetcherInterface {
     fun fetchConversationDocumentById(id: String?): BaasDocument?
 
     /**
+     * Fetch a conversation document by its participants.
+     *
+     * @param firstParticipantId the id of the first participant
+     * @param secondParticipantId the id of the second participant
+     *
+     * @return a BaasDocument if the conversation document between the two participants was found, null otherwise
+     */
+    fun fetchConversationDocumentByParticipants(firstParticipantId: String, secondParticipantId: String): BaasDocument?
+
+    /**
      * Fetch the list of conversation documents corresponding to the given query.
      *
      * @param query the query text

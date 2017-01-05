@@ -107,6 +107,13 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return result.onSuccessReturn { it }
     }
 
+    override fun fetchConversationDocumentByParticipants(firstParticipantId: String, secondParticipantId: String): BaasDocument? {
+        val whereString = with(ServerConstants) {
+            "\"$firstParticipantId\" in $PARTICIPANTS and \"$secondParticipantId\" in $PARTICIPANTS"
+        } // e.g. ""bob" in participants and "sam" in participants"
+        return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString).getOrNull(0)
+    }
+
     override fun fetchConversationDocumentListByQuery(query: String): List<BaasDocument> {
         val trimmedQuery = query.trim()
 
