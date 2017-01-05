@@ -124,13 +124,17 @@ class InsertionDetailFragment(
     }
 
     private fun startConversation() {
-        val conversationId = presenter.startConversation(sellerId)
-        if (conversationId != null) {
-            Log.d(TAG, "Starting conversation with user: $sellerId")
-            context.startConversation(conversationId)
-        } else {
-            Log.d(TAG, "Could not start a conversation with: $sellerId")
-            context.toast(R.string.error_conversation_not_started)
+        doAsync {
+            val conversationId = presenter.startConversation(sellerId)
+            uiThread {
+                if (conversationId != null) {
+                    Log.d(TAG, "Starting conversation with user: $sellerId")
+                    context.startConversation(conversationId)
+                } else {
+                    Log.d(TAG, "Could not start a conversation with: $sellerId")
+                    context.toast(R.string.error_conversation_not_started)
+                }
+            }
         }
     }
 
