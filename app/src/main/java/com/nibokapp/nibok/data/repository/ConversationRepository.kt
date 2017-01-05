@@ -72,7 +72,8 @@ object ConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun startConversation(partnerId: String): String? {
-        return serverRepository.startConversation(partnerId)
+        Log.d(TAG, "Starting conversation with user: $partnerId")
+        return SOURCES.firstResultOrNull { it.startConversation(partnerId) }
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
