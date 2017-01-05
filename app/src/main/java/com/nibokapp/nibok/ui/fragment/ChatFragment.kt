@@ -15,7 +15,9 @@ import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.chat.ChatAdapter
 import com.nibokapp.nibok.ui.presenter.ChatPresenter
 import kotlinx.android.synthetic.main.fragment_chat.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -110,10 +112,14 @@ class ChatFragment(
     private fun setupConversation() {
         conversationId?.let {
             Log.d(TAG, "Got conversationId: $it")
-            partnerName = presenter.getConversationPartnerName(it) ?: partnerNamePlaceholder
-            actionBar?.title = partnerName
-            val messages = presenter.getConversationMessages(it)
-            chatAdapter.addMessages(messages)
+            doAsync {
+                partnerName = presenter.getConversationPartnerName(it) ?: partnerNamePlaceholder
+                val messages = presenter.getConversationMessages(it)
+                uiThread {
+                    actionBar?.title = partnerName
+                    chatAdapter.addMessages(messages)
+                }
+            }
         }
     }
 
