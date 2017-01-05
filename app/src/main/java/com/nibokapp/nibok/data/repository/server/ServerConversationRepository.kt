@@ -1,10 +1,14 @@
 package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
+import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
+import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
+import com.nibokapp.nibok.data.repository.server.common.ServerCollection
+import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
@@ -79,7 +83,12 @@ object ServerConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun startConversation(partnerId: String): String? {
-        TODO()
+        val user = currentUser ?: return null
+
+        if (user.name == partnerId) return null
+
+        return fetchConversationIdByParticipants(user.name, partnerId)
+                ?: startConversationOnServer(user.name, partnerId)
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
@@ -108,5 +117,36 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
     override fun sendMessage(message: Message): Boolean {
         TODO()
+    }
+
+    /*
+     * EXTRA
+     */
+
+    private fun getConversationDocument(participantIds: List<String>): BaasDocument {
+        val document = BaasDocument(ServerCollection.CONVERSATIONS.id)
+        with(ServerConstants) {
+            document.put(PARTICIPANTS, participantIds.toJsonArray())
+                    .put(MESSAGES, JsonArray())
+        }
+        return document
+    }
+
+    private fun fetchConversationIdByParticipants(localUserId: String, partnerId: String): String? {
+        return fetcher.fetchConversationDocumentByParticipants(localUserId, partnerId)?.id
+    }
+
+    private fun startConversationOnServer(localUserId: String, partnerId: String): String? {
+        val participants = listOf(localUserId, partnerId)
+        val document = getConversationDocument(participants)
+        sender.sendConversationDocument(document, partnerId)
+        return fetchConversationIdByParticipants(localUserId, partnerId)
+    }
+
+    private fun List<String>.toJsonArray(): JsonArray {
+        // TODO remove ext as it is copied from ServerDataMapper
+        val array = JsonArray()
+        this.forEach { array.add(it) }
+        return array
     }
 }
