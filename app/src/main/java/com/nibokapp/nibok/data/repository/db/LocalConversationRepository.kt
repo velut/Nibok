@@ -95,7 +95,15 @@ object LocalConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun startConversation(partnerId: String): String? {
-        throw UnsupportedOperationException()
+        if (!userRepository.localUserExists()) return null
+
+        val conversation = queryOneRealm {
+            it.where(Conversation::class.java)
+                    .equalTo("userId", userRepository.getLocalUserId())
+                    .equalTo("partner.username", partnerId)
+                    .findFirst()
+        }
+        return conversation?.id
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
