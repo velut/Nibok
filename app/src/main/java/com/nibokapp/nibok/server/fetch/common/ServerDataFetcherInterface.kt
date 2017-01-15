@@ -115,7 +115,7 @@ interface ServerDataFetcherInterface {
      *
      * @return a BaasDocument if the document with the given id was found, null otherwise
      */
-    fun fetchConversationDocumentById(id: String?): BaasDocument?
+    fun fetchConversationDocumentById(id: String): BaasDocument?
 
     /**
      * Fetch a conversation document by its participants.
@@ -162,6 +162,15 @@ interface ServerDataFetcherInterface {
     fun fetchConversationDocumentListBeforeDate(date: Date): List<BaasDocument>
 
     /**
+     * Fetch a message document by its id.
+     *
+     * @param id the id of the document
+     *
+     * @return a BaasDocument if the document with the given id was found, null otherwise
+     */
+    fun fetchMessageDocumentById(id: String): BaasDocument?
+
+    /**
      * Fetch a list of BaasDocument for the messages' ids present in the given array.
      *
      * @param idsArray a JsonArray of messages' ids
@@ -200,5 +209,14 @@ interface ServerDataFetcherInterface {
      * @return a list of BaasDocument for the found messages
      */
     fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument>
+
+    /**
+     * Fetch the message documents that are newer than the message with the given id.
+     *
+     * @param messageId the id of the message
+     *
+     * @return a list of messages that are newer than the message with the given id
+     */
+    fun  fetchMessageDocumentListAfterDateOfMessage(messageId: String): List<BaasDocument>
 
 }

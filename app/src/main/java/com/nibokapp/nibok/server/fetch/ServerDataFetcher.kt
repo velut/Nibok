@@ -102,7 +102,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return fetchDocumentListFromCollectionById(idsArray, COLL_CONVERSATIONS)
     }
 
-    override fun fetchConversationDocumentById(id: String?): BaasDocument? {
+    override fun fetchConversationDocumentById(id: String): BaasDocument? {
         val result = BaasDocument.fetchSync(COLL_CONVERSATIONS.id, id)
         return result.onSuccessReturn { it }
     }
@@ -142,6 +142,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * MESSAGES
      */
 
+    override fun fetchMessageDocumentById(id: String): BaasDocument? {
+        val result = BaasDocument.fetchSync(COLL_MESSAGES.id, id)
+        return result.onSuccessReturn { it }
+    }
+
     override fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument> {
         return fetchDocumentListFromCollectionById(idsArray, COLL_MESSAGES)
     }
@@ -162,6 +167,16 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     override fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument> {
         val whereString = with(ServerConstants) {
             "$CONVERSATION_ID=$conversationId and ${getBeforeDateQueryCondition(date)}"
+        }
+        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
+    }
+
+    override fun fetchMessageDocumentListAfterDateOfMessage(messageId: String): List<BaasDocument> {
+        val message = fetchMessageDocumentById(messageId) ?: return emptyList()
+        val conversationId = message.getString(ServerConstants.CONVERSATION_ID) ?: return emptyList()
+        val messageDate = message.creationDate
+        val whereString = with(ServerConstants) {
+            "$CONVERSATION_ID=\"$conversationId\" and $CREATION_DATE > date('$messageDate')"
         }
         return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
     }
