@@ -10,6 +10,7 @@ object ServerConstants {
      */
     const val DATA = "data"
     const val DATE = "date"
+    const val CREATION_DATE = "_creation_date"
 
     /**
      * Username.
