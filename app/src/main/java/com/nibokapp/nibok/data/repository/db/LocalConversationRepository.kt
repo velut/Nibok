@@ -111,10 +111,8 @@ object LocalConversationRepository : ConversationRepositoryInterface {
         return conversation?.messages?.toNormalList() ?: emptyList()
     }
 
-    override fun getMessageListAfterDateForConversation(conversationId: String, date: Date): List<Message> {
-        return getMessageListForConversation(conversationId)
-                .sortedBy { it.date }
-                .filter { it.date!! >= date }
+    override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
+        return emptyList()
     }
 
     override fun getMessageListBeforeDateForConversation(conversationId: String, date: Date): List<Message> {

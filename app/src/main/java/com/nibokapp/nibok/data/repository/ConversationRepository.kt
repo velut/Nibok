@@ -83,10 +83,9 @@ object ConversationRepository : ConversationRepositoryInterface {
         return messages
     }
 
-    override fun getMessageListAfterDateForConversation(conversationId: String, date: Date): List<Message> {
-        val messages = SOURCES.firstListResultOrNull { it.getMessageListAfterDateForConversation(conversationId, date) }
-                ?: emptyList()
-        Log.d(TAG, "Found ${messages.size} messages for conversation: $conversationId after date: $date")
+    override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
+        val messages = SOURCES.firstListResultOrNull { it.getMessageListAfterDateOfMessage(messageId) } ?: emptyList()
+        Log.d(TAG, "Found ${messages.size} messages newer than message: $messageId")
         return messages
     }
 

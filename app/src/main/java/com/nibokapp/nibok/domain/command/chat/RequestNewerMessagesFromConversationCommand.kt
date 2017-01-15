@@ -23,8 +23,8 @@ class RequestNewerMessagesFromConversationCommand(
 
     override fun execute(): List<ChatMessageModel> =
             dataMapper.convertMessageListToDomain(
-                    conversationRepository.getMessageListAfterDateForConversation(
-                            lastMessage.conversationId, lastMessage.date
+                    conversationRepository.getMessageListAfterDateOfMessage(
+                            lastMessage.id
                     )
             )
 }

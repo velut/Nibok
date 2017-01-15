@@ -85,15 +85,13 @@ interface ConversationRepositoryInterface {
     fun getMessageListForConversation(conversationId: String): List<Message>
 
     /**
-     * Get the list of messages in the conversation with the given id that are dated after the
-     * given date.
+     * Get the list of messages that are newer than the given message.
      *
-     * @param conversationId the id of the conversation
-     * @param date the date used in comparisons
+     * @param messageId the id of the message
      *
-     * @return the list messages in the conversation dated after the given date
+     * @return the list messages newer than the given message
      */
-    fun getMessageListAfterDateForConversation(conversationId: String, date: Date): List<Message>
+    fun getMessageListAfterDateOfMessage(messageId: String): List<Message>
 
     /**
      * Get the list of messages in the conversation with the given id that are dated before the
