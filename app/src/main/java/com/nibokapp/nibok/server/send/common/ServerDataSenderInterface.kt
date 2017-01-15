@@ -11,7 +11,7 @@ interface ServerDataSenderInterface {
      *
      * @return true if the document was sent successfully, false otherwise
      */
-    fun sendBookDocument(document: BaasDocument): Boolean
+    fun sendBookDocument(document: BaasDocument): Pair<Boolean, String?>
 
     /**
      * Send a BaasDocument representing insertion data to the server.
@@ -20,7 +20,7 @@ interface ServerDataSenderInterface {
      *
      * @return true if the document was sent successfully, false otherwise
      */
-    fun sendInsertionDocument(document: BaasDocument): Boolean
+    fun sendInsertionDocument(document: BaasDocument): Pair<Boolean, String?>
 
     /**
      * Send a BaasDocument representing conversation data to the server.
@@ -30,5 +30,15 @@ interface ServerDataSenderInterface {
      *
      * @return true if the document was sent successfully, false otherwise
      */
-    fun sendConversationDocument(document: BaasDocument, partnerId: String): Boolean
+    fun sendConversationDocument(document: BaasDocument, partnerId: String): Pair<Boolean, String?>
+
+    /**
+     * Send a BaasDocument representing message data to the server.
+     *
+     * @param document the document to send
+     * @param recipientId the id of the user receiving the message
+     *
+     * @return true if the document was sent successfully, false otherwise
+     */
+    fun sendMessageDocument(document: BaasDocument, recipientId: String): Pair<Boolean, String?>
 }
