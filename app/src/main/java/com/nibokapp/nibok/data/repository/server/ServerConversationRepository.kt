@@ -1,9 +1,12 @@
 package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
+import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
+import com.baasbox.android.Rest
 import com.baasbox.android.json.JsonArray
+import com.baasbox.android.json.JsonObject
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
@@ -99,11 +102,11 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         return messages
     }
 
-    override fun getMessageListAfterDateForConversation(conversationId: String, date: Date): List<Message> {
-        Log.d(TAG, "Getting messages for conversation: $conversationId after date: $date")
-        val result = fetcher.fetchMessageDocumentListAfterDateByConversation(conversationId, date)
+    override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
+        Log.d(TAG, "Getting messages newer than: $messageId")
+        val result = fetcher.fetchMessageDocumentListAfterDateOfMessage(messageId)
         val messages = mapper.convertDocumentListToMessages(result)
-        Log.d(TAG, "Found ${messages.size} messages for conversation: $conversationId after date: $date")
+        Log.d(TAG, "Found ${messages.size} messages newer than message: $messageId")
         return messages
     }
 
@@ -116,18 +119,56 @@ object ServerConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun sendMessage(message: Message): Boolean {
-        TODO()
+        if (currentUser == null) return false
+
+        val conversationDocument = fetcher.fetchConversationDocumentById(message.conversationId) ?: return false
+        val recipientId = mapper.convertDocumentToConversation(conversationDocument)?.partner?.username ?: return false
+
+        Log.d(TAG, "Sending message: ${message.text} in conversation: ${message.conversationId} to: $recipientId")
+        val messageDocument = getMessageDocument(message)
+        val (sent, messageId) = sender.sendMessageDocument(messageDocument, recipientId)
+
+        if (!sent) return false
+
+        Log.d(TAG, "Message sent, updating conversation")
+        val updatedMessages = conversationDocument.getArray(ServerConstants.MESSAGES).add(messageId)
+        return conversationDocument.updateArrayField(ServerConstants.MESSAGES, updatedMessages)
     }
 
     /*
      * EXTRA
      */
 
+    private fun BaasDocument.updateArrayField(fieldName: String, fieldData: JsonArray): Boolean {
+        val data = JsonObject().put("data", fieldData)
+        val endpoint = "document/${this.collection}/${this.id}/.$fieldName"
+        val updated = sendUpdateRequest(endpoint, data)
+        return updated
+    }
+
+    private fun sendUpdateRequest(endpoint: String, data: JsonObject): Boolean {
+        return BaasBox.rest().sync(
+                Rest.Method.PUT,
+                endpoint,
+                data
+        ).isSuccess
+    }
+
     private fun getConversationDocument(participantIds: List<String>): BaasDocument {
         val document = BaasDocument(ServerCollection.CONVERSATIONS.id)
         with(ServerConstants) {
             document.put(PARTICIPANTS, participantIds.toJsonArray())
                     .put(MESSAGES, JsonArray())
+        }
+        return document
+    }
+
+    private fun getMessageDocument(message: Message): BaasDocument {
+        val document = BaasDocument(ServerCollection.MESSAGES.id)
+        with(ServerConstants) {
+            document.put(CONVERSATION_ID, message.conversationId)
+                    .put(SENDER_ID, message.senderId)
+                    .put(TEXT, message.text)
         }
         return document
     }
