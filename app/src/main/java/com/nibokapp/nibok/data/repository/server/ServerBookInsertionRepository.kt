@@ -165,10 +165,10 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing insertion")
 
         val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId)
-        val published = sender.sendInsertionDocument(insertionDoc)
+        val (published, insertionId) = sender.sendInsertionDocument(insertionDoc)
 
-        if (published) {
-            user.addPublishedInsertion(insertionDoc.id)
+        if (published && insertionId != null) {
+            user.addPublishedInsertion(insertionId)
         }
 
         return published
@@ -194,9 +194,8 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
 
         val bookDoc = mapper.convertBookToDocument(book)
-        val published = sender.sendBookDocument(bookDoc)
-
-        return if (published) bookDoc.id else null
+        val (published, bookDocId) = sender.sendBookDocument(bookDoc)
+        return bookDocId
     }
 
     /*
