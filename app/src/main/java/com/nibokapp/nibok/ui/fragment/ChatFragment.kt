@@ -167,15 +167,19 @@ class ChatFragment(
                 Date()
         )
 
-        val messageSent = presenter.sendMessage(message)
-        if (messageSent) {
-            chatInputText.text.clear()
-            val messagePosition = chatAdapter.addMessage(message)
-            messagePosition?.let {
-                chatMessagesView.smoothScrollToPosition(it)
+        doAsync {
+            val messageSent = presenter.sendMessage(message)
+            uiThread {
+                if (messageSent) {
+                    chatInputText.text.clear()
+                    val messagePosition = chatAdapter.addMessage(message)
+                    messagePosition?.let {
+                        chatMessagesView.smoothScrollToPosition(it)
+                    }
+                } else {
+                    context.toast(R.string.error_message_not_sent)
+                }
             }
-        } else {
-            context.toast(R.string.error_message_not_sent)
         }
 
     }
