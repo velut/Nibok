@@ -9,7 +9,9 @@ import com.nibokapp.nibok.ui.fragment.main.common.ViewTypeFragment
 import com.nibokapp.nibok.ui.presenter.viewtype.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 /**
  * Fragment managing the feed of books.
@@ -74,10 +76,14 @@ class LatestFragment(
             }
 
             // Save button was clicked, save the insertion and alert user
-            val saved = presenter.toggleInsertionSave(itemId)
-            val toastMessage = if (saved) R.string.book_saved_to_collection
-                                else R.string.book_removed_from_collection
-            context.toast(toastMessage)
+            doAsync {
+                val saved = presenter.toggleInsertionSave(itemId)
+                uiThread {
+                    val toastMessage = if (saved) R.string.book_saved_to_collection
+                    else R.string.book_removed_from_collection
+                    context.toast(toastMessage)
+                }
+            }
         }
 
         override fun showButton(): Boolean = true

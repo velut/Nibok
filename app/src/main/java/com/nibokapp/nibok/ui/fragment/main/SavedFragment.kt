@@ -11,7 +11,9 @@ import com.nibokapp.nibok.ui.presenter.viewtype.SavedInsertionPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 import kotlinx.android.synthetic.main.fragment_saved.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 /**
  * Fragment managing the books saved by the user.
@@ -116,37 +118,40 @@ class SavedFragment(
 
         if (presenter !is InsertionSaveStatusPresenter) return
 
-        val saved = presenter.toggleInsertionSave(itemId)
+        doAsync {
+            val saved = presenter.toggleInsertionSave(itemId)
+            uiThread {
+                if (saved) return@uiThread
 
-        if (saved) return
+                // Remove the book
 
-        // Remove the book
+                // Save old book position for possible reinsertion
+                val oldBookPosition = mainAdapter.removeItemById(itemId, itemType)
 
-        // Save old book position for possible reinsertion
-        val oldBookPosition = mainAdapter.removeItemById(itemId, itemType)
+                // Notify user of removal
+                val snackBar = Snackbar.make(savedFragmentRoot,
+                        R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
 
-        // Notify user of removal
-        val snackBar = Snackbar.make(savedFragmentRoot,
-                R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
-
-        // Provide reinsertion possibility
-        snackBar.setAction(R.string.snackbar_undo_action) {
-            // Reinsert book if necessary
-            if (!presenter.isInsertionSaved(itemId)) {
-                presenter.toggleInsertionSave(itemId)
-                mainAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
-                checkForUpdates() // Sync fragment data and view
-                // Notify the reinsertion
-                val childSnackBar = Snackbar.make(savedFragmentRoot,
-                        R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
-                childSnackBar.show()
-            } else {
-                // Book was reinserted from other pages before the undo operation
-                val childSnackBar = Snackbar.make(savedFragmentRoot,
-                        R.string.book_already_into_collection, Snackbar.LENGTH_SHORT)
-                childSnackBar.show()
+                // Provide reinsertion possibility
+                snackBar.setAction(R.string.snackbar_undo_action) {
+                    // Reinsert book if necessary
+                    if (!presenter.isInsertionSaved(itemId)) {
+                        presenter.toggleInsertionSave(itemId)
+                        mainAdapter.restoreItemById(itemId, itemType, position = oldBookPosition)
+                        checkForUpdates() // Sync fragment data and view
+                        // Notify the reinsertion
+                        val childSnackBar = Snackbar.make(savedFragmentRoot,
+                                R.string.book_reinserted_into_collection, Snackbar.LENGTH_SHORT)
+                        childSnackBar.show()
+                    } else {
+                        // Book was reinserted from other pages before the undo operation
+                        val childSnackBar = Snackbar.make(savedFragmentRoot,
+                                R.string.book_already_into_collection, Snackbar.LENGTH_SHORT)
+                        childSnackBar.show()
+                    }
+                }
+                snackBar.show()
             }
         }
-        snackBar.show()
     }
 }
