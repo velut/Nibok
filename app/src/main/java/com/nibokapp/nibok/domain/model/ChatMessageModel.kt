@@ -11,6 +11,7 @@ import java.util.*
  * @param date the date in which the message was sent
  */
 data class ChatMessageModel(
+        val id: String,
         val conversationId: String,
         val senderId: String,
         val text: String,

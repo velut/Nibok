@@ -17,6 +17,7 @@ class MessageDataMapper : MessageDataMapperInterface {
         } else {
             return with(message) {
                 ChatMessageModel(
+                        id,
                         conversationId,
                         senderId,
                         text,
@@ -31,6 +32,7 @@ class MessageDataMapper : MessageDataMapperInterface {
 
     override fun convertMessageFromDomain(message: ChatMessageModel): Message = with(message) {
         Message(
+                id,
                 conversationId,
                 senderId,
                 text,

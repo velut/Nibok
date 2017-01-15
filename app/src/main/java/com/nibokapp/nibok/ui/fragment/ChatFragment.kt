@@ -161,6 +161,7 @@ class ChatFragment(
         val currentConversationId = conversationId ?: return
 
         val message = ChatMessageModel(
+                "", // id set by server
                 currentConversationId,
                 userId,
                 messageText,

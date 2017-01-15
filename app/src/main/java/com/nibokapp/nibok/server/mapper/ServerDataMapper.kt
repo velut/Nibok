@@ -151,7 +151,7 @@ class ServerDataMapper(
         val senderId = getString(ServerConstants.SENDER_ID)
         val text = getString(ServerConstants.TEXT)
         val date = getDate()
-        Message(conversationId, senderId, text, date)
+        Message(id, conversationId, senderId, text, date)
     }
 
     private fun getCurrentUserId(): String = BaasUser.current()?.name ?: ""
