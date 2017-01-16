@@ -53,9 +53,9 @@ class ChatPresenter {
      *
      * @param chatMessage the message to send
      *
-     * @return true if the message was sent successfully, false otherwise
+     * @return the message's id if the message was sent successfully, null otherwise
      */
-    fun sendMessage(chatMessage: ChatMessageModel): Boolean {
+    fun sendMessage(chatMessage: ChatMessageModel): String? {
         Log.d(TAG, "Sending message")
         return SendMessageCommand(chatMessage).execute()
     }

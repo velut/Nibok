@@ -108,8 +108,8 @@ interface ConversationRepositoryInterface {
      *
      * @param message the message to send
      *
-     * @return true if the message was sent successfully, false otherwise
+     * @return the message's id if the message was sent successfully, null otherwise
      */
-    fun sendMessage(message: Message): Boolean
+    fun sendMessage(message: Message): String?
 
 }

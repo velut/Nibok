@@ -96,7 +96,7 @@ object ConversationRepository : ConversationRepositoryInterface {
         return messages
     }
 
-    override fun sendMessage(message: Message): Boolean {
+    override fun sendMessage(message: Message): String? {
         return serverRepository.sendMessage(message)
     }
 }

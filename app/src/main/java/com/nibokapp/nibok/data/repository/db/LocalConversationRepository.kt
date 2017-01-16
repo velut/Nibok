@@ -121,7 +121,7 @@ object LocalConversationRepository : ConversationRepositoryInterface {
                 .filter { it.date!! <= date }
     }
 
-    override fun sendMessage(message: Message): Boolean {
+    override fun sendMessage(message: Message): String? {
         throw UnsupportedOperationException()
     }
 }

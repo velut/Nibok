@@ -118,21 +118,27 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         return messages
     }
 
-    override fun sendMessage(message: Message): Boolean {
-        if (currentUser == null) return false
+    override fun sendMessage(message: Message): String? {
+        if (currentUser == null) return null
 
-        val conversationDocument = fetcher.fetchConversationDocumentById(message.conversationId) ?: return false
-        val recipientId = mapper.convertDocumentToConversation(conversationDocument)?.partner?.username ?: return false
+        val conversationDocument = fetcher.fetchConversationDocumentById(message.conversationId)
+                ?: return null
+        val recipientId = mapper.convertDocumentToConversation(conversationDocument)?.partner?.username
+                ?: return null
 
         Log.d(TAG, "Sending message: ${message.text} in conversation: ${message.conversationId} to: $recipientId")
         val messageDocument = getMessageDocument(message)
         val (sent, messageId) = sender.sendMessageDocument(messageDocument, recipientId)
 
-        if (!sent) return false
+        if (!sent) return null
 
         Log.d(TAG, "Message sent, updating conversation")
         val updatedMessages = conversationDocument.getArray(ServerConstants.MESSAGES).add(messageId)
-        return conversationDocument.updateArrayField(ServerConstants.MESSAGES, updatedMessages)
+        val updated = conversationDocument.updateArrayField(ServerConstants.MESSAGES, updatedMessages)
+
+        if (!updated) return null
+
+        return messageId
     }
 
     /*

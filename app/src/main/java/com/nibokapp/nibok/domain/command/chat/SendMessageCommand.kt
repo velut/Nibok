@@ -12,15 +12,15 @@ import com.nibokapp.nibok.domain.model.ChatMessageModel
  *
  * @param message the message to send
  *
- * @return true if the message was sent successfully, false otherwise
+ * @return the message's id if the message was sent successfully, null otherwise
  */
 class SendMessageCommand(
         val message: ChatMessageModel,
         val dataMapper: MessageDataMapperInterface = MessageDataMapper(),
         val conversationRepository: ConversationRepositoryInterface = ConversationRepository
-) : Command<Boolean> {
+) : Command<String?> {
 
-    override fun execute(): Boolean =
+    override fun execute(): String? =
             conversationRepository.sendMessage(
                     dataMapper.convertMessageFromDomain(
                             message
