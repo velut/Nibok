@@ -38,10 +38,10 @@ class ChatFragment(
 
         /**
          * Timer constants.
-         * Delay before start is 2 seconds, execution period is 10 seconds
+         * Delay before start is 2 seconds, execution period is 2 seconds
          */
         const private val TIMER_DELAY =  (2 * 1000).toLong()
-        const private val TIMER_PERIOD = (10 * 1000).toLong()
+        const private val TIMER_PERIOD = (2 * 1000).toLong()
     }
 
     private var actionBar: ActionBar? = null
@@ -160,20 +160,15 @@ class ChatFragment(
 
         val currentConversationId = conversationId ?: return
 
-        val message = ChatMessageModel(
-                "", // id set by server
-                currentConversationId,
-                userId,
-                messageText,
-                Date()
-        )
+        val message = buildMessage(currentConversationId, messageText)
 
         doAsync {
-            val messageSent = presenter.sendMessage(message)
+            val messageId = presenter.sendMessage(message)
             uiThread {
-                if (messageSent) {
+                if (messageId != null) {
                     chatInputText.text.clear()
-                    val messagePosition = chatAdapter.addMessage(message)
+                    val sentMessage = message.copy(messageId)
+                    val messagePosition = chatAdapter.addMessage(sentMessage)
                     messagePosition?.let {
                         chatMessagesView.smoothScrollToPosition(it)
                     }
@@ -183,6 +178,16 @@ class ChatFragment(
             }
         }
 
+    }
+
+    private fun buildMessage(currentConversationId: String, messageText: String): ChatMessageModel {
+        return ChatMessageModel(
+                "", // id set after being sent
+                currentConversationId,
+                userId,
+                messageText,
+                Date()
+        )
     }
 
     private fun setupChatMessagesView() {
