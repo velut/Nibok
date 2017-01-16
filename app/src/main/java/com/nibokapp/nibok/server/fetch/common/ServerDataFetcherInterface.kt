@@ -32,11 +32,11 @@ interface ServerDataFetcherInterface {
      * Fetch a book's BaasDocument given its id.
      * The id is not the book's ISBN code.
      *
-     * @param bookId the id of the book
+     * @param id the id of the book
      *
      * @return a BaasDocument if the book was found, null otherwise
      */
-    fun fetchBookDocumentById(bookId: String): BaasDocument?
+    fun fetchBookDocumentById(id: String): BaasDocument?
 
     /**
      * Fetch a book's BaasDocument given its ISBN code.
@@ -187,17 +187,6 @@ interface ServerDataFetcherInterface {
      * @return a list of BaasDocument for the found messages
      */
     fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument>
-
-    /**
-     * Fetch the list of message documents associated to the given conversation
-     * dated after the given date.
-     *
-     * @param conversationId the id of the conversation
-     * @param date the date used for comparisons
-     *
-     * @return a list of BaasDocument for the found messages
-     */
-    fun fetchMessageDocumentListAfterDateByConversation(conversationId: String, date: Date): List<BaasDocument>
 
     /**
      * Fetch the list of message documents associated to the given conversation
