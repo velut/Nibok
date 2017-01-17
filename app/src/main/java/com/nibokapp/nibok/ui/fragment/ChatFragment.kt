@@ -38,9 +38,9 @@ class ChatFragment(
 
         /**
          * Timer constants.
-         * Delay before start is 2 seconds, execution period is 2 seconds
+         * Delay before start is 1 second, execution period is 2 seconds
          */
-        const private val TIMER_DELAY =  (2 * 1000).toLong()
+        const private val TIMER_DELAY =  (1 * 1000).toLong()
         const private val TIMER_PERIOD = (2 * 1000).toLong()
     }
 
@@ -92,14 +92,16 @@ class ChatFragment(
         super.onStart()
         Log.d(TAG, "Timer: Starting to check for new messages")
         checkNewMessagesTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_PERIOD) {
-            Log.d(TAG, "Timer: Checking for new messages")
-            val lastMessage = chatAdapter.getLastMessage()
-            lastMessage?.let {
-                val newMessages = presenter.getNewerMessages(it)
-                activity.runOnUiThread {
+                Log.d(TAG, "Timer: Checking for new messages")
+                val lastMessage = chatAdapter.getLastMessage()
+                val newMessages = if (lastMessage != null) {
+                    presenter.getNewerMessages(lastMessage)
+                } else {
+                    conversationId?.let { presenter.getConversationMessages(it) } ?: emptyList()
+                }
+                activity?.runOnUiThread { // Activity may be null
                     addNewMessages(newMessages)
                 }
-            }
         }
     }
 
