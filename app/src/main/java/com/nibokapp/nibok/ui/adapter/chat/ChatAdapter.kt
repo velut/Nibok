@@ -83,7 +83,7 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
      */
     fun addMessage(message: ChatMessageModel): Int? {
 
-        if (message in messages) return null
+        if (message.id in messages.map { it.id }) return null
 
         messages.add(message)
         val position = itemCount - 1
