@@ -92,16 +92,8 @@ class ChatFragment(
         super.onStart()
         Log.d(TAG, "Timer: Starting to check for new messages")
         checkNewMessagesTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_PERIOD) {
-                Log.d(TAG, "Timer: Checking for new messages")
-                val lastMessage = chatAdapter.getLastMessage()
-                val newMessages = if (lastMessage != null) {
-                    presenter.getNewerMessages(lastMessage)
-                } else {
-                    conversationId?.let { presenter.getConversationMessages(it) } ?: emptyList()
-                }
-                activity?.runOnUiThread { // Activity may be null
-                    addNewMessages(newMessages)
-                }
+            Log.d(TAG, "Timer: Checking for new messages")
+            checkForNewMessages()
         }
     }
 
@@ -121,6 +113,24 @@ class ChatFragment(
                     actionBar?.title = partnerName
                     chatAdapter.addMessages(messages)
                 }
+            }
+        }
+    }
+
+    private fun checkForNewMessages() {
+        doAsync {
+            val lastMessage = chatAdapter.getLastMessage()
+
+            val newMessages = if (lastMessage != null) {
+                presenter.getNewerMessages(lastMessage)
+            } else {
+                conversationId?.let { presenter.getConversationMessages(it) } ?: emptyList()
+            }
+
+            // Activity may be null, e.g. when refresh is going on but activity was closed
+            // When activity is null skip don't run addNewMessages() as it causes a NPE
+            activity?.runOnUiThread {
+                addNewMessages(newMessages)
             }
         }
     }
@@ -161,6 +171,10 @@ class ChatFragment(
         }
 
         val currentConversationId = conversationId ?: return
+
+
+        // Check if new messages arrived before sending our message
+        checkForNewMessages()
 
         val message = buildMessage(currentConversationId, messageText)
 
