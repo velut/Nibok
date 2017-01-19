@@ -38,7 +38,7 @@ class ChatFragment(
 
         /**
          * Timer constants.
-         * Delay before start is 1 second, execution period is 2 seconds
+         * Delay before timer starts is 1 second, timer's execution period is 2 seconds.
          */
         const private val TIMER_DELAY =  (1 * 1000).toLong()
         const private val TIMER_PERIOD = (2 * 1000).toLong()
@@ -48,12 +48,14 @@ class ChatFragment(
 
     private var conversationId: String? = null
 
-    private val userId by lazy { presenter.getUserId() }
+    private lateinit var userId: String
 
-    private val chatAdapter = ChatAdapter(userId)
+    private lateinit var chatAdapter: ChatAdapter
     private val chatLayoutManager = LinearLayoutManager(context)
 
-    private lateinit var checkNewMessagesTimer: Timer
+    private var setupCompleted: Boolean = false
+
+    private var checkNewMessagesTimer: Timer? = null
 
     private lateinit var partnerName: String
     private val partnerNamePlaceholder by lazy { getString(R.string.placeholder_chat_partner) }
@@ -66,8 +68,20 @@ class ChatFragment(
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userId = try {
+            presenter.getUserId()
+        } catch (e: IllegalStateException) {
+            Log.d(TAG, "No user id set for the local user, cannot proceed")
+
+            // If no userId was found return, setupCompleted will be false
+            // and further setup operations won't be executed
+            return
+        }
+
+        chatAdapter = ChatAdapter(userId)
         setupChatMessagesView()
         addSendButtonLister()
+        setupCompleted = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -83,6 +97,8 @@ class ChatFragment(
         actionBar = hostingActivity.supportActionBar
         actionBar?.title = getString(R.string.placeholder_chat)
 
+        if (!setupCompleted) return
+
         // Retrieve conversationId
         conversationId = arguments?.getString(ChatFragment.CONVERSATION_ID)
         setupConversation()
@@ -90,17 +106,22 @@ class ChatFragment(
 
     override fun onStart() {
         super.onStart()
+
+        if (!setupCompleted) return
+
         Log.d(TAG, "Timer: Starting to check for new messages")
         checkNewMessagesTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_PERIOD) {
-            Log.d(TAG, "Timer: Checking for new messages")
+            Log.d(TAG, "Timer: checking for new messages")
             checkForNewMessages()
         }
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "Timer: Stopping, no more check for new messages ")
-        checkNewMessagesTimer.cancel()
+        checkNewMessagesTimer?.let {
+            Log.d(TAG, "Timer: stopping; no more checking for new messages")
+            it.cancel()
+        }
     }
 
     private fun setupConversation() {
