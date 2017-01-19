@@ -40,8 +40,13 @@ class ChatFragment(
          * Timer constants.
          * Delay before timer starts is 1 second, timer's execution period is 2 seconds.
          */
-        const private val TIMER_DELAY =  (1 * 1000).toLong()
-        const private val TIMER_PERIOD = (2 * 1000).toLong()
+        private const val TIMER_DELAY =  (1 * 1000).toLong()
+        private const val TIMER_PERIOD = (2 * 1000).toLong()
+
+        /**
+         * Delay before a message can be sent again.
+         */
+        private const val SEND_DELAY = 200L
     }
 
     private var actionBar: ActionBar? = null
@@ -59,6 +64,8 @@ class ChatFragment(
 
     private lateinit var partnerName: String
     private val partnerNamePlaceholder by lazy { getString(R.string.placeholder_chat_partner) }
+
+    private var lastSentTime: Long? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -193,12 +200,22 @@ class ChatFragment(
 
         val currentConversationId = conversationId ?: return
 
+        // Prevent rapid firing of the same message
+        // A message can be sent only after SEND_DELAY time has passed
+        // since the last time send message was called
+        val canSend = (Date().time - (lastSentTime ?: 0L)) > SEND_DELAY
+        if (!canSend) {
+            Log.d(TAG, "Preventing possible duplicate message")
+            return
+        }
+        lastSentTime = Date().time
 
         // Check if new messages arrived before sending our message
+        // This prevents lost updates when two users send messages close in time
         checkForNewMessages()
 
+        // Build and send the message
         val message = buildMessage(currentConversationId, messageText)
-
         doAsync {
             val messageId = presenter.sendMessage(message)
             uiThread {
