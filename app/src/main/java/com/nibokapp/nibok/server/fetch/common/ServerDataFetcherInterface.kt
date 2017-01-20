@@ -200,6 +200,15 @@ interface ServerDataFetcherInterface {
     fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument>
 
     /**
+     * Fetch the message documents that are older than the message with the given id.
+     *
+     * @param messageId the id of the message
+     *
+     * @return a list of messages that are older than the message with the given id
+     */
+    fun  fetchMessageDocumentListBeforeDateOfMessage(messageId: String): List<BaasDocument>
+
+    /**
      * Fetch the message documents that are newer than the message with the given id.
      *
      * @param messageId the id of the message

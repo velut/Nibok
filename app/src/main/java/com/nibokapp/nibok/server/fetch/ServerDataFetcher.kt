@@ -173,17 +173,12 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
     }
 
-    override fun fetchMessageDocumentListAfterDateOfMessage(messageId: String): List<BaasDocument> {
-        val message = fetchMessageDocumentById(messageId) ?: return emptyList()
-        val conversationId = message.getString(ServerConstants.CONVERSATION_ID) ?: return emptyList()
-        val messageDate = message.creationDate
-        val whereString = AND(
-                CONVERSATION_ID_EQUALS(conversationId),
-                ID_NOT_EQUALS(messageId),
-                CREATION_DATE_AFTER(messageDate)
-        )
+    override fun fetchMessageDocumentListBeforeDateOfMessage(messageId: String): List<BaasDocument> {
+        return fetchMessageDocumentListByDateOfMessage(messageId, true)
+    }
 
-        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
+    override fun fetchMessageDocumentListAfterDateOfMessage(messageId: String): List<BaasDocument> {
+        return fetchMessageDocumentListByDateOfMessage(messageId, false)
     }
 
     /*
@@ -257,5 +252,18 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      */
     private fun getBeforeDateQueryCondition(date: Date): String {
         return "${ServerConstants.DATE} <= ${date.toStringDate()}"
+    }
+
+    private fun fetchMessageDocumentListByDateOfMessage(messageId: String, beforeDate: Boolean): List<BaasDocument> {
+        val message = fetchMessageDocumentById(messageId) ?: return emptyList()
+        val conversationId = message.getString(ServerConstants.CONVERSATION_ID) ?: return emptyList()
+        val messageDate = message.creationDate
+        val dateCondition = if (beforeDate) CREATION_DATE_BEFORE(messageDate) else CREATION_DATE_AFTER(messageDate)
+        val whereString = AND(
+                CONVERSATION_ID_EQUALS(conversationId),
+                ID_NOT_EQUALS(messageId),
+                dateCondition
+        )
+        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
     }
 }
