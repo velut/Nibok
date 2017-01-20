@@ -165,14 +165,6 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
     }
 
-    override fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument> {
-        // TODO WRONG fix
-        val whereString = with(ServerConstants) {
-            "$CONVERSATION_ID=$conversationId and ${getBeforeDateQueryCondition(date)}"
-        }
-        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
-    }
-
     override fun fetchMessageDocumentListBeforeDateOfMessage(messageId: String): List<BaasDocument> {
         return fetchMessageDocumentListByDateOfMessage(messageId, true)
     }

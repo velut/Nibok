@@ -102,19 +102,19 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         return messages
     }
 
+    override fun getMessageListBeforeDateOfMessage(messageId: String): List<Message> {
+        Log.d(TAG, "Getting messages older than: $messageId")
+        val result = fetcher.fetchMessageDocumentListBeforeDateOfMessage(messageId)
+        val messages = mapper.convertDocumentListToMessages(result)
+        Log.d(TAG, "Found ${messages.size} messages older than message: $messageId")
+        return messages
+    }
+
     override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
         Log.d(TAG, "Getting messages newer than: $messageId")
         val result = fetcher.fetchMessageDocumentListAfterDateOfMessage(messageId)
         val messages = mapper.convertDocumentListToMessages(result)
         Log.d(TAG, "Found ${messages.size} messages newer than message: $messageId")
-        return messages
-    }
-
-    override fun getMessageListBeforeDateForConversation(conversationId: String, date: Date): List<Message> {
-        Log.d(TAG, "Getting messages for conversation: $conversationId before date: $date")
-        val result = fetcher.fetchMessageDocumentListBeforeDateByConversation(conversationId, date)
-        val messages = mapper.convertDocumentListToMessages(result)
-        Log.d(TAG, "Found ${messages.size} messages for conversation: $conversationId before date: $date")
         return messages
     }
 

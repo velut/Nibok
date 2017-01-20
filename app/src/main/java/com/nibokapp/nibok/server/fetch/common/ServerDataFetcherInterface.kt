@@ -189,17 +189,6 @@ interface ServerDataFetcherInterface {
     fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument>
 
     /**
-     * Fetch the list of message documents associated to the given conversation
-     * dated before the given date.
-     *
-     * @param conversationId the id of the conversation
-     * @param date the date used for comparisons
-     *
-     * @return a list of BaasDocument for the found messages
-     */
-    fun fetchMessageDocumentListBeforeDateByConversation(conversationId: String, date: Date): List<BaasDocument>
-
-    /**
      * Fetch the message documents that are older than the message with the given id.
      *
      * @param messageId the id of the message

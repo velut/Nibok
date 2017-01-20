@@ -23,8 +23,8 @@ class RequestOlderMessagesFromConversationCommand(
 
     override fun execute(): List<ChatMessageModel> =
             dataMapper.convertMessageListToDomain(
-                    conversationRepository.getMessageListBeforeDateForConversation(
-                            firstMessage.conversationId, firstMessage.date
+                    conversationRepository.getMessageListBeforeDateOfMessage(
+                            firstMessage.id
                     )
             )
 }

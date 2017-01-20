@@ -85,6 +85,15 @@ interface ConversationRepositoryInterface {
     fun getMessageListForConversation(conversationId: String): List<Message>
 
     /**
+     * Get the list of messages that are older than the given message.
+     *
+     * @param messageId the id of the message
+     *
+     * @return the list messages older than the given message
+     */
+    fun getMessageListBeforeDateOfMessage(messageId: String): List<Message>
+
+    /**
      * Get the list of messages that are newer than the given message.
      *
      * @param messageId the id of the message
@@ -92,16 +101,6 @@ interface ConversationRepositoryInterface {
      * @return the list messages newer than the given message
      */
     fun getMessageListAfterDateOfMessage(messageId: String): List<Message>
-
-    /**
-     * Get the list of messages in the conversation with the given id that are dated before the
-     * given date.
-     *
-     * @param conversationId the id of the conversation
-     * @param date the date used in comparisons
-     * @return the list messages in the conversation dated before the given date
-     */
-    fun getMessageListBeforeDateForConversation(conversationId: String, date: Date): List<Message>
 
     /**
      * Send the given message.
