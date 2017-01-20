@@ -146,9 +146,8 @@ class ChatFragment(
     }
 
     private fun checkForNewMessages() {
+        val lastMessage = chatAdapter.getLastMessage()
         doAsync {
-            val lastMessage = chatAdapter.getLastMessage()
-
             val newMessages = if (lastMessage != null) {
                 presenter.getNewerMessages(lastMessage)
             } else {
