@@ -173,6 +173,18 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return fetchMessageDocumentListByDateOfMessage(messageId, false)
     }
 
+    override fun fetchLatestMessageByConversation(conversationId: String): BaasDocument? {
+        val descendingCreationDate = "${ServerConstants.CREATION_DATE} desc"
+        val messageBelongsToConversation = "${ServerConstants.CONVERSATION_ID}=\"$conversationId\""
+        val criteria = BaasQuery.builder()
+                .pagination(0, 1) // First message (page 0, 1 item)
+                .where(messageBelongsToConversation)
+                .orderBy(descendingCreationDate)
+                .criteria()
+        val result = BaasDocument.fetchAllSync(COLL_MESSAGES.id, criteria)
+        return result.onSuccessReturn { it.getOrNull(0) }
+    }
+
     /*
      * OTHER
      */

@@ -206,4 +206,13 @@ interface ServerDataFetcherInterface {
      */
     fun  fetchMessageDocumentListAfterDateOfMessage(messageId: String): List<BaasDocument>
 
+    /**
+     * Fetch the latest message exchanged in the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return a message BaasDocument if a message was found, null otherwise
+     */
+    fun fetchLatestMessageByConversation(conversationId: String): BaasDocument?
+
 }
