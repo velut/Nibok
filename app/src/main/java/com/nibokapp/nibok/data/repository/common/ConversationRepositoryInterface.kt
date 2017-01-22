@@ -29,6 +29,16 @@ interface ConversationRepositoryInterface {
     fun getConversationPartnerName(conversationId: String): String?
 
     /**
+     * Get the preview text for the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return the preview text for the conversation with the given id
+     * or null if no such conversation was found
+     */
+    fun getConversationPreviewText(conversationId: String): String?
+
+    /**
      * Get the list of conversations matching the given query.
      * The query can match on the following  attributes:
      *  Partner name, messages content

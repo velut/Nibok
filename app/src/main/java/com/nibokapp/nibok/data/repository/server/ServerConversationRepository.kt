@@ -53,6 +53,12 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         return conversation?.partner?.username
     }
 
+    override fun getConversationPreviewText(conversationId: String): String? {
+        Log.d(TAG, "Getting preview text for conversation: $conversationId")
+        val message = fetcher.fetchLatestMessageByConversation(conversationId)
+        return message?.getString(ServerConstants.TEXT)
+    }
+
     override fun getConversationListFromQuery(query: String): List<Conversation> {
         Log.d(TAG, "Getting conversation list for query: $query")
         val result = fetcher.fetchConversationDocumentListByQuery(query)

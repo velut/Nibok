@@ -40,6 +40,10 @@ object LocalConversationRepository : ConversationRepositoryInterface {
     override fun getConversationPartnerName(conversationId: String): String? =
             getConversationById(conversationId)?.partner?.username
 
+    override fun getConversationPreviewText(conversationId: String): String? {
+        return null
+    }
+
     override fun getConversationListFromQuery(query: String): List<Conversation> {
 
         if (!userRepository.localUserExists()) return emptyList()
@@ -107,8 +111,9 @@ object LocalConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
-        val conversation = getConversationById(conversationId)
-        return conversation?.messages?.toNormalList() ?: emptyList()
+//        val conversation = getConversationById(conversationId)
+//        return conversation?.messages?.toNormalList() ?: emptyList()
+        return emptyList()
     }
 
     override fun getMessageListBeforeDateOfMessage(messageId: String): List<Message> {

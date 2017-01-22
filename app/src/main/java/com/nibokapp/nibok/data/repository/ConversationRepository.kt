@@ -33,6 +33,9 @@ object ConversationRepository : ConversationRepositoryInterface {
     override fun getConversationPartnerName(conversationId: String): String? =
             SOURCES.firstResultOrNull { it.getConversationPartnerName(conversationId) }
 
+    override fun getConversationPreviewText(conversationId: String): String? =
+            SOURCES.firstResultOrNull { it.getConversationPreviewText(conversationId) }
+
     override fun getConversationListFromQuery(query: String): List<Conversation> {
 
         val trimmedQuery = query.trim()
