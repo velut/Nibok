@@ -6,7 +6,10 @@ import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.*
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.extension.getAvatar
+import com.nibokapp.nibok.extension.parseDate
+import com.nibokapp.nibok.extension.toRealmStringList
+import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
@@ -109,9 +112,9 @@ class ServerDataMapper(
         return partnerId?.let { convertUserFromServer(fetcher.fetchUserById(it)) }
     }
 
-    private fun BaasDocument.getMessages(): List<Message> {
-        val messageIds = getArray(ServerConstants.MESSAGES)
-        return convertDocumentListToMessages(fetcher.fetchMessageDocumentList(messageIds))
+    private fun BaasDocument.getLatestMessage(): Message? {
+        val latestMessageDocument = fetcher.fetchLatestMessageByConversation(id) ?: return null
+        return convertDocumentToMessage(latestMessageDocument)
     }
 
     private fun BaasUser.toExternalUser(): ExternalUser = with(this) {
@@ -142,8 +145,8 @@ class ServerDataMapper(
         val userId = getCurrentUserId()
         val partner = getPartner()
         val date = getDate()
-        val messages = getMessages().toRealmList()
-        Conversation(id, userId, partner, date, messages)
+        val latestMessage = getLatestMessage()
+        Conversation(id, userId, partner, latestMessage, date)
     }
 
     private fun BaasDocument.toMessage(): Message = with(this) {
