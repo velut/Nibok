@@ -39,15 +39,17 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         // CREATION DATE
         fun CREATION_DATE_AFTER(date: String) = "${ServerConstants.CREATION_DATE} >= date('$date')"
         fun CREATION_DATE_BEFORE(date: String) = "${ServerConstants.CREATION_DATE} <= date('$date')"
-        fun ORDER_BY_DESC_CREATION_DATE() = ORDER_BY_DESC(ServerConstants.CREATION_DATE)
 
         // OPERATORS
         fun AND(vararg items: String) = items.joinToString(" and ")
         fun OR(vararg items: String) = items.joinToString(" or ")
         fun IN(one: String, other: String) = "$one in $other"
         fun LIKE(one: String, other: String) = "$one like $other"
-        fun LIST_OF(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
+        fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
+
+        // ORDERING
         fun ORDER_BY_DESC(field: String) = "$field desc"
+        fun ORDER_BY_DESC_CREATION_DATE() = ORDER_BY_DESC(ServerConstants.CREATION_DATE)
     }
 
     /*
@@ -217,6 +219,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
            : List<BaasDocument>{
         val criteria = BaasQuery.builder()
                 .pagination(0, RECORDS_PER_PAGE)
+                .orderBy(ORDER_BY_DESC_CREATION_DATE())
                 .criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
@@ -238,7 +241,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                                                     collection: ServerCollection)
            : List<BaasDocument> {
         val idList = idsArray.filterIsInstance<String>()
-        val whereString = ID_IN_LIST(LIST_OF(idList))
+        val whereString = ID_IN_LIST(LIST_OF_ID(idList))
         return queryDocumentListFromCollection(collection, whereString)
     }
 
