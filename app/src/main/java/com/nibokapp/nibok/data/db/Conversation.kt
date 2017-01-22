@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.data.db
 
 import com.nibokapp.nibok.data.db.common.WellFormedItem
-import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -13,8 +12,8 @@ import java.util.*
  * @param id the id of the conversation
  * @param userId the id of the local user
  * @param partner the external user participating in the conversation
+ * @param latestMessage the latest message exchanged in the conversation
  * @param date the date in which the conversation was started
- * @param messages the list of messages exchanged in the conversation - One to many
  */
 open class Conversation(
 
@@ -24,9 +23,9 @@ open class Conversation(
 
         open var partner: ExternalUser? = null,
 
-        open var date: Date? = null,
+        open var latestMessage: Message? = null,
 
-        open var messages: RealmList<Message> = RealmList()
+        open var date: Date? = null
 
 ) : RealmObject(), WellFormedItem {
 
