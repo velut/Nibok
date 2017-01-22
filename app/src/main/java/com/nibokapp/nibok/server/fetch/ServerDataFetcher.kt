@@ -46,6 +46,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         fun IN(one: String, other: String) = "$one in $other"
         fun LIKE(one: String, other: String) = "$one like $other"
         fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
+        fun DISTINCT(field: String) = "distinct($field)"
 
         // ORDERING
         fun ORDER_BY_DESC(field: String) = "$field desc"
@@ -157,7 +158,22 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     override fun fetchRecentConversationDocumentList(): List<BaasDocument> {
-        return fetchRecentDocumentListFromCollection(COLL_CONVERSATIONS)
+        // Select the distinct conversations ids
+        // From the messages collection
+        // Ordering the messages from the newest
+        // This query returns the list of conversation ids ordered by when the last message was exchanged
+        val query = BaasQuery.builder()
+                .collection(COLL_MESSAGES.id)
+                .projection(DISTINCT(ServerConstants.CONVERSATION_ID))
+                .orderBy(ORDER_BY_DESC_CREATION_DATE())
+                .pagination(0, RECORDS_PER_PAGE)
+                .build()
+        val result = query.querySync().onSuccessReturn { it } ?: return emptyList()
+        val conversationIds = result.map { it.getString(ServerConstants.DISTINCT) }
+        // Fetch in order the conversations from their ids
+        return conversationIds
+                .map { fetchDocumentFromCollectionById(COLL_CONVERSATIONS, it) }
+                .filterNotNull()
     }
 
     override fun fetchConversationDocumentListAfterDate(date: Date): List<BaasDocument> {
@@ -255,7 +271,10 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      */
     private fun queryDocumentListFromCollection(collection: ServerCollection,
                                                 whereConditions: String): List<BaasDocument> {
-        val criteria = BaasQuery.builder().where(whereConditions).criteria()
+        val criteria = BaasQuery.builder()
+                .where(whereConditions)
+                .orderBy(ORDER_BY_DESC_CREATION_DATE())
+                .criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
     }
