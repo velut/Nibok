@@ -23,16 +23,31 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         private val RECORDS_PER_PAGE = 30
 
         /**
-         * Functions building Strings representing common queries to the server database
+         * Functions building Strings representing common queries to the server database.
          */
-        fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=\"$id\""
-        fun ID_NOT_EQUALS(id: String) = "${ServerConstants.ID}<>\"$id\""
+        // ID
+        fun ID(id: String) = "\"$id\""
+        fun ID_NOT_EQUALS(id: String) = "${ServerConstants.ID}<>${ID(id)}"
         fun ID_IN_LIST(list: String) = "${ServerConstants.ID} in $list"
+
+        // ISBN
+        fun ISBN_EQUALS(isbn: String) = "${ServerConstants.ISBN}=$isbn"
+
+        // CONVERSATION
+        fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=${ID(id)}"
+
+        // CREATION DATE
         fun CREATION_DATE_AFTER(date: String) = "${ServerConstants.CREATION_DATE} >= date('$date')"
         fun CREATION_DATE_BEFORE(date: String) = "${ServerConstants.CREATION_DATE} <= date('$date')"
-        fun LIST_OF(items: List<String>)= items.joinToString(", ", "[", "]") { "\"$it\""}
+        fun ORDER_BY_DESC_CREATION_DATE() = ORDER_BY_DESC(ServerConstants.CREATION_DATE)
+
+        // OPERATORS
         fun AND(vararg items: String) = items.joinToString(" and ")
         fun OR(vararg items: String) = items.joinToString(" or ")
+        fun IN(one: String, other: String) = "$one in $other"
+        fun LIKE(one: String, other: String) = "$one like $other"
+        fun LIST_OF(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
+        fun ORDER_BY_DESC(field: String) = "$field desc"
     }
 
     /*
@@ -60,7 +75,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     override fun fetchBookDocumentByISBN(isbn: String): BaasDocument? {
-        val whereString = "${ServerConstants.ISBN}=$isbn"
+        val whereString = ISBN_EQUALS(isbn)
         val bookDocList = queryDocumentListFromCollection(COLL_BOOKS, whereString)
         return bookDocList.getOrNull(0) // Get the first book in the list
     }
@@ -88,10 +103,10 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
         val whereString = with(ServerConstants) {
             OR(
-                    "$TITLE like $query",
-                    "$query in $AUTHORS",
-                    "$PUBLISHER like $query",
-                    "$ISBN like $query"
+                    LIKE(TITLE, query),
+                    IN(query, AUTHORS),
+                    LIKE(PUBLISHER, query),
+                    LIKE(ISBN, query)
             )
         }
         return queryDocumentListFromCollection(COLL_INSERTIONS, whereString)
@@ -119,7 +134,10 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
     override fun fetchConversationDocumentByParticipants(firstParticipantId: String, secondParticipantId: String): BaasDocument? {
         val whereString = with(ServerConstants) {
-            "\"$firstParticipantId\" in $PARTICIPANTS and \"$secondParticipantId\" in $PARTICIPANTS"
+            AND(
+                    IN(ID(firstParticipantId), PARTICIPANTS),
+                    IN(ID(secondParticipantId), PARTICIPANTS)
+            )
         } // e.g. ""bob" in participants and "sam" in participants"
         return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString).getOrNull(0)
     }
@@ -174,12 +192,10 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     override fun fetchLatestMessageByConversation(conversationId: String): BaasDocument? {
-        val descendingCreationDate = "${ServerConstants.CREATION_DATE} desc"
-        val messageBelongsToConversation = "${ServerConstants.CONVERSATION_ID}=\"$conversationId\""
         val criteria = BaasQuery.builder()
                 .pagination(0, 1) // First message (page 0, 1 item)
-                .where(messageBelongsToConversation)
-                .orderBy(descendingCreationDate)
+                .where(CONVERSATION_ID_EQUALS(conversationId))
+                .orderBy(ORDER_BY_DESC_CREATION_DATE())
                 .criteria()
         val result = BaasDocument.fetchAllSync(COLL_MESSAGES.id, criteria)
         return result.onSuccessReturn { it.getOrNull(0) }
@@ -201,7 +217,6 @@ class ServerDataFetcher : ServerDataFetcherInterface {
            : List<BaasDocument>{
         val criteria = BaasQuery.builder()
                 .pagination(0, RECORDS_PER_PAGE)
-                .orderBy(ServerConstants.DATE) // TODO Fix
                 .criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
