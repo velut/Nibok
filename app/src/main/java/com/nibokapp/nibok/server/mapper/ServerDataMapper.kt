@@ -93,7 +93,7 @@ class ServerDataMapper(
      * EXTENSIONS
      */
 
-    private fun BaasDocument.getDate(): Date = creationDate.parseDate()
+    private fun BaasDocument.getParsedCreationDate(): Date = creationDate.parseDate()
 
     private fun BaasDocument.getSeller(): ExternalUser? {
         val sellerName = author // The author of the insertion is the seller
@@ -131,7 +131,7 @@ class ServerDataMapper(
     }
 
     private fun BaasDocument.toInsertion(): Insertion = with(this) {
-        val date = getDate()
+        val date = getParsedCreationDate()
         val seller = getSeller()
         val book = getBook()
         val bookPrice = getFloat(ServerConstants.BOOK_PRICE)
@@ -144,8 +144,8 @@ class ServerDataMapper(
     private fun BaasDocument.toConversation(): Conversation = with(this) {
         val userId = getCurrentUserId()
         val partner = getPartner()
-        val date = getDate()
         val latestMessage = getLatestMessage()
+        val date = latestMessage?.date ?: getParsedCreationDate()
         Conversation(id, userId, partner, latestMessage, date)
     }
 
@@ -153,7 +153,7 @@ class ServerDataMapper(
         val conversationId = getString(ServerConstants.CONVERSATION_ID)
         val senderId = getString(ServerConstants.SENDER_ID)
         val text = getString(ServerConstants.TEXT)
-        val date = getDate()
+        val date = getParsedCreationDate()
         Message(id, conversationId, senderId, text, date)
     }
 
