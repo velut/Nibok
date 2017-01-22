@@ -8,8 +8,6 @@ import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
 import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.domain.model.UserModel
-import com.nibokapp.nibok.extension.toNormalList
-import com.nibokapp.nibok.extension.toRealmList
 
 /**
  * Conversation data mapper implementation.
@@ -24,32 +22,35 @@ class ConversationDataMapper(
 
     override fun convertConversationToDomain(conversation: Conversation?): ConversationModel? {
 
-        if (conversation == null || !conversation.isWellFormed()) {
-            return null
-        } else {
-            return with(conversation) {
-                ConversationModel(
-                        conversationId = id,
-                        userId = userId,
-                        partner = convertPartnerToDomain(partner!!),
-                        date = date!!,
-                        previewText = messages.lastOrNull()?.text ?: "",
-                        chatMessages = convertMessageListToDomain(messages.toNormalList())
-                )
-            }
+        if (conversation == null || !conversation.isWellFormed()) return null
+
+        return with(conversation) {
+            val partner = convertPartnerToDomain(partner!!)
+            val previewText = latestMessage?.text ?: ""
+            val partnerHasReplied = latestMessage?.senderId == partner.username
+            ConversationModel(
+                    id,
+                    userId,
+                    partner,
+                    previewText,
+                    partnerHasReplied,
+                    date!!
+            )
         }
     }
-
+    // TODO 2 unused override methods V
     override fun convertConversationListFromDomain(conversations: List<ConversationModel>):
             List<Conversation> = conversations.map { convertConversationFromDomain(it) }
 
     override fun convertConversationFromDomain(conversation: ConversationModel): Conversation = with(conversation) {
+        val partner = convertPartnerFromDomain(partner)
+        val latestMessage = null
         Conversation(
-                id = conversationId,
-                userId = userId,
-                partner = convertPartnerFromDomain(partner),
-                date = date,
-                messages = convertMessageListFromDomain(chatMessages).toRealmList()
+                conversationId,
+                userId,
+                partner,
+                latestMessage,
+                date
         )
     }
 
