@@ -91,6 +91,12 @@ class ChatAdapter(val userId: String) : RecyclerView.Adapter<ChatAdapter.ChatMes
         return position
     }
 
+    fun addOlderMessages(oldMessages: List<ChatMessageModel>) {
+        val toAdd = oldMessages.filter { it.id !in messages.map { it.id } }
+        messages.addAll(0, toAdd)
+        notifyItemRangeInserted(0, toAdd.size)
+    }
+
     /**
      * Return the first message available in the list of messages.
      *
