@@ -11,9 +11,13 @@ import android.support.v7.widget.RecyclerView
  * If enough items are present it stops loading.
  *
  * @param layoutManager the layout manager
+ * @param loadOnScrollDown true if the listener should listen to scroll down events,
+ *                         false for scroll up events. Default is true
  * @param loadFunc the function to be called to load more items
  */
-class InfiniteScrollListener(val layoutManager: LinearLayoutManager, val loadFunc: () -> Unit) :
+class InfiniteScrollListener(val layoutManager: LinearLayoutManager,
+                             val loadOnScrollDown: Boolean = true,
+                             val loadFunc: () -> Unit) :
         RecyclerView.OnScrollListener() {
 
     private val VISIBLE_THRESHOLD = 3
@@ -28,8 +32,10 @@ class InfiniteScrollListener(val layoutManager: LinearLayoutManager, val loadFun
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        // Scrolled down
-        if (dy > 0) {
+        val hasScrolled = if (loadOnScrollDown) dy > 0 else dy < 0
+
+        // The view was scrolled
+        if (hasScrolled) {
             totalItemCount = layoutManager.itemCount
             visibleItemCount = layoutManager.childCount
             firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
