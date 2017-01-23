@@ -198,7 +198,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
     override fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument> {
         val whereString = CONVERSATION_ID_EQUALS(conversationId)
-        return queryDocumentListFromCollection(COLL_MESSAGES, whereString)
+        return queryDocumentListFromCollection(COLL_MESSAGES, whereString).reversed()
     }
 
     override fun fetchMessageDocumentListBeforeDateOfMessage(messageId: String): List<BaasDocument> {
@@ -270,8 +270,10 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * @return a list of BaasDocument
      */
     private fun queryDocumentListFromCollection(collection: ServerCollection,
-                                                whereConditions: String): List<BaasDocument> {
+                                                whereConditions: String,
+                                                page: Int = 0): List<BaasDocument> {
         val criteria = BaasQuery.builder()
+                .pagination(page, RECORDS_PER_PAGE)
                 .where(whereConditions)
                 .orderBy(ORDER_BY_DESC_CREATION_DATE())
                 .criteria()
