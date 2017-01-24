@@ -273,7 +273,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                                                 whereConditions: String,
                                                 page: Int = 0): List<BaasDocument> {
         val criteria = BaasQuery.builder()
-                .pagination(page, 10)
+                .pagination(page, RECORDS_PER_PAGE)
                 .where(whereConditions)
                 .orderBy(ORDER_BY_DESC_CREATION_DATE())
                 .criteria()
