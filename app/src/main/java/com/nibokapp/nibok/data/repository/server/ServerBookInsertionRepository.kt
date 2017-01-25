@@ -1,15 +1,13 @@
 package com.nibokapp.nibok.data.repository.server
 
+import android.net.Uri
 import android.util.Log
 import com.baasbox.android.BaasUser
 import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.extension.addPublishedInsertion
-import com.nibokapp.nibok.extension.getPublishedInsertions
-import com.nibokapp.nibok.extension.getSavedInsertions
-import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
+import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
@@ -162,9 +160,16 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         val book = insertion.book ?: return false
         val bookId = publishBook(book) ?: return false
 
+        val pictureUris = insertion.bookImagesSources.toStringList()
+        val pictureIds = if (pictureUris.isNotEmpty()) {
+            publishPictures(pictureUris) ?: return false
+        } else {
+            emptyList()
+        }
+
         Log.d(TAG, "Publishing insertion")
 
-        val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId)
+        val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId, pictureIds)
         val (published, insertionId) = sender.sendInsertionDocument(insertionDoc)
 
         if (published && insertionId != null) {
@@ -196,6 +201,17 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         val bookDoc = mapper.convertBookToDocument(book)
         val (published, bookDocId) = sender.sendBookDocument(bookDoc)
         return bookDocId
+    }
+
+    /**
+     * Publish the pictures associated with an insertion.
+     */
+    private fun  publishPictures(pictureUris: List<String>): List<String>? {
+        Log.d(TAG, "Publishing ${pictureUris.size} pictures")
+        val parsedPictureUris = pictureUris.map { Uri.parse(it) }
+        Log.d(TAG, "Picture uris are:\n  $parsedPictureUris")
+        val (published, pictureIds) = sender.sendInsertionPictures(parsedPictureUris)
+        return pictureIds
     }
 
     /*
