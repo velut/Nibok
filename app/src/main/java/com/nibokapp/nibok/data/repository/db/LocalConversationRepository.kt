@@ -55,9 +55,9 @@ object LocalConversationRepository : ConversationRepositoryInterface {
         val results = queryManyRealm {
             it.where(Conversation::class.java)
                     .equalTo("userId", userRepository.getLocalUserId())
-                    .contains("partner.name", trimmedQuery, Case.INSENSITIVE)
+                    .contains("partner.username", trimmedQuery, Case.INSENSITIVE)
                     .or()
-                    .contains("messages.text", trimmedQuery, Case.INSENSITIVE)
+                    .contains("latestMessage.text", trimmedQuery, Case.INSENSITIVE)
                     .findAll()
         }
         Log.d(TAG, "Conversations corresponding to query '$trimmedQuery' = ${results.size}")
