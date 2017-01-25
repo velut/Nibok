@@ -12,6 +12,7 @@ import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
+import com.nibokapp.nibok.extension.toJsonArray
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
@@ -188,12 +189,5 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         val document = getConversationDocument(participants)
         sender.sendConversationDocument(document, partnerId)
         return fetchConversationIdByParticipants(localUserId, partnerId)
-    }
-
-    private fun List<String>.toJsonArray(): JsonArray {
-        // TODO remove ext as it is copied from ServerDataMapper
-        val array = JsonArray()
-        this.forEach { array.add(it) }
-        return array
     }
 }
