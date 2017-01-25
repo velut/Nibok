@@ -2,14 +2,10 @@ package com.nibokapp.nibok.server.mapper
 
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
-import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.db.*
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.getAvatar
-import com.nibokapp.nibok.extension.parseDate
-import com.nibokapp.nibok.extension.toRealmStringList
-import com.nibokapp.nibok.extension.toStringList
+import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
@@ -57,11 +53,14 @@ class ServerDataMapper(
     }
 
     override fun convertInsertionListToDocuments(insertions: List<Insertion>): List<BaasDocument> {
-        return insertions.map { convertInsertionToDocument(it, it.book?.id ?: "") }
+        return insertions.map { convertInsertionToDocument(it, it.book?.id ?: "", emptyList()) }
     }
 
-    override fun convertInsertionToDocument(insertion: Insertion, bookId: String): BaasDocument =
-            insertion.toDocument(bookId)
+    override fun convertInsertionToDocument(insertion: Insertion,
+                                            bookId: String,
+                                            pictureIds: List<String>): BaasDocument {
+        return insertion.toDocument(bookId, pictureIds)
+    }
 
     /*
      * CONVERSATIONS
@@ -171,21 +170,14 @@ class ServerDataMapper(
         return document
     }
 
-    private fun Insertion.toDocument(bookId: String): BaasDocument {
+    private fun Insertion.toDocument(bookId: String, pictureIds: List<String>): BaasDocument {
         val document = BaasDocument(ServerCollection.INSERTIONS.id)
         with(ServerConstants) {
             document.put(BOOK_ID, bookId)
                     .put(BOOK_PRICE, bookPrice.toDouble())
                     .put(BOOK_CONDITION, bookCondition)
-                    .put(BOOK_PICTURES, bookImagesSources.toStringList().toJsonArray())
-        } // TODO Real picture urls
+                    .put(BOOK_PICTURES, pictureIds.toJsonArray())
+        }
         return document
     }
-
-    private fun List<String>.toJsonArray(): JsonArray {
-        val array = JsonArray()
-        this.forEach { array.add(it) }
-        return array
-    }
-
 }

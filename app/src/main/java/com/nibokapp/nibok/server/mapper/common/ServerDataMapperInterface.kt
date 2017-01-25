@@ -71,7 +71,7 @@ interface ServerDataMapperInterface {
      *
      * @return an Insertion
      */
-    fun convertInsertionToDocument(insertion: Insertion, bookId: String): BaasDocument
+    fun convertInsertionToDocument(insertion: Insertion, bookId: String, pictureIds: List<String>): BaasDocument
 
     /**
      * Convert a list of BaasDocument containing conversation data into a list of Conversation.
