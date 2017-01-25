@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.extension
 
 import com.baasbox.android.BaasResult
+import com.baasbox.android.json.JsonArray
 
 /**
  * Extensions handling Baas related operations.
@@ -37,4 +38,13 @@ inline fun <reified T, reified R> BaasResult<T>.onSuccessReturn(func: (T) -> R):
         return func(this.value())
     }
     return null
+}
+
+/**
+ * Converts this list of strings into a JsonArray containing the strings.
+ */
+fun List<String>.toJsonArray(): JsonArray {
+    val array = JsonArray()
+    this.forEach { array.add(it) }
+    return array
 }
