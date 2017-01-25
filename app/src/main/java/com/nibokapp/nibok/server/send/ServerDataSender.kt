@@ -1,16 +1,22 @@
 package com.nibokapp.nibok.server.send
 
+import android.net.Uri
 import android.util.Log
-import com.baasbox.android.BaasACL
-import com.baasbox.android.BaasDocument
-import com.baasbox.android.Grant
-import com.baasbox.android.Role
+import com.baasbox.android.*
+import com.nibokapp.nibok.extension.onSuccessReturn
 import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
+import com.nibokapp.nibok.ui.App
+import java.io.FileNotFoundException
 
 class ServerDataSender : ServerDataSenderInterface {
 
     companion object {
         private val TAG = ServerDataSender::class.java.simpleName
+
+        /**
+         * Access Control List allowing everyone, including anonymous users to read a document or file
+         */
+        private val ACL_PUBLIC_ACCESS = BaasACL.grantRole(Role.ANONYMOUS, Grant.READ)
     }
 
     /*
@@ -31,6 +37,28 @@ class ServerDataSender : ServerDataSenderInterface {
     /*
      * INSERTIONS
      */
+
+    override fun sendInsertionPictures(fileUris: List<Uri>): Pair<Boolean, List<String>?> {
+        val contentResolver = App.instance.contentResolver
+        val pictureIds = mutableListOf<String>()
+        for (fileUri in fileUris) {
+            val inputStream = try {
+                contentResolver.openInputStream(fileUri)
+            } catch (e: FileNotFoundException) {
+                Log.d(TAG, "Could not find file: $fileUri")
+                return Pair(false, null)
+            } ?: return Pair(false, null)
+
+            Log.d(TAG, "Uploading picture: $fileUri")
+            val pictureId = BaasFile().uploadSync(ACL_PUBLIC_ACCESS, inputStream).onSuccessReturn { it.id }
+                    ?: return Pair(false, null)
+            Log.d(TAG, "Uploaded picture: $fileUri, got id: $pictureId")
+            pictureIds += pictureId
+            Log.d(TAG, "Uploaded ${pictureIds.size} pictures so far")
+        }
+        Log.d(TAG, "Uploaded all pictures (${pictureIds.size})")
+        return Pair(true, pictureIds.toList())
+    }
 
     override fun sendInsertionDocument(document: BaasDocument): Pair<Boolean, String?> {
         Log.d(TAG, "Sending insertion to server")
@@ -70,9 +98,7 @@ class ServerDataSender : ServerDataSenderInterface {
      * Send this BaasDocument and let it be readable by everyone (including anonymous users).
      */
     private fun BaasDocument.sendForPublicReading(): Boolean {
-        // Access Control List allowing anonymous users to read this document
-        val acl = BaasACL.grantRole(Role.ANONYMOUS, Grant.READ)
-        return this.saveSync(acl).isSuccess
+        return this.saveSync(ACL_PUBLIC_ACCESS).isSuccess
     }
 
     /**
