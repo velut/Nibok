@@ -151,7 +151,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         if (trimmedQuery.isEmpty()) return emptyList()
 
         val whereString = with(ServerConstants) {
-            "" // TODO?
+            IN(ID(trimmedQuery), PARTICIPANTS)
         }
 
         return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString)
