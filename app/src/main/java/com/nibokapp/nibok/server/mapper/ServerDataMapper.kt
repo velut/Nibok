@@ -9,6 +9,7 @@ import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
+import com.nibokapp.nibok.ui.App
 import java.util.*
 
 /**
@@ -135,9 +136,21 @@ class ServerDataMapper(
         val book = getBook()
         val bookPrice = getFloat(ServerConstants.BOOK_PRICE)
         val bookCondition = getString(ServerConstants.BOOK_CONDITION)
-        val bookPictures = getArray(ServerConstants.BOOK_PICTURES)
-                .filterIsInstance<String>().toRealmStringList()
-        Insertion(id, date, seller, book, bookPrice, bookCondition, bookPictures)
+        val insertionPictures = getInsertionPictures().toRealmStringList()
+        Insertion(id, date, seller, book, bookPrice, bookCondition, insertionPictures)
+    }
+
+    private fun BaasDocument.getInsertionPictures(): List<String> {
+        val pictureIdsArray = getArray(ServerConstants.BOOK_PICTURES) ?: return emptyList()
+        val pictureIds = pictureIdsArray.filterIsInstance<String>()
+        return pictureIds.map { it.toPictureUrl() }
+    }
+
+    private fun String.toPictureUrl(): String {
+        val baseUrl = App.API_BASE_URL
+        val endPoint = "file/$this"
+        val appCode = "?X-BAASBOX-APPCODE=${App.APP_CODE}"
+        return "$baseUrl$endPoint$appCode"
     }
 
     private fun BaasDocument.toConversation(): Conversation = with(this) {
