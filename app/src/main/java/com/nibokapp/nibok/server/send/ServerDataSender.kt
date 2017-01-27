@@ -3,10 +3,9 @@ package com.nibokapp.nibok.server.send
 import android.net.Uri
 import android.util.Log
 import com.baasbox.android.*
+import com.nibokapp.nibok.extension.compressImage
 import com.nibokapp.nibok.extension.onSuccessReturn
 import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
-import com.nibokapp.nibok.ui.App
-import java.io.FileNotFoundException
 
 class ServerDataSender : ServerDataSenderInterface {
 
@@ -39,18 +38,11 @@ class ServerDataSender : ServerDataSenderInterface {
      */
 
     override fun sendInsertionPictures(fileUris: List<Uri>): Pair<Boolean, List<String>?> {
-        val contentResolver = App.instance.contentResolver
         val pictureIds = mutableListOf<String>()
         for (fileUri in fileUris) {
-            val inputStream = try {
-                contentResolver.openInputStream(fileUri)
-            } catch (e: FileNotFoundException) {
-                Log.d(TAG, "Could not find file: $fileUri")
-                return Pair(false, null)
-            } ?: return Pair(false, null)
-
+            val compressedPicture = compressImage(fileUri) ?: return Pair(false, null)
             Log.d(TAG, "Uploading picture: $fileUri")
-            val pictureId = BaasFile().uploadSync(ACL_PUBLIC_ACCESS, inputStream).onSuccessReturn { it.id }
+            val pictureId = BaasFile().uploadSync(ACL_PUBLIC_ACCESS, compressedPicture).onSuccessReturn { it.id }
                     ?: return Pair(false, null)
             Log.d(TAG, "Uploaded picture: $fileUri, got id: $pictureId")
             pictureIds += pictureId
