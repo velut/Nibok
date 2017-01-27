@@ -5,7 +5,7 @@ buildscript {
     // Versioning
     ext.kotlin_version = '1.0.6'
     ext.anko_version = '0.9'
-    ext.realm_version = '2.2.1'
+    ext.realm_version = '2.3.0'
     ext.android_support_version = '25.1.0'
 
     repositories {
