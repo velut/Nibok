@@ -3,9 +3,9 @@ package com.nibokapp.nibok.server.send
 import android.net.Uri
 import android.util.Log
 import com.baasbox.android.*
-import com.nibokapp.nibok.extension.compressImage
 import com.nibokapp.nibok.extension.onSuccessReturn
 import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
+import com.nibokapp.nibok.util.ImageCompressor
 
 class ServerDataSender : ServerDataSenderInterface {
 
@@ -40,7 +40,7 @@ class ServerDataSender : ServerDataSenderInterface {
     override fun sendInsertionPictures(fileUris: List<Uri>): Pair<Boolean, List<String>?> {
         val pictureIds = mutableListOf<String>()
         for (fileUri in fileUris) {
-            val compressedPicture = compressImage(fileUri) ?: return Pair(false, null)
+            val compressedPicture = ImageCompressor.compressImage(fileUri) ?: return Pair(false, null)
             Log.d(TAG, "Uploading picture: $fileUri")
             val pictureId = BaasFile().uploadSync(ACL_PUBLIC_ACCESS, compressedPicture).onSuccessReturn { it.id }
                     ?: return Pair(false, null)
