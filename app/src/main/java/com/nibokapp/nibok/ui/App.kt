@@ -4,6 +4,7 @@ import android.app.Application
 import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasUser
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.nibokapp.nibok.authentication.Authenticator
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.jetbrains.anko.doAsync
@@ -18,6 +19,20 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
+
+        /**
+         * Server config.
+         */
+        // Localhost is 10.0.2.2 for AVD and 10.0.3.2 for Genymotion
+        const val API_DOMAIN = "10.0.2.2"
+        const val API_PORT = 9000
+        const val API_BASE_URL = "http://$API_DOMAIN:$API_PORT/"
+
+        const val APP_CODE = "1234567890"
+        const val APP_CODE_REQUEST = "?X-BAASBOX-APPCODE=$APP_CODE"
+
+        private const val PLACEHOLDER_IMAGE = "asset/book_picture_placeholder"
+        const val PLACEHOLDER_IMAGE_URL = "$API_BASE_URL$PLACEHOLDER_IMAGE$APP_CODE_REQUEST"
     }
 
     override fun onCreate() {
@@ -33,6 +48,7 @@ class App : Application() {
         // Test. logout user on start
         doAsync {
             BaasUser.current()?.logoutSync()
+            Authenticator.login("ciao", "ciaociao")
         }
     }
 
@@ -68,9 +84,9 @@ class App : Application() {
      */
     private fun initBaasBox() {
         BaasBox.builder(this).setAuthentication(BaasBox.Config.AuthType.SESSION_TOKEN)
-                .setApiDomain("10.0.3.2") // 10.0.2.2 for AVD; 10.0.3.2 for Genymotion
-                .setPort(9000)
-                .setAppCode("1234567890")
+                .setApiDomain(API_DOMAIN)
+                .setPort(API_PORT)
+                .setAppCode(APP_CODE)
                 .init()
     }
 }
