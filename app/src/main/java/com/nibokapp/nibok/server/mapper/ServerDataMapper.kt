@@ -149,8 +149,7 @@ class ServerDataMapper(
     private fun String.toPictureUrl(): String {
         val baseUrl = App.API_BASE_URL
         val endPoint = "file/$this"
-        val appCode = "?X-BAASBOX-APPCODE=${App.APP_CODE}"
-        return "$baseUrl$endPoint$appCode"
+        return "$baseUrl$endPoint${App.APP_CODE_REQUEST}"
     }
 
     private fun BaasDocument.toConversation(): Conversation = with(this) {
