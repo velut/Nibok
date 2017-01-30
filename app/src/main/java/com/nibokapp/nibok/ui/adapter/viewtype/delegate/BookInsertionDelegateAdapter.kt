@@ -9,6 +9,7 @@ import android.widget.ImageView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.ui.App
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypeDelegateAdapter
@@ -62,9 +63,8 @@ class BookInsertionDelegateAdapter(
             insertionId = item.insertionId
 
             val thumbnail = item.bookPictureSources.firstOrNull()
-            thumbnail?.let {
-                loadThumbnail(it)
-            }
+            loadThumbnail(thumbnail)
+
 
             bindData(item)
             addThumbnailListener()
@@ -86,8 +86,12 @@ class BookInsertionDelegateAdapter(
          *
          * @param imgSource the source of the book's cover image
          */
-        private fun loadThumbnail(imgSource: String) = with(itemView) {
-            bookThumbnail.loadImg(imgSource)
+        private fun loadThumbnail(imgSource: String?) = with(itemView) {
+            if (imgSource != null) {
+                bookThumbnail.loadImg(imgSource)
+            } else {
+                bookThumbnail.loadImg(App.PLACEHOLDER_IMAGE_URL)
+            }
         }
 
         /**
