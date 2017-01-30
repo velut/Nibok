@@ -2,7 +2,6 @@ package com.nibokapp.nibok.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,8 +39,6 @@ class InsertionDetailFragment(
         val INSERTION_ID = "$TAG:insertionId"
     }
 
-    private var actionBar: ActionBar? = null
-
     /**
      * Insertion's id.
      */
@@ -66,10 +63,8 @@ class InsertionDetailFragment(
         hostingActivity.apply {
             setSupportActionBar(toolbar)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.placeholder_book_detail)
         }
-
-        actionBar = hostingActivity.supportActionBar
-        actionBar?.title = getString(R.string.placeholder_book_detail)
 
         // Retrieve insertionId
         insertionId = arguments?.getString(InsertionDetailFragment.INSERTION_ID)
@@ -166,7 +161,6 @@ class InsertionDetailFragment(
      * @param item the item containing detail data
      */
     private fun bindData(item: BookInsertionModel) = with(item) {
-
         // Insertion details
         insertionBookPrice.text = bookPrice.toCurrency()
         insertionBookCondition.text = bookCondition
@@ -176,8 +170,9 @@ class InsertionDetailFragment(
         // Book details
         with(bookInfo) {
 
-            // Set actionbar's title to book's title
-            actionBar?.title = title
+            // Update activity's title using book's title
+            // Scrolling activity must use toolbar_layout to update title
+            toolbar_layout?.title = title
 
             // Bind book data
             detailBookTitle.text = title
@@ -188,7 +183,9 @@ class InsertionDetailFragment(
             detailBookAuthor.text = authorsString
             detailBookYear.text = year.toString()
             detailBookPublisher.text = publisher
-            detailBookISBN.text = isbn
+            if (isbn != "") {
+                detailBookISBN.text = isbn
+            }
         }
     }
 }
