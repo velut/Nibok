@@ -163,7 +163,9 @@ class InsertionDetailFragment(
     private fun bindData(item: BookInsertionModel) = with(item) {
         // Insertion details
         insertionBookPrice.text = bookPrice.toCurrency()
-        insertionBookCondition.text = bookCondition
+        bookCondition.toBookWearCondition(context)?.let {
+            insertionBookCondition.text = it
+        }
         insertionSoldBy.text = seller.username
         insertionDateField.text = insertionDate.toSimpleDateString()
 

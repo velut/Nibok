@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
-import com.nibokapp.nibok.extension.animateBounce
-import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.extension.loadImg
-import com.nibokapp.nibok.extension.toCurrency
+import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.adapter.viewtype.ViewTypeAdapter
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
 import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypeDelegateAdapter
@@ -105,7 +102,9 @@ class BookInsertionDelegateAdapter(
                     bookAuthor.text = authors.take(MAX_AUTHORS).joinToString("\n")
                     bookYear.text = year.toString()
                 }
-                bookQuality.text = bookCondition
+                bookCondition.toBookWearCondition(context)?.let {
+                    bookQuality.text = it
+                }
                 bookPriceValue.text = bookPrice.toCurrency()
             }
         }

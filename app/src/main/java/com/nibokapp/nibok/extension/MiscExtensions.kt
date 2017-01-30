@@ -1,5 +1,7 @@
 package com.nibokapp.nibok.extension
 
+import android.content.Context
+import com.nibokapp.nibok.R
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -143,4 +145,14 @@ fun String.toSafeFloat(default: Float = 0f): Float = try {
     this.toFloat()
 } catch (e: NumberFormatException) {
     default
+}
+
+fun String.toBookWearCondition(context: Context): String? {
+    val wearConditionsArray = context.resources.getStringArray(R.array.book_wear_condition_array)
+    val bookWearId = this.toSafeInt()
+    return if (bookWearId >= 0 && bookWearId < wearConditionsArray.size) {
+        wearConditionsArray[bookWearId]
+    } else {
+        null
+    }
 }
