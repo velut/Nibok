@@ -61,7 +61,7 @@ class MessageDelegateAdapter(
          */
         private fun loadAvatar(avatarSource: String) = with(itemView) {
             val placeholder = R.drawable.ic_account_circle_dark_green_48dp
-            messageAvatar.loadImg(avatarSource, placeholder, placeholder, animate = false)
+            messageAvatar.loadImage(avatarSource, placeholder, placeholder, animate = false)
         }
 
         /**

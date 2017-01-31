@@ -144,7 +144,7 @@ class InsertionDetailFragment(
         if (pictures.isNotEmpty()) {
             bookThumbnailImage.apply {
                 // Load thumbnail in scrolling image view
-                loadImg(pictures[0])
+                loadImage(pictures[0])
 
                 // Set click listener for gallery
                 setOnClickListener {

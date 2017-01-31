@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.extension.loadImg
+import com.nibokapp.nibok.extension.loadImage
 import com.nibokapp.nibok.ui.delegate.camera.PictureTakerImpl
 import com.nibokapp.nibok.ui.delegate.camera.common.PictureTaker
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
@@ -169,7 +169,7 @@ class InputInsertionPicture(
             val hasEndMargin = i != MAX_PICTURES -1
             val host = getPictureHost(hasEndMargin)
             host.apply {
-                loadImg(uri.toString())
+                loadImage(uri.toString())
                 addListeners(i)
             }
             // Insert as last picture before the picture taking button

@@ -88,9 +88,9 @@ class BookInsertionDelegateAdapter(
          */
         private fun loadThumbnail(imgSource: String?) = with(itemView) {
             if (imgSource != null) {
-                bookThumbnail.loadImg(imgSource)
+                bookThumbnail.loadImage(imgSource)
             } else {
-                bookThumbnail.loadImg(App.PLACEHOLDER_IMAGE_URL)
+                bookThumbnail.loadImage(App.PLACEHOLDER_IMAGE_URL)
             }
         }
 

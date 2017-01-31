@@ -40,10 +40,10 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
  * @param errorResourceId the id of the resource to be shown if there was an error loading the image
  * @param animate true if animation should be used when loading, false otherwise. Default = true
  */
-fun ImageView.loadImg(imageLocation: String,
-                      placeholderResourceId: Int = R.drawable.book_placeholder_image,
-                      errorResourceId: Int = R.drawable.book_placeholder_image,
-                      animate: Boolean = true) {
+fun ImageView.loadImage(imageLocation: String,
+                        placeholderResourceId: Int = R.drawable.book_placeholder_image,
+                        errorResourceId: Int = R.drawable.book_placeholder_image,
+                        animate: Boolean = true) {
     if (animate) {
         Glide.with(context)
                 .load(imageLocation)
