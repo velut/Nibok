@@ -1,5 +1,7 @@
 package com.nibokapp.nibok.ui.fragment
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -27,6 +29,8 @@ abstract class MainActivityFragment(
 
     companion object {
         private val TAG = MainActivityFragment::class.java.simpleName
+
+        val REQUEST_AUTHENTICATE = 1
     }
 
     /**
@@ -116,6 +120,13 @@ abstract class MainActivityFragment(
      */
     abstract fun onQueryTextChange(newText: String): Boolean
 
+    /**
+     * Handle a successful authentication.
+     *
+     * @param data the data received from onActivityResult()
+     */
+    abstract fun onSuccessfulAuthResult(data: Intent?)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,6 +194,17 @@ abstract class MainActivityFragment(
         }
         return true
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_AUTHENTICATE) {
+            if (resultCode == RESULT_OK) {
+                onSuccessfulAuthResult(data)
+            }
+        }
+    }
+
+    protected fun isUserLoggedIn(): Boolean = authPresenter.loggedUserExists()
 
     private fun setupRecyclerView(rv: RecyclerView,
                                   rvLM: RecyclerView.LayoutManager,
