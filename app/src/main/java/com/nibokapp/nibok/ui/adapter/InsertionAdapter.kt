@@ -15,15 +15,33 @@ import kotlin.properties.Delegates
 
 /**
  * Updatable adapter holding BookInsertionModel items.
+ *
+ * All listener functions receive the item's id.
+ *
+ * @param onItemClick the function to execute when the item is clicked
+ * @param onThumbnailClick the function to execute when the item's thumbnail is clicked
+ * @param onSaveButtonClick the optional function to execute when the item's save button is clicked.
+ *                          If null the save button is disabled and hidden. Default is null
  */
-class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), UpdatableAdapter {
+class InsertionAdapter(
+        val onItemClick: (String) -> Unit,
+        val onThumbnailClick: (String) -> Unit,
+        val onSaveButtonClick: ((String) -> Unit)? = null
+) : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), UpdatableAdapter {
 
     companion object {
         private val TAG = InsertionAdapter::class.java.simpleName
 
+        /**
+         * Update key for the save button
+         */
         private const val KEY_IS_SAVED = "InsertionAdapter.KEY_IS_SAVED"
     }
 
+    /**
+     * Items held by the adapter.
+     * When items change an adapter update is triggered. See [UpdatableAdapter].
+     */
     var items: List<BookInsertionModel> by Delegates.observable(emptyList()) {
         prop, oldItems, newItems ->
         Log.d(TAG, "Updating adapter items")
@@ -45,7 +63,7 @@ class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.card_book))
+        return ViewHolder(parent.inflate(R.layout.card_book), onItemClick, onThumbnailClick, onSaveButtonClick)
     }
 
     override fun getItemCount(): Int {
@@ -53,7 +71,6 @@ class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-
         if (payloads.isEmpty()) {
             Log.d(TAG, "Full view holder binding required")
             onBindViewHolder(holder, position)
@@ -80,12 +97,25 @@ class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), 
         holder.bind(items[position])
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    class ViewHolder(itemView: View,
+                     val onItemClick: (String) -> Unit,
+                     val onThumbnailClick: (String) -> Unit,
+                     val onSaveButtonClick: ((String) -> Unit)? = null
+    ) : RecyclerView.ViewHolder(itemView) {
 
         companion object {
+            /**
+             * Maximum number of authors to display in a card.
+             */
             const val MAX_AUTHORS = 2
         }
 
+        /**
+         * Graphically update the save button.
+         *
+         * @param isSaved true if the insertion is saved, false if it is not
+         */
         fun updateSaveButton(isSaved: Boolean) {
             with(itemView) {
                 val (colorFilter, imageResource) = if (isSaved) {
@@ -103,10 +133,16 @@ class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), 
             }
         }
 
+        /**
+         * Bind the item to the item's view.
+         *
+         * @param item the item containing the data used to populate the view
+         */
         fun bind(item: BookInsertionModel) {
             loadThumbnail(item.bookPictureSources.firstOrNull())
             bindTextData(item)
-            addClickListeners()
+            setupButtons()
+            addClickListeners(item.insertionId)
         }
 
         private fun loadThumbnail(imageSource: String?) = with(itemView) {
@@ -134,14 +170,33 @@ class InsertionAdapter() : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), 
             }
         }
 
-        private fun addClickListeners() {
+        private fun setupButtons() = with(itemView) {
+            val disableSaveButton = onSaveButtonClick == null
+            if (disableSaveButton) {
+                saveButton.apply {
+                    isEnabled = false
+                    setGone()
+                }
+            }
+        }
+
+        private fun addClickListeners(itemId: String) {
             Log.d(TAG, "Adding click listeners")
             itemView.setOnClickListener {
                 Log.d(TAG, "Card clicked")
+                onItemClick(itemId)
             }
             itemView.bookThumbnail.setOnClickListener {
                 Log.d(TAG, "Thumbnail clicked")
+                onThumbnailClick(itemId)
             }
+            onSaveButtonClick?.let {
+                itemView.saveButton.setOnClickListener {
+                    Log.d(TAG, "Save button clicked")
+                    it(itemId)
+                }
+            }
+
         }
     }
 }
