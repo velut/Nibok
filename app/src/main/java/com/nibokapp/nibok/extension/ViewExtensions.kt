@@ -1,12 +1,10 @@
 package com.nibokapp.nibok.extension
 
 import android.content.Context
+import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.view.ViewPager
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.ScaleAnimation
@@ -112,6 +110,14 @@ fun View.hideSoftKeyboard(context: Context) {
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
+fun View.setVisible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.setGone() {
+    this.visibility = View.GONE
+}
+
 /**
  * Listener for keyboard hiding on tap.
  *
@@ -153,6 +159,27 @@ inline fun ViewPager.onPageSelected(crossinline func: (Int) -> Unit) = with(this
         }
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        }
+    })
+}
+
+/**
+ * Add expand and collapse listeners for this MenuItem.
+ *
+ * @param onExpand the function to be executed when the item expands,
+ *                 return true if the item should expand
+ * @param onCollapse the function to be executed when the item collapse,
+ *                   return true if the item should collapse
+ */
+inline fun MenuItem.addExpandListener(crossinline onExpand: (MenuItem) -> Boolean,
+                                      crossinline onCollapse: (MenuItem) -> Boolean) {
+    MenuItemCompat.setOnActionExpandListener(this, object : MenuItemCompat.OnActionExpandListener {
+        override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+            return onExpand(item)
+        }
+
+        override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+            return onCollapse(item)
         }
     })
 }
