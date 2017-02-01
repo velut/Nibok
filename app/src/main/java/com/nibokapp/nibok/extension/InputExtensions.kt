@@ -1,6 +1,7 @@
 package com.nibokapp.nibok.extension
 
 import android.support.design.widget.TextInputEditText
+import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
 
@@ -28,4 +29,23 @@ inline fun TextInputEditText.afterTextChanged(crossinline func: () -> Unit) = wi
                 }
             }
     )
+}
+
+/**
+ * Listen for query text change and submit on this SearchView.
+ *
+ * @param onQueryTextSubmit the function handling the query on its submission
+ * @param onQueryTextChange the function handling the changing query text
+ */
+inline fun SearchView.onQueryListener(crossinline onQueryTextSubmit: (String) -> Boolean,
+                                      crossinline onQueryTextChange: (String) -> Boolean) = with(this) {
+    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return query?.let { onQueryTextSubmit(it) } ?: false
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            return newText?.let { onQueryTextChange(it) } ?: false
+        }
+    })
 }
