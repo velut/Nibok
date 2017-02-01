@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -88,6 +89,12 @@ class AuthenticateActivity(
     override fun onPause() {
         super.onPause()
         alertDialog?.dismiss()
+    }
+
+    override fun finish() {
+        val resultIntent = Intent().putExtras(intent)
+        setResult(RESULT_OK, resultIntent)
+        super.finish()
     }
 
     private fun addAuthViewSwitchListener() {
