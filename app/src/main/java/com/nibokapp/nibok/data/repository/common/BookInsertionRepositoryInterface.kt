@@ -2,7 +2,6 @@ package com.nibokapp.nibok.data.repository.common
 
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
-import java.util.*
 
 /**
  * Interface for book insertions repositories.
@@ -42,24 +41,6 @@ interface BookInsertionRepositoryInterface {
      */
     fun getInsertionListFromQuery(query: String): List<Insertion>
 
-    /**
-     * Get the list of insertions with a date greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getInsertionListAfterDate(date: Date): List<Insertion>
-
-    /**
-     * Get the list of insertions with a date smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getInsertionListBeforeDate(date: Date): List<Insertion>
-
     /*
      * FEED BOOK INSERTIONS
      */
@@ -86,26 +67,6 @@ interface BookInsertionRepositoryInterface {
      */
     fun getFeedInsertionListFromQuery(query: String): List<Insertion>
 
-    /**
-     * Get the list of insertions not published by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getFeedInsertionListAfterDate(date: Date): List<Insertion>
-
-    /**
-     * Get the list of insertions not published by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getFeedInsertionListBeforeDate(date: Date): List<Insertion>
-
     /*
      * SAVED BOOK INSERTIONS
      */
@@ -131,26 +92,6 @@ interface BookInsertionRepositoryInterface {
      */
     fun getSavedInsertionListFromQuery(query: String): List<Insertion>
 
-    /**
-     * Get the list of insertions saved by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getSavedInsertionLisAfterDate(date: Date): List<Insertion>
-
-    /**
-     * Get the list of insertions saved by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getSavedInsertionListBeforeDate(date: Date): List<Insertion>
-
     /*
      * PUBLISHED BOOK INSERTIONS
      */
@@ -175,26 +116,6 @@ interface BookInsertionRepositoryInterface {
      *  @return the list of book insertions matching the query
      */
     fun getPublishedInsertionListFromQuery(query: String): List<Insertion>
-
-    /**
-     * Get the list of insertions published by the user with a date
-     * greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date greater or equal to the given date
-     */
-    fun getPublishedInsertionListAfterDate(date: Date): List<Insertion>
-
-    /**
-     * Get the list of insertions published by the user with a date
-     * smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of book insertions with a date smaller or equal to the given date
-     */
-    fun getPublishedInsertionListBeforeDate(date: Date): List<Insertion>
 
     /*
      * BOOK INSERTION SAVE STATUS
