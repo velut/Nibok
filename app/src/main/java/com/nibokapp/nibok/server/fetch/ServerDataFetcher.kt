@@ -1,13 +1,14 @@
 package com.nibokapp.nibok.server.fetch
 
+import android.util.Log
 import com.baasbox.android.*
+import com.baasbox.android.BaasUser.current
 import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
+import com.nibokapp.nibok.extension.getSavedInsertionsArray
 import com.nibokapp.nibok.extension.onSuccessReturn
-import com.nibokapp.nibok.extension.toStringDate
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
-import java.util.*
 
 /**
  * ServerDataFetcher implements the ServerDataFetcherInterface and fetches data from the server.
@@ -25,10 +26,20 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         /**
          * Functions building Strings representing common queries to the server database.
          */
+        // COMMON
+        fun ATTR_IN_LIST(attribute: String, list: String) = "$attribute in $list"
+
         // ID
         fun ID(id: String) = "\"$id\""
         fun ID_NOT_EQUALS(id: String) = "${ServerConstants.ID}<>${ID(id)}"
-        fun ID_IN_LIST(list: String) = "${ServerConstants.ID} in $list"
+        fun ID_IN_LIST(list: String) = ATTR_IN_LIST(ServerConstants.ID, list)
+
+        // DOCUMENT AUTHOR
+        fun AUTHOR_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}=${ID(authorId)}"
+        fun AUTHOR_NOT_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}<>${ID(authorId)}"
+
+        // INSERTION
+        fun BOOK_ID_IN_LIST(list: String) = ATTR_IN_LIST(ServerConstants.BOOK_ID, list)
 
         // ISBN
         fun ISBN_EQUALS(isbn: String) = "${ServerConstants.ISBN}=$isbn"
@@ -44,7 +55,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         fun AND(vararg items: String) = items.joinToString(" and ")
         fun OR(vararg items: String) = items.joinToString(" or ")
         fun IN(one: String, other: String) = "$one in $other"
-        fun LIKE(one: String, other: String) = "$one like $other"
+        fun LIKE(one: String, other: String) = "$one like \"%$other%\""
         fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
         fun DISTINCT(field: String) = "distinct($field)"
 
@@ -56,6 +67,9 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     /*
      * USER
      */
+
+    private val currentUser: BaasUser?
+        get() = current()
 
     override fun fetchUserById(userId: String): BaasUser? {
         return BaasUser.fetchSync(userId).onSuccessReturn { it }
@@ -87,8 +101,30 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * INSERTIONS
      */
 
-    override fun fetchRecentInsertionDocumentList(): List<BaasDocument> {
-        return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+    override fun fetchRecentInsertionDocumentList(filterByCurrentUser: Boolean,
+                                                  excludeAllByUser: Boolean,
+                                                  includeOnlyIfSaved: Boolean,
+                                                  includeOnlyByUser: Boolean): List<BaasDocument> {
+        if (!filterByCurrentUser) {
+            return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+        }
+
+        val user = currentUser ?: return emptyList()
+
+        if (excludeAllByUser) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, AUTHOR_NOT_EQUALS(user.name))
+        }
+
+        if (includeOnlyByUser) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, AUTHOR_EQUALS(user.name))
+        }
+
+        if (includeOnlyIfSaved) {
+            val savedInsertionIds = user.getSavedInsertionsArray().filterIsInstance<String>()
+            return queryDocumentListFromCollection(COLL_INSERTIONS, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
+        }
+
+        return emptyList()
     }
 
     override fun fetchInsertionDocumentListById(idsArray: JsonArray): List<BaasDocument> {
@@ -99,28 +135,32 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return fetchDocumentFromCollectionById(COLL_INSERTIONS, id)
     }
 
-    override fun fetchInsertionDocumentListByQuery(query: String): List<BaasDocument> {
+    override fun fetchInsertionDocumentListByQuery(query: String,
+                                                   filterByCurrentUser: Boolean,
+                                                   excludeAllByUser: Boolean,
+                                                   includeOnlyIfSaved: Boolean,
+                                                   includeOnlyByUser: Boolean): List<BaasDocument> {
         val trimmedQuery = query.trim()
-
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        val whereString = with(ServerConstants) {
-            OR(
-                    LIKE(TITLE, query),
-                    IN(query, AUTHORS),
-                    LIKE(PUBLISHER, query),
-                    LIKE(ISBN, query)
-            )
+        // TODO
+        if (true) {
+            val whereString = with(ServerConstants) {
+                OR(
+                        LIKE(TITLE, query),
+                        IN(ID(query), AUTHORS),
+                        LIKE(PUBLISHER, query),
+                        LIKE(ISBN, query)
+                )
+            }
+            val bookIds = queryDocumentListFromCollection(COLL_BOOKS, whereString).map { it.id }
+            Log.d("TAG", "bookids: $bookIds")
+            return queryDocumentListFromCollection(COLL_INSERTIONS, BOOK_ID_IN_LIST(LIST_OF_ID(bookIds)))
         }
-        return queryDocumentListFromCollection(COLL_INSERTIONS, whereString)
-    }
 
-    override fun fetchInsertionDocumentListAfterDate(date: Date): List<BaasDocument> {
-        return queryDocumentListFromCollection(COLL_INSERTIONS, getAfterDateQueryCondition(date))
-    }
-
-    override fun fetchInsertionDocumentListBeforeDate(date: Date): List<BaasDocument> {
-        return queryDocumentListFromCollection(COLL_INSERTIONS, getBeforeDateQueryCondition(date))
+        // TODO use filtered user id
+        // TODO query books and then retrieve insertions!
+        return emptyList()
     }
 
     /*
@@ -176,14 +216,6 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                 .filterNotNull()
     }
 
-    override fun fetchConversationDocumentListAfterDate(date: Date): List<BaasDocument> {
-        return queryDocumentListFromCollection(COLL_INSERTIONS, getAfterDateQueryCondition(date))
-    }
-
-    override fun fetchConversationDocumentListBeforeDate(date: Date): List<BaasDocument> {
-        return queryDocumentListFromCollection(COLL_INSERTIONS, getBeforeDateQueryCondition(date))
-    }
-
     /*
      * MESSAGES
      */
@@ -225,7 +257,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
     /**
      * Fetch recent documents from the server belonging to the specified collection.
-     * The returned list of document is ordered by date.
+     * The returned list of document is ordered by descending date.
      *
      * @param collection the collection from which the documents are fetched
      *
@@ -279,22 +311,6 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                 .criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
-    }
-
-    /**
-     * Get the String that describes the where condition
-     * for the date field to be after the given date.
-     */
-    private fun getAfterDateQueryCondition(date: Date): String {
-        return "${ServerConstants.DATE} >= ${date.toStringDate()}"
-    }
-
-    /**
-     * Get the String that describes the where condition
-     * for the date field to be before the given date.
-     */
-    private fun getBeforeDateQueryCondition(date: Date): String {
-        return "${ServerConstants.DATE} <= ${date.toStringDate()}"
     }
 
     private fun fetchMessageDocumentListByDateOfMessage(messageId: String, beforeDate: Boolean): List<BaasDocument> {
