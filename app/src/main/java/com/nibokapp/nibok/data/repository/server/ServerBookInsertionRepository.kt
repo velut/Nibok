@@ -2,19 +2,22 @@ package com.nibokapp.nibok.data.repository.server
 
 import android.net.Uri
 import android.util.Log
+import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
 import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.extension.addPublishedInsertion
+import com.nibokapp.nibok.extension.getSavedInsertionsArray
+import com.nibokapp.nibok.extension.toStringList
+import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 import com.nibokapp.nibok.server.mapper.ServerDataMapper
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
 import com.nibokapp.nibok.server.send.ServerDataSender
 import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
-import java.util.*
 
 /**
  * Server repository for book insertions.
@@ -43,7 +46,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      */
 
     override fun getInsertionById(insertionId: String): Insertion? {
-        Log.d(TAG, "Getting insertion: $insertionId")
+        Log.d(TAG, "Getting insertion with id: $insertionId")
         val result = fetcher.fetchInsertionDocumentById(insertionId)
         return result?.let { mapper.convertDocumentToInsertion(it) }
     }
@@ -55,23 +58,8 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
     }
 
     override fun getInsertionListFromQuery(query: String): List<Insertion> {
-        val result = fetcher.fetchInsertionDocumentListByQuery(query)
-        val insertions = mapper.convertDocumentListToInsertions(result)
+        val insertions = fetcher.fetchInsertionDocumentListByQuery(query).toInsertionList()
         Log.d(TAG, "Found ${insertions.size} insertions corresponding to query: $query")
-        return insertions
-    }
-
-    override fun getInsertionListAfterDate(date: Date): List<Insertion> {
-        val result = fetcher.fetchInsertionDocumentListAfterDate(date)
-        val insertions = mapper.convertDocumentListToInsertions(result)
-        Log.d(TAG, "Found ${insertions.size} insertions after date: $date")
-        return insertions
-    }
-
-    override fun getInsertionListBeforeDate(date: Date): List<Insertion> {
-        val result = fetcher.fetchInsertionDocumentListBeforeDate(date)
-        val insertions = mapper.convertDocumentListToInsertions(result)
-        Log.d(TAG, "Found ${insertions.size} insertions before date: $date")
         return insertions
     }
 
@@ -81,20 +69,16 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getFeedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        val result = fetcher.fetchRecentInsertionDocumentList()
-        feedCache = mapper.convertDocumentListToInsertions(result).excludeUserOwnInsertions()
+        feedCache = fetcher.fetchRecentInsertionDocumentList(true, excludeAllByUser = true).toInsertionList()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache
     }
 
-    override fun getFeedInsertionListFromQuery(query: String): List<Insertion>  =
-            getInsertionListFromQuery(query).excludeUserOwnInsertions()
-
-    override fun getFeedInsertionListAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).excludeUserOwnInsertions()
-
-    override fun getFeedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListFromQuery(query: String): List<Insertion> {
+        val insertions = fetcher.fetchInsertionDocumentListByQuery(query, true, excludeAllByUser = true).toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} feed insertions corresponding to query: $query")
+        return insertions
+    }
 
     /*
      * SAVED BOOK INSERTIONS
@@ -102,18 +86,16 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getSavedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return savedCache
-        savedCache = currentUser?.getSavedInsertions() ?: emptyList()
+        savedCache = fetcher.fetchRecentInsertionDocumentList(true, includeOnlyIfSaved = true).toInsertionList()
+        Log.d(TAG, "Found ${savedCache.size} saved insertions")
         return savedCache
     }
 
-    override fun getSavedInsertionListFromQuery(query: String): List<Insertion> =
-            getInsertionListFromQuery(query).includeOnlySavedInsertions()
-
-    override fun getSavedInsertionLisAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).includeOnlySavedInsertions()
-
-    override fun getSavedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionListFromQuery(query: String): List<Insertion> {
+        val insertions = fetcher.fetchInsertionDocumentListByQuery(query, true, includeOnlyIfSaved = true).toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} saved insertions corresponding to query: $query")
+        return insertions
+    }
 
     /*
      * PUBLISHED BOOK INSERTIONS
@@ -121,25 +103,25 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun getPublishedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return publishedCache
-        publishedCache = currentUser?.getPublishedInsertions() ?: emptyList()
+        publishedCache = fetcher.fetchRecentInsertionDocumentList(true, includeOnlyByUser = true).toInsertionList()
+        Log.d(TAG, "Found ${publishedCache.size} published insertions")
         return publishedCache
     }
 
-    override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> =
-            getInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
-
-    override fun getPublishedInsertionListAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
-
-    override fun getPublishedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> {
+        val insertions = fetcher.fetchInsertionDocumentListByQuery(query, true, includeOnlyByUser = true).toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} published insertions corresponding to query: $query")
+        return insertions
+    }
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
-    override fun isBookInsertionSaved(insertionId: String): Boolean =
-            insertionId in getSavedInsertionList().map { it.id }
+    override fun isBookInsertionSaved(insertionId: String): Boolean {
+        val saveInsertionIds = currentUser?.getSavedInsertionsArray()?.filterIsInstance<String>() ?: emptyList()
+        return insertionId in saveInsertionIds
+    }
 
     override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
         val user = currentUser ?:
@@ -218,24 +200,6 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      * EXTENSIONS
      */
 
-    private fun List<Insertion>.excludeUserOwnInsertions(): List<Insertion> {
-        val externalInsertions = currentUser?.let {
-            val userId = it.name
-            this.filter { it.seller?.username != userId }
-        }
-        return externalInsertions ?: this
-    }
+    fun List<BaasDocument>.toInsertionList() = mapper.convertDocumentListToInsertions(this)
 
-    private fun List<Insertion>.includeOnlyUserOwnInsertions(): List<Insertion> {
-        val ownInsertions = currentUser?.let {
-            val userId = it.name
-            this.filter { it.seller?.username == userId }
-        }
-        return ownInsertions ?: this
-    }
-
-    private fun List<Insertion>.includeOnlySavedInsertions(): List<Insertion> {
-        val savedInsertions = getSavedInsertionList()
-        return this.filter { it.id in savedInsertions.map { it.id } }
-    }
 }
