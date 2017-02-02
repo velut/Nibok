@@ -125,7 +125,7 @@ fun BaasUser.toggleInsertionSaveStatus(insertionId: String): Boolean {
     val copy = savedInsertionIds.copy()
 
     val insertionIndex = savedInsertionIds.indexOf(insertionId)
-    val previouslySaved = if (insertionIndex == -1) false else true
+    val previouslySaved = insertionIndex != -1
 
     if (previouslySaved) {
         savedInsertionIds.remove(insertionIndex)
