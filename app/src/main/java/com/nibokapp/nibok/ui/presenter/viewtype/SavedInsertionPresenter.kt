@@ -10,9 +10,7 @@ import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 /**
  * Presenter that operates on insertions of saved books.
  */
-class SavedInsertionPresenter(
-        override val TAG: String = SavedInsertionPresenter.TAG
-) : ViewTypePresenter, InsertionSaveStatusPresenter {
+class SavedInsertionPresenter : ViewTypePresenter, InsertionSaveStatusPresenter {
 
     companion object {
         private val TAG = SavedInsertionPresenter::class.java.simpleName

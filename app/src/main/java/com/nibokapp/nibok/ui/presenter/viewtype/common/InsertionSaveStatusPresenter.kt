@@ -9,8 +9,6 @@ import com.nibokapp.nibok.domain.command.bookinsertion.savestatus.ToggleBookInse
  */
 interface InsertionSaveStatusPresenter {
 
-    val TAG: String
-
     /**
      * Check if the insertion with the given id is saved or not.
      *
@@ -20,7 +18,7 @@ interface InsertionSaveStatusPresenter {
      */
     fun isInsertionSaved(insertionId: String): Boolean {
         val saved = CheckBookInsertionSaveStatusCommand(insertionId).execute()
-        Log.d(TAG, "Insertion $insertionId is saved: $saved")
+        Log.d("InsertionSavePresenter", "Insertion $insertionId is saved: $saved")
         return saved
     }
 
@@ -34,7 +32,7 @@ interface InsertionSaveStatusPresenter {
      */
     fun toggleInsertionSave(insertionId: String): Boolean {
         val saved = ToggleBookInsertionSaveStatusCommand(insertionId).execute()
-        Log.d(TAG, "After toggle insertion $insertionId saved: $saved")
+        Log.d("InsertionSavePresenter", "After toggle insertion $insertionId saved: $saved")
         return saved
     }
 

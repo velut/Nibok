@@ -10,9 +10,7 @@ import com.nibokapp.nibok.ui.presenter.viewtype.common.ViewTypePresenter
 /**
  * Presenter that operates on the feed of books' insertions.
  */
-class InsertionFeedPresenter(
-        override val TAG: String = InsertionFeedPresenter.TAG
-) : ViewTypePresenter, InsertionSaveStatusPresenter {
+class InsertionFeedPresenter : ViewTypePresenter, InsertionSaveStatusPresenter {
 
     companion object {
         private val TAG: String = InsertionSaveStatusPresenter::class.java.simpleName
