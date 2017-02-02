@@ -91,12 +91,6 @@ class AuthenticateActivity(
         alertDialog?.dismiss()
     }
 
-    override fun finish() {
-        val resultIntent = Intent().putExtras(intent)
-        setResult(RESULT_OK, resultIntent)
-        super.finish()
-    }
-
     private fun addAuthViewSwitchListener() {
         alternativeLink.setOnClickListener {
             showLogin = !showLogin
@@ -133,6 +127,9 @@ class AuthenticateActivity(
                     }
             uiThread {
                 if (authenticated) {
+                    val resultIntent = Intent().putExtras(intent)
+                    Log.d(TAG, "Finish intent is: $resultIntent")
+                    setResult(RESULT_OK, resultIntent)
                     finish()
                 } else {
                     alertDialog = getAuthFailedDialog()
