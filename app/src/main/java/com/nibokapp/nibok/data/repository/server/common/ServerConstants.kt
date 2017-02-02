@@ -10,9 +10,9 @@ object ServerConstants {
      */
     const val ID = "id"
     const val DATA = "data"
-    const val DATE = "date"
     const val DISTINCT = "distinct"
     const val CREATION_DATE = "_creation_date"
+    const val AUTHOR = "_author"
 
     /**
      * Username.
