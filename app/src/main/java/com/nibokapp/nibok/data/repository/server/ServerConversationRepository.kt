@@ -19,7 +19,6 @@ import com.nibokapp.nibok.server.mapper.ServerDataMapper
 import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
 import com.nibokapp.nibok.server.send.ServerDataSender
 import com.nibokapp.nibok.server.send.common.ServerDataSenderInterface
-import java.util.*
 
 /**
  * Server repository for conversations.
@@ -74,22 +73,6 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         conversationCache = mapper.convertDocumentListToConversations(result)
         Log.d(TAG, "Found ${conversationCache.size} recent conversations")
         return conversationCache
-    }
-
-    override fun getConversationListAfterDate(date: Date): List<Conversation> {
-        Log.d(TAG, "Getting conversations after date: $date")
-        val result = fetcher.fetchConversationDocumentListAfterDate(date)
-        val conversations = mapper.convertDocumentListToConversations(result)
-        Log.d(TAG, "Found ${conversations.size} conversations after date: $date")
-        return conversations
-    }
-
-    override fun getConversationListBeforeDate(date: Date): List<Conversation> {
-        Log.d(TAG, "Getting conversations before date: $date")
-        val result = fetcher.fetchConversationDocumentListBeforeDate(date)
-        val conversations = mapper.convertDocumentListToConversations(result)
-        Log.d(TAG, "Found ${conversations.size} conversations before date: $date")
-        return conversations
     }
 
     override fun startConversation(partnerId: String): String? {

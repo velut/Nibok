@@ -8,7 +8,6 @@ import com.nibokapp.nibok.data.repository.db.LocalConversationRepository
 import com.nibokapp.nibok.data.repository.server.ServerConversationRepository
 import com.nibokapp.nibok.extension.firstListResultOrNull
 import com.nibokapp.nibok.extension.firstResultOrNull
-import java.util.*
 
 /**
  * Repository for conversations.
@@ -58,20 +57,6 @@ object ConversationRepository : ConversationRepositoryInterface {
         // TODO Store
         Log.d(TAG, "Found ${conversationCache.size} conversations")
         return conversationCache
-    }
-
-    override fun getConversationListAfterDate(date: Date): List<Conversation> {
-        val results = SOURCES.firstListResultOrNull { it.getConversationListAfterDate(date) }
-                ?: emptyList()
-        Log.d(TAG, "Found ${results.size} conversations after $date")
-        return results
-    }
-
-    override fun getConversationListBeforeDate(date: Date): List<Conversation> {
-        val results = SOURCES.firstListResultOrNull { it.getConversationListBeforeDate(date) }
-                ?: emptyList()
-        Log.d(TAG, "Found ${results.size} conversations before $date")
-        return results
     }
 
     override fun startConversation(partnerId: String): String? {

@@ -10,7 +10,6 @@ import com.nibokapp.nibok.extension.queryManyRealm
 import com.nibokapp.nibok.extension.queryOneRealm
 import com.nibokapp.nibok.extension.toNormalList
 import io.realm.Case
-import java.util.*
 
 /**
  * Local repository for conversations.
@@ -70,32 +69,6 @@ object LocalConversationRepository : ConversationRepositoryInterface {
                 userRepository.getLocalUser()?.conversations?.toNormalList() ?: emptyList()
         Log.d(TAG, "Found ${conversationCache.size} conversations")
         return conversationCache
-    }
-
-    override fun getConversationListAfterDate(date: Date): List<Conversation> {
-
-        if (!userRepository.localUserExists()) return emptyList()
-
-        val results = queryManyRealm {
-            it.where(Conversation::class.java)
-                    .equalTo("userId", userRepository.getLocalUserId())
-                    .greaterThanOrEqualTo("date", date)
-                    .findAll()}
-        Log.d(TAG, "Found ${results.size} conversations after $date")
-        return results
-    }
-
-    override fun getConversationListBeforeDate(date: Date): List<Conversation> {
-
-        if (!userRepository.localUserExists()) return emptyList()
-
-        val results = queryManyRealm {
-            it.where(Conversation::class.java)
-                    .equalTo("userId", userRepository.getLocalUserId())
-                    .lessThanOrEqualTo("date", date)
-                    .findAll()}
-        Log.d(TAG, "Found ${results.size} conversations before $date")
-        return results
     }
 
     override fun startConversation(partnerId: String): String? {

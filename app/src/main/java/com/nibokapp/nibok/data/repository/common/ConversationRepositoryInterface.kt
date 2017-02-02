@@ -2,7 +2,6 @@ package com.nibokapp.nibok.data.repository.common
 
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Message
-import java.util.*
 
 /**
  * Interface for conversation repositories.
@@ -57,24 +56,6 @@ interface ConversationRepositoryInterface {
      * @return the list of currently available conversations
      */
     fun getConversationList(cached: Boolean = false): List<Conversation>
-
-    /**
-     * Get the list of conversations with a date greater or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of conversations with a date greater or equal to the given date
-     */
-    fun getConversationListAfterDate(date: Date): List<Conversation>
-
-    /**
-     * Get the list of conversations with a date smaller or equal to the given date.
-     *
-     * @param date the date used in comparisons
-     *
-     *  @return the list of conversations with a date smaller or equal to the given date
-     */
-    fun getConversationListBeforeDate(date: Date): List<Conversation>
 
     /**
      * Start a conversation with the user with the given id.
