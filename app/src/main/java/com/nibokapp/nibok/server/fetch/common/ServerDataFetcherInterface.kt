@@ -3,7 +3,6 @@ package com.nibokapp.nibok.server.fetch.common
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
 import com.baasbox.android.json.JsonArray
-import java.util.*
 
 /**
  * ServerDataFetcherInterface is an interface for objects fetching data from the server.
@@ -50,9 +49,17 @@ interface ServerDataFetcherInterface {
     /**
      * Fetch recent insertion documents.
      *
+     * @param filterByCurrentUser true if filtering based on one of the following options is needed
+     * @param excludeAllByUser true if all documents by the filtered user id should not be fetched
+     * @param includeOnlyIfSaved true if only documents saved by the filtered user should be fetched
+     * @param includeOnlyByUser true if only documents by the filtered user id should be fetched
+     *
      * @return a list of BaasDocument
      */
-    fun fetchRecentInsertionDocumentList(): List<BaasDocument>
+    fun fetchRecentInsertionDocumentList(filterByCurrentUser: Boolean = false,
+                                         excludeAllByUser: Boolean = false,
+                                         includeOnlyIfSaved: Boolean = false,
+                                         includeOnlyByUser: Boolean = false): List<BaasDocument>
 
     /**
      * Fetch a list of BaasDocument for the insertions' ids present in the given array.
@@ -76,28 +83,18 @@ interface ServerDataFetcherInterface {
      * Fetch the list of insertion documents corresponding to the given query.
      *
      * @param query the query text (e.g. book's title)
+     * @param filterByCurrentUser true if filtering based on one of the following options is needed
+     * @param excludeAllByUser true if all documents by the filtered user id should not be fetched
+     * @param includeOnlyIfSaved true if only documents saved by the filtered user should be fetched
+     * @param includeOnlyByUser true if only documents by the filtered user id should be fetched
      *
      * @return a list of BaasDocument
      */
-    fun fetchInsertionDocumentListByQuery(query: String): List<BaasDocument>
-
-    /**
-     * Fetch the list of insertion documents dated after the given date.
-     *
-     * @param date the date used as in comparisons
-     *
-     * @return a list of BaasDocument
-     */
-    fun fetchInsertionDocumentListAfterDate(date: Date): List<BaasDocument>
-
-    /**
-     * Fetch the list of insertion documents dated before the given date.
-     *
-     * @param date the date used as in comparisons
-     *
-     * @return a list of BaasDocument
-     */
-    fun fetchInsertionDocumentListBeforeDate(date: Date): List<BaasDocument>
+    fun fetchInsertionDocumentListByQuery(query: String,
+                                          filterByCurrentUser: Boolean = false,
+                                          excludeAllByUser: Boolean = false,
+                                          includeOnlyIfSaved: Boolean = false,
+                                          includeOnlyByUser: Boolean = false): List<BaasDocument>
 
     /**
      * Fetch a list of BaasDocument for the conversations' ids present in the given array.
@@ -142,24 +139,6 @@ interface ServerDataFetcherInterface {
      * @return a list of BaasDocument
      */
     fun fetchRecentConversationDocumentList(): List<BaasDocument>
-
-    /**
-     * Fetch the list of conversation documents dated after the given date.
-     *
-     * @param date the date used as in comparisons
-     *
-     * @return a list of BaasDocument
-     */
-    fun fetchConversationDocumentListAfterDate(date: Date): List<BaasDocument>
-
-    /**
-     * Fetch the list of conversation documents dated before the given date.
-     *
-     * @param date the date used as in comparisons
-     *
-     * @return a list of BaasDocument
-     */
-    fun fetchConversationDocumentListBeforeDate(date: Date): List<BaasDocument>
 
     /**
      * Fetch a message document by its id.
