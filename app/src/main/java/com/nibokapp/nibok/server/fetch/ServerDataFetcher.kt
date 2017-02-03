@@ -25,40 +25,40 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         /**
          * Functions building Strings representing common queries to the server database.
          */
-        // COMMON
+        // Common
+        fun QUOTE(attribute: String) = "\"$attribute\""
         fun ATTR_IN_LIST(attribute: String, list: String) = "$attribute in $list"
 
-        // ID
-        fun ID(id: String) = "\"$id\""
-        fun ID_NOT_EQUALS(id: String) = "${ServerConstants.ID}<>${ID(id)}"
+        // Document Id
+        fun ID_NOT_EQUALS(id: String) = "${ServerConstants.ID}<>${QUOTE(id)}"
         fun ID_IN_LIST(list: String) = ATTR_IN_LIST(ServerConstants.ID, list)
 
-        // DOCUMENT AUTHOR
-        fun AUTHOR_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}=${ID(authorId)}"
-        fun AUTHOR_NOT_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}<>${ID(authorId)}"
+        // Document Author
+        fun AUTHOR_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}=${QUOTE(authorId)}"
+        fun AUTHOR_NOT_EQUALS(authorId: String) = "${ServerConstants.AUTHOR}<>${QUOTE(authorId)}"
 
-        // INSERTION
+        // Insertion
         fun BOOK_ID_IN_LIST(list: String) = ATTR_IN_LIST(ServerConstants.BOOK_ID, list)
 
-        // ISBN
+        // Isbn
         fun ISBN_EQUALS(isbn: String) = "${ServerConstants.ISBN}=$isbn"
 
-        // CONVERSATION
-        fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=${ID(id)}"
+        // Conversation
+        fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=${QUOTE(id)}"
 
-        // CREATION DATE
+        // Document Creation's date
         fun CREATION_DATE_AFTER(date: String) = "${ServerConstants.CREATION_DATE} >= date('$date')"
         fun CREATION_DATE_BEFORE(date: String) = "${ServerConstants.CREATION_DATE} <= date('$date')"
 
-        // OPERATORS
+        // Operators
         fun AND(vararg items: String) = items.joinToString(" and ")
         fun OR(vararg items: String) = items.joinToString(" or ")
         fun IN(one: String, other: String) = "$one in $other"
         fun LIKE(one: String, other: String) = "$one like \"%$other%\""
-        fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { ID(it) }
+        fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { QUOTE(it) }
         fun DISTINCT(field: String) = "distinct($field)"
 
-        // ORDERING
+        // Ordering
         fun ORDER_BY_DESC(field: String) = "$field desc"
         fun ORDER_BY_DESC_CREATION_DATE() = ORDER_BY_DESC(ServerConstants.CREATION_DATE)
     }
@@ -147,7 +147,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
             val whereString = with(ServerConstants) {
                 OR(
                         LIKE(TITLE, query),
-                        IN(ID(query), AUTHORS),
+                        IN(QUOTE(query), AUTHORS),
                         LIKE(PUBLISHER, query),
                         LIKE(ISBN, query)
                 )
@@ -177,8 +177,8 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     override fun fetchConversationDocumentByParticipants(firstParticipantId: String, secondParticipantId: String): BaasDocument? {
         val whereString = with(ServerConstants) {
             AND(
-                    IN(ID(firstParticipantId), PARTICIPANTS),
-                    IN(ID(secondParticipantId), PARTICIPANTS)
+                    IN(QUOTE(firstParticipantId), PARTICIPANTS),
+                    IN(QUOTE(secondParticipantId), PARTICIPANTS)
             )
         } // e.g. ""bob" in participants and "sam" in participants"
         return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString).getOrNull(0)
@@ -190,7 +190,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         if (trimmedQuery.isEmpty()) return emptyList()
 
         val whereString = with(ServerConstants) {
-            IN(ID(trimmedQuery), PARTICIPANTS)
+            IN(QUOTE(trimmedQuery), PARTICIPANTS)
         }
 
         return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString)
