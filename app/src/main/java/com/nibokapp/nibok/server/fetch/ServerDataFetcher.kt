@@ -3,7 +3,6 @@ package com.nibokapp.nibok.server.fetch
 import android.util.Log
 import com.baasbox.android.*
 import com.baasbox.android.BaasUser.current
-import com.baasbox.android.json.JsonArray
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.getSavedInsertionsArray
@@ -127,8 +126,8 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return emptyList()
     }
 
-    override fun fetchInsertionDocumentListById(idsArray: JsonArray): List<BaasDocument> {
-        return fetchDocumentListFromCollectionById(idsArray, COLL_INSERTIONS)
+    override fun fetchInsertionDocumentListById(idList: List<String>): List<BaasDocument> {
+        return fetchDocumentListFromCollectionById(idList, COLL_INSERTIONS)
     }
 
     override fun fetchInsertionDocumentById(id: String): BaasDocument? {
@@ -167,8 +166,8 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * CONVERSATIONS
      */
 
-    override fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument> {
-        return fetchDocumentListFromCollectionById(idsArray, COLL_CONVERSATIONS)
+    override fun fetchConversationDocumentListById(idList: List<String>): List<BaasDocument> {
+        return fetchDocumentListFromCollectionById(idList, COLL_CONVERSATIONS)
     }
 
     override fun fetchConversationDocumentById(id: String): BaasDocument? {
@@ -224,8 +223,8 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         return fetchDocumentFromCollectionById(COLL_MESSAGES, id)
     }
 
-    override fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument> {
-        return fetchDocumentListFromCollectionById(idsArray, COLL_MESSAGES)
+    override fun fetchMessageDocumentList(idList: List<String>): List<BaasDocument> {
+        return fetchDocumentListFromCollectionById(idList, COLL_MESSAGES)
     }
 
     override fun fetchMessageDocumentListByConversation(conversationId: String): List<BaasDocument> {
@@ -278,17 +277,16 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     /**
-     * Fetch the list of documents with the ids given in the array from the specified collection.
+     * Fetch the list of documents with the ids given in the list from the specified collection.
      *
-     * @param idsArray the array containing the ids of the documents to fetch
+     * @param idList the list of id values
      * @param collection the collection from which the documents are fetched
      *
      * @return a list of BaasDocument
      */
-    private fun fetchDocumentListFromCollectionById(idsArray: JsonArray,
+    private fun fetchDocumentListFromCollectionById(idList: List<String>,
                                                     collection: ServerCollection)
            : List<BaasDocument> {
-        val idList = idsArray.filterIsInstance<String>()
         val whereString = ID_IN_LIST(LIST_OF_ID(idList))
         return queryDocumentListFromCollection(collection, whereString)
     }

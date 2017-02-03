@@ -2,7 +2,6 @@ package com.nibokapp.nibok.server.fetch.common
 
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
-import com.baasbox.android.json.JsonArray
 
 /**
  * ServerDataFetcherInterface is an interface for objects fetching data from the server.
@@ -62,13 +61,13 @@ interface ServerDataFetcherInterface {
                                          includeOnlyByUser: Boolean = false): List<BaasDocument>
 
     /**
-     * Fetch a list of BaasDocument for the insertions' ids present in the given array.
+     * Fetch a list of BaasDocument for the insertions' ids present in the given list.
      *
-     * @param idsArray a JsonArray of insertions' ids
+     * @param idList the list of id values
      *
      * @return a list of BaasDocument for the found insertions
      */
-    fun fetchInsertionDocumentListById(idsArray: JsonArray): List<BaasDocument>
+    fun fetchInsertionDocumentListById(idList: List<String>): List<BaasDocument>
 
     /**
      * Fetch an insertion document by its id.
@@ -97,13 +96,13 @@ interface ServerDataFetcherInterface {
                                           includeOnlyByUser: Boolean = false): List<BaasDocument>
 
     /**
-     * Fetch a list of BaasDocument for the conversations' ids present in the given array.
+     * Fetch a list of BaasDocument for the conversations' ids present in the given list.
      *
-     * @param idsArray a JsonArray of conversations' ids
+     * @param idList the list of id values
      *
      * @return a list of BaasDocument for the found conversations
      */
-    fun fetchConversationDocumentListById(idsArray: JsonArray): List<BaasDocument>
+    fun fetchConversationDocumentListById(idList: List<String>): List<BaasDocument>
 
     /**
      * Fetch a conversation document by its id.
@@ -150,13 +149,13 @@ interface ServerDataFetcherInterface {
     fun fetchMessageDocumentById(id: String): BaasDocument?
 
     /**
-     * Fetch a list of BaasDocument for the messages' ids present in the given array.
+     * Fetch a list of BaasDocument for the messages' ids present in the given list.
      *
-     * @param idsArray a JsonArray of messages' ids
+     * @param idList the list of id values
      *
      * @return a list of BaasDocument for the found messages
      */
-    fun fetchMessageDocumentList(idsArray: JsonArray): List<BaasDocument>
+    fun fetchMessageDocumentList(idList: List<String>): List<BaasDocument>
 
     /**
      * Fetch the list of message documents associated to the given conversation.

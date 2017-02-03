@@ -21,13 +21,13 @@ class ServerDataProvider(
 ) : ServerDataProviderInterface {
 
     override fun getInsertionListFromIds(idsArray: JsonArray): List<Insertion> {
-        val insertionDocuments = fetcher.fetchInsertionDocumentListById(idsArray)
+        val insertionDocuments = fetcher.fetchInsertionDocumentListById(idsArray.filterIsInstance<String>())
         val insertions = mapper.convertDocumentListToInsertions(insertionDocuments)
         return insertions
     }
 
     override fun getConversationListFromIds(idsArray: JsonArray): List<Conversation> {
-        val conversationDocuments = fetcher.fetchConversationDocumentListById(idsArray)
+        val conversationDocuments = fetcher.fetchConversationDocumentListById(idsArray.filterIsInstance<String>())
         val conversations = mapper.convertDocumentListToConversations(conversationDocuments)
         return conversations
     }
