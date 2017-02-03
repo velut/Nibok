@@ -1,6 +1,5 @@
 package com.nibokapp.nibok.server.fetch
 
-import android.util.Log
 import com.baasbox.android.*
 import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
@@ -142,23 +141,43 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         val trimmedQuery = query.trim()
         if (trimmedQuery.isEmpty()) return emptyList()
 
-        // TODO
-        if (true) {
-            val whereString = with(ServerConstants) {
-                OR(
-                        LIKE(TITLE, query),
-                        IN(QUOTE(query), AUTHORS),
-                        LIKE(PUBLISHER, query),
-                        LIKE(ISBN, query)
-                )
-            }
-            val bookIds = queryDocumentListFromCollection(COLL_BOOKS, whereString).map { it.id }
-            Log.d("TAG", "bookids: $bookIds")
-            return queryDocumentListFromCollection(COLL_INSERTIONS, BOOK_ID_IN_LIST(LIST_OF_ID(bookIds)))
+        // First retrieve the books corresponding to the query and extract their ids
+        val bookWhereString = with(ServerConstants) {
+            OR(
+                    LIKE(TITLE, query),
+                    IN(QUOTE(query), AUTHORS),
+                    LIKE(PUBLISHER, query),
+                    LIKE(ISBN, query)
+            )
+        }
+        val bookIds = queryDocumentListFromCollection(COLL_BOOKS, bookWhereString).map { it.id }
+
+        // Then query the insertions in which the found books are sold
+        val relevantInsertions = BOOK_ID_IN_LIST(LIST_OF_ID(bookIds))
+
+        if (!filterByCurrentUser) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, relevantInsertions)
         }
 
-        // TODO use filtered user id
-        // TODO query books and then retrieve insertions!
+        // Optionally filter by current user
+        val user = currentUser ?: return emptyList()
+
+        if (excludeAllByUser) {
+            val relevantFiltered = AND(relevantInsertions, AUTHOR_NOT_EQUALS(user.name))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, relevantFiltered)
+        }
+
+        if (includeOnlyByUser) {
+            val relevantFiltered = AND(relevantInsertions, AUTHOR_EQUALS(user.name))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, relevantFiltered)
+        }
+
+        if (includeOnlyIfSaved) {
+            val savedInsertionIds = user.getSavedInsertionsArray().filterIsInstance<String>()
+            val relevantFiltered = AND(relevantInsertions, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, relevantFiltered)
+        }
+
         return emptyList()
     }
 
