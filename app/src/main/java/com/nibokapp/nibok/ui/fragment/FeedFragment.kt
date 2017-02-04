@@ -114,6 +114,8 @@ class FeedFragment(
             val data = presenter.getData()
             uiThread {
                 mainAdapter.items = data
+                val infiniteScrollListener = mainScrollListener as? InfiniteScrollListener
+                infiniteScrollListener?.reset()
             }
         }
     }
