@@ -103,11 +103,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                                                   excludeAllByUser: Boolean,
                                                   includeOnlyIfSaved: Boolean,
                                                   includeOnlyByUser: Boolean): List<BaasDocument> {
-        if (!filterByCurrentUser) {
+        val user = currentUser
+
+        if (!filterByCurrentUser || user == null) {
             return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
         }
-
-        val user = currentUser ?: return emptyList()
 
         if (excludeAllByUser) {
             return queryDocumentListFromCollection(COLL_INSERTIONS, AUTHOR_NOT_EQUALS(user.name))
@@ -155,12 +155,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         // Then query the insertions in which the found books are sold
         val relevantInsertions = BOOK_ID_IN_LIST(LIST_OF_ID(bookIds))
 
-        if (!filterByCurrentUser) {
+        val user = currentUser
+
+        if (!filterByCurrentUser || user == null) {
             return queryDocumentListFromCollection(COLL_INSERTIONS, relevantInsertions)
         }
-
-        // Optionally filter by current user
-        val user = currentUser ?: return emptyList()
 
         if (excludeAllByUser) {
             val relevantFiltered = AND(relevantInsertions, AUTHOR_NOT_EQUALS(user.name))
@@ -176,6 +175,43 @@ class ServerDataFetcher : ServerDataFetcherInterface {
             val savedInsertionIds = user.getSavedInsertionsIdList()
             val relevantFiltered = AND(relevantInsertions, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
             return queryDocumentListFromCollection(COLL_INSERTIONS, relevantFiltered)
+        }
+
+        return emptyList()
+    }
+
+    override fun fetchInsertionDocumentListAfterDateOfInsertion(insertionId: String,
+                                                                filterByCurrentUser: Boolean,
+                                                                excludeAllByUser: Boolean,
+                                                                includeOnlyIfSaved: Boolean,
+                                                                includeOnlyByUser: Boolean): List<BaasDocument> {
+        val insertion = fetchInsertionDocumentById(insertionId) ?: return emptyList()
+        val insertionDate = insertion.creationDate
+        val olderInsertions = AND(
+                ID_NOT_EQUALS(insertionId),
+                CREATION_DATE_BEFORE(insertionDate)
+        )
+
+        val user = currentUser
+
+        if (!filterByCurrentUser || user == null) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertions)
+        }
+
+        if (excludeAllByUser) {
+            val olderInsertionsFiltered = AND(olderInsertions, AUTHOR_NOT_EQUALS(user.name))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertionsFiltered)
+        }
+
+        if (includeOnlyByUser) {
+            val olderInsertionsFiltered = AND(olderInsertions, AUTHOR_EQUALS(user.name))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertionsFiltered)
+        }
+
+        if (includeOnlyIfSaved) {
+            val savedInsertionIds = user.getSavedInsertionsIdList()
+            val olderInsertionsFiltered = AND(olderInsertions, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
+            return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertionsFiltered)
         }
 
         return emptyList()
