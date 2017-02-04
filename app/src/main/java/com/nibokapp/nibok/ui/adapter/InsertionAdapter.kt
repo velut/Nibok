@@ -72,7 +72,6 @@ class InsertionAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty()) {
-            Log.d(TAG, "Full view holder binding required")
             onBindViewHolder(holder, position)
             return
         }
@@ -93,7 +92,6 @@ class InsertionAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d(TAG, "Binding view holder")
         holder.bind(items[position])
     }
 
@@ -154,18 +152,15 @@ class InsertionAdapter(
             with(item) {
 
                 with(bookInfo) {
-                    Log.d(TAG, "Binding book data")
                     bookTitle.text = title
                     bookAuthor.text = authors.take(MAX_AUTHORS).joinToString("\n")
                     bookYear.text = year.toString()
                 }
 
                 bookCondition.toBookWearCondition(context).let {
-                    Log.d(TAG, "Binding book wear condition")
                     bookQuality.text = it
                 }
 
-                Log.d(TAG, "Binding book price")
                 bookPriceValue.text = bookPrice.toCurrency()
             }
         }
@@ -181,7 +176,6 @@ class InsertionAdapter(
         }
 
         private fun addClickListeners(itemId: String) {
-            Log.d(TAG, "Adding click listeners")
             itemView.setOnClickListener {
                 Log.d(TAG, "Card clicked")
                 onItemClick(itemId)
