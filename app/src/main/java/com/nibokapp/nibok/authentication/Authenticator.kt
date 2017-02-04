@@ -9,7 +9,6 @@ import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
 import com.nibokapp.nibok.extension.*
-import org.jetbrains.anko.doAsync
 
 /**
  * Authenticator.
@@ -61,15 +60,10 @@ object Authenticator : AuthenticatorInterface {
 
         // Try to log out user from the server.
         // Logout may fail if the server is unreachable.
-        // Async in order to let the caller go on not waiting for the logout
         Log.d(TAG, "Trying to logout user from the server")
-        loggedUser?.let {
-            doAsync {
-                val loggedOut = it.logoutSync().isSuccess
-                Log.d(TAG, if (loggedOut) "Logged out"
-                            else "Could not log out" + " user: ${it.name}")
-            }
-        }
+        val user = loggedUser ?: return false
+        val loggedOut = user.logoutSync().isSuccess
+        Log.d(TAG, if (loggedOut) "Logged out" else "Could not log out user: ${user.name}")
 
         // Return true as the local user does not exist anymore
         // and a failed server logout does not impact a successive login
