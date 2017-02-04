@@ -9,7 +9,7 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 
 /**
- * Presenter used for the insertions' feed fragment.
+ * Presenter used for the bookmarked insertions.
  */
 class InsertionBookmarkPresenter : MainActivityPresenter<BookInsertionModel>, InsertionSaveStatusPresenter {
 
