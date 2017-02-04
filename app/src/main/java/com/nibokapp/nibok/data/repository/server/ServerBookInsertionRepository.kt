@@ -9,7 +9,7 @@ import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.extension.addPublishedInsertion
-import com.nibokapp.nibok.extension.getSavedInsertionsArray
+import com.nibokapp.nibok.extension.getSavedInsertionsIdList
 import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
 import com.nibokapp.nibok.server.fetch.ServerDataFetcher
@@ -119,7 +119,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      */
 
     override fun isBookInsertionSaved(insertionId: String): Boolean {
-        val saveInsertionIds = currentUser?.getSavedInsertionsArray()?.filterIsInstance<String>() ?: emptyList()
+        val saveInsertionIds = currentUser?.getSavedInsertionsIdList() ?: emptyList()
         return insertionId in saveInsertionIds
     }
 

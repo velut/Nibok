@@ -4,7 +4,7 @@ import com.baasbox.android.*
 import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.repository.server.common.ServerCollection
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.getSavedInsertionsArray
+import com.nibokapp.nibok.extension.getSavedInsertionsIdList
 import com.nibokapp.nibok.extension.onSuccessReturn
 import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
 
@@ -118,7 +118,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         }
 
         if (includeOnlyIfSaved) {
-            val savedInsertionIds = user.getSavedInsertionsArray().filterIsInstance<String>()
+            val savedInsertionIds = user.getSavedInsertionsIdList()
             return queryDocumentListFromCollection(COLL_INSERTIONS, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
         }
 
@@ -173,7 +173,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         }
 
         if (includeOnlyIfSaved) {
-            val savedInsertionIds = user.getSavedInsertionsArray().filterIsInstance<String>()
+            val savedInsertionIds = user.getSavedInsertionsIdList()
             val relevantFiltered = AND(relevantInsertions, ID_IN_LIST(LIST_OF_ID(savedInsertionIds)))
             return queryDocumentListFromCollection(COLL_INSERTIONS, relevantFiltered)
         }
