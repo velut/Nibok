@@ -16,13 +16,14 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
 class RequestOlderBookInsertionFeedCommand(
         val lastBookInsertion: BookInsertionModel,
         val dataMapper: BookInsertionDataMapperInterface = BookInsertionDataMapper(),
-        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository) :
-        Command<List<BookInsertionModel>> {
+        val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
+) : Command<List<BookInsertionModel>> {
 
-    override fun execute(): List<BookInsertionModel> =
-            dataMapper.convertInsertionListToDomain(
-                    bookRepository.getFeedInsertionListBeforeDate(
-                            lastBookInsertion.insertionDate
-                    )
-            )
+    override fun execute(): List<BookInsertionModel> {
+        return dataMapper.convertInsertionListToDomain(
+                bookRepository.getFeedInsertionListOlderThanInsertion(
+                        lastBookInsertion.insertionId
+                )
+        )
+    }
 }

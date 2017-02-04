@@ -17,13 +17,13 @@ class RequestOlderPublishedBookInsertionCommand(
         val lastBookInsertion: BookInsertionModel,
         val dataMapper: BookInsertionDataMapperInterface = BookInsertionDataMapper(),
         val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
-) :
-        Command<List<BookInsertionModel>> {
+) : Command<List<BookInsertionModel>> {
 
-    override fun execute(): List<BookInsertionModel> =
-            dataMapper.convertInsertionListToDomain(
-                    bookRepository.getPublishedInsertionListBeforeDate(
-                            lastBookInsertion.insertionDate
-                    )
-            )
+    override fun execute(): List<BookInsertionModel> {
+        return dataMapper.convertInsertionListToDomain(
+                bookRepository.getPublishedInsertionListOlderThanInsertion(
+                        lastBookInsertion.insertionId
+                )
+        )
+    }
 }
