@@ -80,6 +80,15 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         return insertions
     }
 
+    override fun getFeedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        Log.d(TAG, "Getting feed insertions older than: $insertionId")
+        val insertions = fetcher
+                .fetchInsertionDocumentListAfterDateOfInsertion(insertionId, true, excludeAllByUser = true)
+                .toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} feed insertions older than: $insertionId")
+        return insertions
+    }
+
     /*
      * SAVED BOOK INSERTIONS
      */
@@ -97,6 +106,15 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         return insertions
     }
 
+    override fun getSavedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        Log.d(TAG, "Getting saved insertions older than: $insertionId")
+        val insertions = fetcher
+                .fetchInsertionDocumentListAfterDateOfInsertion(insertionId, true, includeOnlyIfSaved= true)
+                .toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} saved insertions older than: $insertionId")
+        return insertions
+    }
+
     /*
      * PUBLISHED BOOK INSERTIONS
      */
@@ -111,6 +129,15 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
     override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> {
         val insertions = fetcher.fetchInsertionDocumentListByQuery(query, true, includeOnlyByUser = true).toInsertionList()
         Log.d(TAG, "Found ${insertions.size} published insertions corresponding to query: $query")
+        return insertions
+    }
+
+    override fun getPublishedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        Log.d(TAG, "Getting published insertions older than: $insertionId")
+        val insertions = fetcher
+                .fetchInsertionDocumentListAfterDateOfInsertion(insertionId, true, includeOnlyByUser= true)
+                .toInsertionList()
+        Log.d(TAG, "Found ${insertions.size} published insertions older than: $insertionId")
         return insertions
     }
 
