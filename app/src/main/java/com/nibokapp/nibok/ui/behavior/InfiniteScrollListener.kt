@@ -70,4 +70,11 @@ class InfiniteScrollListener(val layoutManager: LinearLayoutManager,
         }
         return scrollBufferItemCount <= bufferSize
     }
+
+    fun reset() {
+        loading = true
+        previousTotal = 0
+        totalItemCount = 0
+        newestVisibleItemPosition = 0
+    }
 }
