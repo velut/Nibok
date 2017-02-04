@@ -96,6 +96,22 @@ interface ServerDataFetcherInterface {
                                           includeOnlyByUser: Boolean = false): List<BaasDocument>
 
     /**
+     * Fetch insertion documents older than the insertion with the given id.
+     * Optionally filter based on the current user.
+     *
+     * @param insertionId the id of the insertion used in date comparisons
+     * @param filterByCurrentUser true if filtering based on one of the following options is needed
+     * @param excludeAllByUser true if all documents by the filtered user id should not be fetched
+     * @param includeOnlyIfSaved true if only documents saved by the filtered user should be fetched
+     * @param includeOnlyByUser true if only documents by the filtered user id should be fetched
+     */
+    fun  fetchInsertionDocumentListAfterDateOfInsertion(insertionId: String,
+                                                        filterByCurrentUser: Boolean = false,
+                                                        excludeAllByUser: Boolean = false,
+                                                        includeOnlyIfSaved: Boolean = false,
+                                                        includeOnlyByUser: Boolean = false): List<BaasDocument>
+
+    /**
      * Fetch a list of BaasDocument for the conversations' ids present in the given list.
      *
      * @param idList the list of id values
