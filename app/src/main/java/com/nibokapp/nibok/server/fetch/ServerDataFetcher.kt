@@ -103,10 +103,15 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                                                   excludeAllByUser: Boolean,
                                                   includeOnlyIfSaved: Boolean,
                                                   includeOnlyByUser: Boolean): List<BaasDocument> {
-        val user = currentUser
 
-        if (!filterByCurrentUser || user == null) {
+        if (!filterByCurrentUser) {
             return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+        }
+
+        val user = currentUser ?: if (excludeAllByUser) {
+            return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+        } else {
+            return emptyList()
         }
 
         if (excludeAllByUser) {
@@ -155,10 +160,14 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         // Then query the insertions in which the found books are sold
         val relevantInsertions = BOOK_ID_IN_LIST(LIST_OF_ID(bookIds))
 
-        val user = currentUser
-
-        if (!filterByCurrentUser || user == null) {
+        if (!filterByCurrentUser) {
             return queryDocumentListFromCollection(COLL_INSERTIONS, relevantInsertions)
+        }
+
+        val user = currentUser ?: if (excludeAllByUser) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, relevantInsertions)
+        } else {
+            return emptyList()
         }
 
         if (excludeAllByUser) {
@@ -192,10 +201,14 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                 CREATION_DATE_BEFORE(insertionDate)
         )
 
-        val user = currentUser
-
-        if (!filterByCurrentUser || user == null) {
+        if (!filterByCurrentUser) {
             return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertions)
+        }
+
+        val user = currentUser ?: if (excludeAllByUser) {
+            return queryDocumentListFromCollection(COLL_INSERTIONS, olderInsertions)
+        } else {
+            return emptyList()
         }
 
         if (excludeAllByUser) {
