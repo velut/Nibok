@@ -67,6 +67,15 @@ interface BookInsertionRepositoryInterface {
      */
     fun getFeedInsertionListFromQuery(query: String): List<Insertion>
 
+    /**
+     * Get the list of insertions for the feed that are older than the insertion with the given id.
+     *
+     * @param insertionId the id of the oldest available insertion
+     *
+     * @return a list of Insertion
+     */
+    fun getFeedInsertionListOlderThanInsertion(insertionId: String): List<Insertion>
+
     /*
      * SAVED BOOK INSERTIONS
      */
@@ -92,6 +101,15 @@ interface BookInsertionRepositoryInterface {
      */
     fun getSavedInsertionListFromQuery(query: String): List<Insertion>
 
+    /**
+     * Get the list of saved insertions that are older than the insertion with the given id.
+     *
+     * @param insertionId the id of the oldest available insertion
+     *
+     * @return a list of Insertion
+     */
+    fun getSavedInsertionListOlderThanInsertion(insertionId: String): List<Insertion>
+
     /*
      * PUBLISHED BOOK INSERTIONS
      */
@@ -116,6 +134,15 @@ interface BookInsertionRepositoryInterface {
      *  @return the list of book insertions matching the query
      */
     fun getPublishedInsertionListFromQuery(query: String): List<Insertion>
+
+    /**
+     * Get the list of published insertions that are older than the insertion with the given id.
+     *
+     * @param insertionId the id of the oldest available insertion
+     *
+     * @return a list of Insertion
+     */
+    fun getPublishedInsertionListOlderThanInsertion(insertionId: String): List<Insertion>
 
     /*
      * BOOK INSERTION SAVE STATUS
