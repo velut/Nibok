@@ -51,12 +51,21 @@ fun BaasUser.getPublicScope(): JsonObject? = this.getScope(BaasUser.Scope.PUBLIC
 
 /**
  * Get the JsonArray containing the ids of the insertions saved by this user.
- * 
+ *
  * @return a JsonArray that might be empty if the user did not save any insertion
  */
 fun BaasUser.getSavedInsertionsArray(): JsonArray {
     val scope = this.getPrivateScope() ?: return JsonArray()
     return scope.getArray(ServerConstants.SAVED_INSERTIONS, JsonArray())
+}
+
+/**
+ * Get the list of ids of the insertions saved by this user.
+ *
+ * @return a list of strings representing the insertions' ids
+ */
+fun BaasUser.getSavedInsertionsIdList(): List<String> {
+    return this.getSavedInsertionsArray().filterIsInstance<String>()
 }
 
 /**
