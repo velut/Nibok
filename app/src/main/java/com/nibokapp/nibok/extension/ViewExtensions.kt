@@ -118,6 +118,8 @@ fun View.setGone() {
     this.visibility = View.GONE
 }
 
+fun View.isVisible() = this.visibility == View.VISIBLE
+
 /**
  * Listener for keyboard hiding on tap.
  *
