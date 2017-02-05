@@ -13,9 +13,7 @@ import android.view.*
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.presenter.AuthPresenter
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 /**
  * Abstract class at the base of fragments displayed in the main activity's viewpager.
@@ -39,9 +37,14 @@ abstract class MainActivityFragment(
     protected abstract val layoutId: Int
 
     /**
+     * Id of the main recycler view.
+     */
+    protected abstract val mainViewId: Int
+
+    /**
      * Main view is the RecyclerView primarily displayed in the fragment.
      */
-    protected abstract val mainView: RecyclerView
+    protected lateinit var mainView: RecyclerView
 
     /**
      * Adapter for the main recycler view.
@@ -59,9 +62,14 @@ abstract class MainActivityFragment(
     protected abstract val mainScrollListener: RecyclerView.OnScrollListener?
 
     /**
+     * Id of the search recycler view.
+     */
+    protected abstract val searchViewId: Int
+
+    /**
      * Search view is the RecyclerView used to display search results in the fragment.
      */
-    protected abstract val searchView: RecyclerView
+    protected lateinit var searchView: RecyclerView
 
     /**
      * Adapter for the search recycler view.
@@ -84,9 +92,15 @@ abstract class MainActivityFragment(
     protected abstract val searchHint: String
 
     /**
+     * Id of the FAB.
+     * If not null the fragment will try to find the fab in the view.
+     */
+    protected open var fabId: Int? = null
+
+    /**
      * Optional FAB displayed in the view.
      */
-    open val fab: FloatingActionButton? = null
+    protected open var fab: FloatingActionButton? = null
 
     // Currently displayed view, changes between main and search views
     private lateinit var currentView: RecyclerView
@@ -135,20 +149,24 @@ abstract class MainActivityFragment(
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(layoutId)
-    }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val view = container?.inflate(layoutId)
+        view?.let {
+            val v = it
+            mainView = v.find(mainViewId)
+            searchView = v.find(searchViewId)
+            fabId?.let { fab = v.findOptional(it) }
+        }
         setupRecyclerView(mainView, mainLayoutManager, mainAdapter, mainScrollListener)
         addCachedData()
         setupRecyclerView(searchView, searchLayoutManger, searchAdapter, searchScrollListener)
         currentView = mainView
+        return view
     }
 
     override fun onStart() {
         super.onStart()
         updateData()
+        fab?.let { it.post { it.show() } }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
