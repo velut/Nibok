@@ -26,7 +26,12 @@ abstract class MainActivityFragment(
 ) : Fragment(), ViewPagerFragment {
 
     companion object {
+        private val P_TAG: String = MainActivityFragment::class.java.simpleName
+
         val REQUEST_AUTHENTICATE = 1
+
+        private val KEY_IS_MAIN_VIEW_VISIBLE = "$P_TAG:KEY_IS_MAIN_VIEW_VISIBLE"
+        private val KEY_SEARCH_VIEW_TEXT = "$P_TAG:KEY_SEARCH_VIEW_TEXT"
     }
 
     /**
@@ -108,6 +113,7 @@ abstract class MainActivityFragment(
     // Currently displayed view, changes between main and search views
     private lateinit var currentView: RecyclerView
 
+    private var searchViewText: String = ""
 
     /**
      * Fill the adapter with cached data.
@@ -166,10 +172,26 @@ abstract class MainActivityFragment(
         return view
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        var isMainViewVisible = true
+        savedInstanceState?.let {
+            isMainViewVisible = it.getBoolean(KEY_IS_MAIN_VIEW_VISIBLE, true)
+            searchViewText = it.getString(KEY_SEARCH_VIEW_TEXT, "")
+        }
+        Log.d(TAG, "Restored: vis: $isMainViewVisible; search: $searchViewText")
+        if (isMainViewVisible) {
+            showMainView()
+            currentView = mainView
+        } else {
+            // TODO works only in feed
+            currentView = searchView
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         updateData()
-        showFab()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -184,9 +206,19 @@ abstract class MainActivityFragment(
         searchActionView.apply {
             queryHint = searchHint
             onQueryListener(
-                    { onQueryTextSubmit(it) },
-                    { onQueryTextChange(it)}
+                    { searchViewText = it; onQueryTextSubmit(it) },
+                    { searchViewText = it; onQueryTextChange(it)}
             )
+        }
+
+        if (currentView == searchView) {
+            val oldQuery = searchViewText
+            Log.d(TAG, "About to reopen search view for query: $oldQuery")
+            searchActionItem.expandActionView()
+            searchActionView.apply {
+                setQuery(oldQuery, true)
+                clearFocus()
+            }
         }
     }
 
@@ -225,6 +257,21 @@ abstract class MainActivityFragment(
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val mv = try {
+            mainView
+        } catch (e: Exception) {
+            Log.d(TAG, "This fragment has no initialized main view")
+            return
+        }
+        Log.d(TAG, "Saving: vis: ${mv.isVisible()}; search: $searchViewText")
+        outState.apply {
+            putBoolean(KEY_IS_MAIN_VIEW_VISIBLE, mv.isVisible())
+            putString(KEY_SEARCH_VIEW_TEXT, searchViewText)
+        }
+    }
+
     override fun onSelected() {
         showMainView()
         updateData()
@@ -252,11 +299,16 @@ abstract class MainActivityFragment(
 
     private fun onSearchOpen(): Boolean {
         Log.d(TAG, "Menu search opened")
+        showSearchView()
+        return true // Expand view
+    }
+
+    private fun showSearchView() {
+        Log.d(TAG, "Show search view")
         mainView.setGone()
-        fab?.setGone()
+        hideFab()
         searchView.setVisible()
         currentView = searchView
-        return true // Expand view
     }
 
     private fun onSearchClose(): Boolean {
@@ -266,6 +318,7 @@ abstract class MainActivityFragment(
     }
 
     private fun showMainView() {
+        Log.d(TAG, "Show main view")
         searchView.setGone()
         mainView.setVisible()
         showFab()
@@ -290,5 +343,9 @@ abstract class MainActivityFragment(
 
     private fun showFab() {
         fab?.let { it.post { it.show() } }
+    }
+
+    private fun hideFab() {
+        fab?.let { it.post { it.hide() } }
     }
 }
