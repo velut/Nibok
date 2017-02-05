@@ -157,6 +157,8 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         }
         val bookIds = queryDocumentListFromCollection(COLL_BOOKS, bookWhereString).map { it.id }
 
+        if (bookIds.isEmpty()) return emptyList()
+
         // Then query the insertions in which the found books are sold
         val relevantInsertions = BOOK_ID_IN_LIST(LIST_OF_ID(bookIds))
 
