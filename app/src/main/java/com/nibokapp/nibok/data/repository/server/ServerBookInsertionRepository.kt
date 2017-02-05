@@ -153,7 +153,12 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
     override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
         val user = currentUser ?:
                 throw IllegalStateException("No user logged in. Cannot toggle insertion save status")
-
+        val insertion = getInsertionById(insertionId)
+        val insertionAuthor = insertion?.seller?.username
+        if (user.name == insertionAuthor) {
+            Log.d(TAG, "A seller can't bookmark his own insertion")
+            return false
+        }
         val saved = user.toggleInsertionSaveStatus(insertionId)
         Log.d(TAG, "After toggle: Save status: $saved")
         return saved
