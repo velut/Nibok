@@ -1,7 +1,6 @@
 package com.nibokapp.nibok.ui.fragment
 
 import android.content.Intent
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -14,7 +13,6 @@ import com.nibokapp.nibok.ui.adapter.InsertionAdapter
 import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
-import kotlinx.android.synthetic.main.fragment_selling.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -53,7 +51,7 @@ class PublishedFragment(
      * Main view
      */
 
-    override val mainView: RecyclerView by lazy { sellingBooksList }
+    override val mainViewId: Int = R.id.sellingBooksList
 
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -61,9 +59,9 @@ class PublishedFragment(
             { toggleInsertionSaveStatus(it) } // TODO delete?
     )
 
-    override val mainLayoutManager: LinearLayoutManager by lazy {
-        context.getDpBasedLinearLayoutManager()
-    }
+    override val mainLayoutManager: LinearLayoutManager
+        get() = context.getDpBasedLinearLayoutManager()
+
 
     override val mainScrollListener: RecyclerView.OnScrollListener? by lazy {
         InfiniteScrollListener(mainLayoutManager) {
@@ -86,7 +84,7 @@ class PublishedFragment(
      * Search view
      */
 
-    override val searchView: RecyclerView by lazy { searchResultsListSelling }
+    override val searchViewId: Int = R.id.searchResultsListSelling
 
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -94,9 +92,9 @@ class PublishedFragment(
             { TODO() }
     )
 
-    override val searchLayoutManger: LinearLayoutManager by lazy {
-        context.getDpBasedLinearLayoutManager()
-    }
+    override val searchLayoutManger: LinearLayoutManager
+        get() = context.getDpBasedLinearLayoutManager()
+
 
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
@@ -106,7 +104,7 @@ class PublishedFragment(
      * Fab
      */
 
-    override val fab: FloatingActionButton? by lazy { sellingFab }
+    override var fabId: Int? = R.id.sellingFab
 
     /*
      * Data handling

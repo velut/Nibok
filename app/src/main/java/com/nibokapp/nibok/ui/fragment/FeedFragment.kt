@@ -14,7 +14,6 @@ import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.main.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
-import kotlinx.android.synthetic.main.fragment_latest.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -52,7 +51,7 @@ class FeedFragment(
      * Main view
      */
 
-    override val mainView: RecyclerView by lazy { latestBooksList }
+    override val mainViewId: Int = R.id.latestBooksList
 
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -60,9 +59,9 @@ class FeedFragment(
             { toggleInsertionSaveStatus(it) }
     )
 
-    override val mainLayoutManager: LinearLayoutManager by lazy {
-        context.getDpBasedLinearLayoutManager()
-    }
+    override val mainLayoutManager: LinearLayoutManager
+        get() = context.getDpBasedLinearLayoutManager()
+
 
     override val mainScrollListener: RecyclerView.OnScrollListener? by lazy {
         InfiniteScrollListener(mainLayoutManager) {
@@ -85,7 +84,7 @@ class FeedFragment(
      * Search view
      */
 
-    override val searchView: RecyclerView by lazy { searchResultsListLatest }
+    override val searchViewId: Int = R.id.searchResultsListLatest
 
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -93,9 +92,8 @@ class FeedFragment(
             { TODO() }
     )
 
-    override val searchLayoutManger: LinearLayoutManager by lazy {
-        context.getDpBasedLinearLayoutManager()
-    }
+    override val searchLayoutManger: LinearLayoutManager
+        get() = context.getDpBasedLinearLayoutManager()
 
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
