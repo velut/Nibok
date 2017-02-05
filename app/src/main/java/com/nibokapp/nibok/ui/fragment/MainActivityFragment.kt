@@ -23,13 +23,16 @@ import org.jetbrains.anko.*
  */
 abstract class MainActivityFragment(
         val authPresenter: AuthPresenter = AuthPresenter()
-) : Fragment() {
+) : Fragment(), ViewPagerFragment {
 
     companion object {
-        private val TAG = MainActivityFragment::class.java.simpleName
-
         val REQUEST_AUTHENTICATE = 1
     }
+
+    /**
+     * TAG for log output.
+     */
+    protected abstract val TAG: String
 
     /**
      * Layout's id for the fragment.
@@ -166,7 +169,7 @@ abstract class MainActivityFragment(
     override fun onStart() {
         super.onStart()
         updateData()
-        fab?.let { it.post { it.show() } }
+        showFab()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -222,6 +225,11 @@ abstract class MainActivityFragment(
         }
     }
 
+    override fun onSelected() {
+        showMainView()
+        updateData()
+    }
+
     protected fun isUserLoggedIn(): Boolean = authPresenter.loggedUserExists()
 
     private fun setupRecyclerView(rv: RecyclerView,
@@ -252,11 +260,15 @@ abstract class MainActivityFragment(
 
     private fun onSearchClose(): Boolean {
         Log.d(TAG, "Menu search closed")
+        showMainView()
+        return true // Collapse view
+    }
+
+    private fun showMainView() {
         searchView.setGone()
         mainView.setVisible()
-        fab?.let { it.post { it.setVisible() } }
+        showFab()
         currentView = mainView
-        return true // Collapse view
     }
 
     private fun onAuthItemSelected() {
@@ -273,5 +285,9 @@ abstract class MainActivityFragment(
         } else {
             context.startAuthenticateActivity()
         }
+    }
+
+    private fun showFab() {
+        fab?.let { it.post { it.show() } }
     }
 }

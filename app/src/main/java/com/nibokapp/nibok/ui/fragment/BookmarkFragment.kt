@@ -33,6 +33,8 @@ class BookmarkFragment(
         private val KEY_INSERTION_TO_TOGGLE = "$TAG:insertionToToggle"
     }
 
+    override val TAG: String = BookmarkFragment.TAG
+
     /*
      * Layout
      */

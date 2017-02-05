@@ -32,6 +32,8 @@ class PublishedFragment(
         private val KEY_INSERTION_TO_TOGGLE = "$TAG:insertionToToggle"
     }
 
+    override val TAG: String = PublishedFragment.TAG
+
     /*
      * Layout
      */
