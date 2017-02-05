@@ -159,9 +159,9 @@ abstract class MainActivityFragment(
             searchView = v.find(searchViewId)
             fabId?.let { fab = v.findOptional(it) }
         }
-        setupRecyclerView(mainView, mainLayoutManager, mainAdapter, mainScrollListener)
+        setupRecyclerView(mainView, mainLayoutManager, mainAdapter, { mainScrollListener })
         addCachedData()
-        setupRecyclerView(searchView, searchLayoutManger, searchAdapter, searchScrollListener)
+        setupRecyclerView(searchView, searchLayoutManger, searchAdapter, { searchScrollListener })
         currentView = mainView
         return view
     }
@@ -235,12 +235,13 @@ abstract class MainActivityFragment(
     private fun setupRecyclerView(rv: RecyclerView,
                                   rvLM: RecyclerView.LayoutManager,
                                   rvAdapter: RecyclerView.Adapter<*>,
-                                  onScrollListener: RecyclerView.OnScrollListener?) {
+                                  onScrollListenerBuilder: () -> RecyclerView.OnScrollListener?) {
         Log.d(TAG, "Setting up view: ${rv.getName()}")
         rv.apply {
             setHasFixedSize(true)
             layoutManager = rvLM
             adapter = rvAdapter
+            val onScrollListener = onScrollListenerBuilder()
             onScrollListener?.let {
                 clearOnScrollListeners()
                 Log.d(TAG, "Adding scroll listener")
