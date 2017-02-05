@@ -10,11 +10,8 @@ import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
-import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 
 /**
@@ -23,8 +20,8 @@ import org.jetbrains.anko.uiThread
  * @param presenter the presenter used by this fragment to perform data operations
  */
 class PublishedFragment(
-        val presenter: MainActivityPresenter<BookInsertionModel> = InsertionPublishedPresenter()
-) : MainActivityFragment() {
+        override val presenter: MainActivityPresenter<BookInsertionModel> = InsertionPublishedPresenter()
+) : MainInsertionFragment() {
 
     companion object {
         private val TAG = PublishedFragment::class.java.simpleName
@@ -65,22 +62,8 @@ class PublishedFragment(
         get() = context.getDpBasedLinearLayoutManager()
 
 
-    override val mainScrollListener: RecyclerView.OnScrollListener? by lazy {
-        InfiniteScrollListener(mainLayoutManager) {
-            val lastItem = mainAdapter.items.lastOrNull()
-            Log.d(TAG, "Loading published items older than: $lastItem")
-            doAsync {
-                val olderItems = if (lastItem != null) {
-                    presenter.getDataOlderThanItem(lastItem)
-                } else {
-                    presenter.getData()
-                }
-                uiThread {
-                    mainAdapter.items += olderItems
-                }
-            }
-        }
-    }
+    override val mainScrollListener: RecyclerView.OnScrollListener?
+        get() = buildMainViewInfiniteScrollListener()
 
     /*
      * Search view
@@ -108,39 +91,6 @@ class PublishedFragment(
 
     override var fabId: Int? = R.id.sellingFab
 
-    /*
-     * Data handling
-     */
-
-    override fun addCachedData() {
-        mainAdapter.items = presenter.getCachedData()
-    }
-
-    override fun updateData() {
-        doAsync {
-            val data = presenter.getData()
-            uiThread {
-                mainAdapter.items = data
-                val infiniteScrollListener = mainScrollListener as? InfiniteScrollListener
-                infiniteScrollListener?.reset()
-            }
-        }
-    }
-
-    override fun onQueryTextSubmit(query: String): Boolean {
-        return onQueryTextChange(query)
-    }
-
-    override fun onQueryTextChange(newText: String): Boolean {
-        doAsync {
-            val results = presenter.getQueryData(newText)
-            Log.d(TAG, "Query results size: ${results.size}")
-            uiThread {
-                searchAdapter.items = results
-            }
-        }
-        return true
-    }
 
     override fun onSuccessfulAuthResult(data: Intent?) {
         if (data == null) return
