@@ -1,17 +1,22 @@
 package com.nibokapp.nibok.ui.fragment
 
 import android.content.Intent
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
+import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
+import kotlinx.android.synthetic.main.fragment_selling.*
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -91,13 +96,29 @@ class PublishedFragment(
 
     override var fabId: Int? = R.id.sellingFab
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sellingFab.setOnClickListener {
+            if (!isUserLoggedIn()) {
+                Log.d(TAG, "User needs to login before publishing an insertion")
+                val intent = Intent(context, AuthenticateActivity::class.java)
+                startActivityForResult(intent, REQUEST_AUTHENTICATE)
+            } else {
+                startInsertionPublishActivity()
+            }
+        }
+    }
 
     override fun onSuccessfulAuthResult(data: Intent?) {
-        if (data == null) return
         Log.d(TAG, "User authenticated successfully")
-        val insertionId = data.getStringExtra(KEY_INSERTION_TO_TOGGLE) ?: return
-//        saveInsertion(insertionId)
+        startInsertionPublishActivity()
     }
+
+    private fun startInsertionPublishActivity() {
+        Log.d(TAG, "Starting insertion publishing activity")
+        context.startActivity<InsertionPublishActivity>()
+    }
+
 
 //    private fun saveInsertion(insertionId: String) {
 //        val presenter = savePresenter ?: return
