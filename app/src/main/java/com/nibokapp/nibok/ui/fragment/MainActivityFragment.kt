@@ -154,7 +154,8 @@ abstract class MainActivityFragment(
      *
      * @param data the data received from onActivityResult()
      */
-    abstract fun onSuccessfulAuthResult(data: Intent?)
+    open fun onSuccessfulAuthResult(data: Intent?) {
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
