@@ -114,6 +114,23 @@ class InsertionAdapter(
         items = updatedItems
     }
 
+    /**
+     * Remove the insertion with the given id from the current list of items
+     * and return the list of items as it was before the removal.
+     *
+     * @param insertionId the id of the insertion to remove
+     *
+     * @return the list of items as it was before the removal, that is including the removed item
+     */
+    fun removeInsertion(insertionId: String): List<BookInsertionModel> {
+        if (items.isEmpty()) return emptyList()
+
+        val oldItems = items.toList()
+        val newItems = items.filter { it.insertionId != insertionId }
+        items = newItems
+        return oldItems
+    }
+
     class ViewHolder(itemView: View,
                      val onItemClick: (String) -> Unit,
                      val onThumbnailClick: (String) -> Unit,
