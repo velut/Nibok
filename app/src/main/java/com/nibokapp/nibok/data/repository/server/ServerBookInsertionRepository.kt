@@ -147,7 +147,9 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
 
     override fun isBookInsertionSaved(insertionId: String): Boolean {
         val saveInsertionIds = currentUser?.getSavedInsertionsIdList() ?: emptyList()
-        return insertionId in saveInsertionIds
+        val isSaved = insertionId in saveInsertionIds
+        Log.d(TAG, "Insertion: $insertionId is saved: $isSaved")
+        return isSaved
     }
 
     override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
