@@ -75,7 +75,7 @@ class FeedFragment(
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
             { context.startDetailActivity(it) },
-            { TODO() }
+            { toggleInsertionSaveStatus(it) }
     )
 
     override val searchLayoutManger: LinearLayoutManager
@@ -120,14 +120,8 @@ class FeedFragment(
         doAsync {
             val isSaved = presenter.toggleInsertionSave(insertionId)
             uiThread {
-                val items = mainAdapter.items.map {
-                    if (it.insertionId == insertionId) {
-                        it.copy(savedByUser = isSaved)
-                    } else {
-                        it
-                    }
-                }
-                mainAdapter.items = items
+                mainAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
+                searchAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
             }
         }
     }
