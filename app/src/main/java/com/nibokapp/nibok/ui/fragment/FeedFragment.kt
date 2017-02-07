@@ -14,6 +14,7 @@ import com.nibokapp.nibok.ui.presenter.main.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 
@@ -122,6 +123,12 @@ class FeedFragment(
             uiThread {
                 mainAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
                 searchAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
+                val saveMessage = if (isSaved) {
+                    R.string.book_saved_to_collection
+                } else {
+                    R.string.book_removed_from_collection
+                }
+                context.toast(saveMessage)
             }
         }
     }
