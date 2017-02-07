@@ -95,6 +95,24 @@ class InsertionAdapter(
         holder.bind(items[position])
     }
 
+    /**
+     * Toggle the insertion save status of the item with the given id.
+     *
+     * @param insertionId the id of the insertion of which the save status should be changed
+     * @param isSaved true if the new status is saved, false if it is not saved
+     */
+    fun toggleInsertionSaveStatus(insertionId: String, isSaved: Boolean) {
+        if (items.isEmpty()) return
+
+        val updatedItems = items.map {
+            if (it.insertionId == insertionId) {
+                it.copy(savedByUser = isSaved)
+            } else {
+                it
+            }
+        }
+        items = updatedItems
+    }
 
     class ViewHolder(itemView: View,
                      val onItemClick: (String) -> Unit,
