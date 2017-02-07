@@ -110,11 +110,12 @@ class InsertionAdapter(
         }
 
         /**
-         * Graphically update the save button.
+         * Update the graphical appearance of the save button.
          *
          * @param isSaved true if the insertion is saved, false if it is not
+         * @param animate true if an animation should play when an insertion becomes bookmarked. Default is true
          */
-        fun updateSaveButton(isSaved: Boolean) {
+        fun updateSaveButton(isSaved: Boolean, animate: Boolean = true) {
             with(itemView) {
                 val (colorFilter, imageResource) = if (isSaved) {
                     Pair(ContextCompat.getColor(context, R.color.primary),
@@ -126,7 +127,7 @@ class InsertionAdapter(
                 saveButton.apply {
                     setColorFilter(colorFilter)
                     setImageResource(imageResource)
-                    if (isSaved) animateBounce()
+                    if (isSaved && animate) animateBounce()
                 }
             }
         }
@@ -139,7 +140,7 @@ class InsertionAdapter(
         fun bind(item: BookInsertionModel) {
             loadThumbnail(item.bookPictureSources.firstOrNull())
             bindTextData(item)
-            setupButtons()
+            setupButtons(item)
             addClickListeners(item.insertionId)
         }
 
@@ -165,13 +166,15 @@ class InsertionAdapter(
             }
         }
 
-        private fun setupButtons() = with(itemView) {
+        private fun setupButtons(item: BookInsertionModel) = with(itemView) {
             val disableSaveButton = onSaveButtonClick == null
             if (disableSaveButton) {
                 saveButton.apply {
                     isEnabled = false
                     setGone()
                 }
+            } else {
+                updateSaveButton(item.savedByUser, false)
             }
         }
 
