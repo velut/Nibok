@@ -22,7 +22,7 @@ abstract class MainInsertionFragment : MainActivityFragment() {
      * The adapter currently used by the main view safely casted as an InsertionAdapter.
      */
     protected val mainInsertionAdapter: InsertionAdapter?
-        get() = mainView.adapter as? InsertionAdapter
+        get() = mainView?.adapter as? InsertionAdapter
 
     /**
      * The infinite scroll listener currently used by the main view.
@@ -35,7 +35,7 @@ abstract class MainInsertionFragment : MainActivityFragment() {
      * The adapter currently used by the search view safely casted as an InsertionAdapter.
      */
     protected val searchInsertionAdapter: InsertionAdapter?
-        get() = searchView.adapter as? InsertionAdapter
+        get() = searchView?.adapter as? InsertionAdapter
 
 
     override fun addCachedData() {
@@ -73,7 +73,7 @@ abstract class MainInsertionFragment : MainActivityFragment() {
 
     protected fun buildMainViewInfiniteScrollListener(): RecyclerView.OnScrollListener? {
         // Get the linear layout manager and the main adapter
-        val llm = mainView.layoutManager as? LinearLayoutManager ?: return null
+        val llm = mainView?.layoutManager as? LinearLayoutManager ?: return null
         val adapter = mainInsertionAdapter ?: return null
         // Update current listener reference
         mainInfiniteScrollListener = buildInfiniteScrollListener(llm, adapter)
