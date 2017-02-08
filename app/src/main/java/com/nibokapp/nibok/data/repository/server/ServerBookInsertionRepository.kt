@@ -141,6 +141,12 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         return insertions
     }
 
+    override fun deletePublishedInsertion(insertionId: String): Boolean {
+        Log.d(TAG, "Deleting insertion: $insertionId")
+        val insertion = fetcher.fetchInsertionDocumentById(insertionId) ?: return false
+        return sender.sendInsertionDeleteRequest(insertion)
+    }
+
     /*
      * BOOK INSERTION SAVE STATUS
      */

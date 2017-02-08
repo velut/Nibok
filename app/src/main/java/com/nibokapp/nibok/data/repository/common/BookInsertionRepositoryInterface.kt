@@ -144,6 +144,15 @@ interface BookInsertionRepositoryInterface {
      */
     fun getPublishedInsertionListOlderThanInsertion(insertionId: String): List<Insertion>
 
+    /**
+     * Delete the published insertion with the given id.
+     *
+     * @param insertionId the id of the insertion to delete
+     *
+     * @return true if the insertion was deleted, false otherwise
+     */
+    fun deletePublishedInsertion(insertionId: String): Boolean
+
     /*
      * BOOK INSERTION SAVE STATUS
      */
