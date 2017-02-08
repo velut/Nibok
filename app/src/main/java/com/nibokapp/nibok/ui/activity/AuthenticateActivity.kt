@@ -360,7 +360,7 @@ class AuthenticateActivity(
         return MaterialDialog.Builder(this)
                 .title(dialogTitle)
                 .content(dialogContent)
-                .positiveText(getString(android.R.string.ok))
+                .positiveText(android.R.string.ok)
                 .build()
     }
 }

@@ -153,7 +153,7 @@ class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.Publ
                 .title(R.string.alert_quit_publish_title)
                 .content(R.string.alert_quit_publish_content)
                 .positiveText(R.string.alert_quit_publish_positive_text)
-                .negativeText(getString(R.string.text_cancel))
+                .negativeText(R.string.text_cancel)
                 .onPositive { materialDialog, dialogAction ->  onQuit() }
                 .build()
         alertQuitDialog?.show()
