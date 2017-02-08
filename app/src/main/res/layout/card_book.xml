@@ -103,6 +103,23 @@
             android:contentDescription="@string/save_button_description"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:clickable="true"
+            android:layout_width="@dimen/img_button_dim"
+            android:layout_height="@dimen/img_button_dim"
+            android:paddingStart="@dimen/img_button_padding"
+            android:paddingTop="@dimen/img_button_padding"
+            android:paddingEnd="@dimen/img_button_padding"
+            android:paddingBottom="@dimen/img_button_padding"
+            android:tint="@color/secondary_text"
+            android:src="@drawable/ic_delete_forever_black_24dp"
+            android:contentDescription="@string/delete_insertion"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 

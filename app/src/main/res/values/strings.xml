@@ -49,6 +49,7 @@
 
     <!-- Buttons -->
     <string name="snackbar_undo_action">UNDO</string>
+    <string name="delete_insertion">Delete insertion</string>
 
 
     <!-- Extra -->

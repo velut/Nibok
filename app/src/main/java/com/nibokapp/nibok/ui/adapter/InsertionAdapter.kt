@@ -26,7 +26,8 @@ import kotlin.properties.Delegates
 class InsertionAdapter(
         val onItemClick: (String) -> Unit,
         val onThumbnailClick: (String) -> Unit,
-        val onSaveButtonClick: ((String) -> Unit)? = null
+        val onSaveButtonClick: ((String) -> Unit)? = null,
+        val onDeleteButtonClick: ((String) -> Unit)? = null
 ) : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), UpdatableAdapter {
 
     companion object {
@@ -63,7 +64,8 @@ class InsertionAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.card_book), onItemClick, onThumbnailClick, onSaveButtonClick)
+        return ViewHolder(parent.inflate(R.layout.card_book),
+                onItemClick, onThumbnailClick, onSaveButtonClick, onDeleteButtonClick)
     }
 
     override fun getItemCount(): Int {
@@ -134,7 +136,8 @@ class InsertionAdapter(
     class ViewHolder(itemView: View,
                      val onItemClick: (String) -> Unit,
                      val onThumbnailClick: (String) -> Unit,
-                     val onSaveButtonClick: ((String) -> Unit)? = null
+                     val onSaveButtonClick: ((String) -> Unit)? = null,
+                     val onDeleteButtonClick: ((String) -> Unit)? = null
     ) : RecyclerView.ViewHolder(itemView) {
 
         companion object {
@@ -202,6 +205,11 @@ class InsertionAdapter(
         }
 
         private fun setupButtons(item: BookInsertionModel) = with(itemView) {
+            setupSaveButton(item.savedByUser)
+            setupDeleteButton()
+        }
+
+        private fun setupSaveButton(isSaved: Boolean) = with(itemView) {
             val disableSaveButton = onSaveButtonClick == null
             if (disableSaveButton) {
                 saveButton.apply {
@@ -209,7 +217,20 @@ class InsertionAdapter(
                     setGone()
                 }
             } else {
-                updateSaveButton(item.savedByUser, false)
+                updateSaveButton(isSaved, false)
+            }
+        }
+
+        private fun setupDeleteButton() = with(itemView) {
+            val disableDeleteButton = onDeleteButtonClick == null
+            deleteButton.apply {
+                if (disableDeleteButton) {
+                    isEnabled = false
+                    setGone()
+                } else {
+                    isEnabled = true
+                    setVisible()
+                }
             }
         }
 
@@ -228,7 +249,12 @@ class InsertionAdapter(
                     it(itemId)
                 }
             }
-
+            onDeleteButtonClick?.let {
+                itemView.deleteButton.setOnClickListener {
+                    Log.d(TAG, "Delete button clicked")
+                    it(itemId)
+                }
+            }
         }
     }
 }
