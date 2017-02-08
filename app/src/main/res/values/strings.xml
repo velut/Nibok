@@ -164,4 +164,13 @@
     <string name="title_sign_up_fail">Sign Up Failed</string>
     <string name="content_sign_up_fail">Try again later</string>
 
+    <!-- Delete dialogs -->
+    <string name="title_delete_insertion">Delete insertion?</string>
+    <string name="content_delete_insertion">Do you really want to delete this insertion?\nThis cannot be undone</string>
+    <string name="positive_delete">Delete</string>
+    <string name="title_delete_success">Insertion deleted</string>
+    <string name="content_delete_success">Your insertion was deleted successfully</string>
+    <string name="title_delete_fail">Error while deleting insertion</string>
+    <string name="content_delete_fail">Your insertion couldn't be deleted.\nTry again later.</string>
+
 </resources>

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
@@ -13,10 +14,13 @@ import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
+import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import kotlinx.android.synthetic.main.fragment_selling.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.uiThread
 
 
 /**
@@ -30,8 +34,6 @@ class PublishedFragment(
 
     companion object {
         private val TAG = PublishedFragment::class.java.simpleName
-
-        private val KEY_INSERTION_TO_TOGGLE = "$TAG:insertionToToggle"
     }
 
     override val TAG: String = PublishedFragment.TAG
@@ -46,10 +48,9 @@ class PublishedFragment(
      * Presenter
      */
 
-    // TODO delete insertion?
-//    private val savePresenter: InsertionSaveStatusPresenter? by lazy {
-//        presenter as? InsertionSaveStatusPresenter
-//    }
+    private val deletePresenter: InsertionDeletePresenter? by lazy {
+        presenter as? InsertionDeletePresenter
+    }
 
     /*
      * Main view
@@ -60,7 +61,7 @@ class PublishedFragment(
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
             { context.startDetailActivity(it) },
-            { toggleInsertionSaveStatus(it) } // TODO delete?
+            onDeleteButtonClick = { confirmDeleteInsertion(it) }
     )
 
     override val mainLayoutManager: LinearLayoutManager
@@ -79,7 +80,7 @@ class PublishedFragment(
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
             { context.startDetailActivity(it) },
-            { TODO() }
+            onDeleteButtonClick = { confirmDeleteInsertion(it) }
     )
 
     override val searchLayoutManger: LinearLayoutManager
@@ -96,6 +97,15 @@ class PublishedFragment(
 
     override var fabId: Int? = R.id.sellingFab
 
+    /*
+     * Dialogs
+     */
+
+    private var alertDialog: MaterialDialog? = null
+
+    private var resultDialog: MaterialDialog? = null
+
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sellingFab.setOnClickListener {
@@ -109,6 +119,12 @@ class PublishedFragment(
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        alertDialog?.dismiss()
+        resultDialog?.dismiss()
+    }
+
     override fun onSuccessfulAuthResult(data: Intent?) {
         Log.d(TAG, "User authenticated successfully")
         startInsertionPublishActivity()
@@ -119,43 +135,46 @@ class PublishedFragment(
         context.startActivity<InsertionPublishActivity>()
     }
 
+    private fun confirmDeleteInsertion(insertionId: String) {
+        if (!isUserLoggedIn()) return
 
-//    private fun saveInsertion(insertionId: String) {
-//        val presenter = savePresenter ?: return
-//        doAsync {
-//            val isSaved = presenter.isInsertionSaved(insertionId)
-//            uiThread {
-//                if (!isSaved) {
-//                    toggleInsertionSaveStatus(insertionId)
-//                }
-//            }
-//        }
-//    }
-
-    private fun toggleInsertionSaveStatus(insertionId: String) {
-
-        if (!isUserLoggedIn()) {
-            Log.d(TAG, "User needs to login before saving insertion")
-            val intent = Intent(context, AuthenticateActivity::class.java)
-            intent.putExtra(KEY_INSERTION_TO_TOGGLE, insertionId)
-            startActivityForResult(intent, REQUEST_AUTHENTICATE)
-            return
-        }
-
-//        Log.d(TAG, "Toggling save status for insertion: $insertionId")
-//        val presenter = savePresenter ?: return
-//        doAsync {
-//            val isSaved = presenter.toggleInsertionSave(insertionId)
-//            uiThread {
-//                val items = mainAdapter.items.map {
-//                    if (it.insertionId == insertionId) {
-//                        it.copy(savedByUser = isSaved)
-//                    } else {
-//                        it
-//                    }
-//                }
-//                mainAdapter.items = items
-//            }
-//        }
+        val presenter = deletePresenter ?: return
+        alertDialog = MaterialDialog.Builder(context)
+                .title(R.string.title_delete_insertion)
+                .content(R.string.content_delete_insertion)
+                .positiveText(R.string.positive_delete)
+                .negativeText(R.string.text_cancel)
+                .onPositive { materialDialog, dialogAction ->  deleteInsertion(presenter, insertionId) }
+                .build()
+        alertDialog?.show()
     }
+
+    private fun deleteInsertion(presenter: InsertionDeletePresenter, insertionId: String) {
+        Log.d(TAG, "Deleting insertion: $insertionId")
+        doAsync {
+            val isDeleted = presenter.deleteInsertion(insertionId)
+            uiThread {
+                if (isDeleted) {
+                    mainAdapter.removeInsertion(insertionId)
+                    searchAdapter.removeInsertion(insertionId)
+                }
+                showDeleteResult(isDeleted)
+            }
+        }
+    }
+
+    private fun showDeleteResult(isDeleted: Boolean) {
+        val (title, content) = if (isDeleted) {
+            Pair(R.string.title_delete_success, R.string.content_delete_success)
+        } else {
+            Pair(R.string.title_delete_fail, R.string.content_delete_fail)
+        }
+        resultDialog = MaterialDialog.Builder(context)
+                .title(title)
+                .content(content)
+                .positiveText(android.R.string.ok)
+                .build()
+        resultDialog?.show()
+    }
+
 }
