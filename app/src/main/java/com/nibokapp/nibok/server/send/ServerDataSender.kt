@@ -58,6 +58,11 @@ class ServerDataSender : ServerDataSenderInterface {
         return Pair(sent, document.getIdOrNull(sent))
     }
 
+    override fun sendInsertionDeleteRequest(document: BaasDocument): Boolean {
+        Log.d(TAG, "Removing insertion from server")
+        return document.deleteSync().isSuccess
+    }
+
     /*
      * CONVERSATIONS
      */

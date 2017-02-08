@@ -34,6 +34,15 @@ interface ServerDataSenderInterface {
     fun sendInsertionDocument(document: BaasDocument): Pair<Boolean, String?>
 
     /**
+     * Remove a BaasDocument representing an insertion from the server.
+     *
+     * @param document the document to remove
+     *
+     * @return true if the document was removed successfully, false otherwise
+     */
+    fun sendInsertionDeleteRequest(document: BaasDocument): Boolean
+
+    /**
      * Send a BaasDocument representing conversation data to the server.
      *
      * @param document the document to send
