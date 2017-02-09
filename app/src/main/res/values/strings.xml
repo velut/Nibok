@@ -10,10 +10,10 @@
     <string name="description_nibok_logo">Nibok logo</string>
 
     <!-- Main ViewPager Tabs names -->
-    <string name="latest_tab">Latest</string>
-    <string name="saved_tab">Saved</string>
-    <string name="selling_tab">Selling</string>
-    <string name="messages_tab">Messages</string>
+    <string name="main_tab_new">New</string>
+    <string name="main_tab_saved">Saved</string>
+    <string name="main_tab_published">My insertions</string>
+    <string name="main_tab_messages">Messages</string>
 
     <!-- Toasts -->
     <string name="book_saved_to_collection">Book saved to your collection</string>

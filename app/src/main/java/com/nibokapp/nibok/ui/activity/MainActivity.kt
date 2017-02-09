@@ -6,14 +6,9 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.onPageSelected
-import com.nibokapp.nibok.ui.fragment.main.LatestFragment
-import com.nibokapp.nibok.ui.fragment.main.MessageListFragment
-import com.nibokapp.nibok.ui.fragment.main.SavedFragment
-import com.nibokapp.nibok.ui.fragment.main.SellingFragment
-import com.nibokapp.nibok.ui.fragment.main.common.VisibleFragment
+import com.nibokapp.nibok.ui.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -22,10 +17,10 @@ import kotlinx.android.synthetic.main.activity_main.*
  * The main activity of the application.
  *
  * It hosts the ViewPager with the four main fragments:
- *  LatestFragment: the fragment for the feed of latest insertions published
- *  SavedFragment: the fragment for the list of insertions bookmarked by the user
- *  SellingFragment: the fragment for the list of insertions published by the user
- *  MessageListFragment: the fragment for the list of messages exchanged with other users
+ *  FeedFragment: the fragment for the feed of latest insertions published
+ *  BookmarkFragment: the fragment for the list of insertions bookmarked by the user
+ *  PublishedFragment: the fragment for the list of insertions published by the user
+ *  ConversationFragment: the fragment for the list of messages exchanged with other users
  */
 class MainActivity : AppCompatActivity() {
 
@@ -38,10 +33,10 @@ class MainActivity : AppCompatActivity() {
      */
     private val fragments: Map<String, Fragment> by lazy {
         mapOf<String, Fragment>(
-                getString(R.string.latest_tab) to LatestFragment(),
-                getString(R.string.saved_tab) to SavedFragment(),
-                getString(R.string.selling_tab) to SellingFragment(),
-                getString(R.string.messages_tab) to MessageListFragment()
+                getString(R.string.main_tab_new) to FeedFragment(),
+                getString(R.string.main_tab_saved) to BookmarkFragment(),
+                getString(R.string.main_tab_published) to PublishedFragment(),
+                getString(R.string.main_tab_messages) to ConversationFragment()
         )
     }
 
@@ -65,16 +60,17 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         viewPager.adapter = adapter
-        viewPager.onPageSelected { position ->
-            val fragment = adapter.getItem(position) as? VisibleFragment
-            fragment?.let {
-                it.onBecomeInvisible()
-                Log.d("$TAG ViewPager", "Fragment $fragment at position $position became visible")
-            }
+        viewPager.onPageSelected {
+            position ->
+            // Alert selected fragment
+            val selectedFragment = adapter.getItem(position)
+            if (selectedFragment is ViewPagerFragment) selectedFragment.onSelected()
 
-            // Alert other fragments that they became invisible
+            // Alert other fragments
             val otherFragmentsPositions = (0..adapter.count - 1).filter { it != position }
-            otherFragmentsPositions.forEach { (adapter.getItem(it) as? VisibleFragment)?.onBecomeInvisible() }
+            val otherFragments = otherFragmentsPositions.map { adapter.getItem(it) }
+            val unselectedFragments = otherFragments.filterIsInstance<ViewPagerFragment>()
+            unselectedFragments.forEach { it.onUnselected() }
         }
     }
 
