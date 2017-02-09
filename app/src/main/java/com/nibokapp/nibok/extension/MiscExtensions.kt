@@ -83,7 +83,7 @@ fun Date.toDeltaBasedSimpleDateString(yesterdayString: String, alwaysAddHour: Bo
 }
 
 /**
- * Return a string with the date formatted with the given pattern-
+ * Return a string with the date formatted with the given pattern.
  *
  * @param pattern the pattern to use in order to format the date. Default pattern is for RFC 1123
  *
