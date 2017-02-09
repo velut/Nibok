@@ -13,8 +13,8 @@ import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
-import com.nibokapp.nibok.ui.adapter.InsertionAdapter
-import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
+import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
+import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter

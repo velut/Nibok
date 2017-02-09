@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter
+package com.nibokapp.nibok.ui.adapter.main
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat

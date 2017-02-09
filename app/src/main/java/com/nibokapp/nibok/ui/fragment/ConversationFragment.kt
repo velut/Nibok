@@ -6,8 +6,8 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startChatActivity
-import com.nibokapp.nibok.ui.adapter.ConversationAdapter
-import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
+import com.nibokapp.nibok.ui.adapter.main.ConversationAdapter
+import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.main.ConversationPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 

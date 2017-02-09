@@ -3,7 +3,7 @@ package com.nibokapp.nibok.ui.fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
+import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import org.jetbrains.anko.doAsync

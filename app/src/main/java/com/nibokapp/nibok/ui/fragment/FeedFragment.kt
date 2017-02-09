@@ -9,8 +9,8 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
-import com.nibokapp.nibok.ui.adapter.InsertionAdapter
-import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
+import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
+import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.main.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter

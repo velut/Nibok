@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter
+package com.nibokapp.nibok.ui.adapter.main
 
 import android.content.Context
 import android.os.Bundle
@@ -27,8 +27,8 @@ class ConversationAdapter(
     companion object {
         private val TAG = ConversationAdapter::class.java.simpleName
 
-        private val KEY_DATE: String = "$TAG:KEY_DATE"
-        private val KEY_PREVIEW_TEXT: String = "$TAG:KEY_PREVIEW_TEXT"
+        private val KEY_DATE: String = "${TAG}:KEY_DATE"
+        private val KEY_PREVIEW_TEXT: String = "${TAG}:KEY_PREVIEW_TEXT"
     }
 
     /**

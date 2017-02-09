@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.adapter
+package com.nibokapp.nibok.ui.adapter.main
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
