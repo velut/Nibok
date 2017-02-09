@@ -16,13 +16,13 @@ class RequestOlderConversationCommand(
         val lastConversation: ConversationModel,
         val dataMapper: ConversationDataMapperInterface = ConversationDataMapper(),
         val conversationRepository: ConversationRepositoryInterface = ConversationRepository
-) :
-        Command<List<ConversationModel>> {
+) : Command<List<ConversationModel>> {
 
-    override fun execute(): List<ConversationModel> =
-            dataMapper.convertConversationListToDomain(
-                    conversationRepository.getConversationListBeforeDate(
-                            lastConversation.date
-                    )
-            )
+    override fun execute(): List<ConversationModel> {
+        return dataMapper.convertConversationListToDomain(
+                conversationRepository.getConversationListOlderThanConversation(
+                        lastConversation.conversationId
+                )
+        )
+    }
 }
