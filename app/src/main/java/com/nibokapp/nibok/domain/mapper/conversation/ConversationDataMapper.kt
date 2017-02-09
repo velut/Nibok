@@ -2,10 +2,8 @@ package com.nibokapp.nibok.domain.mapper.conversation
 
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.ExternalUser
-import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.domain.mapper.user.UserMapper
 import com.nibokapp.nibok.domain.mapper.user.UserMapperInterface
-import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.domain.model.UserModel
 
@@ -60,9 +58,4 @@ class ConversationDataMapper(
     private fun convertPartnerFromDomain(partner: UserModel): ExternalUser =
             userMapper.convertUserFromDomain(partner)
 
-    private fun  convertMessageListToDomain(messages: List<Message>): List<ChatMessageModel> =
-            messageMapper.convertMessageListToDomain(messages)
-
-    private fun  convertMessageListFromDomain(messages: List<ChatMessageModel>): List<Message> =
-            messageMapper.convertMessageListFromDomain(messages)
 }
