@@ -6,8 +6,14 @@ import android.util.Log
 
 /**
  * Interface for adapters that can be updated through DiffUtil.
+ * Updatable adapters hold a list of items of type T.
  */
-interface UpdatableAdapter {
+interface UpdatableAdapter<T> {
+
+    /**
+     * The list of items held by the adapter.
+     */
+    var items: List<T>
 
     /**
      * Update an adapter through DiffUtil and then dispatch the updates.
@@ -17,10 +23,10 @@ interface UpdatableAdapter {
      * @param areItemsTheSame the function comparing two items (one old and one new) and checking if they are the same
      * @param getChangePayload the function calculating the change payload between the old version of an item and the new one
      */
-    fun <T> RecyclerView.Adapter<*>.update(oldItems: List<T>,
-                                           newItems: List<T>,
-                                           areItemsTheSame: (T, T) -> Boolean,
-                                           getChangePayload: (T, T) -> Any?) {
+    fun RecyclerView.Adapter<*>.update(oldItems: List<T>,
+                                       newItems: List<T>,
+                                       areItemsTheSame: (T, T) -> Boolean,
+                                       getChangePayload: (T, T) -> Any?) {
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
