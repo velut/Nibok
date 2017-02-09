@@ -18,6 +18,7 @@ data class InsertionData(
         var bookPictures: List<String> = emptyList()
 ) : Parcelable {
     companion object {
+        @Suppress("unused")
         @JvmField val CREATOR: Parcelable.Creator<InsertionData> = object : Parcelable.Creator<InsertionData> {
             override fun createFromParcel(source: Parcel): InsertionData = InsertionData(source)
             override fun newArray(size: Int): Array<InsertionData?> = arrayOfNulls(size)

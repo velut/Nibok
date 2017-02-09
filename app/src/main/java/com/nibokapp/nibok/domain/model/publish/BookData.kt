@@ -22,6 +22,7 @@ data class BookData(
         var isbn: String = ""
 ) : Parcelable {
     companion object {
+        @Suppress("unused")
         @JvmField val CREATOR: Parcelable.Creator<BookData> = object : Parcelable.Creator<BookData> {
             override fun createFromParcel(source: Parcel): BookData = BookData(source)
             override fun newArray(size: Int): Array<BookData?> = arrayOfNulls(size)
