@@ -11,8 +11,7 @@ import com.nibokapp.nibok.domain.model.UserModel
  * Conversation data mapper implementation.
  */
 class ConversationDataMapper(
-        val userMapper: UserMapperInterface = UserMapper(),
-        val messageMapper: MessageDataMapperInterface = MessageDataMapper()
+        val userMapper: UserMapperInterface = UserMapper()
 ) : ConversationDataMapperInterface {
     
     override fun convertConversationListToDomain(conversations: List<Conversation>): List<ConversationModel> =
@@ -36,7 +35,7 @@ class ConversationDataMapper(
             )
         }
     }
-    // TODO 2 unused override methods V
+
     override fun convertConversationListFromDomain(conversations: List<ConversationModel>):
             List<Conversation> = conversations.map { convertConversationFromDomain(it) }
 
