@@ -75,6 +75,13 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         return conversationCache
     }
 
+    override fun getConversationListOlderThanConversation(conversationId: String): List<Conversation> {
+        val conversations = fetcher.fetchConversationDocumentListOlderThanConversation(conversationId)
+                .toConversationList()
+        Log.d(TAG, "Found ${conversations.size} older than $conversationId")
+        return conversations
+    }
+
     override fun startConversation(partnerId: String): String? {
         val user = currentUser ?: return null
 
@@ -128,6 +135,14 @@ object ServerConversationRepository : ConversationRepositoryInterface {
     /*
      * EXTRA
      */
+
+    private fun List<BaasDocument>.toConversationList(): List<Conversation> {
+        return mapper.convertDocumentListToConversations(this)
+    }
+
+    private fun List<BaasDocument>.toMessageList(): List<Message> {
+        return mapper.convertDocumentListToMessages(this)
+    }
 
     private fun BaasDocument.updateArrayField(fieldName: String, fieldData: JsonArray): Boolean {
         val data = JsonObject().put("data", fieldData)

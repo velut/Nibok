@@ -58,6 +58,15 @@ interface ConversationRepositoryInterface {
     fun getConversationList(cached: Boolean = false): List<Conversation>
 
     /**
+     * Get the list of conversations older than the one with the given id.
+     *
+     * @param conversationId the id of the conversation
+     *
+     * @return a list of Conversation
+     */
+    fun getConversationListOlderThanConversation(conversationId: String): List<Conversation>
+
+    /**
      * Start a conversation with the user with the given id.
      *
      * @param partnerId the id of the user with which the conversation is held

@@ -71,6 +71,10 @@ object LocalConversationRepository : ConversationRepositoryInterface {
         return conversationCache
     }
 
+    override fun getConversationListOlderThanConversation(conversationId: String): List<Conversation> {
+        return emptyList()
+    }
+
     override fun startConversation(partnerId: String): String? {
         if (!userRepository.localUserExists()) return null
 

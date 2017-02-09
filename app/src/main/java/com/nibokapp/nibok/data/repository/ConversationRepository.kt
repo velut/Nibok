@@ -59,6 +59,10 @@ object ConversationRepository : ConversationRepositoryInterface {
         return conversationCache
     }
 
+    override fun getConversationListOlderThanConversation(conversationId: String): List<Conversation> {
+        return SOURCES.firstListResultOrNull { it.getConversationListOlderThanConversation(conversationId) } ?: emptyList()
+    }
+
     override fun startConversation(partnerId: String): String? {
         Log.d(TAG, "Starting conversation with user: $partnerId")
         return SOURCES.firstResultOrNull { it.startConversation(partnerId) }
