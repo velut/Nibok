@@ -8,7 +8,11 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.onPageSelected
-import com.nibokapp.nibok.ui.fragment.*
+import com.nibokapp.nibok.ui.fragment.main.BookmarkFragment
+import com.nibokapp.nibok.ui.fragment.main.ConversationFragment
+import com.nibokapp.nibok.ui.fragment.main.FeedFragment
+import com.nibokapp.nibok.ui.fragment.main.PublishedFragment
+import com.nibokapp.nibok.ui.fragment.main.common.ViewPagerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**

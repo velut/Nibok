@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main.common
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent

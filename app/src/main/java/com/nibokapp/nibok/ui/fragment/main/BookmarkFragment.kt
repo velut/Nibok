@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
@@ -10,6 +10,7 @@ import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
+import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
 import com.nibokapp.nibok.ui.presenter.main.InsertionBookmarkPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
@@ -31,7 +32,7 @@ class BookmarkFragment(
         private val TAG = BookmarkFragment::class.java.simpleName
     }
 
-    override val TAG: String = BookmarkFragment.TAG
+    override val TAG: String = Companion.TAG
 
     /*
      * Layout

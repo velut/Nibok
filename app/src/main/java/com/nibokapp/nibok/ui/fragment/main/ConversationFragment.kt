@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,6 +8,7 @@ import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startChatActivity
 import com.nibokapp.nibok.ui.adapter.main.ConversationAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
+import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
 import com.nibokapp.nibok.ui.presenter.main.ConversationPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 
@@ -25,7 +26,7 @@ class ConversationFragment(
         private val TAG = PublishedFragment::class.java.simpleName
     }
 
-    override val TAG: String = ConversationFragment.TAG
+    override val TAG: String = Companion.TAG
 
     /*
      * Layout

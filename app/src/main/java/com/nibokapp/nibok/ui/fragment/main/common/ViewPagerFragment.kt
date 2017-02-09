@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main.common
 
 /**
  * Interface for fragments hosted in a ViewPager.

@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +15,7 @@ import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
+import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
 import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
@@ -37,7 +38,7 @@ class PublishedFragment(
         private val TAG = PublishedFragment::class.java.simpleName
     }
 
-    override val TAG: String = PublishedFragment.TAG
+    override val TAG: String = Companion.TAG
 
     /*
      * Layout
