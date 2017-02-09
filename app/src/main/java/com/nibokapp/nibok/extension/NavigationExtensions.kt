@@ -28,9 +28,9 @@ fun Context.startAuthenticateActivity() =
         this.startActivity<AuthenticateActivity>()
 
 /**
- * Start the ConversationActivity for the given conversation's id.
+ * Start the ChatActivity for the given conversation's id.
  */
-fun Context.startConversation(conversationId: String) =
+fun Context.startChatActivity(conversationId: String) =
         this.startActivity<ChatActivity>(
                 ChatFragment.CONVERSATION_ID to conversationId
         )
