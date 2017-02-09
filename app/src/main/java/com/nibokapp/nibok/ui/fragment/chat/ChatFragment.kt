@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.chat
 
 import android.os.Bundle
 import android.os.Handler
@@ -36,7 +36,7 @@ class ChatFragment(
         /**
          * Key for arguments passing.
          */
-        val CONVERSATION_ID = "$TAG:conversationId"
+        val CONVERSATION_ID = "${TAG}:conversationId"
 
         /**
          * Timer constants.
@@ -109,7 +109,7 @@ class ChatFragment(
         if (!setupCompleted) return
 
         // Retrieve conversationId
-        conversationId = arguments?.getString(ChatFragment.CONVERSATION_ID)
+        conversationId = arguments?.getString(CONVERSATION_ID)
         setupConversation()
     }
 
