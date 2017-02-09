@@ -44,6 +44,7 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
         // Conversation
         fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=${QUOTE(id)}"
+        fun CONVERSATION_ID_NOT_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}<>${QUOTE(id)}"
 
         // Document Creation's date
         fun CREATION_DATE_AFTER(date: String) = "${ServerConstants.CREATION_DATE} >= date('$date')"
@@ -274,6 +275,30 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         val query = BaasQuery.builder()
                 .collection(COLL_MESSAGES.id)
                 .projection(DISTINCT(ServerConstants.CONVERSATION_ID))
+                .orderBy(ORDER_BY_DESC_CREATION_DATE())
+                .pagination(0, RECORDS_PER_PAGE)
+                .build()
+        val result = query.querySync().onSuccessReturn { it } ?: return emptyList()
+        val conversationIds = result.map { it.getString(ServerConstants.DISTINCT) }
+        // Fetch in order the conversations from their ids
+        return conversationIds
+                .map { fetchDocumentFromCollectionById(COLL_CONVERSATIONS, it) }
+                .filterNotNull()
+    }
+
+    override fun fetchConversationDocumentListOlderThanConversation(conversationId: String): List<BaasDocument> {
+        val oldestMessage = fetchLatestMessageByConversation(conversationId) ?: return emptyList()
+        val oldestMessageId = oldestMessage.id
+        val oldestMessageDate = oldestMessage.creationDate
+        val olderThanMessage = AND(
+                CREATION_DATE_BEFORE(oldestMessageDate),
+                ID_NOT_EQUALS(oldestMessageId),
+                CONVERSATION_ID_NOT_EQUALS(conversationId)
+        )
+        val query = BaasQuery.builder()
+                .collection(COLL_MESSAGES.id)
+                .projection(DISTINCT(ServerConstants.CONVERSATION_ID))
+                .where(olderThanMessage)
                 .orderBy(ORDER_BY_DESC_CREATION_DATE())
                 .pagination(0, RECORDS_PER_PAGE)
                 .build()

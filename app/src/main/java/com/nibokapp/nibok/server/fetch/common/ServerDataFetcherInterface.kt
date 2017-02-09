@@ -156,6 +156,15 @@ interface ServerDataFetcherInterface {
     fun fetchRecentConversationDocumentList(): List<BaasDocument>
 
     /**
+     * Fetch conversation documents older than the conversation with the given id.
+     *
+     * @param conversationId the id of the conversation used for comparisons
+     *
+     * @return a list of BaasDocument
+     */
+    fun fetchConversationDocumentListOlderThanConversation(conversationId: String): List<BaasDocument>
+
+    /**
      * Fetch a message document by its id.
      *
      * @param id the id of the document
