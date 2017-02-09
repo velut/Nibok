@@ -13,7 +13,7 @@ import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.main.InsertionBookmarkPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
-import kotlinx.android.synthetic.main.fragment_saved.*
+import kotlinx.android.synthetic.main.fragment_bookmark.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -37,7 +37,7 @@ class BookmarkFragment(
      * Layout
      */
 
-    override val layoutId: Int = R.layout.fragment_saved
+    override val layoutId: Int = R.layout.fragment_bookmark
 
     /*
      * Presenter
@@ -51,7 +51,7 @@ class BookmarkFragment(
      * Main view
      */
 
-    override val mainViewId: Int = R.id.savedBooksList
+    override val mainViewId: Int = R.id.bookmarkList
 
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -69,7 +69,7 @@ class BookmarkFragment(
      * Search view
      */
 
-    override val searchViewId: Int = R.id.searchResultsListSaved
+    override val searchViewId: Int = R.id.searchBookmarkList
 
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -116,7 +116,7 @@ class BookmarkFragment(
     private fun showRestoreOption(presenter: InsertionSaveStatusPresenter, insertionId: String,
                                   oldMainItems: List<BookInsertionModel>, oldSearchItems: List<BookInsertionModel>) {
         // Alert user that insertion was removed
-        val snackbar = Snackbar.make(savedFragmentRoot,
+        val snackbar = Snackbar.make(bookmarkFragmentRoot,
                 R.string.book_removed_from_collection, Snackbar.LENGTH_LONG)
 
         // Provide a way to restore insertion
@@ -165,7 +165,7 @@ class BookmarkFragment(
     }
 
     private fun showSnackBar(messageResId: Int) {
-        val snackbar = Snackbar.make(savedFragmentRoot, messageResId, Snackbar.LENGTH_SHORT)
+        val snackbar = Snackbar.make(bookmarkFragmentRoot, messageResId, Snackbar.LENGTH_SHORT)
         snackbar.show()
     }
 }

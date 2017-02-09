@@ -31,13 +31,13 @@ class ConversationFragment(
      * Layout
      */
 
-    override val layoutId: Int = R.layout.fragment_message_list
+    override val layoutId: Int = R.layout.fragment_conversation
 
     /*
      * Main view
      */
 
-    override val mainViewId: Int = R.id.messagesList
+    override val mainViewId: Int = R.id.conversationList
 
     override val mainAdapter: ConversationAdapter = ConversationAdapter { startChatActivity(it) }
 
@@ -51,7 +51,7 @@ class ConversationFragment(
      * Search view
      */
 
-    override val searchViewId: Int = R.id.searchResultsListMessages
+    override val searchViewId: Int = R.id.searchConversationList
 
     override val searchAdapter: ConversationAdapter = ConversationAdapter { startChatActivity(it) }
 

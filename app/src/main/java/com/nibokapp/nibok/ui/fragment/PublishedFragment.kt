@@ -18,7 +18,7 @@ import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
-import kotlinx.android.synthetic.main.fragment_selling.*
+import kotlinx.android.synthetic.main.fragment_published.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
@@ -43,7 +43,7 @@ class PublishedFragment(
      * Layout
      */
 
-    override val layoutId: Int = R.layout.fragment_selling
+    override val layoutId: Int = R.layout.fragment_published
 
     /*
      * Presenter
@@ -57,7 +57,7 @@ class PublishedFragment(
      * Main view
      */
 
-    override val mainViewId: Int = R.id.sellingBooksList
+    override val mainViewId: Int = R.id.publishedList
 
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -76,7 +76,7 @@ class PublishedFragment(
      * Search view
      */
 
-    override val searchViewId: Int = R.id.searchResultsListSelling
+    override val searchViewId: Int = R.id.searchPublishedList
 
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -104,7 +104,7 @@ class PublishedFragment(
      * Fab
      */
 
-    override var fabId: Int? = R.id.sellingFab
+    override var fabId: Int? = R.id.publishFab
 
     /*
      * Dialogs
@@ -145,7 +145,7 @@ class PublishedFragment(
     }
 
     private fun addFabClickListener() {
-        sellingFab.setOnClickListener {
+        publishFab.setOnClickListener {
             if (!isUserLoggedIn()) {
                 Log.d(TAG, "User needs to login before publishing an insertion")
                 val intent = Intent(context, AuthenticateActivity::class.java)
@@ -170,7 +170,9 @@ class PublishedFragment(
                 .content(R.string.content_delete_insertion)
                 .positiveText(R.string.positive_delete)
                 .negativeText(R.string.text_cancel)
-                .onPositive { materialDialog, dialogAction ->  deleteInsertion(presenter, insertionId) }
+                .onPositive {
+                    materialDialog, dialogAction -> deleteInsertion(presenter, insertionId)
+                }
                 .build()
         alertDialog?.show()
     }

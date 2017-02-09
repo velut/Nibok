@@ -40,7 +40,7 @@ class FeedFragment(
      * Layout
      */
 
-    override val layoutId: Int = R.layout.fragment_latest
+    override val layoutId: Int = R.layout.fragment_feed
 
     /*
      * Presenter
@@ -54,7 +54,7 @@ class FeedFragment(
      * Main view
      */
 
-    override val mainViewId: Int = R.id.latestBooksList
+    override val mainViewId: Int = R.id.feedList
 
     override val mainAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
@@ -72,7 +72,7 @@ class FeedFragment(
      * Search view
      */
 
-    override val searchViewId: Int = R.id.searchResultsListLatest
+    override val searchViewId: Int = R.id.searchFeedList
 
     override val searchAdapter: InsertionAdapter = InsertionAdapter(
             { context.startDetailActivity(it) },
