@@ -117,15 +117,8 @@ class PublishedFragment(
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sellingFab.setOnClickListener {
-            if (!isUserLoggedIn()) {
-                Log.d(TAG, "User needs to login before publishing an insertion")
-                val intent = Intent(context, AuthenticateActivity::class.java)
-                startActivityForResult(intent, REQUEST_AUTHENTICATE)
-            } else {
-                startInsertionPublishActivity()
-            }
-        }
+        addFabDisplayScrollListener()
+        addFabClickListener()
     }
 
     override fun onPause() {
@@ -137,6 +130,30 @@ class PublishedFragment(
     override fun onSuccessfulAuthResult(data: Intent?) {
         Log.d(TAG, "User authenticated successfully")
         startInsertionPublishActivity()
+    }
+
+    private fun addFabDisplayScrollListener() {
+        mainView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (dy > 0) { // Scroll down, hide fab
+                    fab?.hide()
+                } else if (dy < 0) { // Scroll up, show fab
+                    fab?.show()
+                }
+            }
+        })
+    }
+
+    private fun addFabClickListener() {
+        sellingFab.setOnClickListener {
+            if (!isUserLoggedIn()) {
+                Log.d(TAG, "User needs to login before publishing an insertion")
+                val intent = Intent(context, AuthenticateActivity::class.java)
+                startActivityForResult(intent, REQUEST_AUTHENTICATE)
+            } else {
+                startInsertionPublishActivity()
+            }
+        }
     }
 
     private fun startInsertionPublishActivity() {
