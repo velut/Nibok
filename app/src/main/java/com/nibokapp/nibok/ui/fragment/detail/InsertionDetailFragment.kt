@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.fragment
+package com.nibokapp.nibok.ui.fragment.detail
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -36,7 +36,7 @@ class InsertionDetailFragment(
         /**
          * Key for arguments passing.
          */
-        val INSERTION_ID = "$TAG:insertionId"
+        val INSERTION_ID = "${TAG}:insertionId"
     }
 
     /**
@@ -67,7 +67,7 @@ class InsertionDetailFragment(
         }
 
         // Retrieve insertionId
-        insertionId = arguments?.getString(InsertionDetailFragment.INSERTION_ID)
+        insertionId = arguments?.getString(INSERTION_ID)
 
         setupView()
     }

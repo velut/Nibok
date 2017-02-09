@@ -3,7 +3,7 @@ package com.nibokapp.nibok.ui.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.nibokapp.nibok.R
-import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
+import com.nibokapp.nibok.ui.fragment.detail.InsertionDetailFragment
 
 /**
  * InsertionDetailActivity.
