@@ -6,7 +6,7 @@ import com.nibokapp.nibok.domain.model.UserModel
 /**
  * User mapper implementation.
  */
-class UserMapper() : UserMapperInterface {
+class UserMapper : UserMapperInterface {
 
     override fun convertUserToDomain(user: ExternalUser): UserModel = with(user) {
         UserModel(

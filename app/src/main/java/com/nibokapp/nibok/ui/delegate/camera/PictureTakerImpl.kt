@@ -16,7 +16,7 @@ import java.io.File
 /**
  * Implementation of PictureTaker.
  */
-class PictureTakerImpl() : PictureTaker {
+class PictureTakerImpl : PictureTaker {
 
     companion object {
         private val TAG = PictureTakerImpl::class.java.simpleName

@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_insertion_publish.*
  * It also implements the PublishProcessManager interface to enable screen navigation
  * between fragments of the publishing process and also to keep track of submitted data.
  */
-class InsertionPublishActivity() : AppCompatActivity(), BasePublishFragment.PublishProcessManager {
+class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.PublishProcessManager {
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
