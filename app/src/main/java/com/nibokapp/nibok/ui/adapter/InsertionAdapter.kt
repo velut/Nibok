@@ -28,7 +28,7 @@ class InsertionAdapter(
         val onThumbnailClick: (String) -> Unit,
         val onSaveButtonClick: ((String) -> Unit)? = null,
         val onDeleteButtonClick: ((String) -> Unit)? = null
-) : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), UpdatableAdapter {
+) : RecyclerView.Adapter<InsertionAdapter.ViewHolder>(), UpdatableAdapter<BookInsertionModel> {
 
     companion object {
         private val TAG = InsertionAdapter::class.java.simpleName
@@ -43,9 +43,9 @@ class InsertionAdapter(
      * Items held by the adapter.
      * When items change an adapter update is triggered. See [UpdatableAdapter].
      */
-    var items: List<BookInsertionModel> by Delegates.observable(emptyList()) {
+    override var items: List<BookInsertionModel> by Delegates.observable(emptyList()) {
         prop, oldItems, newItems ->
-        Log.d(TAG, "Updating adapter items")
+        Log.d(TAG, "Updating adapter's insertion items")
         update(oldItems, newItems,
                 { o, n -> areItemsTheSame(o, n) },
                 { o, n -> getChangePayload(o, n) })
