@@ -114,7 +114,7 @@ class InsertionDetailFragment(
                     showAuthActivity()
                 }
             }
-            post { fab.visibility = View.VISIBLE }
+            post { fab.show() }
         }
     }
 
@@ -124,7 +124,7 @@ class InsertionDetailFragment(
             uiThread {
                 if (conversationId != null) {
                     Log.d(TAG, "Starting conversation with user: $sellerId")
-                    context.startConversation(conversationId)
+                    context.startChatActivity(conversationId)
                 } else {
                     Log.d(TAG, "Could not start a conversation with: $sellerId")
                     context.toast(R.string.error_conversation_not_started)
