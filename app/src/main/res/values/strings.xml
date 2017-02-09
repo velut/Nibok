@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Nibok</string>
 
     <!-- Accessibility content description -->
@@ -71,8 +71,8 @@
     <string name="error_invalid_isbn">Invalid ISBN.\nISBN codes look like 97# - ##########</string>
     <string name="error_message_not_sent">"Could not send message, try again later"</string>
     <string name="error_invalid_seller_messaging">"Cannot send a message to this user"</string>
-    <string name="error_username_too_short">Username must contain at least %1d characters</string>
-    <string name="error_password_too_short">Password must contain at least %1d characters</string>
+    <string name="error_username_too_short" tools:ignore="PluralsCandidate">Username must contain at least %1d characters</string>
+    <string name="error_password_too_short" tools:ignore="PluralsCandidate">Password must contain at least %1d characters</string>
     <string name="error_password_do_not_match">Passwords must be the same</string>
     <string name="error_conversation_not_started">Cannot send a message to this user</string>
     <string name="error_take_picture">Cannot take picture</string>
