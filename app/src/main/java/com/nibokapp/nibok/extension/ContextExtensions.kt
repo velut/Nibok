@@ -19,14 +19,6 @@ fun Context.isOrientationPortrait(): Boolean =
     this.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
 /**
- * Check if orientation is landscape.
- *
- * @return true if orientation is landscape, false otherwise
- */
-fun Context.isOrientationLandscape(): Boolean =
-    this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
-/**
  * Get a LinearLayoutManager based on the current screen size in dp.
  * If the size is >= 600dp (tablet) a GridLayoutManager with the given number of columns
  * is returned.
