@@ -4,8 +4,8 @@ import android.content.Context
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.ChatActivity
 import com.nibokapp.nibok.ui.activity.InsertionDetailActivity
-import com.nibokapp.nibok.ui.fragment.ChatFragment
-import com.nibokapp.nibok.ui.fragment.InsertionDetailFragment
+import com.nibokapp.nibok.ui.fragment.chat.ChatFragment
+import com.nibokapp.nibok.ui.fragment.detail.InsertionDetailFragment
 import org.jetbrains.anko.startActivity
 
 /**
