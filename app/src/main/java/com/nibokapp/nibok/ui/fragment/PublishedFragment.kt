@@ -14,6 +14,7 @@ import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
+import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
@@ -30,7 +31,7 @@ import org.jetbrains.anko.uiThread
  */
 class PublishedFragment(
         override val presenter: MainActivityPresenter<BookInsertionModel> = InsertionPublishedPresenter()
-) : MainInsertionFragment() {
+) : MainUpdatableAdapterFragment<BookInsertionModel>() {
 
     companion object {
         private val TAG = PublishedFragment::class.java.simpleName
@@ -90,6 +91,14 @@ class PublishedFragment(
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
     override val searchHint: String by lazy { getString(R.string.search_hint_book) }
+
+    /*
+     * Updatable adapters
+     */
+
+    override val mainUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = mainAdapter
+
+    override val searchUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = searchAdapter
 
     /*
      * Fab

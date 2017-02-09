@@ -9,6 +9,7 @@ import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
+import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.main.InsertionBookmarkPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
@@ -24,7 +25,7 @@ import org.jetbrains.anko.uiThread
  */
 class BookmarkFragment(
         override val presenter: MainActivityPresenter<BookInsertionModel> = InsertionBookmarkPresenter()
-) : MainInsertionFragment() {
+) : MainUpdatableAdapterFragment<BookInsertionModel>() {
 
     companion object {
         private val TAG = BookmarkFragment::class.java.simpleName
@@ -83,6 +84,14 @@ class BookmarkFragment(
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
     override val searchHint: String by lazy { getString(R.string.search_hint_book) }
+
+    /*
+     * Updatable adapters
+     */
+
+    override val mainUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = mainAdapter
+
+    override val searchUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = searchAdapter
 
 
     private fun toggleInsertionSaveStatus(insertionId: String) {

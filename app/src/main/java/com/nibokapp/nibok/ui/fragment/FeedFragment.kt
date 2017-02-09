@@ -10,6 +10,7 @@ import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startDetailActivity
 import com.nibokapp.nibok.ui.activity.AuthenticateActivity
 import com.nibokapp.nibok.ui.adapter.InsertionAdapter
+import com.nibokapp.nibok.ui.adapter.UpdatableAdapter
 import com.nibokapp.nibok.ui.presenter.main.InsertionFeedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
@@ -25,7 +26,7 @@ import org.jetbrains.anko.uiThread
  */
 class FeedFragment(
         override val presenter: MainActivityPresenter<BookInsertionModel> = InsertionFeedPresenter()
-) : MainInsertionFragment() {
+) : MainUpdatableAdapterFragment<BookInsertionModel>() {
 
     companion object {
         private val TAG = FeedFragment::class.java.simpleName
@@ -85,6 +86,14 @@ class FeedFragment(
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
     override val searchHint: String by lazy { getString(R.string.search_hint_book) }
+
+    /*
+     * Updatable adapters
+     */
+
+    override val mainUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = mainAdapter
+
+    override val searchUpdatableAdapter: UpdatableAdapter<BookInsertionModel>? = searchAdapter
 
 
     override fun onSuccessfulAuthResult(data: Intent?) {
