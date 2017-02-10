@@ -6,8 +6,10 @@ import com.baasbox.android.json.JsonObject
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.server.provider.ServerDataProvider
-import com.nibokapp.nibok.server.provider.common.ServerDataProviderInterface
+import com.nibokapp.nibok.server.fetch.ServerDataFetcher
+import com.nibokapp.nibok.server.fetch.common.ServerDataFetcherInterface
+import com.nibokapp.nibok.server.mapper.ServerDataMapper
+import com.nibokapp.nibok.server.mapper.common.ServerDataMapperInterface
 
 /**
  * Extensions handling BaasUser related operations.
@@ -186,26 +188,31 @@ fun BaasUser.addPublishedInsertion(insertionId: String): Boolean {
  * Get the list of insertions corresponding to the ids stored in the given JsonArray.
  *
  * @param array the array that contains the ids of the insertions
- * @param provider the provider used to fetch data from the server.
- * ServerDataProvider is used by default.
+ * @param fetcher the fetcher used to retrieve data from the server
+ * @param mapper the mapper used to map data from the server to db data
  *
  * @return a list of Insertion
  */
 private fun getInsertionsFromArray(array: JsonArray,
-                                   provider: ServerDataProviderInterface = ServerDataProvider()): List<Insertion> {
-    return provider.getInsertionListFromIds(array)
+                                   fetcher: ServerDataFetcherInterface = ServerDataFetcher(),
+                                   mapper: ServerDataMapperInterface = ServerDataMapper()): List<Insertion> {
+    val ids = array.filterIsInstance<String>()
+    val insertionDocuments = fetcher.fetchInsertionDocumentListById(ids)
+    return mapper.convertDocumentListToInsertions(insertionDocuments)
 }
 
 /**
  * Get the list of conversations corresponding to the ids stored in the given JsonArray.
  *
- * @param array the array that contains the ids of the conversations
- * @param provider the provider used to fetch data from the server.
- * ServerDataProvider is used by default.
+ * @param fetcher the fetcher used to retrieve data from the server
+ * @param mapper the mapper used to map data from the server to db data
  *
  * @return a list of Conversation
  */
 private fun getConversationsFromArray(array: JsonArray,
-                                      provider: ServerDataProviderInterface = ServerDataProvider()): List<Conversation> {
-    return provider.getConversationListFromIds(array)
+                                      fetcher: ServerDataFetcherInterface = ServerDataFetcher(),
+                                      mapper: ServerDataMapperInterface = ServerDataMapper()): List<Conversation> {
+    val ids = array.filterIsInstance<String>()
+    val conversationDocuments = fetcher.fetchConversationDocumentListById(ids)
+    return mapper.convertDocumentListToConversations(conversationDocuments)
 }
