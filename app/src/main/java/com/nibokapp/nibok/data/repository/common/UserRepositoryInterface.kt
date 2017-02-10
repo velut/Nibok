@@ -1,7 +1,5 @@
 package com.nibokapp.nibok.data.repository.common
 
-import com.nibokapp.nibok.data.db.Conversation
-import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 
 
@@ -9,10 +7,13 @@ interface UserRepositoryInterface {
 
     /**
      * Create the local user instance in the local db if necessary.
+     *
+     * @param userId the id of the user
+     * @param savedInsertionsIds the list of ids of the insertions saved by the user
+     *
+     * @return true if the local user exists, false otherwise
      */
-    fun createLocalUser(userId: String, savedInsertions: List<Insertion> = emptyList(),
-                        publishedInsertions: List<Insertion> = emptyList(),
-                        conversations: List<Conversation> = emptyList())
+    fun createLocalUser(userId: String, savedInsertionsIds: List<String> = emptyList()): Boolean
 
     /**
      * Remove the local user instance in the local db if necessary.

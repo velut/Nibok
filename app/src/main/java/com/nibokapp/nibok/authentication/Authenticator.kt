@@ -8,7 +8,10 @@ import com.nibokapp.nibok.authentication.common.AuthenticatorInterface
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.server.common.ServerConstants
-import com.nibokapp.nibok.extension.*
+import com.nibokapp.nibok.extension.getSavedInsertionsIdList
+import com.nibokapp.nibok.extension.init
+import com.nibokapp.nibok.extension.onSuccess
+import com.nibokapp.nibok.extension.onSuccessReturn
 
 /**
  * Authenticator.
@@ -42,11 +45,7 @@ object Authenticator : AuthenticatorInterface {
 
         return user.loginSync().onSuccess {
             with(it) {
-                localUserRepository
-                        .createLocalUser(name,
-                                getSavedInsertions(),
-                                getPublishedInsertions(),
-                                getConversations())
+                localUserRepository.createLocalUser(name, getSavedInsertionsIdList())
             }
         }
     }
