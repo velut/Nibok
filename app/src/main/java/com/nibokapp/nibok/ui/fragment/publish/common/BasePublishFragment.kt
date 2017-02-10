@@ -15,7 +15,7 @@ import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.extension.hideSoftKeyboard
 import com.nibokapp.nibok.extension.inflate
-import com.nibokapp.nibok.ui.presenter.PublishInsertionPresenter
+import com.nibokapp.nibok.ui.presenter.publish.PublishInsertionPresenter
 import org.jetbrains.anko.findOptional
 
 /**
