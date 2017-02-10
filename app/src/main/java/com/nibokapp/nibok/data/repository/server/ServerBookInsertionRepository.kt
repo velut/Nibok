@@ -8,7 +8,6 @@ import com.baasbox.android.BaasUser.current
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
-import com.nibokapp.nibok.extension.addPublishedInsertion
 import com.nibokapp.nibok.extension.getSavedInsertionsIdList
 import com.nibokapp.nibok.extension.toStringList
 import com.nibokapp.nibok.extension.toggleInsertionSaveStatus
@@ -177,7 +176,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      */
 
     override fun publishInsertion(insertion: Insertion): Boolean {
-        val user = currentUser ?: return false
+        if (currentUser == null) return false
 
         val book = insertion.book ?: return false
         val bookId = publishBook(book) ?: return false
@@ -192,12 +191,8 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing insertion")
 
         val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId, pictureIds)
-        val (published, insertionId) = sender.sendInsertionDocument(insertionDoc)
-
-        if (published && insertionId != null) {
-            user.addPublishedInsertion(insertionId)
-        }
-
+        val published = sender.sendInsertionDocument(insertionDoc).first
+        Log.d(TAG, "Insertion: $insertion was published: $published")
         return published
     }
 
@@ -221,8 +216,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
 
         val bookDoc = mapper.convertBookToDocument(book)
-        val (published, bookDocId) = sender.sendBookDocument(bookDoc)
-        return bookDocId
+        return sender.sendBookDocument(bookDoc).second
     }
 
     /**
@@ -232,8 +226,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing ${pictureUris.size} pictures")
         val parsedPictureUris = pictureUris.map { Uri.parse(it) }
         Log.d(TAG, "Picture uris are:\n  $parsedPictureUris")
-        val (published, pictureIds) = sender.sendInsertionPictures(parsedPictureUris)
-        return pictureIds
+        return sender.sendInsertionPictures(parsedPictureUris).second
     }
 
     /*
