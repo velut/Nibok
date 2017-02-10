@@ -1,7 +1,5 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
-import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import java.util.*
 
 /**
@@ -26,10 +24,5 @@ data class BookInsertionModel(
         val bookPictureSources: List<String>,
         val insertionDate: Date,
         var savedByUser: Boolean
-) : ViewType {
-
-    override fun getItemId(): String = insertionId
-
-    override fun getViewType(): Int = ViewTypes.BOOK_INSERTION
-}
+)
 

@@ -44,7 +44,7 @@ class ConversationAdapter(
     }
 
     private fun areItemsTheSame(old: ConversationModel, new: ConversationModel): Boolean {
-        return old.getItemId() == new.getItemId()
+        return old.conversationId == new.conversationId
     }
 
     private fun getChangePayload(old: ConversationModel, new: ConversationModel): Bundle? {

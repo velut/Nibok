@@ -52,7 +52,7 @@ class InsertionAdapter(
     }
 
     private fun areItemsTheSame(old: BookInsertionModel, new: BookInsertionModel): Boolean {
-        return old.getItemId() == new.getItemId()
+        return old.insertionId == new.insertionId
     }
 
     private fun getChangePayload(old: BookInsertionModel, new: BookInsertionModel): Bundle? {

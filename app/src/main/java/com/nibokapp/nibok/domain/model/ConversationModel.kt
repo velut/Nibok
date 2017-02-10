@@ -1,7 +1,5 @@
 package com.nibokapp.nibok.domain.model
 
-import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewType
-import com.nibokapp.nibok.ui.adapter.viewtype.common.ViewTypes
 import java.util.*
 
 /**
@@ -22,9 +20,4 @@ data class ConversationModel(
         val previewText: String,
         val partnerHasReplied: Boolean,
         val date: Date
-) : ViewType {
-
-    override fun getItemId(): String = conversationId
-
-    override fun getViewType(): Int = ViewTypes.MESSAGE
-}
+)
