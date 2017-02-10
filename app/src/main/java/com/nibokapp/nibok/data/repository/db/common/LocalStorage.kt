@@ -13,4 +13,11 @@ interface LocalStorage<in T : RealmModel> {
      * @param items the items to store
      */
     fun storeItems(items: List<T>)
+
+    /**
+     * Store the given item.
+     *
+     * @param item the item to store
+     */
+    fun storeItem(item: T)
 }
