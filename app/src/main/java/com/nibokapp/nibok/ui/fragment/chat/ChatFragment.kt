@@ -15,7 +15,7 @@ import com.nibokapp.nibok.domain.model.ChatMessageModel
 import com.nibokapp.nibok.extension.inflate
 import com.nibokapp.nibok.ui.adapter.chat.ChatAdapter
 import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
-import com.nibokapp.nibok.ui.presenter.ChatPresenter
+import com.nibokapp.nibok.ui.presenter.chat.ChatPresenter
 import kotlinx.android.synthetic.main.fragment_chat.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
