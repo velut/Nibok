@@ -36,7 +36,7 @@ class ChatFragment(
         /**
          * Key for arguments passing.
          */
-        val CONVERSATION_ID = "${TAG}:conversationId"
+        val CONVERSATION_ID = "$TAG:conversationId"
 
         /**
          * Timer constants.

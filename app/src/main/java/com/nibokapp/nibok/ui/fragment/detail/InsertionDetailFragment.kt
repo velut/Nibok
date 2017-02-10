@@ -36,7 +36,7 @@ class InsertionDetailFragment(
         /**
          * Key for arguments passing.
          */
-        val INSERTION_ID = "${TAG}:insertionId"
+        val INSERTION_ID = "$TAG:insertionId"
     }
 
     /**
