@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.*
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.*
-import com.nibokapp.nibok.ui.presenter.AuthPresenter
+import com.nibokapp.nibok.ui.presenter.authentication.AuthPresenter
 import org.jetbrains.anko.*
 
 /**

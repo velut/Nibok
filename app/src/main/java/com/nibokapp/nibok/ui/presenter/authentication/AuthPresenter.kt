@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.presenter
+package com.nibokapp.nibok.ui.presenter.authentication
 
 import com.nibokapp.nibok.authentication.Authenticator
 import com.nibokapp.nibok.authentication.common.AuthenticatorInterface

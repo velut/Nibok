@@ -11,7 +11,7 @@ import com.nibokapp.nibok.domain.rule.AuthInputValidator
 import com.nibokapp.nibok.extension.afterTextChanged
 import com.nibokapp.nibok.extension.hideKeyboardListener
 import com.nibokapp.nibok.ui.filter.getAlphanumericFilter
-import com.nibokapp.nibok.ui.presenter.AuthPresenter
+import com.nibokapp.nibok.ui.presenter.authentication.AuthPresenter
 import kotlinx.android.synthetic.main.activity_authenticate.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
