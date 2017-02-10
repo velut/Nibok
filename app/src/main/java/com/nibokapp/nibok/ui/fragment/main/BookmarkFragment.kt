@@ -12,8 +12,8 @@ import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
 import com.nibokapp.nibok.ui.presenter.main.InsertionBookmarkPresenter
+import com.nibokapp.nibok.ui.presenter.main.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
-import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

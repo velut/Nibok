@@ -13,8 +13,8 @@ import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
 import com.nibokapp.nibok.ui.presenter.main.InsertionFeedPresenter
+import com.nibokapp.nibok.ui.presenter.main.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
-import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread

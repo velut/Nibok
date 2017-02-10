@@ -6,7 +6,6 @@ import com.nibokapp.nibok.domain.command.bookinsertion.feed.RequestBookInsertion
 import com.nibokapp.nibok.domain.command.bookinsertion.feed.RequestCachedBookInsertionFeedCommand
 import com.nibokapp.nibok.domain.command.bookinsertion.feed.RequestOlderBookInsertionFeedCommand
 import com.nibokapp.nibok.domain.model.BookInsertionModel
-import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 
 /**
  * Presenter used for the insertions' feed fragment.

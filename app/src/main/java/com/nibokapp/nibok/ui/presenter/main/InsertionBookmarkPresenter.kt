@@ -6,7 +6,6 @@ import com.nibokapp.nibok.domain.command.bookinsertion.saved.RequestOlderSavedBo
 import com.nibokapp.nibok.domain.command.bookinsertion.saved.RequestSavedBookInsertionCommand
 import com.nibokapp.nibok.domain.command.bookinsertion.saved.RequestSavedBookInsertionFromQueryCommand
 import com.nibokapp.nibok.domain.model.BookInsertionModel
-import com.nibokapp.nibok.ui.presenter.viewtype.common.InsertionSaveStatusPresenter
 
 /**
  * Presenter used for the bookmarked insertions.

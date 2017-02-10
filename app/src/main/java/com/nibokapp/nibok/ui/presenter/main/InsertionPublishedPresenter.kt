@@ -6,7 +6,6 @@ import com.nibokapp.nibok.domain.command.bookinsertion.published.RequestOlderPub
 import com.nibokapp.nibok.domain.command.bookinsertion.published.RequestPublishedBookInsertionCommand
 import com.nibokapp.nibok.domain.command.bookinsertion.published.RequestPublishedBookInsertionFromQueryCommand
 import com.nibokapp.nibok.domain.model.BookInsertionModel
-import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
 
 /**
  * Presenter used for the user published insertions.

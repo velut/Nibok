@@ -16,7 +16,7 @@ import com.nibokapp.nibok.ui.activity.InsertionPublishActivity
 import com.nibokapp.nibok.ui.adapter.main.InsertionAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.fragment.main.common.MainUpdatableAdapterFragment
-import com.nibokapp.nibok.ui.presenter.InsertionDeletePresenter
+import com.nibokapp.nibok.ui.presenter.main.InsertionDeletePresenter
 import com.nibokapp.nibok.ui.presenter.main.InsertionPublishedPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import kotlinx.android.synthetic.main.fragment_published.*

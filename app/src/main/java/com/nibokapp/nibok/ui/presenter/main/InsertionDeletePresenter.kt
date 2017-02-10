@@ -1,4 +1,4 @@
-package com.nibokapp.nibok.ui.presenter
+package com.nibokapp.nibok.ui.presenter.main
 
 import android.util.Log
 import com.nibokapp.nibok.domain.command.bookinsertion.published.RequestInsertionDeletion
