@@ -61,16 +61,14 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
     override fun getConversationListFromQuery(query: String): List<Conversation> {
         Log.d(TAG, "Getting conversation list for query: $query")
-        val result = fetcher.fetchConversationDocumentListByQuery(query)
-        val conversations = mapper.convertDocumentListToConversations(result)
+        val conversations = fetcher.fetchConversationDocumentListByQuery(query).toConversationList()
         Log.d(TAG, "Found ${conversations.size} conversations corresponding to query: $query")
         return conversations
     }
 
     override fun getConversationList(cached: Boolean): List<Conversation> {
         if (cached) return conversationCache
-        val result = fetcher.fetchRecentConversationDocumentList()
-        conversationCache = mapper.convertDocumentListToConversations(result)
+        conversationCache = fetcher.fetchRecentConversationDocumentList().toConversationList()
         Log.d(TAG, "Found ${conversationCache.size} recent conversations")
         return conversationCache
     }
@@ -93,24 +91,21 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
         Log.d(TAG, "Getting messages for conversation: $conversationId")
-        val result = fetcher.fetchMessageDocumentListByConversation(conversationId)
-        val messages = mapper.convertDocumentListToMessages(result)
+        val messages = fetcher.fetchMessageDocumentListByConversation(conversationId).toMessageList()
         Log.d(TAG, "Found ${messages.size} messages for conversation: $conversationId")
         return messages
     }
 
     override fun getMessageListBeforeDateOfMessage(messageId: String): List<Message> {
         Log.d(TAG, "Getting messages older than: $messageId")
-        val result = fetcher.fetchMessageDocumentListBeforeDateOfMessage(messageId)
-        val messages = mapper.convertDocumentListToMessages(result)
+        val messages = fetcher.fetchMessageDocumentListBeforeDateOfMessage(messageId).toMessageList()
         Log.d(TAG, "Found ${messages.size} messages older than message: $messageId")
         return messages
     }
 
     override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
         Log.d(TAG, "Getting messages newer than: $messageId")
-        val result = fetcher.fetchMessageDocumentListAfterDateOfMessage(messageId)
-        val messages = mapper.convertDocumentListToMessages(result)
+        val messages = fetcher.fetchMessageDocumentListAfterDateOfMessage(messageId).toMessageList()
         Log.d(TAG, "Found ${messages.size} messages newer than message: $messageId")
         return messages
     }
