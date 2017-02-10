@@ -1,12 +1,9 @@
 package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
-import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
-import com.baasbox.android.Rest
 import com.baasbox.android.json.JsonArray
-import com.baasbox.android.json.JsonObject
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
@@ -137,21 +134,6 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
     private fun List<BaasDocument>.toMessageList(): List<Message> {
         return mapper.convertDocumentListToMessages(this)
-    }
-
-    private fun BaasDocument.updateArrayField(fieldName: String, fieldData: JsonArray): Boolean {
-        val data = JsonObject().put("data", fieldData)
-        val endpoint = "document/${this.collection}/${this.id}/.$fieldName"
-        val updated = sendUpdateRequest(endpoint, data)
-        return updated
-    }
-
-    private fun sendUpdateRequest(endpoint: String, data: JsonObject): Boolean {
-        return BaasBox.rest().sync(
-                Rest.Method.PUT,
-                endpoint,
-                data
-        ).isSuccess
     }
 
     private fun getConversationDocument(participantIds: List<String>): BaasDocument {
