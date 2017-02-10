@@ -1,10 +1,10 @@
 package com.nibokapp.nibok.extension
 
-import com.nibokapp.nibok.data.db.Conversation
-import com.nibokapp.nibok.data.db.ExternalUser
-import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.db.User
 import io.realm.Realm
+import io.realm.RealmModel
+import io.realm.RealmQuery
+import java.util.*
 
 /**
  * Extensions for repositories.
@@ -19,57 +19,56 @@ import io.realm.Realm
  *
  * @return the User if it exits, null otherwise
  */
-fun Realm.getLocalUser(): User? =
-        this.where(User::class.java).findFirst()
-
-/**
- * Get an external user by id.
- *
- * @param userId the external user's id
- *
- * @return the ExternalUser if it exits, null otherwise
- */
-fun Realm.getExternalUserById(userId: String): ExternalUser? =
-        this.where(ExternalUser::class.java).equalTo("username", userId).findFirst()
+fun Realm.getLocalUser(): User? {
+    return this.where(User::class.java).findFirst()
+}
 
 /*
- * BOOK INSERTION
+ * Common
  */
 
 /**
- * Get book insertion by id.
+ * Add to a query the condition that the RealmModel's date must be older than the given one.
  *
- * @param insertionId the insertion's id
+ * @param date the date used in the query
  *
- * @return the Insertion if it exits, null otherwise
+ * @return a RealmQuery
  */
-fun Realm.getBookInsertionById(insertionId: String): Insertion? =
-        this.where(Insertion::class.java).equalTo("id", insertionId).findFirst()
-
-/*
- * CONVERSATION
- */
+fun <T : RealmModel> RealmQuery<T>.dateOlderThan(date: Date): RealmQuery<T> {
+    return this.lessThanOrEqualTo("date", date)
+}
 
 /**
- * Get conversation by id.
+ * Add to a query the condition that the RealmModel's id must be equal to the given id.
  *
- * @param conversationId the conversation's id
+ * @param id the id used in the query
  *
- * @return the Conversation if it exits, null otherwise
+ * @return a RealmQuery
  */
-fun Realm.getConversationById(conversationId: String): Conversation? =
-        this.where(Conversation::class.java).equalTo("id", conversationId).findFirst()
+fun <T : RealmModel> RealmQuery<T>.idEqualTo(id: String): RealmQuery<T> {
+    return this.equalTo("id", id)
+}
 
 /**
- * Get the conversation between the two given users.
+ * Add to a query the condition that the RealmModel's id must be different from the given id.
  *
- * @param localUserId the id of the local user
- * @param partnerId the id of the conversation's partner
+ * @param id the id used in the query
  *
- * @return the Conversation between the two users if it exits, null otherwise
+ * @return a RealmQuery
  */
-fun Realm.getConversationBetweenUsers(localUserId: String, partnerId: String): Conversation? =
-        this.where(Conversation::class.java)
-                .equalTo("userId", localUserId)
-                .equalTo("partner.username", partnerId)
-                .findFirst()
+fun <T : RealmModel> RealmQuery<T>.idNotEqualTo(id: String): RealmQuery<T> {
+    return this.notEqualTo("id", id)
+}
+
+/**
+ * Add to a query the condition that the RealmModel's must be older
+ * than the one with the given id and date.
+ *
+ * @param otherId the id of the other item
+ * @param otherDate the date of the other item
+ *
+ * @return a RealmQuery
+ */
+fun <T : RealmModel> RealmQuery<T>.olderThan(otherId: String, otherDate: Date): RealmQuery<T> {
+    return this.idNotEqualTo(otherId).dateOlderThan(otherDate)
+}
