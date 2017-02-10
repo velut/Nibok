@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.BookInsertionModel
 import com.nibokapp.nibok.extension.*
-import com.nibokapp.nibok.ui.presenter.InsertionDetailPresenter
+import com.nibokapp.nibok.ui.presenter.detail.InsertionDetailPresenter
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.content_insertion_detail.*
 import kotlinx.android.synthetic.main.fragment_insertion_detail.*
