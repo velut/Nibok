@@ -3,6 +3,7 @@ package com.nibokapp.nibok.data.repository.db
 import android.util.Log
 import com.nibokapp.nibok.data.db.Book
 import com.nibokapp.nibok.data.db.Insertion
+import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
@@ -149,13 +150,17 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
 
     fun setInsertionSaveStatus(insertionId: String, isSaved: Boolean) {
         if (!localUserExists()) return
-        val rInsertionId = insertionId.toRealmString()
+        Log.d(TAG, "Setting insertion: $insertionId save status to: $isSaved")
         executeRealmTransaction {
-            it.getLocalUser()?.let {
-                if (isSaved) {
-                    it.savedInsertionsIds.add(rInsertionId)
-                } else {
-                    it.savedInsertionsIds.remove(rInsertionId)
+            val user = it.where(User::class.java).findFirst() ?: return@executeRealmTransaction
+            if (isSaved) {
+                Log.d(TAG, "Saving insertion: $insertionId")
+                user.savedInsertionsIds.add(insertionId.toRealmString())
+            } else {
+                val toRemovePos = user.savedInsertionsIds.toStringList().indexOf(insertionId)
+                if (toRemovePos != -1) {
+                    val obj = user.savedInsertionsIds.removeAt(toRemovePos)
+                    Log.d(TAG, "Removed saved insertion: ${obj.value}")
                 }
             }
         }
@@ -174,11 +179,13 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
      */
 
     override fun storeItems(items: List<Insertion>) {
-
         if (items.isEmpty()) return
         doAsync {
-            Log.d(TAG, "Storing insertions")
-            items.forEach { storeItem(it) }
+            val ids = items.map { it.id }
+            Log.d(TAG, "Storing insertions: $ids")
+            executeRealmTransaction {
+                it.copyToRealmOrUpdate(items)
+            }
         }
     }
 
@@ -211,7 +218,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         return queryManyRealm {
             it.whereInsertion()
                     .applyFiltering(excludeByLocalUser, includeOnlyIfSaved, includeOnlyByLocalUser)
-                    .findAll()
+                    .findAllSortedByDescendingDate()
         }
     }
 
@@ -225,7 +232,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         return queryManyRealm {
             it.queryInsertion(query)
                     .applyFiltering(excludeByLocalUser, includeOnlyIfSaved, includeOnlyByLocalUser)
-                    .findAll()
+                    .findAllSortedByDescendingDate()
         }
     }
 
@@ -238,7 +245,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
             it.whereInsertion()
                     .olderThan(insertionId, currentOldestDate)
                     .applyFiltering(excludeByLocalUser, includeOnlyIfSaved, includeOnlyByLocalUser)
-                    .findAll()
+                    .findAllSortedByDescendingDate()
         }
     }
 
@@ -252,6 +259,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
 
     private fun Realm.queryInsertion(query: String): RealmQuery<Insertion> {
         return this.whereInsertion()
+                .beginGroup()
                 .contains("book.title", query, Case.INSENSITIVE)
                 .or()
                 .contains("book.authors.value", query, Case.INSENSITIVE)
@@ -259,6 +267,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
                 .contains("book.publisher", query, Case.INSENSITIVE)
                 .or()
                 .contains("book.isbn", query, Case.INSENSITIVE)
+                .endGroup()
     }
 
     private fun RealmQuery<Insertion>.excludeByLocalUser(userId: String): RealmQuery<Insertion> {
@@ -274,7 +283,14 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
     }
 
     private fun RealmQuery<Insertion>.whereIdInList(idList: List<String>): RealmQuery<Insertion> {
-        return this.`in`("id", idList.toTypedArray())
+        val list = if (idList.isNotEmpty()) {
+            Log.d(TAG, "Searching among ids: $idList")
+            idList
+        } else {
+            Log.d(TAG, "Fake NO_ID list")
+            listOf("NO_ID")
+        }
+        return this.`in`("id", list.toTypedArray())
     }
 
     private fun RealmQuery<Insertion>.includeOnlySavedIfPossible(): RealmQuery<Insertion> {
