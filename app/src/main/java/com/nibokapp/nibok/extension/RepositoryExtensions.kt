@@ -1,10 +1,5 @@
 package com.nibokapp.nibok.extension
 
-import com.nibokapp.nibok.data.db.Insertion
-import com.nibokapp.nibok.data.repository.BookInsertionRepository
-import com.nibokapp.nibok.data.repository.UserRepository
-import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
-
 /**
  * Extensions for the base repository
  */
@@ -14,14 +9,15 @@ import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
  *
  * @param predicate the way in which to retrieve the result
  *
- * @return a result or null if no result was found
+ * @return a Pair containing the result and the source that generated it
+ *         or a Pair of null, null if no result was found
  */
-inline fun <T, R : Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?): R? {
+inline fun <T, R : Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?): Pair<R?, T?> {
     for (element in this) {
         val result = predicate(element)
-        if (result != null) return result
+        if (result != null) return Pair(result, element)
     }
-    return null
+    return Pair(null, null)
 }
 
 /**
@@ -30,46 +26,55 @@ inline fun <T, R : Any> Iterable<T>.firstResultOrNull(predicate: (T) -> R?): R? 
  *
  * @param predicate the way in which to retrieve the result
  *
- * @return a result (non empty list) or null if no result was found
+ * @return a Pair containing the result (non empty list) and the source that generated it
+ *         or a Pair of null, null if no result was found
  */
-inline fun <T, R : Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<R>?): List<R>? {
+@Suppress("LoopToCallChain")
+inline fun <T, R : Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List<R>?): Pair<List<R>?, T?> {
     for (element in this) {
         val result = predicate(element)
-        if (result != null && result.isNotEmpty()) return result
+        if (result != null && result.isNotEmpty()) return Pair(result, element)
     }
-    return null
+    return Pair(null, null)
 }
 
 /**
- * When a local user exists exclude his insertions from this list.
+ * Given a Pair<Result, Source> try to store the result through onStore() and return the result.
+ *
+ * @param onStore the function used to store the result,
+ *                it takes as arguments the item to store and the source that generated it
+ *
+ * @return the result
  */
-fun List<Insertion>.excludeUserOwnInsertions(): List<Insertion> {
-    val userRepository: UserRepositoryInterface = UserRepository
-    if (!userRepository.localUserExists()) {
-        return this
-    } else {
-        val userId = userRepository.getLocalUserId()
-        return this.filter { it.seller?.username != userId }
-    }
+fun <T, R : Any> Pair<R?, T?>.storeAndReturnResult(onStore: (R?, T?) -> Unit): R? {
+    val result = this.first
+    val source = this.second
+    onStore(result, source)
+    return result
 }
 
 /**
- * When a local user exists include only his insertions from this list.
+ * Given a Pair<ResultList, Source> try to store the result list through onStore() and return the result list.
+ *
+ * @param onStore the function used to store the result list,
+ *                it takes as arguments the list of items to store and the source that generated it
+ *
+ * @return the result list
  */
-fun List<Insertion>.includeOnlyUserOwnInsertions(): List<Insertion> {
-    val userRepository: UserRepositoryInterface = UserRepository
-    if (!userRepository.localUserExists()) {
-        return this
-    } else {
-        val userId = userRepository.getLocalUserId()
-        return this.filter { it.seller?.username == userId }
-    }
+fun <T, R : Any> Pair<List<R>?, T?>.storeAndReturnListResult(onStore: (List<R>?, T?) -> Unit): List<R>? {
+    val resultList = this.first
+    val source = this.second
+    onStore(resultList, source)
+    return resultList
 }
 
 /**
- * Include only saved insertions from this list.
+ * First query the sources and then try to store the result.
  */
-fun List<Insertion>.includeOnlySavedInsertions(): List<Insertion> {
-    val savedInsertions = BookInsertionRepository.getSavedInsertionList()
-    return this.filter { it.id in savedInsertions.map { it.id } }
+inline fun <T, R : Any> Iterable<T>.firstListResultOrNullWithStorage(
+        predicate: (T) -> List<R>?,
+        crossinline onStore: (List<R>?, T?) -> Unit
+): List<R>? {
+    return this.firstListResultOrNull { predicate(it) }
+            .storeAndReturnListResult { list, source -> onStore(list, source) }
 }
