@@ -6,8 +6,9 @@ import com.nibokapp.nibok.data.db.Insertion
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.db.LocalBookInsertionRepository
 import com.nibokapp.nibok.data.repository.server.ServerBookInsertionRepository
-import com.nibokapp.nibok.extension.*
-import java.util.*
+import com.nibokapp.nibok.extension.firstListResultOrNullWithStorage
+import com.nibokapp.nibok.extension.firstResultOrNull
+import com.nibokapp.nibok.extension.storeAndReturnResult
 
 /**
  * Repository for book insertions.
@@ -31,45 +32,22 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * COMMON FUNCTIONS
      */
 
-    override fun getInsertionById(insertionId: String): Insertion? =
-            SOURCES.firstResultOrNull { it.getInsertionById(insertionId) }
+    override fun getInsertionById(insertionId: String): Insertion? {
+        Log.d(TAG, "Getting insertion with id: $insertionId")
+        return SOURCES.firstResultOrNull { it.getInsertionById(insertionId) }
+                .storeAndReturnResult { i, s -> storeInLocalRepo(i, s) }
+    }
 
-    override fun getBookByISBN(isbn: String): Book? =
-            SOURCES.firstResultOrNull { it.getBookByISBN(isbn) }
+    override fun getBookByISBN(isbn: String): Book? {
+        Log.d(TAG, "Getting book with ISBN: $isbn")
+        return SOURCES.firstResultOrNull { it.getBookByISBN(isbn) }.first
+    }
 
     override fun getInsertionListFromQuery(query: String): List<Insertion> {
-
-        val trimmedQuery = query.trim()
-
-        if (trimmedQuery.isEmpty()) return emptyList()
-
-        val results = SOURCES.firstListResultOrNull { it.getInsertionListFromQuery(trimmedQuery) }
-                ?: emptyList()
-
-        if (results.isNotEmpty()) localRepository.storeItems(results)
-
-        Log.d(TAG, "Book insertions corresponding to query '$trimmedQuery' = ${results.size}")
-
-        return results
-    }
-
-    override fun getInsertionListAfterDate(date: Date): List<Insertion> {
-        val results = SOURCES.firstListResultOrNull { it.getInsertionListAfterDate(date) }
-                ?: emptyList()
-
-        if (results.isNotEmpty()) localRepository.storeItems(results)
-
-        Log.d(TAG, "Found ${results.size} insertions after $date")
-        return results
-    }
-
-    override fun getInsertionListBeforeDate(date: Date): List<Insertion> {
-        val results = SOURCES.firstListResultOrNull { it.getInsertionListBeforeDate(date) }
-                ?: emptyList()
-
-        if (results.isNotEmpty()) localRepository.storeItems(results)
-
-        Log.d(TAG, "Found ${results.size} insertions before $date")
+        val results = SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getInsertionListFromQuery(query)
+        } ?: emptyList()
+        Log.d(TAG, "Book insertions corresponding to query '$query': ${results.size}")
         return results
     }
 
@@ -79,24 +57,24 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getFeedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-
-        feedCache = SOURCES.firstListResultOrNull { it.getFeedInsertionList(cached) }
-                ?: emptyList()
-
-        if (feedCache.isNotEmpty()) localRepository.storeItems(feedCache)
-
+        feedCache = SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getFeedInsertionList(cached)
+        } ?: emptyList()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
         return feedCache
     }
 
-    override fun getFeedInsertionListFromQuery(query: String): List<Insertion>  =
-            getInsertionListFromQuery(query).excludeUserOwnInsertions()
+    override fun getFeedInsertionListFromQuery(query: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getFeedInsertionListFromQuery(query)
+        } ?: emptyList()
+    }
 
-    override fun getFeedInsertionListAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).excludeUserOwnInsertions()
-
-    override fun getFeedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).excludeUserOwnInsertions()
+    override fun getFeedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getFeedInsertionListOlderThanInsertion(insertionId)
+        } ?: emptyList()
+    }
 
     /*
      * SAVED BOOK INSERTIONS
@@ -104,23 +82,23 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return savedCache
-
-        savedCache = SOURCES.firstListResultOrNull { it.getSavedInsertionList(cached) }
-                ?: emptyList()
-
-        if (savedCache.isNotEmpty()) localRepository.storeItems(savedCache)
-
+        savedCache = SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getSavedInsertionList(cached)
+        } ?: emptyList()
         return savedCache
     }
 
-    override fun getSavedInsertionListFromQuery(query: String): List<Insertion> =
-            getInsertionListFromQuery(query).includeOnlySavedInsertions()
+    override fun getSavedInsertionListFromQuery(query: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getSavedInsertionListFromQuery(query)
+        } ?: emptyList()
+    }
 
-    override fun getSavedInsertionLisAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).includeOnlySavedInsertions()
-
-    override fun getSavedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).includeOnlySavedInsertions()
+    override fun getSavedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getSavedInsertionListOlderThanInsertion(insertionId)
+        } ?: emptyList()
+    }
 
     /*
      * PUBLISHED BOOK INSERTIONS
@@ -128,36 +106,43 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getPublishedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return publishedCache
-
-        publishedCache = SOURCES.firstListResultOrNull { it.getPublishedInsertionList(cached) }
-                ?: emptyList()
-
-        if (publishedCache.isNotEmpty()) localRepository.storeItems(publishedCache)
-
+        publishedCache = SOURCES.reversed().firstListResultOrNullWithLocalStorage {
+            it.getPublishedInsertionList(cached)
+        } ?: emptyList()
         return publishedCache
     }
 
-    override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> =
-            getInsertionListFromQuery(query).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListFromQuery(query: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getPublishedInsertionListFromQuery(query)
+        } ?: emptyList()
+    }
 
-    override fun getPublishedInsertionListAfterDate(date: Date): List<Insertion> =
-            getInsertionListAfterDate(date).includeOnlyUserOwnInsertions()
+    override fun getPublishedInsertionListOlderThanInsertion(insertionId: String): List<Insertion> {
+        return SOURCES.firstListResultOrNullWithLocalStorage {
+            it.getPublishedInsertionListOlderThanInsertion(insertionId)
+        } ?: emptyList()
+    }
 
-    override fun getPublishedInsertionListBeforeDate(date: Date): List<Insertion> =
-            getInsertionListBeforeDate(date).includeOnlyUserOwnInsertions()
+    override fun deletePublishedInsertion(insertionId: String): Boolean {
+        val isDeleted = serverRepository.deletePublishedInsertion(insertionId)
+        if (isDeleted) {
+            localRepository.deletePublishedInsertion(insertionId)
+        }
+        return isDeleted
+    }
 
     /*
      * BOOK INSERTION SAVE STATUS
      */
 
-    override fun isBookInsertionSaved(insertionId: String): Boolean =
-            insertionId in getSavedInsertionList().map { it.id }
+    override fun isBookInsertionSaved(insertionId: String): Boolean {
+        return SOURCES.firstResultOrNull { it.isBookInsertionSaved(insertionId) }.first ?: false
+    }
 
     override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
         val savedOnServer = serverRepository.toggleInsertionSaveStatus(insertionId)
-        if (savedOnServer) {
-            localRepository.toggleInsertionSaveStatus(insertionId)
-        }
+        localRepository.setInsertionSaveStatus(insertionId, savedOnServer)
         return savedOnServer
     }
 
@@ -166,6 +151,38 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      */
 
     override fun publishInsertion(insertion: Insertion): Boolean {
-        return serverRepository.publishInsertion(insertion)
+        val isPublished = serverRepository.publishInsertion(insertion)
+        if (isPublished) {
+            localRepository.storeItem(insertion)
+        }
+        return isPublished
+    }
+
+    /*
+     * Utilities
+     */
+
+    private fun storeInLocalRepo(insertion: Insertion?, source: BookInsertionRepositoryInterface?) {
+        if (source == serverRepository && insertion != null) {
+            localRepository.storeItem(insertion)
+        }
+    }
+
+    private fun storeInLocalRepo(insertionList: List<Insertion>?, source: BookInsertionRepositoryInterface?) {
+        if (source == serverRepository && insertionList != null) {
+            localRepository.storeItems(insertionList)
+        }
+    }
+
+    /**
+     * Shorthand for querying the repositories first
+     * and then trying to store new data in the local repository.
+     */
+    private inline fun Iterable<BookInsertionRepositoryInterface>.firstListResultOrNullWithLocalStorage(
+            predicate: (BookInsertionRepositoryInterface) -> List<Insertion>?): List<Insertion>? {
+        return this.firstListResultOrNullWithStorage(
+                { predicate(it) },
+                { insertionList, source -> storeInLocalRepo(insertionList, source) }
+        )
     }
 }
