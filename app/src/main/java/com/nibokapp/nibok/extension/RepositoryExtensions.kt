@@ -1,5 +1,7 @@
 package com.nibokapp.nibok.extension
 
+import org.jetbrains.anko.doAsync
+
 /**
  * Extensions for the base repository
  */
@@ -49,7 +51,7 @@ inline fun <T, R : Any> Iterable<T>.firstListResultOrNull(predicate: (T) -> List
 fun <T, R : Any> Pair<R?, T?>.storeAndReturnResult(onStore: (R?, T?) -> Unit): R? {
     val result = this.first
     val source = this.second
-    onStore(result, source)
+    doAsync { onStore(result, source) }
     return result
 }
 
@@ -64,7 +66,7 @@ fun <T, R : Any> Pair<R?, T?>.storeAndReturnResult(onStore: (R?, T?) -> Unit): R
 fun <T, R : Any> Pair<List<R>?, T?>.storeAndReturnListResult(onStore: (List<R>?, T?) -> Unit): List<R>? {
     val resultList = this.first
     val source = this.second
-    onStore(resultList, source)
+    doAsync { onStore(resultList, source) }
     return resultList
 }
 
