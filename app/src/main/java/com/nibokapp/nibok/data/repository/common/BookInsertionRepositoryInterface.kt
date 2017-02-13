@@ -185,8 +185,8 @@ interface BookInsertionRepositoryInterface {
      *
      * @param insertion the insertion to publish
      *
-     * @return true if the book insertion was published successfully, false otherwise
+     * @return a String representing the id of the insertion if the insertion was published successfully, null otherwise
      */
-    fun publishInsertion(insertion: Insertion): Boolean
+    fun publishInsertion(insertion: Insertion): String?
 
 }

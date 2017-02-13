@@ -21,9 +21,9 @@ class PublishBookInsertionCommand(
         val bookRepository: BookInsertionRepositoryInterface = BookInsertionRepository
 ) : Command<Boolean> {
 
-    override fun execute(): Boolean =
-            bookRepository.publishInsertion(
-                    dataMapper.convertInsertionDataToInsertion(insertionData)
-            )
-
+    override fun execute(): Boolean {
+        return bookRepository.publishInsertion(
+                dataMapper.convertInsertionDataToInsertion(insertionData)
+        ) != null
+    }
 }
