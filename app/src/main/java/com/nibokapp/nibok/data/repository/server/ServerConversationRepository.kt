@@ -119,9 +119,7 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
         Log.d(TAG, "Sending message: ${message.text} in conversation: ${message.conversationId} to: $recipientId")
         val messageDocument = getMessageDocument(message)
-        val (sent, messageId) = sender.sendMessageDocument(messageDocument, recipientId)
-
-        return messageId
+        return sender.sendMessageDocument(messageDocument, recipientId)
     }
 
     /*
