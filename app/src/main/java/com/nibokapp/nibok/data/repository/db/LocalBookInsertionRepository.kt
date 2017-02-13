@@ -8,6 +8,7 @@ import com.nibokapp.nibok.data.repository.UserRepository
 import com.nibokapp.nibok.data.repository.common.BookInsertionRepositoryInterface
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.data.repository.db.common.LocalStorage
+import com.nibokapp.nibok.data.repository.server.ServerBookInsertionRepository
 import com.nibokapp.nibok.extension.*
 import io.realm.Case
 import io.realm.Realm
@@ -22,6 +23,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
     const private val TAG = "LocalBookInsertionRepo"
 
     private val userRepository: UserRepositoryInterface = UserRepository
+    private val serverRepository: BookInsertionRepositoryInterface = ServerBookInsertionRepository
 
     private var feedCache: List<Insertion> = emptyList()
     private var savedCache: List<Insertion> = emptyList()
@@ -152,19 +154,27 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         if (!localUserExists()) return
         Log.d(TAG, "Setting insertion: $insertionId save status to: $isSaved")
         executeRealmTransaction {
-            val user = it.where(User::class.java).findFirst() ?: return@executeRealmTransaction
-            if (isSaved && !isBookInsertionSaved(insertionId)) {
-                Log.d(TAG, "Saving insertion: $insertionId")
-                user.savedInsertionsIds.add(insertionId.toRealmString())
-            } else if (!isSaved && isBookInsertionSaved(insertionId)) {
-                val toRemovePos = user.savedInsertionsIds.toStringList().indexOf(insertionId)
-                if (toRemovePos != -1) {
-                    val obj = user.savedInsertionsIds.removeAt(toRemovePos)
-                    Log.d(TAG, "Removed saved insertion: ${obj.value}")
-                }
-            } else {
-                Log.d(TAG, "Not updating insertion save status")
+            changeSaveStatus(insertionId, isSaved, it)
+        }
+    }
+
+    private fun changeSaveStatus(insertionId: String, isSaved: Boolean, realm: Realm) {
+        val user = realm.where(User::class.java).findFirst()
+        if (user == null) {
+            Log.d(TAG, "Local user is null, skipping change status!")
+            return
+        }
+        if (isSaved && !isBookInsertionSaved(insertionId)) {
+            Log.d(TAG, "Saving insertion: $insertionId")
+            user.savedInsertionsIds.add(insertionId.toRealmString())
+        } else if (!isSaved && isBookInsertionSaved(insertionId)) {
+            val toRemovePos = user.savedInsertionsIds.indexOfFirst { it.value == insertionId }
+            if (toRemovePos != -1) {
+                val obj = user.savedInsertionsIds.removeAt(toRemovePos)
+                Log.d(TAG, "Removed saved insertion: ${obj.value}")
             }
+        } else {
+            Log.d(TAG, "Not updating insertion save status")
         }
     }
 
@@ -184,17 +194,30 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         if (items.isEmpty()) return
         doAsync {
             val ids = items.map { it.id }
-            Log.d(TAG, "Storing insertions: $ids")
             executeRealmTransaction {
-                it.copyToRealmOrUpdate(items)
+                realm ->
+                Log.d(TAG, "Storing insertions: $ids")
+                realm.copyToRealmOrUpdate(items)
+
+                Log.d(TAG, "Updating on storage save status for insertions: $ids")
+                ids.forEach {
+                    insertionId ->
+                    val isSaved = serverRepository.isBookInsertionSaved(insertionId)
+                    changeSaveStatus(insertionId, isSaved, realm)
+                }
             }
         }
     }
 
     override fun storeItem(item: Insertion) {
-        Log.d(TAG, "Storing insertion: ${item.id}")
+        val insertionId = item.id
         executeRealmTransaction {
+            Log.d(TAG, "Storing insertion: $insertionId")
             it.copyToRealmOrUpdate(item)
+
+            Log.d(TAG, "Updating on storage save status for insertion: $insertionId")
+            val isSaved = serverRepository.isBookInsertionSaved(insertionId)
+            changeSaveStatus(insertionId, isSaved, it)
         }
     }
 
