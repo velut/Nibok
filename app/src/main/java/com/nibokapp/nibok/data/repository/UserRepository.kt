@@ -19,10 +19,10 @@ object UserRepository : UserRepositoryInterface {
         if (localUserExists()) return true
         Log.d(TAG, "Local user does not exist, trying to create one")
         executeRealmTransaction {
+            val user = User(userId, savedInsertionsIds.toRealmStringList())
             // Insert user in the db
-            val newUser = it.createObject(User::class.java, userId)
-            newUser.savedInsertionsIds.addAll(savedInsertionsIds.toRealmStringList())
-            Log.d(TAG, "Created new user: ${newUser.username}")
+            it.copyToRealmOrUpdate(user)
+            Log.d(TAG, "Created new user: ${user.username}")
         }
         return localUserExists()
     }
