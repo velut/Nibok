@@ -160,7 +160,7 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     override fun storeItem(item: RealmModel) {
         when (item) {
             is Conversation -> {
-                Log.d(TAG, "Storing conversation: ${item.id} with partner ${item.partner}")
+                Log.d(TAG, "Storing conversation: ${item.id} with partner ${item.partner?.username}")
                 storeItemInRealm(item)
             }
             is Message -> {
