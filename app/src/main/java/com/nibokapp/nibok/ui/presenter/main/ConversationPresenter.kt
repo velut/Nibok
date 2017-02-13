@@ -13,7 +13,7 @@ import com.nibokapp.nibok.domain.model.ConversationModel
 class ConversationPresenter : MainActivityPresenter<ConversationModel> {
 
     companion object {
-        private val TAG = ConversationModel::class.java.simpleName
+        private val TAG = ConversationPresenter::class.java.simpleName
     }
 
     override fun getData(): List<ConversationModel> {
