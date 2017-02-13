@@ -153,15 +153,17 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         Log.d(TAG, "Setting insertion: $insertionId save status to: $isSaved")
         executeRealmTransaction {
             val user = it.where(User::class.java).findFirst() ?: return@executeRealmTransaction
-            if (isSaved) {
+            if (isSaved && !isBookInsertionSaved(insertionId)) {
                 Log.d(TAG, "Saving insertion: $insertionId")
                 user.savedInsertionsIds.add(insertionId.toRealmString())
-            } else {
+            } else if (!isSaved && isBookInsertionSaved(insertionId)) {
                 val toRemovePos = user.savedInsertionsIds.toStringList().indexOf(insertionId)
                 if (toRemovePos != -1) {
                     val obj = user.savedInsertionsIds.removeAt(toRemovePos)
                     Log.d(TAG, "Removed saved insertion: ${obj.value}")
                 }
+            } else {
+                Log.d(TAG, "Not updating insertion save status")
             }
         }
     }
