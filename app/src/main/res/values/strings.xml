@@ -83,6 +83,8 @@
     <string name="error_required_price">Price is required</string>
     <string name="error_future_year">Publishing year must be in the past</string>
     <string name="error_unknown_menu_action">Unknown action</string>
+    <string name="error_could_not_add_bookmark">"Could not add bookmark"</string>
+    <string name="error_could_not_remove_bookmark">"Could not remove bookmark"</string>
 
     <!-- Placeholders -->
     <string name="placeholder_no_info">Information not available</string>

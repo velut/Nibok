@@ -16,6 +16,7 @@ import com.nibokapp.nibok.ui.presenter.main.InsertionSaveStatusPresenter
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 
@@ -102,14 +103,20 @@ class BookmarkFragment(
         val presenter = savePresenter ?: return
 
         doAsync {
+            val wasSaved = presenter.isInsertionSaved(insertionId)
             val isSaved = presenter.toggleInsertionSave(insertionId)
             uiThread {
-                if (!isSaved) {
-                    val oldMainItems = mainAdapter.removeInsertion(insertionId)
-                    val oldSearchItems = searchAdapter.removeInsertion(insertionId)
-                    Log.d(TAG, "Insertion: $insertionId removed, showing restore option")
-                    showRestoreOption(presenter, insertionId, oldMainItems, oldSearchItems)
+                if (wasSaved != isSaved) {
+                    if (!isSaved) {
+                        val oldMainItems = mainAdapter.removeInsertion(insertionId)
+                        val oldSearchItems = searchAdapter.removeInsertion(insertionId)
+                        Log.d(TAG, "Insertion: $insertionId removed, showing restore option")
+                        showRestoreOption(presenter, insertionId, oldMainItems, oldSearchItems)
+                    }
+                } else {
+                    context.toast(R.string.error_could_not_remove_bookmark)
                 }
+
             }
         }
     }

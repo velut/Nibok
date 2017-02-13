@@ -129,16 +129,28 @@ class FeedFragment(
         Log.d(TAG, "Toggling save status for insertion: $insertionId")
         val presenter = savePresenter ?: return
         doAsync {
+            val wasSaved = presenter.isInsertionSaved(insertionId)
             val isSaved = presenter.toggleInsertionSave(insertionId)
             uiThread {
-                mainAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
-                searchAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
-                val saveMessage = if (isSaved) {
-                    R.string.book_saved_to_collection
+                if (wasSaved != isSaved) { // Changed status successfully
+                    mainAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
+                    searchAdapter.toggleInsertionSaveStatus(insertionId, isSaved)
+                    val saveMessage = if (isSaved) {
+                        R.string.book_saved_to_collection
+                    } else {
+                        R.string.book_removed_from_collection
+                    }
+                    context.toast(saveMessage)
                 } else {
-                    R.string.book_removed_from_collection
+                    Log.d(TAG, "Could not change save status")
+                    val errorMessage = if (wasSaved) {
+                        R.string.error_could_not_remove_bookmark
+                    } else {
+                        R.string.error_could_not_add_bookmark
+                    }
+                    context.toast(errorMessage)
                 }
-                context.toast(saveMessage)
+
             }
         }
     }
