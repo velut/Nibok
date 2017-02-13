@@ -12,7 +12,6 @@ import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.RealmQuery
-import org.jetbrains.anko.doAsync
 
 /**
  * Local repository for conversations.
@@ -155,9 +154,20 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
 
     override fun storeItems(items: List<RealmModel>) {
         if (items.isEmpty()) return
-        doAsync {
-            Log.d(TAG, "Storing conversation and message items")
-            items.forEach { storeItem(it) }
+
+        val conversations = items.filterIsInstance<Conversation>()
+        val messages = items.filterIsInstance<Message>()
+        if (conversations.isEmpty() && messages.isEmpty()) return
+
+        executeRealmTransaction {
+            if (conversations.isNotEmpty()) {
+                Log.d(TAG, "Storing conversations: ${conversations.map { it.id }}")
+                it.copyToRealmOrUpdate(conversations)
+            }
+            if (messages.isNotEmpty()) {
+                Log.d(TAG, "Storing message: ${messages.map { it.id }}")
+                it.copyToRealmOrUpdate(messages)
+            }
         }
     }
 
