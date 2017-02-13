@@ -13,7 +13,6 @@ import com.nibokapp.nibok.extension.*
 import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmQuery
-import org.jetbrains.anko.doAsync
 
 /**
  * Local repository for book insertions.
@@ -158,8 +157,8 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         }
     }
 
-    private fun changeSaveStatus(insertionId: String, isSaved: Boolean, realm: Realm) {
-        val user = realm.where(User::class.java).findFirst()
+    private fun changeSaveStatus(insertionId: String, isSaved: Boolean, realm: Realm, localUser: User? = null) {
+        val user = localUser ?: realm.where(User::class.java).findFirst()
         if (user == null) {
             Log.d(TAG, "Local user is null, skipping change status!")
             return
@@ -192,19 +191,18 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
 
     override fun storeItems(items: List<Insertion>) {
         if (items.isEmpty()) return
-        doAsync {
-            val ids = items.map { it.id }
-            executeRealmTransaction {
-                realm ->
-                Log.d(TAG, "Storing insertions: $ids")
-                realm.copyToRealmOrUpdate(items)
+        val ids = items.map { it.id }
+        executeRealmTransaction {
+            realm ->
+            Log.d(TAG, "Storing insertions: $ids")
+            realm.copyToRealmOrUpdate(items)
 
-                Log.d(TAG, "Updating on storage save status for insertions: $ids")
-                ids.forEach {
-                    insertionId ->
-                    val isSaved = serverRepository.isBookInsertionSaved(insertionId)
-                    changeSaveStatus(insertionId, isSaved, realm)
-                }
+            Log.d(TAG, "Updating on storage save status for insertions: $ids")
+            val user = realm.where(User::class.java).findFirst()
+            ids.forEach {
+                insertionId ->
+                val isSaved = serverRepository.isBookInsertionSaved(insertionId)
+                changeSaveStatus(insertionId, isSaved, realm, user)
             }
         }
     }
