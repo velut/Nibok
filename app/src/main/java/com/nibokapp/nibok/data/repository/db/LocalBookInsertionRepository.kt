@@ -170,7 +170,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
      * Insertion publishing
      */
 
-    override fun publishInsertion(insertion: Insertion): Boolean {
+    override fun publishInsertion(insertion: Insertion): String? {
         throw UnsupportedOperationException()
     }
 

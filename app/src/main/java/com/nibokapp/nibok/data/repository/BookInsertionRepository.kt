@@ -57,7 +57,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getFeedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return feedCache
-        feedCache = SOURCES.firstListResultOrNullWithLocalStorage {
+        feedCache = SOURCES.reversed().firstListResultOrNullWithLocalStorage {
             it.getFeedInsertionList(cached)
         } ?: emptyList()
         Log.d(TAG, "Found ${feedCache.size} feed insertions")
@@ -82,7 +82,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
 
     override fun getSavedInsertionList(cached: Boolean): List<Insertion> {
         if (cached) return savedCache
-        savedCache = SOURCES.firstListResultOrNullWithLocalStorage {
+        savedCache = SOURCES.reversed().firstListResultOrNullWithLocalStorage {
             it.getSavedInsertionList(cached)
         } ?: emptyList()
         return savedCache
@@ -150,12 +150,12 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishInsertion(insertion: Insertion): Boolean {
-        val isPublished = serverRepository.publishInsertion(insertion)
-        if (isPublished) {
-            localRepository.storeItem(insertion)
+    override fun publishInsertion(insertion: Insertion): String? {
+        val publishedInsertionId = serverRepository.publishInsertion(insertion)
+        publishedInsertionId?.let {
+            getInsertionById(it) // Get the new insertion and store it
         }
-        return isPublished
+        return publishedInsertionId
     }
 
     /*
