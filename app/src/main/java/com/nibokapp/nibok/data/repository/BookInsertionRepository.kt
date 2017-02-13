@@ -128,7 +128,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
     override fun deletePublishedInsertion(insertionId: String): Boolean {
         val isDeleted = serverRepository.deletePublishedInsertion(insertionId)
         if (isDeleted) {
-            localRepository.deletePublishedInsertion(insertionId)
+            doAsync { localRepository.deletePublishedInsertion(insertionId) }
         }
         return isDeleted
     }

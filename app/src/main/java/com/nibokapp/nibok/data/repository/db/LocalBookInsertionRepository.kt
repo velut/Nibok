@@ -131,8 +131,9 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         executeRealmTransaction {
             val insertion = it.whereInsertion().idEqualTo(insertionId).findAll()
             insertion.deleteAllFromRealm()
+            Log.d(TAG, "Deleted insertion: $insertionId from realm")
         }
-        return true
+        return getInsertionById(insertionId) == null
     }
 
     /*
