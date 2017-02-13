@@ -19,43 +19,38 @@ class ServerDataSender : ServerDataSenderInterface {
     }
 
     /*
-     * USER
-     */
-
-
-    /*
      * BOOK DATA
      */
 
-    override fun sendBookDocument(document: BaasDocument): Pair<Boolean, String?> {
+    override fun sendBookDocument(document: BaasDocument): String? {
         Log.d(TAG, "Sending book to server")
         val sent = document.sendForPublicReading()
-        return Pair(sent, document.getIdOrNull(sent))
+        return document.getIdOrNull(sent)
     }
 
     /*
      * INSERTIONS
      */
 
-    override fun sendInsertionPictures(fileUris: List<Uri>): Pair<Boolean, List<String>?> {
+    override fun sendInsertionPictures(fileUris: List<Uri>): List<String>? {
         val pictureIds = mutableListOf<String>()
         for (fileUri in fileUris) {
-            val compressedPicture = ImageCompressor.compressImage(fileUri) ?: return Pair(false, null)
+            val compressedPicture = ImageCompressor.compressImage(fileUri) ?: return null
             Log.d(TAG, "Uploading picture: $fileUri")
             val pictureId = BaasFile().uploadSync(ACL_PUBLIC_ACCESS, compressedPicture).onSuccessReturn { it.id }
-                    ?: return Pair(false, null)
+                    ?: return null
             Log.d(TAG, "Uploaded picture: $fileUri, got id: $pictureId")
             pictureIds += pictureId
             Log.d(TAG, "Uploaded ${pictureIds.size} pictures so far")
         }
         Log.d(TAG, "Uploaded all pictures (${pictureIds.size})")
-        return Pair(true, pictureIds.toList())
+        return pictureIds.toList()
     }
 
-    override fun sendInsertionDocument(document: BaasDocument): Pair<Boolean, String?> {
+    override fun sendInsertionDocument(document: BaasDocument): String? {
         Log.d(TAG, "Sending insertion to server")
         val sent = document.sendForPublicReading()
-        return Pair(sent, document.getIdOrNull(sent))
+        return document.getIdOrNull(sent)
     }
 
     override fun sendInsertionDeleteRequest(document: BaasDocument): Boolean {
@@ -67,24 +62,24 @@ class ServerDataSender : ServerDataSenderInterface {
      * CONVERSATIONS
      */
 
-    override fun sendConversationDocument(document: BaasDocument, partnerId: String): Pair<Boolean, String?> {
+    override fun sendConversationDocument(document: BaasDocument, partnerId: String): String? {
         Log.d(TAG, "Sending conversation to server")
         // ACL allowing the conversation's partner to read and update the conversation document
         val acl = BaasACL.grantUser(partnerId, Grant.READ, Grant.UPDATE)
         val sent = document.saveSync(acl).isSuccess
-        return Pair(sent, document.getIdOrNull(sent))
+        return document.getIdOrNull(sent)
     }
 
     /*
      * MESSAGES
      */
 
-    override fun sendMessageDocument(document: BaasDocument, recipientId: String): Pair<Boolean, String?> {
+    override fun sendMessageDocument(document: BaasDocument, recipientId: String): String? {
         Log.d(TAG, "Sending message to server")
         // ACL allowing the message's recipient to read the message document
         val acl = BaasACL.grantUser(recipientId, Grant.READ)
         val sent = document.saveSync(acl).isSuccess
-        return Pair(sent, document.getIdOrNull(sent))
+        return document.getIdOrNull(sent)
     }
 
     /*
