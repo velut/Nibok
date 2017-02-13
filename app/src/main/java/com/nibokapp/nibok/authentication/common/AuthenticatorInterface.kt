@@ -37,7 +37,7 @@ interface AuthenticatorInterface {
      *
      * @return true if there is a currently logged in user, false otherwise
      */
-    fun currentUserExists(): Boolean
+    fun loggedUserExists(): Boolean
 
     /**
      * Check if the given username is available on the platform.

@@ -38,8 +38,9 @@ class InsertionDetailPresenter(
      *
      * @return true if there is a currently logged in user, false otherwise
      */
-    fun loggedUserExists(): Boolean =
-            authenticator.currentUserExists()
+    fun loggedUserExists(): Boolean {
+        return authenticator.loggedUserExists()
+    }
 
     /**
      * Get detailed data about the insertion with the given id.
