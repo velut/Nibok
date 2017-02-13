@@ -9,6 +9,7 @@ import com.nibokapp.nibok.data.repository.server.ServerBookInsertionRepository
 import com.nibokapp.nibok.extension.firstListResultOrNullWithStorage
 import com.nibokapp.nibok.extension.firstResultOrNull
 import com.nibokapp.nibok.extension.storeAndReturnResult
+import org.jetbrains.anko.doAsync
 
 /**
  * Repository for book insertions.
@@ -137,12 +138,13 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      */
 
     override fun isBookInsertionSaved(insertionId: String): Boolean {
-        return SOURCES.firstResultOrNull { it.isBookInsertionSaved(insertionId) }.first ?: false
+        return SOURCES.reversed().firstResultOrNull { it.isBookInsertionSaved(insertionId) }.first
+                ?: false
     }
 
     override fun toggleInsertionSaveStatus(insertionId: String): Boolean {
         val savedOnServer = serverRepository.toggleInsertionSaveStatus(insertionId)
-        localRepository.setInsertionSaveStatus(insertionId, savedOnServer)
+        doAsync { localRepository.setInsertionSaveStatus(insertionId, savedOnServer) }
         return savedOnServer
     }
 
@@ -151,11 +153,7 @@ object BookInsertionRepository : BookInsertionRepositoryInterface {
      */
 
     override fun publishInsertion(insertion: Insertion): String? {
-        val publishedInsertionId = serverRepository.publishInsertion(insertion)
-        publishedInsertionId?.let {
-            getInsertionById(it) // Get the new insertion and store it
-        }
-        return publishedInsertionId
+        return serverRepository.publishInsertion(insertion)
     }
 
     /*
