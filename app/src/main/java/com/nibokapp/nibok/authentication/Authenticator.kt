@@ -33,9 +33,11 @@ object Authenticator : AuthenticatorInterface {
         val user = BaasUser.withUserName(username).setPassword(password)
         user.init()
 
-        return user.signupSync().onSuccess {
+        val isRegistered = user.signupSync().onSuccess {
             localUserRepository.createLocalUser(it.name)
         }
+        Log.d(TAG, "User: $user signed up: $isRegistered")
+        return isRegistered
     }
 
     override fun login(username: String, password: String): Boolean {
@@ -43,33 +45,38 @@ object Authenticator : AuthenticatorInterface {
 
         val user = BaasUser.withUserName(username).setPassword(password)
 
-        return user.loginSync().onSuccess {
-            with(it) {
-                localUserRepository.createLocalUser(name, getSavedInsertionsIdList())
-            }
+        val isLoggedIn = user.loginSync().onSuccess {
+            localUserRepository.createLocalUser(it.name, it.getSavedInsertionsIdList())
         }
+        Log.d(TAG, "User: $username logged in: $isLoggedIn")
+        return isLoggedIn
     }
 
     override fun logout(): Boolean {
-        Log.d(TAG, "Logging out")
-
-        // Remove the local user, even if logout from the server will be unsuccessful
-        Log.d(TAG, "Removing eventual local user")
-        localUserRepository.removeLocalUser()
-
-        // Try to log out user from the server.
-        // Logout may fail if the server is unreachable.
-        Log.d(TAG, "Trying to logout user from the server")
-        val user = loggedUser ?: return false
+        val user = loggedUser
+        if (user == null) {
+            Log.d(TAG, "No user to logout")
+            return false
+        }
+        val username = user.name
         val loggedOut = user.logoutSync().isSuccess
-        Log.d(TAG, if (loggedOut) "Logged out" else "Could not log out user: ${user.name}")
-
-        // Return true as the local user does not exist anymore
-        // and a failed server logout does not impact a successive login
-        return true
+        if (loggedOut) {
+            Log.d(TAG, "User: $username correctly logged out")
+            localUserRepository.removeLocalUser()
+        } else {
+            Log.d(TAG, "Could not log out user: $username")
+        }
+        return loggedOut
     }
 
-    override fun currentUserExists(): Boolean = localUserExists()
+    override fun loggedUserExists(): Boolean {
+        val user = loggedUser ?: return false
+        if (!localUserExists()) {
+            Log.d(TAG, "Logged used exists but local user does not, creating one")
+            localUserRepository.createLocalUser(user.name, user.getSavedInsertionsIdList())
+        }
+        return true
+    }
 
     override fun isUsernameAvailable(username: String): Boolean {
 
