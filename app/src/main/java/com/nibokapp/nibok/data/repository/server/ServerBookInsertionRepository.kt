@@ -175,15 +175,15 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
      * BOOK INSERTION PUBLISHING
      */
 
-    override fun publishInsertion(insertion: Insertion): Boolean {
-        if (currentUser == null) return false
+    override fun publishInsertion(insertion: Insertion): String? {
+        if (currentUser == null) return null
 
-        val book = insertion.book ?: return false
-        val bookId = publishBook(book) ?: return false
+        val book = insertion.book ?: return null
+        val bookId = publishBook(book) ?: return null
 
         val pictureUris = insertion.bookImagesSources.toStringList()
         val pictureIds = if (pictureUris.isNotEmpty()) {
-            publishPictures(pictureUris) ?: return false
+            publishPictures(pictureUris) ?: return null
         } else {
             emptyList()
         }
@@ -191,9 +191,9 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing insertion")
 
         val insertionDoc = mapper.convertInsertionToDocument(insertion, bookId, pictureIds)
-        val published = sender.sendInsertionDocument(insertionDoc).first
-        Log.d(TAG, "Insertion: $insertion was published: $published")
-        return published
+        val publishedInsertionId = sender.sendInsertionDocument(insertionDoc)
+        Log.d(TAG, "Insertion: $insertion was published with id: $publishedInsertionId")
+        return publishedInsertionId
     }
 
     /**
@@ -216,7 +216,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing book with ISBN: ${book.isbn}")
 
         val bookDoc = mapper.convertBookToDocument(book)
-        return sender.sendBookDocument(bookDoc).second
+        return sender.sendBookDocument(bookDoc)
     }
 
     /**
@@ -226,7 +226,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         Log.d(TAG, "Publishing ${pictureUris.size} pictures")
         val parsedPictureUris = pictureUris.map { Uri.parse(it) }
         Log.d(TAG, "Picture uris are:\n  $parsedPictureUris")
-        return sender.sendInsertionPictures(parsedPictureUris).second
+        return sender.sendInsertionPictures(parsedPictureUris)
     }
 
     /*
