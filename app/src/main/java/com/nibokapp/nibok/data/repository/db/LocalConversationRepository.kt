@@ -120,22 +120,26 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     }
 
     override fun getMessageListBeforeDateOfMessage(messageId: String): List<Message> {
-        val currentOldestMessageDate = getMessageById(messageId)?.date
-                ?: return emptyList()
+        val oldestMessage = getMessageById(messageId) ?: return emptyList()
+        val currentOldestMessageDate = oldestMessage.date ?: return emptyList()
+        val conversationId = oldestMessage.conversationId
 
         return queryManyRealm {
             it.whereMessage()
+                    .conversationIdEqualTo(conversationId)
                     .olderThan(messageId, currentOldestMessageDate)
                     .findAllSortedByAscendingDate()
         }
     }
 
     override fun getMessageListAfterDateOfMessage(messageId: String): List<Message> {
-        val currentNewestMessageDate = getMessageById(messageId)?.date
-                ?: return emptyList()
+        val newestMessage = getMessageById(messageId) ?: return emptyList()
+        val currentNewestMessageDate = newestMessage.date ?: return emptyList()
+        val conversationId = newestMessage.conversationId
 
         return queryManyRealm {
             it.whereMessage()
+                    .conversationIdEqualTo(conversationId)
                     .newerThan(messageId, currentNewestMessageDate)
                     .findAllSortedByAscendingDate()
         }
@@ -216,9 +220,11 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     fun Realm.queryConversation(query: String): RealmQuery<Conversation> {
         return this.whereConversation()
                 .userIdEqualTo(getLocalUserId())
+                .beginGroup()
                 .contains("partner.username", query, Case.INSENSITIVE)
                 .or()
                 .contains("latestMessage.text", query, Case.INSENSITIVE)
+                .endGroup()
     }
 
 }
