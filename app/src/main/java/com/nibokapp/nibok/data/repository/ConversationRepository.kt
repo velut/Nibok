@@ -56,7 +56,7 @@ object ConversationRepository : ConversationRepositoryInterface {
 
     override fun getConversationList(cached: Boolean): List<Conversation> {
         if (cached) return conversationCache
-        val results = SOURCES.firstListResultOrNullWithLocalStorage {
+        val results = SOURCES.reversed().firstListResultOrNullWithLocalStorage {
             it.getConversationList(cached)
         } ?: emptyList()
         conversationCache = results.filterIsInstance<Conversation>()
@@ -77,7 +77,7 @@ object ConversationRepository : ConversationRepositoryInterface {
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
-        val results = SOURCES.firstListResultOrNullWithLocalStorage {
+        val results = SOURCES.reversed().firstListResultOrNullWithLocalStorage {
             it.getMessageListForConversation(conversationId)
         } ?: emptyList()
         val messages = results.filterIsInstance<Message>()
