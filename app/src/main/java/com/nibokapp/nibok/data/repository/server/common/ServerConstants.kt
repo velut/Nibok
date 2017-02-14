@@ -23,8 +23,6 @@ object ServerConstants {
      * User attributes.
      */
     const val SAVED_INSERTIONS = "savedInsertions"
-    const val PUBLISHED_INSERTIONS = "publishedInsertions"
-    const val CONVERSATIONS = "conversations"
     const val AVATAR = "avatar"
 
     /**
@@ -48,7 +46,7 @@ object ServerConstants {
      * Conversation attributes.
      */
     const val PARTICIPANTS = "participants"
-    const val MESSAGES = "messages"
+    const val LAST_UPDATE_DATE = "lastUpdateDate"
 
     /**
      * Message attributes.
