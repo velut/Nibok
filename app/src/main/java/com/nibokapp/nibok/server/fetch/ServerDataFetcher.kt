@@ -44,7 +44,9 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
         // Conversation
         fun CONVERSATION_ID_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}=${QUOTE(id)}"
-        fun CONVERSATION_ID_NOT_EQUALS(id: String) = "${ServerConstants.CONVERSATION_ID}<>${QUOTE(id)}"
+
+        fun LAST_UPDATE_NOT_EMPTY() = "${ServerConstants.LAST_UPDATE_DATE}<>\"\""
+        fun LAST_UPDATE_BEFORE(date: String) = "${ServerConstants.LAST_UPDATE_DATE} <= date('$date')"
 
         // Document Creation's date
         fun CREATION_DATE_AFTER(date: String) = "${ServerConstants.CREATION_DATE} >= date('$date')"
@@ -56,11 +58,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
         fun IN(one: String, other: String) = "$one in $other"
         fun LIKE(one: String, other: String) = "$one like \"%$other%\""
         fun LIST_OF_ID(items: List<String>)= items.joinToString(", ", "[", "]") { QUOTE(it) }
-        fun DISTINCT(field: String) = "distinct($field)"
 
         // Ordering
         fun ORDER_BY_DESC(field: String) = "$field desc"
         fun ORDER_BY_DESC_CREATION_DATE() = ORDER_BY_DESC(ServerConstants.CREATION_DATE)
+        fun ORDER_BY_DESC_LAST_UPDATE_DATE() = ORDER_BY_DESC(ServerConstants.LAST_UPDATE_DATE)
     }
 
     /*
@@ -106,11 +108,11 @@ class ServerDataFetcher : ServerDataFetcherInterface {
                                                   includeOnlyByUser: Boolean): List<BaasDocument> {
 
         if (!filterByCurrentUser) {
-            return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+            return queryDocumentListFromCollection(COLL_INSERTIONS)
         }
 
         val user = currentUser ?: if (excludeAllByUser) {
-            return fetchRecentDocumentListFromCollection(COLL_INSERTIONS)
+            return queryDocumentListFromCollection(COLL_INSERTIONS)
         } else {
             return emptyList()
         }
@@ -157,7 +159,6 @@ class ServerDataFetcher : ServerDataFetcherInterface {
             )
         }
         val bookIds = queryDocumentListFromCollection(COLL_BOOKS, bookWhereString).map { it.id }
-
         if (bookIds.isEmpty()) return emptyList()
 
         // Then query the insertions in which the found books are sold
@@ -257,57 +258,33 @@ class ServerDataFetcher : ServerDataFetcherInterface {
 
     override fun fetchConversationDocumentListByQuery(query: String): List<BaasDocument> {
         val trimmedQuery = query.trim()
-
         if (trimmedQuery.isEmpty()) return emptyList()
 
         val whereString = with(ServerConstants) {
             IN(QUOTE(trimmedQuery), PARTICIPANTS)
         }
-
         return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereString)
     }
 
     override fun fetchRecentConversationDocumentList(): List<BaasDocument> {
-        // Select the distinct conversations ids
-        // From the messages collection
-        // Ordering the messages from the newest
-        // This query returns the list of conversation ids ordered by when the last message was exchanged
-        val query = BaasQuery.builder()
-                .collection(COLL_MESSAGES.id)
-                .projection(DISTINCT(ServerConstants.CONVERSATION_ID))
-                .orderBy(ORDER_BY_DESC_CREATION_DATE())
-                .pagination(0, RECORDS_PER_PAGE)
-                .build()
-        val result = query.querySync().onSuccessReturn { it } ?: return emptyList()
-        val conversationIds = result.map { it.getString(ServerConstants.DISTINCT) }
-        // Fetch in order the conversations from their ids
-        return conversationIds
-                .map { fetchDocumentFromCollectionById(COLL_CONVERSATIONS, it) }
-                .filterNotNull()
+        return queryDocumentListFromCollection(COLL_CONVERSATIONS,
+                LAST_UPDATE_NOT_EMPTY(),
+                ORDER_BY_DESC_LAST_UPDATE_DATE())
     }
 
     override fun fetchConversationDocumentListOlderThanConversation(conversationId: String): List<BaasDocument> {
-        val oldestMessage = fetchLatestMessageByConversation(conversationId) ?: return emptyList()
-        val oldestMessageId = oldestMessage.id
-        val oldestMessageDate = oldestMessage.creationDate
-        val olderThanMessage = AND(
-                CREATION_DATE_BEFORE(oldestMessageDate),
-                ID_NOT_EQUALS(oldestMessageId),
-                CONVERSATION_ID_NOT_EQUALS(conversationId)
+        val conversationDocument = fetchConversationDocumentById(conversationId) ?: return emptyList()
+        val lastUpdateDate = conversationDocument.getString(ServerConstants.LAST_UPDATE_DATE)
+        if (lastUpdateDate == null || lastUpdateDate == "") {
+            return emptyList()
+        }
+        val order = ORDER_BY_DESC_LAST_UPDATE_DATE()
+        val whereCondition = AND(
+                ID_NOT_EQUALS(conversationId),
+                LAST_UPDATE_NOT_EMPTY(),
+                LAST_UPDATE_BEFORE(lastUpdateDate)
         )
-        val query = BaasQuery.builder()
-                .collection(COLL_MESSAGES.id)
-                .projection(DISTINCT(ServerConstants.CONVERSATION_ID))
-                .where(olderThanMessage)
-                .orderBy(ORDER_BY_DESC_CREATION_DATE())
-                .pagination(0, RECORDS_PER_PAGE)
-                .build()
-        val result = query.querySync().onSuccessReturn { it } ?: return emptyList()
-        val conversationIds = result.map { it.getString(ServerConstants.DISTINCT) }
-        // Fetch in order the conversations from their ids
-        return conversationIds
-                .map { fetchDocumentFromCollectionById(COLL_CONVERSATIONS, it) }
-                .filterNotNull()
+        return queryDocumentListFromCollection(COLL_CONVERSATIONS, whereCondition, order)
     }
 
     /*
@@ -336,36 +313,14 @@ class ServerDataFetcher : ServerDataFetcherInterface {
     }
 
     override fun fetchLatestMessageByConversation(conversationId: String): BaasDocument? {
-        val criteria = BaasQuery.builder()
-                .pagination(0, 1) // First message (page 0, 1 item)
-                .where(CONVERSATION_ID_EQUALS(conversationId))
-                .orderBy(ORDER_BY_DESC_CREATION_DATE())
-                .criteria()
-        val result = BaasDocument.fetchAllSync(COLL_MESSAGES.id, criteria)
-        return result.onSuccessReturn { it.getOrNull(0) }
+        return queryDocumentListFromCollection(COLL_MESSAGES,
+                CONVERSATION_ID_EQUALS(conversationId),
+                recordsPerPage = 1).getOrNull(0)
     }
 
     /*
      * OTHER
      */
-
-    /**
-     * Fetch recent documents from the server belonging to the specified collection.
-     * The returned list of document is ordered by descending date.
-     *
-     * @param collection the collection from which the documents are fetched
-     *
-     * @return a list of BaasDocument
-     */
-    private fun fetchRecentDocumentListFromCollection(collection: ServerCollection)
-           : List<BaasDocument>{
-        val criteria = BaasQuery.builder()
-                .pagination(0, RECORDS_PER_PAGE)
-                .orderBy(ORDER_BY_DESC_CREATION_DATE())
-                .criteria()
-        val result = BaasDocument.fetchAllSync(collection.id, criteria)
-        return result.onSuccessReturn { it } ?: emptyList()
-    }
 
     private fun fetchDocumentFromCollectionById(collection: ServerCollection, id: String): BaasDocument? {
         return BaasDocument.fetchSync(collection.id, id).onSuccessReturn { it }
@@ -395,13 +350,16 @@ class ServerDataFetcher : ServerDataFetcherInterface {
      * @return a list of BaasDocument
      */
     private fun queryDocumentListFromCollection(collection: ServerCollection,
-                                                whereConditions: String,
-                                                page: Int = 0): List<BaasDocument> {
-        val criteria = BaasQuery.builder()
-                .pagination(page, RECORDS_PER_PAGE)
-                .where(whereConditions)
-                .orderBy(ORDER_BY_DESC_CREATION_DATE())
-                .criteria()
+                                                whereConditions: String? = null,
+                                                order: String = ORDER_BY_DESC_CREATION_DATE(),
+                                                page: Int = 0,
+                                                recordsPerPage: Int = RECORDS_PER_PAGE): List<BaasDocument> {
+        val query = BaasQuery.builder()
+                .pagination(page, recordsPerPage)
+                .orderBy(order)
+        whereConditions?.let { query.where(it) }
+
+        val criteria = query.criteria()
         val result = BaasDocument.fetchAllSync(collection.id, criteria)
         return result.onSuccessReturn { it } ?: emptyList()
     }
