@@ -68,6 +68,10 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     }
 
     override fun getConversationList(cached: Boolean): List<Conversation> {
+        if (!localUserExists()) {
+            conversationCache = emptyList()
+            return emptyList()
+        }
         if (cached) return conversationCache
         conversationCache = queryManyRealm {
             it.whereConversation()
@@ -78,6 +82,7 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     }
 
     override fun getConversationListOlderThanConversation(conversationId: String): List<Conversation> {
+        if (!localUserExists()) return emptyList()
         val currentOldestDate = getConversationById(conversationId)?.date ?: return emptyList()
         return queryManyRealm {
             it.whereConversation()
@@ -111,6 +116,7 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
     }
 
     override fun getMessageListForConversation(conversationId: String): List<Message> {
+        if (!localUserExists()) return emptyList()
         return queryManyRealm {
             it.whereMessage()
                     .conversationIdEqualTo(conversationId)
