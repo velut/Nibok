@@ -1,6 +1,8 @@
 package com.nibokapp.nibok.data.repository
 
 import android.util.Log
+import com.nibokapp.nibok.data.db.Conversation
+import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.db.User
 import com.nibokapp.nibok.data.repository.common.UserRepositoryInterface
 import com.nibokapp.nibok.extension.executeRealmTransaction
@@ -33,10 +35,14 @@ object UserRepository : UserRepositoryInterface {
             return false
         }
 
-        Log.d(TAG, "Removing local user")
+        Log.d(TAG, "Removing local user and his messages")
         executeRealmTransaction {
             val user = it.getLocalUser()
             user?.deleteFromRealm()
+            val conversations = it.where(Conversation::class.java).findAll()
+            conversations.deleteAllFromRealm()
+            val messages = it.where(Message::class.java).findAll()
+            messages.deleteAllFromRealm()
         }
 
         return localUserExists()
