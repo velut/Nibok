@@ -1,9 +1,11 @@
 package com.nibokapp.nibok.data.repository.server
 
 import android.util.Log
+import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasDocument
 import com.baasbox.android.BaasUser
-import com.baasbox.android.json.JsonArray
+import com.baasbox.android.Rest
+import com.baasbox.android.json.JsonObject
 import com.nibokapp.nibok.data.db.Conversation
 import com.nibokapp.nibok.data.db.Message
 import com.nibokapp.nibok.data.repository.common.ConversationRepositoryInterface
@@ -119,7 +121,11 @@ object ServerConversationRepository : ConversationRepositoryInterface {
 
         Log.d(TAG, "Sending message: ${message.text} in conversation: ${message.conversationId} to: $recipientId")
         val messageDocument = getMessageDocument(message)
-        return sender.sendMessageDocument(messageDocument, recipientId)
+        val messageId = sender.sendMessageDocument(messageDocument, recipientId) ?: return null
+        val messageDate = messageDocument.creationDate
+        Log.d(TAG, "Message: $messageId sent, creation_date: $messageDate")
+        conversationDocument.updateConversationDate(messageDate)
+        return messageId
     }
 
     /*
@@ -138,7 +144,7 @@ object ServerConversationRepository : ConversationRepositoryInterface {
         val document = BaasDocument(ServerCollection.CONVERSATIONS.id)
         with(ServerConstants) {
             document.put(PARTICIPANTS, participantIds.toJsonArray())
-                    .put(MESSAGES, JsonArray())
+                    .put(LAST_UPDATE_DATE, "")
         }
         return document
     }
@@ -160,7 +166,26 @@ object ServerConversationRepository : ConversationRepositoryInterface {
     private fun startConversationOnServer(localUserId: String, partnerId: String): String? {
         val participants = listOf(localUserId, partnerId)
         val document = getConversationDocument(participants)
-        sender.sendConversationDocument(document, partnerId)
-        return fetchConversationIdByParticipants(localUserId, partnerId)
+        return sender.sendConversationDocument(document, partnerId)
+    }
+
+    private fun BaasDocument.updateConversationDate(newDate: String): Boolean {
+        Log.d(TAG, "Updating conversation date for: ${this.id} to: $newDate")
+        return this.updateField(ServerConstants.LAST_UPDATE_DATE, newDate)
+    }
+
+    private fun BaasDocument.updateField(fieldName: String, fieldData: String): Boolean {
+        val data = JsonObject().put("data", fieldData)
+        val endpoint = "document/${this.collection}/${this.id}/.$fieldName"
+        val updated = sendUpdateRequest(endpoint, data)
+        return updated
+    }
+
+    private fun sendUpdateRequest(endpoint: String, data: JsonObject): Boolean {
+        return BaasBox.rest().sync(
+                Rest.Method.PUT,
+                endpoint,
+                data
+        ).isSuccess
     }
 }
