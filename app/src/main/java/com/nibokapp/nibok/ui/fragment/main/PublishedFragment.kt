@@ -131,6 +131,7 @@ class PublishedFragment(
     }
 
     override fun onSuccessfulAuthResult(data: Intent?) {
+        super.onSuccessfulAuthResult(data)
         Log.d(TAG, "User authenticated successfully")
         startInsertionPublishActivity()
     }
@@ -190,6 +191,9 @@ class PublishedFragment(
                     searchAdapter.removeInsertion(insertionId)
                 }
                 showDeleteResult(isDeleted)
+                if (mainAdapter.items.isEmpty() && isMainViewVisible()) {
+                    showPlaceholderView()
+                }
             }
         }
     }

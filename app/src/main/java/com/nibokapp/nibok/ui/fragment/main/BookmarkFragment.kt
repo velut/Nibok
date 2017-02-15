@@ -118,7 +118,9 @@ class BookmarkFragment(
                 } else {
                     context.toast(R.string.error_could_not_remove_bookmark)
                 }
-
+                if (mainAdapter.items.isEmpty() && isMainViewVisible()) {
+                    showPlaceholderView()
+                }
             }
         }
     }
@@ -156,6 +158,7 @@ class BookmarkFragment(
                     mainAdapter.items = oldMainItems
                     searchAdapter.items = oldSearchItems
                     Log.d(TAG, "Restored insertion: $insertionId")
+                    hidePlaceholderView()
                 }
             }
         }

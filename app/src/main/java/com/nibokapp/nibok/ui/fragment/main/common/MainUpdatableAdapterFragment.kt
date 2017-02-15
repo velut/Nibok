@@ -41,6 +41,7 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
 
     override fun addCachedData() {
         val adapter = mainUpdatableAdapter ?: return
+        hidePlaceholderView()
         showProgressBarWhileAdapterUpdates(adapter.items.isEmpty())
         Log.d(TAG, "Adding cached data")
         val data = presenter.getCachedData()
@@ -51,6 +52,7 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
     override fun updateData() {
         val adapter = mainUpdatableAdapter ?: return
         val mv = mainView ?: return
+        hidePlaceholderView()
         showProgressBarWhileAdapterUpdates(adapter.items.isEmpty())
         doAsync {
             val data = presenter.getData()
@@ -58,6 +60,9 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
                 if (mv.isVisible()) {
                     // This check prevents hiding the progress bar when the search view is open
                     hideProgressBar()
+                    if (data.isEmpty()) {
+                        showPlaceholderView()
+                    }
                 }
                 Log.d(TAG, "Updating data")
                 adapter.items = data
@@ -73,12 +78,11 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
 
     override fun onQueryTextChange(newText: String): Boolean {
         val adapter = searchUpdatableAdapter ?: return false
-        val isSearchViewVisible = searchView?.isVisible() ?: return false
 
         hideNoResultsView()
         showProgressBar()
 
-        if (!isSearchViewVisible) {
+        if (!isSearchViewVisible()) {
             Log.d(TAG, "Search view is no longer visible, reset adapter and skip query")
             hideProgressBar()
             adapter.items = emptyList()
@@ -103,6 +107,16 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
             }
         }
         return true
+    }
+
+    override fun onLogout() {
+        searchUpdatableAdapter?.items = emptyList()
+        updateData()
+    }
+
+    override fun onSearchClose(): Boolean {
+        searchUpdatableAdapter?.items = emptyList()
+        return super.onSearchClose()
     }
 
     protected fun buildMainViewInfiniteScrollListener(): RecyclerView.OnScrollListener? {

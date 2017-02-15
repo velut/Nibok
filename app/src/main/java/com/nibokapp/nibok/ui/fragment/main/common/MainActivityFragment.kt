@@ -128,6 +128,11 @@ abstract class MainActivityFragment(
     protected var noSearchResultsView: TextView? = null
 
     /**
+     * Placeholder view displayed when no items are shown in the fragment.
+     */
+    protected var placeholderView: View? = null
+
+    /**
      * Current view tracks which view between mainView and searchView
      * is currently displayed in the fragment.
      */
@@ -174,6 +179,12 @@ abstract class MainActivityFragment(
     open fun onSuccessfulAuthResult(data: Intent?) {
     }
 
+    /**
+     * Handle logout.
+     */
+    open fun onLogout() {
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,6 +200,7 @@ abstract class MainActivityFragment(
             fabId?.let { fab = v.findOptional(it) }
             progressBar = v.findOptional(R.id.progressBar)
             noSearchResultsView = v.findOptional(R.id.search_no_results)
+            placeholderView = v.findOptional(R.id.placeholderView)
         }
         mainView?.let {
             setupRecyclerView(it, mainLayoutManager, mainAdapter, { mainScrollListener })
@@ -335,13 +347,14 @@ abstract class MainActivityFragment(
     private fun showSearchView() {
         Log.d(TAG, "Show search view")
         mainView?.setGone()
+        hidePlaceholderView()
         hideFab()
         searchView?.setVisible()
         showProgressBar()
         currentView = searchView
     }
 
-    private fun onSearchClose(): Boolean {
+    protected open fun onSearchClose(): Boolean {
         Log.d(TAG, "Menu search closed")
         showMainView()
         return true // Collapse view
@@ -352,6 +365,10 @@ abstract class MainActivityFragment(
         hideProgressBar()
         searchView?.setGone()
         mainView?.setVisible()
+        val mainAdapterIsEmpty = mainAdapter.itemCount == 0
+        if (mainAdapterIsEmpty) {
+            showPlaceholderView()
+        }
         showFab()
         currentView = mainView
     }
@@ -363,13 +380,21 @@ abstract class MainActivityFragment(
                 val loggedOut = authPresenter.logout()
                 uiThread {
                     if (loggedOut) {
-                        updateData()
+                        onLogout()
                     }
                 }
             }
         } else {
             context.startAuthenticateActivity()
         }
+    }
+
+    protected fun isMainViewVisible(): Boolean {
+        return mainView?.isVisible() ?: false
+    }
+
+    protected fun isSearchViewVisible(): Boolean {
+        return searchView?.isVisible() ?: false
     }
 
     private fun showFab() {
@@ -414,4 +439,21 @@ abstract class MainActivityFragment(
         Log.d(TAG, "Hiding no results text view")
         noSearchResultsView?.setGone()
     }
+
+    /**
+     * Show the placeholder view, if any.
+     */
+    protected fun showPlaceholderView() {
+        Log.d(TAG, "Showing placeholder view")
+        placeholderView?.setVisible()
+    }
+
+    /**
+     * Hide the placeholder view, if any.
+     */
+    protected fun hidePlaceholderView() {
+        Log.d(TAG, "Hiding placeholder view")
+        placeholderView?.setGone()
+    }
+
 }

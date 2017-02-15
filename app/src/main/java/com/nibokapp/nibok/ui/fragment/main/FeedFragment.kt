@@ -100,6 +100,7 @@ class FeedFragment(
 
 
     override fun onSuccessfulAuthResult(data: Intent?) {
+        super.onSuccessfulAuthResult(data)
         if (data == null) return
         Log.d(TAG, "User authenticated successfully")
         val insertionId = data.getStringExtra(KEY_INSERTION_TO_TOGGLE) ?: return
