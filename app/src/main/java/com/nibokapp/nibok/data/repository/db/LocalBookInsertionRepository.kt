@@ -254,7 +254,7 @@ object LocalBookInsertionRepository : BookInsertionRepositoryInterface, LocalSto
         if (trimmedQuery.isEmpty()) return emptyList()
 
         return queryManyRealm {
-            it.queryInsertion(query)
+            it.queryInsertion(trimmedQuery)
                     .applyFiltering(excludeByLocalUser, includeOnlyIfSaved, includeOnlyByLocalUser)
                     .findAllSortedByDescendingDate()
         }
