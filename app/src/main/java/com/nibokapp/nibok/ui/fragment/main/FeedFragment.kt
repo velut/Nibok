@@ -88,6 +88,8 @@ class FeedFragment(
 
     override val searchHint: String by lazy { getString(R.string.search_hint_book) }
 
+    override val noSearchResultsHintId: Int = R.string.search_hint_no_insertions
+
     /*
      * Updatable adapters
      */

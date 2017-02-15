@@ -3,6 +3,7 @@ package com.nibokapp.nibok.ui.fragment.main.common
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import com.nibokapp.nibok.extension.isVisible
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
 import com.nibokapp.nibok.ui.behavior.InfiniteScrollListener
 import com.nibokapp.nibok.ui.presenter.main.MainActivityPresenter
@@ -40,15 +41,24 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
 
     override fun addCachedData() {
         val adapter = mainUpdatableAdapter ?: return
+        showProgressBarWhileAdapterUpdates(adapter.items.isEmpty())
         Log.d(TAG, "Adding cached data")
-        adapter.items = presenter.getCachedData()
+        val data = presenter.getCachedData()
+        hideProgressBar()
+        adapter.items = data
     }
 
     override fun updateData() {
         val adapter = mainUpdatableAdapter ?: return
+        val mv = mainView ?: return
+        showProgressBarWhileAdapterUpdates(adapter.items.isEmpty())
         doAsync {
             val data = presenter.getData()
             uiThread {
+                if (mv.isVisible()) {
+                    // This check prevents hiding the progress bar when the search view is open
+                    hideProgressBar()
+                }
                 Log.d(TAG, "Updating data")
                 adapter.items = data
                 // MUST reset infinite scroll listener, otherwise it won't work with new data
@@ -63,10 +73,31 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
 
     override fun onQueryTextChange(newText: String): Boolean {
         val adapter = searchUpdatableAdapter ?: return false
+        val isSearchViewVisible = searchView?.isVisible() ?: return false
+
+        hideNoResultsView()
+        showProgressBar()
+
+        if (!isSearchViewVisible) {
+            Log.d(TAG, "Search view is no longer visible, reset adapter and skip query")
+            hideProgressBar()
+            adapter.items = emptyList()
+            return true
+        }
+        if (newText.isBlank()) {
+            Log.d(TAG, "Blank query, reset adapter and skip query")
+            adapter.items = emptyList()
+            return true
+        }
+
         Log.d(TAG, "Performing query for: $newText")
         doAsync {
             val results = presenter.getQueryData(newText)
             uiThread {
+                hideProgressBar()
+                if (results.isEmpty()) {
+                    showNoResultsForQueryMessage(newText)
+                }
                 Log.d(TAG, "Query results size: ${results.size} for: $newText")
                 adapter.items = results
             }
@@ -99,5 +130,17 @@ abstract class MainUpdatableAdapterFragment<T> : MainActivityFragment() {
                 }
             }
         }
+    }
+
+    private fun showProgressBarWhileAdapterUpdates(adapterIsEmpty: Boolean) {
+        if (adapterIsEmpty) {
+            showProgressBar()
+        }
+    }
+
+    private fun showNoResultsForQueryMessage(newText: String) {
+        val trimmedQuery = newText.trim()
+        val noResultsMessage = getString(noSearchResultsHintId, trimmedQuery)
+        showNoResultsView(noResultsMessage)
     }
 }

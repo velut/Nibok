@@ -63,6 +63,8 @@ class ConversationFragment(
 
     override val searchHint: String by lazy { getString(R.string.search_hint_message) }
 
+    override val noSearchResultsHintId: Int = R.string.search_hint_no_conversations
+
     /*
      * Updatable adapters
      */

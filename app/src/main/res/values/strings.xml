@@ -61,6 +61,10 @@
     <!-- Hints -->
     <string name="search_hint_book">Search by title, author, ISBN…</string>
     <string name="search_hint_message">Search messages…</string>
+    <string name="search_hint_no_insertions">No insertions found corresponding to: \'%1s\'</string>
+    <string name="search_hint_no_saved_insertions">No saved insertions found corresponding to: \'%1s\'</string>
+    <string name="search_hint_no_published_insertions">No published insertions found corresponding to: \'%1s\'</string>
+    <string name="search_hint_no_conversations">No messages found corresponding to: \'%1s\'</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>

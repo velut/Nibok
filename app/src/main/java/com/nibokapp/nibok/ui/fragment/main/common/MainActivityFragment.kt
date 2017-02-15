@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.*
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.*
 import com.nibokapp.nibok.ui.presenter.authentication.AuthPresenter
@@ -100,6 +102,11 @@ abstract class MainActivityFragment(
     protected abstract val searchHint: String
 
     /**
+     * Hint displayed in the search TextView when no results are found.
+     */
+    protected abstract val noSearchResultsHintId: Int
+
+    /**
      * Id of the FAB.
      * If not null the fragment will try to find the fab in the view.
      */
@@ -108,7 +115,17 @@ abstract class MainActivityFragment(
     /**
      * Optional FAB displayed in the view.
      */
-    protected open var fab: FloatingActionButton? = null
+    protected var fab: FloatingActionButton? = null
+
+    /**
+     * Optional progress bar displayed when loading data.
+     */
+    protected var progressBar: ProgressBar? = null
+
+    /**
+     * TextView displayed when no results are found for a given query submitted in the search view.
+     */
+    protected var noSearchResultsView: TextView? = null
 
     /**
      * Current view tracks which view between mainView and searchView
@@ -166,10 +183,12 @@ abstract class MainActivityFragment(
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(layoutId)
         view?.let {
-            val v = it
+            v ->
             mainView = v.find(mainViewId)
             searchView = v.find(searchViewId)
             fabId?.let { fab = v.findOptional(it) }
+            progressBar = v.findOptional(R.id.progressBar)
+            noSearchResultsView = v.findOptional(R.id.search_no_results)
         }
         mainView?.let {
             setupRecyclerView(it, mainLayoutManager, mainAdapter, { mainScrollListener })
@@ -318,6 +337,7 @@ abstract class MainActivityFragment(
         mainView?.setGone()
         hideFab()
         searchView?.setVisible()
+        showProgressBar()
         currentView = searchView
     }
 
@@ -329,6 +349,7 @@ abstract class MainActivityFragment(
 
     private fun showMainView() {
         Log.d(TAG, "Show main view")
+        hideProgressBar()
         searchView?.setGone()
         mainView?.setVisible()
         showFab()
@@ -357,5 +378,40 @@ abstract class MainActivityFragment(
 
     private fun hideFab() {
         fab?.let { it.post { it.hide() } }
+    }
+
+    /**
+     * Show the progress bar, if any.
+     */
+    protected fun showProgressBar() {
+        Log.d(TAG, "Showing progress bar")
+        progressBar?.setVisible()
+    }
+
+    /**
+     * Hide the progress bar, if any.
+     */
+    protected fun hideProgressBar() {
+        Log.d(TAG, "Hiding progress bar")
+        progressBar?.setGone()
+    }
+
+    /**
+     * Show the text view, if any, signaling that no results where found while searching.
+     *
+     * @param text the text to display
+     */
+    protected fun showNoResultsView(text: String) {
+        Log.d(TAG, "Showing no results text view")
+        noSearchResultsView?.text = text
+        noSearchResultsView?.setVisible()
+    }
+
+    /**
+     * Hide the text view, if any, displayed when no results where found while searching.
+     */
+    protected fun hideNoResultsView() {
+        Log.d(TAG, "Hiding no results text view")
+        noSearchResultsView?.setGone()
     }
 }
