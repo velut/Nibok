@@ -36,14 +36,39 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
-    <!--
-    <TextView
+    <RelativeLayout
+        android:id="@+id/placeholderView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Messages"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
-    -->
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/placeholderViewImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_account_circle_dark_green_48dp" />
+
+        <TextView
+            android:id="@+id/placeholderViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeholderViewImage"
+            android:layout_centerHorizontal="true"
+            android:text="@string/placeholder_text_conversation"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/placeholderViewText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeholderViewText"
+            android:layout_centerHorizontal="true"
+            android:text="@string/placeholder_sub_conversation"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
