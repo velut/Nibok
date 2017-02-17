@@ -282,7 +282,9 @@ abstract class MainActivityFragment(
         when (item.itemId) {
             R.id.searchAction -> { Log.d(TAG, "Searching") }
             R.id.refreshAction -> updateData()
-            R.id.backToTopAction -> { currentView?.layoutManager?.scrollToPosition(0) }
+            R.id.backToTopAction -> {
+                currentView?.layoutManager?.scrollToPosition(0); showFab()
+            }
             R.id.authAction -> onAuthItemSelected()
             else -> { context.toast(R.string.error_unknown_menu_action); super.onOptionsItemSelected(item) }
         }
