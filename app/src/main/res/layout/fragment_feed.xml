@@ -49,7 +49,7 @@
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_account_circle_dark_green_48dp" />
+            android:src="@drawable/ic_placeholder_feed_icon" />
 
         <TextView
             android:id="@+id/placeholderViewText"
