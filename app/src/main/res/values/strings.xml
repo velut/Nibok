@@ -179,7 +179,7 @@
     <string name="title_delete_fail">Error while deleting insertion</string>
     <string name="content_delete_fail">Your insertion could not be deleted.\nTry again later.</string>
     <string name="placeholder_text_feed">Feed</string>
-    <string name="placeholder_sub_feed">Refresh the feed to view the latest insertions</string>
+    <string name="placeholder_sub_feed">Refresh to view the latest insertions</string>
     <string name="placeholder_text_bookmark">Saved Insertions</string>
     <string name="placeholder_sub_bookmark">Tap the bookmark icon to save insertions</string>
     <string name="placeholder_text_published">My Insertions</string>
