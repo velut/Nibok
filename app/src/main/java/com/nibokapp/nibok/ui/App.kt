@@ -1,5 +1,6 @@
 package com.nibokapp.nibok.ui
 
+import android.Manifest
 import android.app.Application
 import com.baasbox.android.BaasBox
 import com.baasbox.android.BaasUser
@@ -33,6 +34,14 @@ class App : Application() {
 
         private const val PLACEHOLDER_IMAGE = "asset/book_picture_placeholder"
         const val PLACEHOLDER_IMAGE_URL = "$API_BASE_URL$PLACEHOLDER_IMAGE$APP_CODE_REQUEST"
+
+        /**
+         * Permissions.
+         */
+        const val PERMISSION_INTERNET = Manifest.permission.INTERNET
+        const val REQUEST_PERMISSION_INTERNET = 1
+        const val PERMISSION_WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        const val REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 2
     }
 
     override fun onCreate() {
@@ -48,7 +57,7 @@ class App : Application() {
         // Test. logout user on start
         doAsync {
             BaasUser.current()?.logoutSync()
-            Authenticator.login("ciao", "ciaociao")
+            Authenticator.login("qwer", "ciaociao")
         }
     }
 

@@ -1,11 +1,10 @@
 package com.nibokapp.nibok.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.NavUtils
+import android.support.v4.app.*
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -14,6 +13,7 @@ import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.publish.BookData
 import com.nibokapp.nibok.domain.model.publish.InsertionData
 import com.nibokapp.nibok.extension.onPageSelected
+import com.nibokapp.nibok.ui.App
 import com.nibokapp.nibok.ui.fragment.publish.*
 import com.nibokapp.nibok.ui.fragment.publish.common.BasePublishFragment
 import kotlinx.android.synthetic.main.activity_insertion_publish.*
@@ -28,6 +28,12 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
 
     companion object {
         private val TAG = InsertionPublishActivity::class.java.simpleName
+
+        /**
+         * Permissions.
+         */
+        private val PERMISSION_WRITE_EXTERNAL_STORAGE = App.PERMISSION_WRITE_EXTERNAL_STORAGE
+        private val REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = App.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE
 
         private val KEY_INSERTION_DATA = "$TAG:insertionData"
 
@@ -115,6 +121,37 @@ class InsertionPublishActivity : AppCompatActivity(), BasePublishFragment.Publis
         Log.d(TAG, "Saved insertion data:\n$insertionData")
 
         setupViewPager()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!hasWriteExternalStoragePermission()) {
+            requestWriteExternalStoragePermission()
+        } else {
+            Log.d(TAG, "Write external storage permission is already granted")
+        }
+    }
+
+    private fun hasWriteExternalStoragePermission(): Boolean {
+        val permissionStatus = ContextCompat.checkSelfPermission(this, PERMISSION_WRITE_EXTERNAL_STORAGE)
+        return permissionStatus == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestWriteExternalStoragePermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(PERMISSION_WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Write external storage permission granted")
+            } else {
+                Log.d(TAG, "Write external storage permission NOT granted, exit")
+                finish()
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

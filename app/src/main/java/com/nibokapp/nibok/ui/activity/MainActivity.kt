@@ -1,13 +1,18 @@
 package com.nibokapp.nibok.ui.activity
 
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.extension.onPageSelected
+import com.nibokapp.nibok.ui.App
 import com.nibokapp.nibok.ui.fragment.main.BookmarkFragment
 import com.nibokapp.nibok.ui.fragment.main.ConversationFragment
 import com.nibokapp.nibok.ui.fragment.main.FeedFragment
@@ -30,6 +35,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
+
+        private val PERMISSION_INTERNET = App.PERMISSION_INTERNET
+        private val REQUEST_PERMISSION_INTERNET = App.REQUEST_PERMISSION_INTERNET
     }
 
     /**
@@ -52,7 +60,43 @@ class MainActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (!hasInternetPermission()) {
+            requestInternetPermission()
+        } else {
+            Log.d(TAG, "Internet permission is already granted")
+        }
+    }
 
+    private fun hasInternetPermission(): Boolean {
+        val permissionStatus = ContextCompat.checkSelfPermission(this, PERMISSION_INTERNET)
+        return permissionStatus == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestInternetPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(PERMISSION_INTERNET), REQUEST_PERMISSION_INTERNET)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSION_INTERNET) {
+            if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Internet permission was granted")
+                updateCurrentFragment()
+            } else {
+                Log.d(TAG, "Internet permission was NOT granted")
+            }
+        }
+    }
+
+    private fun updateCurrentFragment() {
+        val viewpagerAdapter = viewPager.adapter as? ViewPagerAdapter ?: return
+        val currentItemPos = viewPager.currentItem
+        val currentFragment = viewpagerAdapter.getItem(currentItemPos) as? ViewPagerFragment ?: return
+        currentFragment.onSelected()
+    }
 
     /**
      * Sets up the ViewPager linking it to the adapter and adding the given fragments.
