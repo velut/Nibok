@@ -252,6 +252,7 @@ abstract class MainActivityFragment(
             )
         }
         if (currentView == searchView) {
+            hideNoResultsView()
             val oldQuery = searchViewText
             Log.d(TAG, "Restoring search view for query: $oldQuery")
             searchActionItem.expandActionView()
