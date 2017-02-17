@@ -7,14 +7,14 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/messageAvatar"
         android:layout_width="58dp"
         android:layout_height="58dp"
         android:layout_marginTop="5.5dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/profile_image_of_the_message_receiver"
-        android:src="@drawable/book_placeholder_image"/>
+        android:src="@drawable/ic_account_circle_dark_green_48dp" />
 
     <TextView
         android:id="@+id/messagePartner"

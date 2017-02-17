@@ -47,8 +47,8 @@ dependencies {
     // Material dialogs
     compile 'com.afollestad.material-dialogs:core:0.9.0.1'
 
-    // Circular Image View
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+    // TextDrawable for avatars
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     // Fresco and image gallery
     compile 'com.facebook.fresco:fresco:0.13.0'

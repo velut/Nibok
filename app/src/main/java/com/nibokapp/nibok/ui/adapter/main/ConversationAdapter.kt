@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import com.amulyakhare.textdrawable.TextDrawable
+import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.ConversationModel
 import com.nibokapp.nibok.extension.*
@@ -139,14 +141,17 @@ class ConversationAdapter(
          * @param item the item containing the data used to populate the view
          */
         fun bind(item: ConversationModel) {
-            loadAvatar(item.partner.avatar)
+            loadAvatar(item.partner.username)
             bindTextData(item)
             addClickListeners(item.conversationId)
         }
 
-        private fun loadAvatar(imageSource: String) = with(itemView) {
-            val placeholder = R.drawable.ic_account_circle_dark_green_48dp
-            messageAvatar.loadImage(imageSource, placeholder, placeholder, animate = false)
+        private fun loadAvatar(partnerName: String) = with(itemView) {
+            val generator = ColorGenerator.MATERIAL
+            val color = generator.getColor(partnerName)
+            val initial = partnerName.getOrNull(0) ?: '#'
+            val avatarDrawable = TextDrawable.builder().buildRound(initial.toString(), color)
+            messageAvatar.setImageDrawable(avatarDrawable)
         }
 
         private fun bindTextData(item: ConversationModel) = with(itemView) {
