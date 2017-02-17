@@ -38,25 +38,6 @@ fun List<String>.toRealmStringList(): RealmList<RealmString> {
 }
 
 /**
- * Convert a List of RealmModel into a RealmList of RealmModel.
- *
- * @return a a RealmList of RealmModel
- */
-fun <T : RealmModel> List<T>.toRealmList(): RealmList<T> {
-    val realmList = RealmList<T>()
-    this.forEach { realmList.add(it) }
-    return realmList
-}
-
-/**
- * Convert a RealmList of RealmModels into a normal list of RealmModel.
- *
- * @return a list of RealmModel
- */
-fun <T : RealmModel> RealmList<T>.toNormalList(): List<T> =
-        this.map { it }
-
-/**
  * Execute the function with a realm as the parameter.
  *
  * @param func the function to execute with realm
