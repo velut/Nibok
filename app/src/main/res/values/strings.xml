@@ -181,7 +181,7 @@
     <string name="placeholder_text_feed">Feed</string>
     <string name="placeholder_sub_feed">Refresh the feed to view the latest insertions</string>
     <string name="placeholder_text_bookmark">Saved Insertions</string>
-    <string name="placeholder_sub_bookmark">Tap the bookmark icon to save an insertions</string>
+    <string name="placeholder_sub_bookmark">Tap the bookmark icon to save insertions</string>
     <string name="placeholder_text_published">My Insertions</string>
     <string name="placeholder_sub_published">Tap the button to publish an insertion</string>
     <string name="placeholder_text_conversation">Messages</string>
