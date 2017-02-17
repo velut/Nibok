@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.nibokapp.nibok.R
 import com.nibokapp.nibok.domain.model.ConversationModel
-import com.nibokapp.nibok.extension.getDpBasedLinearLayoutManager
 import com.nibokapp.nibok.extension.startChatActivity
 import com.nibokapp.nibok.ui.adapter.main.ConversationAdapter
 import com.nibokapp.nibok.ui.adapter.main.UpdatableAdapter
@@ -43,7 +42,7 @@ class ConversationFragment(
     override val mainAdapter: ConversationAdapter = ConversationAdapter { startChatActivity(it) }
 
     override val mainLayoutManager: LinearLayoutManager
-        get() = context.getDpBasedLinearLayoutManager() // TODO check
+        get() = LinearLayoutManager(context)
 
     override val mainScrollListener: RecyclerView.OnScrollListener?
         get() = buildMainViewInfiniteScrollListener()
@@ -57,7 +56,7 @@ class ConversationFragment(
     override val searchAdapter: ConversationAdapter = ConversationAdapter { startChatActivity(it) }
 
     override val searchLayoutManger: LinearLayoutManager
-        get() = context.getDpBasedLinearLayoutManager() // TODO check
+        get() = LinearLayoutManager(context)
 
     override val searchScrollListener: RecyclerView.OnScrollListener? = null
 
