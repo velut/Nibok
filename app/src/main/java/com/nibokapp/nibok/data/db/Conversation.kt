@@ -13,7 +13,7 @@ import java.util.*
  * @param userId the id of the local user
  * @param partner the external user participating in the conversation
  * @param latestMessage the latest message exchanged in the conversation
- * @param date the date in which the conversation was started
+ * @param lastUpdateDate the date in which the conversation was last updated
  */
 open class Conversation(
 
@@ -25,11 +25,11 @@ open class Conversation(
 
         open var latestMessage: Message? = null,
 
-        open var date: Date? = null
+        open var lastUpdateDate: Date? = null
 
 ) : RealmObject(), WellFormedItem {
 
     override fun isWellFormed(): Boolean = with(this) {
-        partner != null && date != null && userId != ""
+        partner != null && lastUpdateDate != null && userId != ""
     }
 }

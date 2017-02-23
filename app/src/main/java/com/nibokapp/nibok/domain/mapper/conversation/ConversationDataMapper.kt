@@ -31,7 +31,7 @@ class ConversationDataMapper(
                     partner,
                     previewText,
                     partnerHasReplied,
-                    date!!
+                    lastUpdateDate!!
             )
         }
     }

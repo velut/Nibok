@@ -83,7 +83,7 @@ object LocalConversationRepository : ConversationRepositoryInterface, LocalStora
 
     override fun getConversationListOlderThanConversation(conversationId: String): List<Conversation> {
         if (!localUserExists()) return emptyList()
-        val currentOldestDate = getConversationById(conversationId)?.date ?: return emptyList()
+        val currentOldestDate = getConversationById(conversationId)?.lastUpdateDate ?: return emptyList()
         return queryManyRealm {
             it.whereConversation()
                     .olderThan(conversationId, currentOldestDate)
