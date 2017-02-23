@@ -40,7 +40,7 @@ class BookInsertionDataMapper(
                         bookInfo = convertBookToDomain(book!!)!!,
                         bookPrice = bookPrice,
                         bookCondition = bookCondition,
-                        bookPictureSources = bookImagesSources.toStringList(),
+                        bookPictureSources = bookPictures.toStringList(),
                         insertionDate = date!!,
                         savedByUser = bookRepository.isBookInsertionSaved(id)
                 )
@@ -59,7 +59,7 @@ class BookInsertionDataMapper(
                 book = convertBookFromDomain(bookInfo),
                 bookPrice = bookPrice,
                 bookCondition = bookCondition,
-                bookImagesSources = bookPictureSources.toRealmStringList()
+                bookPictures = bookPictureSources.toRealmStringList()
         )
     }
 

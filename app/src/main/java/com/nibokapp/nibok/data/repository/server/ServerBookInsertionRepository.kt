@@ -181,7 +181,7 @@ object ServerBookInsertionRepository: BookInsertionRepositoryInterface {
         val book = insertion.book ?: return null
         val bookId = publishBook(book) ?: return null
 
-        val pictureUris = insertion.bookImagesSources.toStringList()
+        val pictureUris = insertion.bookPictures.toStringList()
         val pictureIds = if (pictureUris.isNotEmpty()) {
             publishPictures(pictureUris) ?: return null
         } else {

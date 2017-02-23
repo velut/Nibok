@@ -17,7 +17,7 @@ import java.util.*
  * @param book the book being sold in this insertion - One to one
  * @param bookPrice the price the user set for the book
  * @param bookCondition the wear condition of the book
- * @param bookImagesSources the sources of the pictures of the book taken by the user
+ * @param bookPictures the sources of the pictures of the book taken by the user
  */
 open class Insertion(
 
@@ -33,7 +33,7 @@ open class Insertion(
 
         open var bookCondition: String = "",
 
-        open var bookImagesSources: RealmList<RealmString> = RealmList()
+        open var bookPictures: RealmList<RealmString> = RealmList()
 
 ) : RealmObject(), WellFormedItem {
 
